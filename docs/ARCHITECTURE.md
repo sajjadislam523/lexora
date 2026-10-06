@@ -42,26 +42,33 @@
 
 ---
 
-## 3. Current structure (Phase 0)
+## 3. Current structure (Phase 1, in progress)
 
 ```text
 lexora/
 ├── CLAUDE.md                     # Working agreement for Claude Code
 ├── AGENTS.md                     # Next.js-generated agent notes (Next 16 docs pointer)
-├── docs/                         # DESIGN, UX_PRINCIPLES, ARCHITECTURE, ROADMAP
+├── docs/                         # DESIGN, UX_PRINCIPLES, ARCHITECTURE, ROADMAP, WORKFLOW
 ├── components.json               # shadcn/ui configuration
 └── src/
     ├── app/
     │   ├── layout.tsx            # Root layout: fonts, metadata, TooltipProvider
     │   ├── globals.css           # Tailwind + token imports + base layer
-    │   ├── page.tsx              # Placeholder home (honest "in development")
-    │   └── design-system/        # Visual playground (static sample data)
+    │   ├── page.tsx              # Placeholder landing page
+    │   ├── (app)/                # App route group, rendered inside the persistent AppShell
+    │   │   ├── layout.tsx
+    │   │   ├── home|finder|bank|practice|writing|speaking|progress|settings/page.tsx
+    │   │   └── language/[slug]/page.tsx   # Static params from demo content; unknown slugs 404
+    │   └── design-system/        # Visual review surface (static sample data)
     │       ├── page.tsx
     │       ├── _fixtures.ts      # Illustrative samples, NOT the language dataset
-    │       └── _sections/        # Foundations, primitives, patterns, states
+    │       └── _sections/        # Principles, colour, typography, layout, components, states, composition
     ├── components/
     │   ├── ui/                   # shadcn primitives, restyled to tokens
-    │   └── lexora/               # Lexora product components (presentational)
+    │   ├── lexora/               # Lexora product components (presentational)
+    │   └── shell/                # AppShell, sidebar, top bar, command palette, navigation config
+    ├── features/                 # Screen-level composition: dashboard, finder, practice, language
+    ├── demo/                     # Phase 1 prototype content + session-only saved state (NOT the dataset)
     ├── lib/
     │   └── utils.ts              # cn()
     └── styles/
@@ -236,15 +243,25 @@ interface ExplanationProvider {
 
 ## 11. Decision log
 
-| #   | Date       | Decision                                                                       | Rationale                                                                              |
-| --- | ---------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| 1   | 2026-10-07 | Next.js 16 + TypeScript + Tailwind 4                                           | Requested stack, current stable; RSC suits a data-heavy app                            |
-| 2   | 2026-10-07 | shadcn/ui on Radix (`radix-nova`)                                              | Accessible primitives we own and restyle; Radix chosen over Base UI for maturity       |
-| 3   | 2026-10-07 | Tokens as CSS variables mapped via `@theme inline`; kept shadcn variable names | Primitives work unmodified; one place to change values; dark mode becomes a value swap |
-| 4   | 2026-10-07 | Fonts: Inter / Newsreader / JetBrains Mono via `next/font`                     | Editorial + interface voices; self-hosted (privacy, no layout shift)                   |
-| 5   | 2026-10-07 | Light theme only for now                                                       | Focus; token architecture keeps dark mode cheap later                                  |
-| 6   | 2026-10-07 | Zod, DB, ORM, and tests not installed in Phase 0                               | Nothing uses them yet; avoid unused dependencies                                       |
-| 7   | 2026-10-07 | `shadcn` package as a devDependency                                            | Only its `tailwind.css` (custom variants, utilities) is consumed, at build time        |
-| 8   | 2026-10-07 | `suppressHydrationWarning` on `<html>` and `<body>` only                       | Browser extensions inject attributes there; it doesn't affect children                 |
-| 9   | 2026-10-07 | No AI dependency; intelligence behind interfaces                               | Product requirement; AI optional in Phase 9                                            |
-| 10  | _proposed_ | Drizzle ORM for Postgres                                                       | SQL-close, light, portable, no binary engine; good fit for FTS/trigram/pgvector        |
+| #   | Date       | Decision                                                                                                                                                                | Rationale                                                                                                                                      |
+| --- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 2026-10-07 | Next.js 16 + TypeScript + Tailwind 4                                                                                                                                    | Requested stack, current stable; RSC suits a data-heavy app                                                                                    |
+| 2   | 2026-10-07 | shadcn/ui on Radix (`radix-nova`)                                                                                                                                       | Accessible primitives we own and restyle; Radix chosen over Base UI for maturity                                                               |
+| 3   | 2026-10-07 | Tokens as CSS variables mapped via `@theme inline`; kept shadcn variable names                                                                                          | Primitives work unmodified; one place to change values; dark mode becomes a value swap                                                         |
+| 4   | 2026-10-07 | Fonts: Inter / Newsreader / JetBrains Mono via `next/font`                                                                                                              | Editorial + interface voices; self-hosted (privacy, no layout shift)                                                                           |
+| 5   | 2026-10-07 | Light theme only for now                                                                                                                                                | Focus; token architecture keeps dark mode cheap later                                                                                          |
+| 6   | 2026-10-07 | Zod, DB, ORM, and tests not installed in Phase 0                                                                                                                        | Nothing uses them yet; avoid unused dependencies                                                                                               |
+| 7   | 2026-10-07 | `shadcn` package as a devDependency                                                                                                                                     | Only its `tailwind.css` (custom variants, utilities) is consumed, at build time                                                                |
+| 8   | 2026-10-07 | `suppressHydrationWarning` on `<html>` and `<body>` only                                                                                                                | Browser extensions inject attributes there; it doesn't affect children                                                                         |
+| 9   | 2026-10-07 | No AI dependency; intelligence behind interfaces                                                                                                                        | Product requirement; AI optional in Phase 9                                                                                                    |
+| 10  | _proposed_ | Drizzle ORM for Postgres                                                                                                                                                | SQL-close, light, portable, no binary engine; good fit for FTS/trigram/pgvector                                                                |
+| 11  | 2026-10-07 | Design language v0.2: serif reserved for language content; Inter 600 for all interface headings                                                                         | Owner decision after reference study; serif becomes a reliable "this is English to study" signal                                               |
+| 12  | 2026-10-07 | Radius scale 4/6/8/12/16; flat resting surfaces; control-height and section-rhythm tokens                                                                               | Translated from the reference's sober geometry, flat cards and two-density sizing                                                              |
+| 13  | 2026-10-07 | Added shadcn `table` primitive                                                                                                                                          | Needed for the language bank and mistakes views; restyled to the table spec                                                                    |
+| 14  | 2026-10-07 | App routes live in an `(app)` route group: `/home`, `/finder`, `/bank`, `/practice`, `/writing`, `/speaking`, `/progress`, `/settings`; `/` stays a public landing page | Short, stable URLs; one persistent shell layout; leaves room for `(marketing)` and `(auth)` groups in Phase 2                                  |
+| 15  | 2026-10-07 | Shell UI state (collapse, mobile sheet, palette) in a client context, not persisted                                                                                     | Avoids cookie reads that would make every app page dynamic; persistence can come with user preferences in Phase 2                              |
+| 16  | 2026-10-07 | Added shadcn `sheet` primitive                                                                                                                                          | Mobile navigation drawer                                                                                                                       |
+| 17  | 2026-10-07 | Phase 1 demo content lives in `src/demo/`, imported only by UI code (features, shell, palette)                                                                          | Keeps prototype data obviously separate from the Phase 3 curated dataset and domain model; easy to delete                                      |
+| 18  | 2026-10-07 | Saved items are an in-memory client context in the `(app)` layout, labelled "session only" wherever saving appears                                                      | Believable cross-screen save state without fake persistence                                                                                    |
+| 19  | 2026-10-07 | `/language/[slug]` is statically generated with `dynamicParams = false`; Finder and Practice read `?q=` / `?step=` via `useSearchParams` inside `Suspense`              | Every route stays static; queries are shareable, and the browser back button works                                                             |
+| 20  | 2026-10-07 | Screen composition lives in `src/features/<screen>/`; reusable presentation stays in `components/lexora`                                                                | First use of the target feature structure; features don't import each other except `language/to-card-props` (to move into `domain` in Phase 3) |

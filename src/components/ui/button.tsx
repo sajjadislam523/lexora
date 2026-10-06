@@ -4,32 +4,35 @@ import { cn } from "cn";
 import { Slot } from "radix-ui";
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-120 ease-standard outline-none select-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border border-transparent bg-clip-padding type-label whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-120 ease-standard outline-none select-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/88",
-        ink: "bg-ink text-ink-foreground shadow-xs hover:bg-ink-strong",
+        // Filled variants: disabled = recessed fill + disabled text (no opacity fade).
+        default:
+          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/88 active:bg-primary/80 disabled:bg-muted disabled:text-disabled-foreground disabled:shadow-none",
+        ink: "bg-ink text-ink-foreground shadow-xs hover:bg-ink-strong active:bg-ink-strong/90 disabled:bg-muted disabled:text-disabled-foreground disabled:shadow-none",
         outline:
-          "border-border-strong bg-card text-foreground shadow-xs hover:bg-accent aria-expanded:bg-accent",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-accent aria-expanded:bg-accent",
+          "border-border-strong bg-card text-foreground hover:border-input/60 hover:bg-accent active:bg-accent/70 disabled:border-border disabled:bg-transparent disabled:text-disabled-foreground aria-expanded:bg-accent",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-accent active:bg-accent/70 disabled:text-disabled-foreground aria-expanded:bg-accent",
         ghost:
-          "text-muted-foreground hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
+          "text-muted-foreground hover:bg-accent hover:text-foreground active:bg-accent/70 disabled:text-disabled-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
         destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-ink underline-offset-4 hover:underline",
+          "bg-danger-soft text-danger hover:bg-danger/15 focus-visible:ring-danger active:bg-danger/20 disabled:bg-muted disabled:text-disabled-foreground",
+        link: "h-auto! px-0! text-ink underline-offset-4 hover:underline disabled:text-disabled-foreground",
       },
       size: {
+        // Compact chrome → comfortable forms. Heights come from the control-* tokens.
+        xs: "h-control-xs gap-1 rounded-sm px-2 type-micro has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-control-sm gap-1.5 rounded-sm px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3.5",
         default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-sm px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-md px-2.5 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
-        "icon-xs":
-          "size-6 rounded-sm in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-7 rounded-md in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
+          "h-control-md gap-2 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+        lg: "h-control-lg gap-2 px-4.5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        "icon-xs": "size-control-xs rounded-sm [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-control-sm rounded-sm",
+        icon: "size-control-md",
+        "icon-lg": "size-control-lg",
       },
     },
     defaultVariants: {
