@@ -223,7 +223,7 @@ export function ComponentsSection() {
         note="Recessed trigger in chrome, raised hero in the Finder, small field for filtering. Search itself is not wired up."
         className="bg-background"
       >
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-2">
             <p className="type-overline text-subtle-foreground">Trigger · chrome</p>
             <DemoSearchTrigger />

@@ -7,6 +7,7 @@ import { ColorSection } from "./_sections/color";
 import { ComponentsSection } from "./_sections/components";
 import { CompositionSection } from "./_sections/composition";
 import { LayoutSection } from "./_sections/layout";
+import { LearningSection } from "./_sections/learning";
 import { PaletteProvider } from "./_sections/palette";
 import { PrinciplesSection } from "./_sections/principles";
 import { StatesSection } from "./_sections/states";
@@ -23,6 +24,7 @@ const SECTIONS = [
   { id: "typography", label: "Typography" },
   { id: "layout", label: "Space & shape" },
   { id: "components", label: "Components" },
+  { id: "learning", label: "Learning patterns" },
   { id: "states", label: "States" },
   { id: "composition", label: "Composition" },
 ];
@@ -45,7 +47,7 @@ export default function DesignSystemPage() {
             </span>
             <span className="type-label text-muted-foreground">Design system</span>
             <Badge variant="outline" className="ml-auto">
-              v0.2 · Prototype · static
+              v0.3 · Prototype · static
             </Badge>
           </div>
           <nav
@@ -85,7 +87,7 @@ export default function DesignSystemPage() {
 
           <main className="min-w-0 flex-1">
             <div className="mb-section-sm">
-              <Badge variant="ink">Design language v0.2</Badge>
+              <Badge variant="ink">Design system v0.3</Badge>
               <h1 className="mt-4 type-display text-foreground">Lexora design system</h1>
               <p className="mt-4 max-w-prose type-reading text-muted-foreground">
                 Calm, warm and precise. Interface in Inter, language in Newsreader, colour only
@@ -103,6 +105,7 @@ export default function DesignSystemPage() {
             <TypographySection />
             <LayoutSection />
             <ComponentsSection />
+            <LearningSection />
             <StatesSection />
             <CompositionSection />
           </main>
