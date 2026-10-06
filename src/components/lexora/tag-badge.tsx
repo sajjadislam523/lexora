@@ -27,7 +27,7 @@ export function TagBadge({
     <span
       data-slot="tag-badge"
       className={cn(
-        "inline-flex h-5 items-center gap-1 rounded-sm bg-muted px-1.5 text-xs text-muted-foreground",
+        "inline-flex h-5 items-center gap-1 rounded-xs bg-muted px-1.5 type-micro font-normal text-muted-foreground",
         className,
       )}
       {...props}

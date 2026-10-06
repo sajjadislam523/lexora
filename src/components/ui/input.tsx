@@ -1,13 +1,19 @@
 import * as React from "react";
 import { cn } from "cn";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+type InputProps = Omit<React.ComponentProps<"input">, "size"> & {
+  /** `default` 40px for in-app forms; `lg` 44px for auth and onboarding forms. */
+  size?: "default" | "lg";
+};
+
+function Input({ className, type, size = "default", ...props }: InputProps) {
   return (
     <input
       type={type}
       data-slot="input"
+      data-size={size}
       className={cn(
-        "h-9 w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base shadow-xs transition-[color,border-color,box-shadow] duration-120 ease-standard outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-subtle-foreground hover:border-foreground/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        "h-control-input w-full min-w-0 rounded-md border border-input bg-card px-3 py-1 text-base transition-[color,border-color,box-shadow] duration-120 ease-standard outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-subtle-foreground hover:border-foreground/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-disabled-foreground aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=lg]:h-control-lg data-[size=lg]:px-3.5 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
         className,
       )}
       {...props}

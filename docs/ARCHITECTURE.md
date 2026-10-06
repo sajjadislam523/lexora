@@ -236,15 +236,18 @@ interface ExplanationProvider {
 
 ## 11. Decision log
 
-| #   | Date       | Decision                                                                       | Rationale                                                                              |
-| --- | ---------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| 1   | 2026-10-07 | Next.js 16 + TypeScript + Tailwind 4                                           | Requested stack, current stable; RSC suits a data-heavy app                            |
-| 2   | 2026-10-07 | shadcn/ui on Radix (`radix-nova`)                                              | Accessible primitives we own and restyle; Radix chosen over Base UI for maturity       |
-| 3   | 2026-10-07 | Tokens as CSS variables mapped via `@theme inline`; kept shadcn variable names | Primitives work unmodified; one place to change values; dark mode becomes a value swap |
-| 4   | 2026-10-07 | Fonts: Inter / Newsreader / JetBrains Mono via `next/font`                     | Editorial + interface voices; self-hosted (privacy, no layout shift)                   |
-| 5   | 2026-10-07 | Light theme only for now                                                       | Focus; token architecture keeps dark mode cheap later                                  |
-| 6   | 2026-10-07 | Zod, DB, ORM, and tests not installed in Phase 0                               | Nothing uses them yet; avoid unused dependencies                                       |
-| 7   | 2026-10-07 | `shadcn` package as a devDependency                                            | Only its `tailwind.css` (custom variants, utilities) is consumed, at build time        |
-| 8   | 2026-10-07 | `suppressHydrationWarning` on `<html>` and `<body>` only                       | Browser extensions inject attributes there; it doesn't affect children                 |
-| 9   | 2026-10-07 | No AI dependency; intelligence behind interfaces                               | Product requirement; AI optional in Phase 9                                            |
-| 10  | _proposed_ | Drizzle ORM for Postgres                                                       | SQL-close, light, portable, no binary engine; good fit for FTS/trigram/pgvector        |
+| #   | Date       | Decision                                                                                        | Rationale                                                                                        |
+| --- | ---------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 1   | 2026-10-07 | Next.js 16 + TypeScript + Tailwind 4                                                            | Requested stack, current stable; RSC suits a data-heavy app                                      |
+| 2   | 2026-10-07 | shadcn/ui on Radix (`radix-nova`)                                                               | Accessible primitives we own and restyle; Radix chosen over Base UI for maturity                 |
+| 3   | 2026-10-07 | Tokens as CSS variables mapped via `@theme inline`; kept shadcn variable names                  | Primitives work unmodified; one place to change values; dark mode becomes a value swap           |
+| 4   | 2026-10-07 | Fonts: Inter / Newsreader / JetBrains Mono via `next/font`                                      | Editorial + interface voices; self-hosted (privacy, no layout shift)                             |
+| 5   | 2026-10-07 | Light theme only for now                                                                        | Focus; token architecture keeps dark mode cheap later                                            |
+| 6   | 2026-10-07 | Zod, DB, ORM, and tests not installed in Phase 0                                                | Nothing uses them yet; avoid unused dependencies                                                 |
+| 7   | 2026-10-07 | `shadcn` package as a devDependency                                                             | Only its `tailwind.css` (custom variants, utilities) is consumed, at build time                  |
+| 8   | 2026-10-07 | `suppressHydrationWarning` on `<html>` and `<body>` only                                        | Browser extensions inject attributes there; it doesn't affect children                           |
+| 9   | 2026-10-07 | No AI dependency; intelligence behind interfaces                                                | Product requirement; AI optional in Phase 9                                                      |
+| 10  | _proposed_ | Drizzle ORM for Postgres                                                                        | SQL-close, light, portable, no binary engine; good fit for FTS/trigram/pgvector                  |
+| 11  | 2026-10-07 | Design language v0.2: serif reserved for language content; Inter 600 for all interface headings | Owner decision after reference study; serif becomes a reliable "this is English to study" signal |
+| 12  | 2026-10-07 | Radius scale 4/6/8/12/16; flat resting surfaces; control-height and section-rhythm tokens       | Translated from the reference's sober geometry, flat cards and two-density sizing                |
+| 13  | 2026-10-07 | Added shadcn `table` primitive                                                                  | Needed for the language bank and mistakes views; restyled to the table spec                      |

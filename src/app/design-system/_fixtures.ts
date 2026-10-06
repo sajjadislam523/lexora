@@ -94,3 +94,41 @@ export const SAMPLE_QUERIES = [
   "I want to disagree politely",
   "natural speaking alternative to furthermore",
 ];
+
+export const SAMPLE_BANK: {
+  term: string;
+  category: SampleResult["category"];
+  status: "new" | "learning" | "due" | "mastered";
+  nextReview: string;
+  accuracy: number;
+}[] = [
+  {
+    term: "responsible for",
+    category: "preposition",
+    status: "due",
+    nextReview: "Today",
+    accuracy: 62,
+  },
+  {
+    term: "pose a threat",
+    category: "collocation",
+    status: "learning",
+    nextReview: "In 2 days",
+    accuracy: 78,
+  },
+  {
+    term: "In contrast,",
+    category: "linker",
+    status: "mastered",
+    nextReview: "In 24 days",
+    accuracy: 96,
+  },
+  { term: "significant", category: "synonym", status: "new", nextReview: "Tomorrow", accuracy: 0 },
+  {
+    term: "Not only … but also …",
+    category: "pattern",
+    status: "learning",
+    nextReview: "In 4 days",
+    accuracy: 71,
+  },
+];

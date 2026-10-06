@@ -3,83 +3,111 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 
-import { FoundationsSection } from "./_sections/foundations";
-import { PatternsSection } from "./_sections/patterns";
-import { PrimitivesSection } from "./_sections/primitives";
+import { ColorSection } from "./_sections/color";
+import { ComponentsSection } from "./_sections/components";
+import { CompositionSection } from "./_sections/composition";
+import { LayoutSection } from "./_sections/layout";
+import { PaletteProvider } from "./_sections/palette";
+import { PrinciplesSection } from "./_sections/principles";
 import { StatesSection } from "./_sections/states";
+import { TypographySection } from "./_sections/typography";
 
 export const metadata: Metadata = {
   title: "Design system",
-  description: "Lexora design tokens, primitives and patterns.",
+  description: "Lexora design language: principles, tokens, components and states.",
 };
 
 const SECTIONS = [
-  { id: "foundations", label: "Tokens" },
-  { id: "primitives", label: "Primitives" },
-  { id: "patterns", label: "Lexora patterns" },
-  { id: "states", label: "States & feedback" },
+  { id: "principles", label: "Principles" },
+  { id: "colour", label: "Colour" },
+  { id: "typography", label: "Typography" },
+  { id: "layout", label: "Space & shape" },
+  { id: "components", label: "Components" },
+  { id: "states", label: "States" },
+  { id: "composition", label: "Composition" },
 ];
 
 /**
- * Visual playground for the design system. A development surface, not a product page:
- * everything here is static sample content. The spec lives in docs/DESIGN.md.
+ * Visual review surface for the design system. A development page, not a product page:
+ * all content is static sample data. The written specification is docs/DESIGN.md.
  */
 export default function DesignSystemPage() {
   return (
-    <div className="min-h-dvh">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/95 supports-backdrop-filter:bg-background/85 supports-backdrop-filter:backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-page items-center gap-3 px-4 sm:px-6">
-          <Link href="/" className="type-subheading text-foreground hover:text-ink">
-            Lexora
-          </Link>
-          <span className="text-subtle-foreground" aria-hidden>
-            /
-          </span>
-          <span className="type-label text-muted-foreground">Design system</span>
-          <Badge variant="outline" className="ml-auto">
-            Prototype · static
-          </Badge>
-        </div>
-      </header>
-
-      <div className="mx-auto flex max-w-page gap-12 px-4 py-10 sm:px-6 sm:py-14">
-        <nav aria-label="Design system sections" className="hidden w-44 shrink-0 lg:block">
-          <ul className="sticky top-24 space-y-0.5">
-            {SECTIONS.map((section) => (
-              <li key={section.id}>
-                <a
-                  href={`#${section.id}`}
-                  className="block rounded-md px-2 py-1.5 type-label text-muted-foreground transition-colors duration-120 hover:bg-accent hover:text-foreground"
-                >
-                  {section.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <main className="min-w-0 flex-1">
-          <div className="border-b border-border pb-10">
-            <p className="type-overline text-subtle-foreground">Phase 0 · Foundation</p>
-            <h1 className="mt-2 type-title text-foreground sm:type-display">
-              Lexora design system
-            </h1>
-            <p className="mt-3 max-w-reading type-reading text-muted-foreground">
-              Warm, editorial and calm. This page renders the real tokens and components so changes
-              can be reviewed in one place. The written specification is{" "}
-              <code className="rounded-xs bg-muted px-1 py-0.5 type-mono text-foreground">
-                docs/DESIGN.md
-              </code>
-              .
-            </p>
+    <PaletteProvider>
+      <div className="min-h-dvh">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/95 supports-backdrop-filter:bg-background/85 supports-backdrop-filter:backdrop-blur-sm">
+          <div className="mx-auto flex h-12 max-w-page items-center gap-3 px-4 sm:px-6">
+            <Link href="/" className="type-label text-foreground hover:text-ink">
+              Lexora
+            </Link>
+            <span className="text-subtle-foreground" aria-hidden>
+              /
+            </span>
+            <span className="type-label text-muted-foreground">Design system</span>
+            <Badge variant="outline" className="ml-auto">
+              v0.2 · Prototype · static
+            </Badge>
           </div>
+          <nav
+            aria-label="Design system sections (mobile)"
+            className="border-t border-border-subtle lg:hidden"
+          >
+            <ul className="mx-auto no-scrollbar flex max-w-page gap-1 overflow-x-auto px-4 py-2 sm:px-6">
+              {SECTIONS.map((section) => (
+                <li key={section.id} className="shrink-0">
+                  <a
+                    href={`#${section.id}`}
+                    className="block rounded-full px-3 py-1 type-caption text-muted-foreground hover:bg-accent hover:text-foreground"
+                  >
+                    {section.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </header>
 
-          <FoundationsSection />
-          <PrimitivesSection />
-          <PatternsSection />
-          <StatesSection />
-        </main>
+        <div className="mx-auto flex max-w-page gap-12 px-4 py-10 sm:px-6 lg:py-section">
+          <nav aria-label="Design system sections" className="hidden w-40 shrink-0 lg:block">
+            <ul className="sticky top-20 space-y-0.5">
+              {SECTIONS.map((section) => (
+                <li key={section.id}>
+                  <a
+                    href={`#${section.id}`}
+                    className="flex h-control-nav items-center rounded-sm px-2 type-label text-muted-foreground transition-colors duration-120 hover:bg-accent hover:text-foreground"
+                  >
+                    {section.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <main className="min-w-0 flex-1">
+            <div className="mb-section-sm">
+              <Badge variant="ink">Design language v0.2</Badge>
+              <h1 className="mt-4 type-display text-foreground">Lexora design system</h1>
+              <p className="mt-4 max-w-prose type-reading text-muted-foreground">
+                Calm, warm and precise. Interface in Inter, language in Newsreader, colour only
+                where it means something. This page renders the real tokens and components; the
+                written specification is{" "}
+                <code className="rounded-xs bg-muted px-1 py-0.5 type-mono text-foreground">
+                  docs/DESIGN.md
+                </code>
+                .
+              </p>
+            </div>
+
+            <PrinciplesSection />
+            <ColorSection />
+            <TypographySection />
+            <LayoutSection />
+            <ComponentsSection />
+            <StatesSection />
+            <CompositionSection />
+          </main>
+        </div>
       </div>
-    </div>
+    </PaletteProvider>
   );
 }

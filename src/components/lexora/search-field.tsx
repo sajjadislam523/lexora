@@ -30,8 +30,8 @@ export function SearchField({
       data-slot="search-field"
       data-size={size}
       className={cn(
-        "group/search relative flex w-full items-center rounded-lg border border-input bg-card shadow-xs transition-[border-color,box-shadow] duration-120 ease-standard focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/20 hover:border-foreground/50",
-        size === "lg" ? "h-14 rounded-xl px-4 shadow-sm" : "h-9 px-3",
+        "group/search relative flex w-full items-center rounded-md border border-input bg-card transition-[border-color,box-shadow] duration-120 ease-standard focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/20 hover:border-foreground/50",
+        size === "lg" ? "h-control-hero rounded-xl px-4 shadow-sm" : "h-control-input px-3",
         className,
       )}
     >

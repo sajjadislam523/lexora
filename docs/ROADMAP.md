@@ -2,13 +2,13 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current phase: Phase 0 — Foundation (complete, awaiting review)**
+**Current phase: Phase 1 — Visual Prototype (in progress)** · Phase 0 approved and tagged `v0.0.0`
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
 ---
 
-## Phase 0 — Foundation ✅ (awaiting review)
+## Phase 0 — Foundation ✅
 
 **Goal:** a maintainable base with documentation, design tokens, and a component foundation.
 
@@ -27,10 +27,11 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ---
 
-## Phase 1 — Visual Prototype 🔜
+## Phase 1 — Visual Prototype 🔜 (in progress)
 
 **Goal:** see and feel the product end-to-end with static data, before building any backend.
 
+- [x] Design language v0.2 from the reference study: principles translated, tokens and type roles revised (serif = language only), new components (FilterChip, StatusBadge, SearchTrigger, Tile, Table), `/design-system` rebuilt for review — _awaiting owner review_
 - App shell: sidebar (collapsible; a sheet on mobile), top bar, global command palette
 - Navigation between mock pages under an `(app)` route group
 - Dashboard mock: items due, weak areas, recent searches (static)
