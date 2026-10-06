@@ -2,101 +2,143 @@
  * Lexora type roles. Use these instead of composing font-size + weight + tracking ad hoc.
  * Documented in docs/DESIGN.md → Typography.
  *
- * Serif (Newsreader) = editorial voice: page titles, the term being studied, example sentences.
- * Sans (Inter)       = interface voice: everything you operate.
- * Mono (JetBrains)   = keys, counts, metadata.
+ * The rule: hierarchy comes from WEIGHT and size, not from font changes.
+ *   Inter (sans)        = every interface surface, including all headings (600).
+ *   Newsreader (serif)  = ONLY English being learned: terms, example sentences.
+ *   JetBrains Mono      = structure: patterns, keys, counts.
+ * When a learner sees serif, they are looking at language to study.
  */
 
+/* ── Interface headings (sans, 600) ───────────────────────────── */
+
+/* Onboarding / marketing hero. Fluid: 36px → 52px. */
 @utility type-display {
+  font-family: var(--font-sans);
+  font-size: clamp(2.25rem, 1.6rem + 2.2vw, 3.25rem);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* Page title (one per page). Fluid: 26px → 32px. */
+@utility type-title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.625rem, 1.4rem + 0.9vw, 2rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Section heading. 20px. */
+@utility type-heading {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Card, group and dialog headings. 16px. */
+@utility type-subheading {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* ── Language (serif) ─────────────────────────────────────────── */
+
+/* A language item in a list or card: "responsible for". 22px. */
+@utility type-term {
   font-family: var(--font-serif);
-  font-size: 2.25rem; /* 36px */
-  line-height: 2.75rem;
+  font-size: 1.375rem;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+/* The term heading of a language detail page. Fluid: 32px → 44px. */
+@utility type-term-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+  line-height: 1.1;
   font-weight: 500;
   letter-spacing: -0.015em;
 }
 
-@utility type-title {
+/* A term in dense contexts: tables, palette results, chips. 16px. */
+@utility type-term-sm {
   font-family: var(--font-serif);
-  font-size: 1.75rem; /* 28px */
-  line-height: 2.25rem;
+  font-size: 1rem;
+  line-height: 1.4;
   font-weight: 500;
-  letter-spacing: -0.01em;
 }
 
-@utility type-heading {
-  font-family: var(--font-sans);
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.625rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-@utility type-subheading {
-  font-family: var(--font-sans);
-  font-size: 0.9375rem; /* 15px */
-  line-height: 1.375rem;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-}
-
-/* The term a learner is looking at: "responsible for", "furthermore". */
-@utility type-term {
-  font-family: var(--font-serif);
-  font-size: 1.25rem; /* 20px */
-  line-height: 1.75rem;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-}
-
-@utility type-body {
-  font-family: var(--font-sans);
-  font-size: 0.875rem; /* 14px — interface default */
-  line-height: 1.375rem;
-  font-weight: 400;
-}
-
-@utility type-reading {
-  font-family: var(--font-sans);
-  font-size: 1rem; /* 16px — explanations and long text */
-  line-height: 1.625rem;
-  font-weight: 400;
-}
-
-/* Example sentences: editorial, slightly larger, comfortable measure. */
+/* Example sentences. 18px, generous leading. */
 @utility type-example {
   font-family: var(--font-serif);
-  font-size: 1.0625rem; /* 17px */
-  line-height: 1.625rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
   font-weight: 400;
 }
 
+/* ── Text (sans) ──────────────────────────────────────────────── */
+
+/* Explanations, descriptions, long text. 16px. */
+@utility type-reading {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Interface default (set on <body>). 14px. */
+@utility type-body {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+/* Labels, nav, button text. 14px medium. */
 @utility type-label {
   font-family: var(--font-sans);
-  font-size: 0.8125rem; /* 13px */
-  line-height: 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
   font-weight: 500;
 }
 
+/* Metadata, hints, secondary lines. 13px. */
 @utility type-caption {
   font-family: var(--font-sans);
-  font-size: 0.75rem; /* 12px */
-  line-height: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
   font-weight: 400;
 }
 
-/* Section eyebrows: "SYNONYMS", "IN WRITING". Use sparingly. */
+/* Badges, counts, compact meta. 12px medium. */
+@utility type-micro {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+/* Eyebrows and table headers: "SYNONYMS", "IN WRITING". Use sparingly. */
 @utility type-overline {
   font-family: var(--font-sans);
-  font-size: 0.6875rem; /* 11px */
+  font-size: 0.6875rem;
   line-height: 1rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
+/* Patterns and structure: "responsible for + noun / -ing". 13px. */
 @utility type-mono {
   font-family: var(--font-mono);
-  font-size: 0.75rem; /* 12px */
-  line-height: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
   font-weight: 400;
 }

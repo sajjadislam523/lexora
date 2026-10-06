@@ -28,6 +28,7 @@
   --muted: #f3f1ec; /* recessed surface: wells, code, tracks */
   --muted-foreground: #5f5c55; /* secondary text */
   --subtle-foreground: #6b675f; /* tertiary text: metadata, placeholders */
+  --disabled-foreground: #a39e94; /* disabled control text (exempt from contrast minimums) */
   --accent: #efece6; /* hover / selected row surface */
   --accent-foreground: #1f1e1b;
   --secondary: #f3f1ec;
@@ -35,7 +36,8 @@
   --sidebar: #f6f4f0; /* sidebar surface, a half-step below canvas */
 
   /* ── Lines ───────────────────────────────────────────────────── */
-  --border: #e7e4dd; /* default hairline: dividers, card edges */
+  --border-subtle: #efece6; /* inner hairline: table rows, dividers inside a card */
+  --border: #e7e4dd; /* default hairline: card edges, section dividers */
   --border-strong: #d5d0c6; /* emphasized hairline: hover edges, table heads */
   --input: #908b82; /* form-control edge (≥3:1 against canvas and surface) */
 
@@ -47,6 +49,12 @@
   --ink-soft: #eceef8; /* tinted ink surface */
   --ink-strong: #3a4596; /* ink text on ink-soft */
   --ring: #4450a8;
+
+  /* ── Emphasis ────────────────────────────────────────────────── */
+  /* The highlighter: Lexora's single emphasis tint. Marks the target term in examples
+     and, at most once per view, an emphasis panel. Never a category, never feedback. */
+  --highlight: #f9eaa0;
+  --highlight-foreground: #1f1e1b;
 
   /* ── Feedback ────────────────────────────────────────────────── */
   --destructive: #b13a30;
@@ -94,7 +102,7 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
-  --font-heading: var(--font-serif);
+  --font-heading: var(--font-sans); /* serif is reserved for language content */
 
   --text-2xs: 0.6875rem; /* 11px */
   --text-2xs--line-height: 1rem;
@@ -109,12 +117,14 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-subtle-foreground: var(--subtle-foreground);
+  --color-disabled-foreground: var(--disabled-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-sidebar: var(--sidebar);
 
+  --color-border-subtle: var(--border-subtle);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-input: var(--input);
@@ -126,6 +136,9 @@
   --color-ink-soft: var(--ink-soft);
   --color-ink-strong: var(--ink-strong);
   --color-ring: var(--ring);
+
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
 
   --color-destructive: var(--destructive);
   --color-success: var(--success);
@@ -159,15 +172,15 @@
   --color-cat-expression-soft: var(--cat-expression-soft);
   --color-cat-expression-line: var(--cat-expression-line);
 
-  /* Radius — restrained. Pills only for avatars and toggles. */
-  --radius-xs: 3px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
+  /* Radius — rectangular, never bubbly. rounded-full only for filter chips, status pills, avatars. */
+  --radius-xs: 4px; /* tags, kbd, inline marks */
+  --radius-sm: 6px; /* nav items, small controls, menu items */
+  --radius-md: 8px; /* buttons, inputs, menus */
+  --radius-lg: 12px; /* cards, tiles, panels */
+  --radius-xl: 16px; /* dialogs, command palette, hero search */
 
-  /* Shadows — warm-tinted, low. Borders do most of the separating work. */
+  /* Elevation — surfaces rest flat (border only). Shadows mean "lifted":
+     xs = primary button, sm = hovered card, md = menus/tooltips, lg = dialogs/palette. */
   --shadow-xs: 0 1px 2px 0 rgb(31 30 27 / 0.05);
   --shadow-sm: 0 1px 3px 0 rgb(31 30 27 / 0.06), 0 1px 2px -1px rgb(31 30 27 / 0.05);
   --shadow-md: 0 4px 12px -4px rgb(31 30 27 / 0.1), 0 2px 4px -2px rgb(31 30 27 / 0.05);
@@ -180,4 +193,18 @@
   --container-reading: 42rem; /* 672px: long-form text, result lists */
   --container-page: 72rem; /* 1152px: standard page content */
   --spacing-sidebar: 15.5rem; /* 248px: expanded sidebar */
+
+  /* Section rhythm — vertical space between page regions */
+  --spacing-section-sm: 3rem; /* 48px: between groups inside a page */
+  --spacing-section: 4rem; /* 64px: between page sections */
+  --spacing-section-lg: 6rem; /* 96px: marketing / onboarding bands */
+
+  /* Control heights — two densities (compact chrome, comfortable forms) */
+  --spacing-control-xs: 1.5rem; /* 24px: inline actions */
+  --spacing-control-sm: 1.75rem; /* 28px: toolbars, compact chrome */
+  --spacing-control-nav: 1.875rem; /* 30px: sidebar rows */
+  --spacing-control-md: 2.25rem; /* 36px: default buttons */
+  --spacing-control-input: 2.5rem; /* 40px: default inputs */
+  --spacing-control-lg: 2.75rem; /* 44px: forms, mobile, primary CTAs */
+  --spacing-control-hero: 3.5rem; /* 56px: Finder hero search */
 }
