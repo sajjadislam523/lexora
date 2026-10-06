@@ -2,7 +2,7 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current phase: Phase 1 — Visual Prototype (in progress)** · Phase 0 approved and tagged `v0.0.0`
+**Current phase: Phase 1 — Visual Prototype (complete, awaiting review)** · Phase 0 approved and tagged `v0.0.0`
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
@@ -31,15 +31,15 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 **Goal:** see and feel the product end-to-end with static data, before building any backend.
 
-- [x] Design language v0.2 from the reference study: principles translated, tokens and type roles revised (serif = language only), new components (FilterChip, StatusBadge, SearchTrigger, Tile, Table), `/design-system` rebuilt for review — _awaiting owner review_
-- [x] App shell: sidebar (collapsible to an icon rail; a sheet on mobile), top bar, global command palette, skip link — _awaiting owner review_
+- [x] Design language v0.2 from the reference study: principles translated, tokens and type roles revised (serif = language only), new components (FilterChip, StatusBadge, SearchTrigger, Tile, Table), `/design-system` rebuilt for review
+- [x] App shell: sidebar (collapsible to an icon rail; a sheet on mobile), top bar, global command palette, skip link
 - [x] Navigation between pages under an `(app)` route group, with honest placeholders that name the delivering phase
-- Dashboard mock: items due, weak areas, recent searches (static)
-- Language Finder mock: hero search, sample result groups by category, filters UI (skill, register, category)
-- Language detail mock: overview, examples, collocations, mistakes, alternatives
-- Practice UI mock: one exercise flow (multiple choice and fill-in-the-blank) with feedback states
-- Responsive behaviour across mobile, tablet, and desktop
-- Every mock page visibly marked as a prototype; no fake persistence
+- [x] Dashboard: today's focus, needs attention, continue learning, recent mistakes, quick actions (sample learner data)
+- [x] Language Finder: intent search with modes, example searches, fit guide, result cards, context tool, writing vs speaking, honest no-match state
+- [x] Language detail (`/language/[slug]`, 22 sample items): meaning, context, warnings, collocations, examples, skills, mistakes, related language
+- [x] Practice: five retrieval modes (complete the sentence, natural expression, typed preposition, replace repetition, collocation) with immediate feedback and a summary
+- [x] Responsive behaviour verified at 375 / 768 / 1024 / 1440 px
+- [x] Every prototype screen marked as such; saving is session-only and labelled; no persistence, backend or AI
 
 **Out of scope:** database, auth, real search, real practice logic.
 **Exit criteria:** owner approves the look, the flow, and the information architecture.

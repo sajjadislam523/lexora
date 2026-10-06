@@ -2,7 +2,7 @@
 
 > The visual source of truth. Values live in `src/styles/tokens.css` and `src/styles/typography.css`; this document explains them. The live reference is the `/design-system` route.
 >
-> **Status:** v0.2, the design language derived from the reference study (Phase 1). Sections marked _Planned_ describe intent; they are specified fully when built.
+> **Status:** v0.3 — design language v0.2 plus the learning components and screen patterns of the Phase 1 prototype. Sections marked _Planned_ describe intent; they are specified fully when built.
 
 ---
 
@@ -350,12 +350,13 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 
 **Rectangles say what something is. Pills say where you are with it.**
 
-| Component               | Shape              | Use                                                                                |
-| ----------------------- | ------------------ | ---------------------------------------------------------------------------------- |
-| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                           |
-| `lexora/tag-badge`      | Rectangle, neutral | Register and skill context                                                         |
-| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success) |
-| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)           |
+| Component               | Shape              | Use                                                                                                                   |
+| ----------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                              |
+| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                                      |
+| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                                    |
+| `lexora/fit-badge`      | Pill               | How well a choice fits a sentence: Best fit (success), Natural (ink), Possible (warning), Different meaning (neutral) |
+| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                              |
 
 All badges are 20px tall with `type-micro` text.
 
@@ -374,12 +375,15 @@ The core unit of the Finder. White, flat, 1px `border`, `rounded-lg`. Hover: `bo
 1. `CategoryBadge`
 2. **Term** in `type-term` (serif)
 3. **Meaning**, one line, `type-body` muted
-4. **Pattern** (optional): mono chip on `bg-muted`
-5. **Example** (optional): serif blockquote with a left rule; the target term is marked with the **highlighter**
-6. **Note** (optional): caption, for common mistakes, strength or register warnings
-7. **Tags**: register and skill
+4. **Best when …** (optional): lightbulb in ink plus one line of context. This is the line that makes near-synonyms distinguishable.
+5. **Pattern** (optional): mono chip on `bg-muted`, shown when there are no collocations
+6. **Collocations** (optional): up to four quiet chips (`border-subtle` on canvas, `type-caption`)
+7. **Example** (optional): serif blockquote with a left rule; the target term is marked with the **highlighter**
+8. **Note** (optional): caption, for common mistakes or register warnings
+9. **Footer**: register and skill tags on the left, `StrengthMeter` on the right
 
-Save is a ghost icon button (bookmark) with `aria-pressed`; saved = ink with a filled-check icon. It is hidden when no handler is passed.
+- **Selectable:** with `href`, the term becomes a stretched link, so the whole card opens the detail page. Focus shows a ring on the card.
+- **Save:** a ghost icon button (bookmark) with `aria-pressed`. It sits above the stretched link (`z-10`), so it stays separately clickable and focusable. Saved = ink with a filled-check icon. It is hidden when no handler is passed.
 
 ### 9.9 Table ✅ `ui/table`
 
@@ -409,9 +413,10 @@ The generic container: white, flat, `rounded-lg`, 20px padding, with an optional
   - 48px, sticky, `border` bottom, canvas at 95% with a light blur.
   - Left: the menu button (below `lg`), then "Lexora / Page" (the caption is hidden on small screens).
   - Right: a "Prototype" badge while the app is a prototype, plus a search button below `lg`.
-- **Command palette** (`shell/command-palette`): global ⌘K / Ctrl+K. "Go to" lists every destination and navigates for real; "Actions" toggles the sidebar. Language search is added with the Finder (Phase 4).
+- **Command palette** (`shell/command-palette`): global ⌘K / Ctrl+K. "Go to" lists every destination and navigates for real. "Example searches" open the Finder, "Sample language" opens detail pages, and "Actions" toggles the sidebar. Real language search arrives in Phase 4.
 - **Page frame** (`shell/page-container`): `max-w-page`, gutters 16 / 24 / 40px, vertical padding 32 → 48px.
-- **Placeholders** (`shell/route-placeholder`): pages not built yet show the page header with a "Not built yet" badge and an empty state naming the phase that delivers them.
+- **Placeholders** (`shell/route-placeholder`): pages not built yet show the page header with a "Not built yet" badge, a dashed "What this screen will do" panel (status plus three planned capabilities), and a "Meanwhile" list linking to built screens.
+- **Breadcrumb:** sub-routes show their parent, e.g. "Language Finder / significant" on a detail page.
 - **Skip link:** the first focusable element on every app page. It jumps to `#main`.
 
 ### 9.13 Overlays ✅ `ui/tooltip`, `ui/dropdown-menu`, `ui/dialog`
@@ -426,20 +431,87 @@ The generic container: white, flat, `rounded-lg`, 20px padding, with an optional
 - **Empty state:** a dashed `border-strong` frame, an icon tile, a title, one sentence and usually one action.
 - **Skeleton:** `bg-muted` blocks that mirror the final layout, with `role="status"`. No spinners for content.
 
-### 9.15 Planned
+### 9.15 Learning patterns ✅
 
-- **Practice card** 🔜 _(Phase 6)_: a focused, single-task card at reading width.
-  - The prompt is in serif.
-  - Answers are full-width outline rows. Selected = ink edge + `ink-soft`; correct = success; incorrect = danger, with the right answer revealed.
-  - A thin progress track runs along the top.
-  - Keyboard: 1–4 to choose, Enter to continue.
-- **Language detail** 🔜 _(Phase 1 mock)_: `type-term-display` heading, then underline tabs (Overview · Examples · Collocations · Mistakes · Practice). Relationship rows use category dots.
+Components for language and practice. They are presentational and take data as props.
+
+| Component                 | Spec                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lexora/highlighted-text` | Marks the first occurrence of the target term with the **highlighter** (`bg-highlight`, `rounded-xs`). Use it wherever language is shown in context.                                                                                                                                                                                                                                                                                                                                           |
+| `lexora/gap-sentence`     | A serif sentence (`type-example`) with gap slots. An empty slot is a 2px `border-input` underline with a visually hidden "blank"; a filled slot is the highlighter, or `danger-soft` with a strike-through for a wrong attempt. Usually sits in a `bg-muted` well.                                                                                                                                                                                                                             |
+| `lexora/choice-option`    | A full-width answer row, at least 44px, `rounded-md`, with an optional key-cap shortcut (hidden below `sm`). States: idle (`border-strong`) · selected (ink edge + `ink-soft`) · correct (success edge and fill + check) · acceptable (ink + check) · incorrect (danger edge and fill + cross) · revealed (dashed success edge + check) · dimmed. The verdict is also given in visually hidden text. `language` renders the label in serif; `pressed` gives toggle semantics for multi-select. |
+| `lexora/fit-badge`        | See §9.6. Used by the Finder context tool.                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `lexora/strength-meter`   | Three 12×6px segments (`ink` filled, `border-strong` empty) plus "Strength: Moderate / High / Very high". `role="img"` with the label as its accessible name. Strength is relative to the plain word (e.g. _important_).                                                                                                                                                                                                                                                                       |
+| `lexora/progress-track`   | A 4px `bg-muted` track with an `ink` fill. `role="progressbar"` with values and "n of m" text. Never shows percentages or rewards. On tinted panels, pass `trackClassName`.                                                                                                                                                                                                                                                                                                                    |
+| `lexora/language-row`     | Compact list link: `type-term-sm` term, category dot, one usage line (`type-caption`, a context line rather than a definition), optional `StatusBadge` (hidden below `sm`), chevron. Hover `bg-accent/60`. Group rows inside a bordered card with `p-1`.                                                                                                                                                                                                                                       |
+| `lexora/mistake-row`      | A correction, not a failure: overline type label; the old form in serif, struck through in muted text; an arrow; the better form in full colour; one line of why; an optional outline `sm` action. The struck text is announced as "Instead of …, use …".                                                                                                                                                                                                                                      |
+| `lexora/skill-comparison` | The same idea in writing and in speaking. Two bordered panels side by side from `sm`, each with a skill tag and a serif example with the highlighter. Below `sm` it becomes a segmented switch, so the pair stays comparable without a long stack. An optional note follows in caption.                                                                                                                                                                                                        |
+
+### 9.16 Planned
+
 - **Writing Lab annotations** 🔜 _(Phase 7)_: wavy warning underline = repetition; solid danger = preposition or collocation error; dotted info = suggestion. Each opens a popover with a one-click apply.
-- **Toasts** 🔜: bottom-right on desktop, at most one at a time, 4s, with Undo when the action can be reversed.
+- **Toasts** 🔜: bottom-right on desktop, at most one at a time, 4s, with Undo when the action can be reversed. Saving will confirm with a toast once persistence exists.
 
 ---
 
-## 10. States checklist
+## 10. Screen patterns (Phase 1 prototype)
+
+The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and the components above. Every prototype screen says what is sample data and what isn't stored.
+
+### 10.1 Dashboard (`/home`)
+
+- **Header:** a sample-data badge, "Welcome back", this week's focus, then _Find language_ (outline) and _Start today's practice_ (primary).
+- **Today's focus:** the single **highlighter panel** on the page. It holds the review count and time, a `ProgressTrack`, _Continue review_, and up to three "needs attention" rows (category dot + reason) on `bg-card/70`.
+- **Continue learning:** `LanguageRow`s with a usage line, not definitions.
+- **Recent mistakes:** `MistakeRow`s, each with a next step (practise, or find alternatives).
+- **Quick actions:** a compact link list in the side column from `lg`.
+- **No metric tiles, charts or streaks.**
+
+### 10.2 Language Finder (`/finder`)
+
+- **Search:** header, then the hero `SearchField` inside a `form role="search"`. The query lives in the URL (`?q=`). `/` focuses the field. On mobile a _Find_ button sits inside the field.
+- **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They are intents, so they have no category dots. Selecting one changes the placeholder and the example searches; a recognised query auto-selects its mode. Below `sm` they form one horizontally scrollable row.
+- **Example searches:** quiet `bg-muted` pills.
+- **Prototype caption:** always visible.
+- **Results:**
+  - an "Understood as" heading with mode and result count
+  - a **fit guide** ("Which one fits?": term → when, plus a note on why they aren't interchangeable), in a sticky right column at `xl` and above the cards below `xl`
+  - result cards
+  - a `SkillComparison` when register matters
+  - related searches
+- **Context tool:** a `GapSentence` in a muted well. Each option fills the gap, including the preposition it brings, and gets a `FitBadge`. A note and a link to the item follow. This is exploration, not a test.
+- **No match:** a dashed empty state that says the prototype only knows the example searches, and offers them again.
+
+### 10.3 Practice (`/practice`)
+
+- **Intro:** the five modes as numbered rows, each with a one-line purpose. Choosing a row jumps straight to that mode.
+- **Session:**
+  - one task at a time at `max-w-reading`
+  - "Question n of 5 · mode" with a `ProgressTrack` above, _End session_ on the right
+  - the prompt as the card heading, which receives focus on each new question
+- **Retrieval first:** prepositions are **typed**, not chosen. Multi-select is used for collocations.
+- **Feedback:** immediate, in a `Callout` (Correct · Also natural · Not quite). It explains why, reveals the best answer and links to the item. Answered options lock, and focus moves to _Continue_.
+- **Keyboard:** number keys choose, Enter checks or continues.
+- **Summary:** "You retrieved n of 5", a calm per-mode list, and _Worth revisiting_ as `LanguageRow`s.
+- **No XP, streaks, hearts or confetti.**
+
+### 10.4 Language detail (`/language/[slug]`)
+
+- **Header:** back link; category and status; the term in `type-term-display` with IPA (only where verified) and part of speech; _Save to language bank_ (outline → secondary "Saved" in ink) and _Practise this_; an honest caption about session-only saving.
+- **At a glance:** part of speech, register, level (CEFR), strength, skills. A sticky card at `xl`; a compact two- or three-column strip below `xl`.
+- **Sections, divided by hairlines, in this order:**
+  1. Meaning (+ pattern)
+  2. When it works best (muted well with lightbulb)
+  3. Don't use it when… (warning callout)
+  4. Common collocations (2-column grid of phrase + note)
+  5. Examples (segmented All / Writing / Speaking when both exist)
+  6. In writing and speaking (`SkillComparison`)
+  7. Common mistakes (`MistakeRow`s)
+  8. Related language (relation → term, linked when it exists)
+
+---
+
+## 11. States checklist
 
 Every data-backed view ships with:
 
@@ -451,7 +523,7 @@ Every data-backed view ships with:
 
 ---
 
-## 11. Accessibility
+## 12. Accessibility
 
 - WCAG 2.1 AA contrast minimum; the playground verifies it live for every token pair.
 - Every interactive element has a **visible focus** state (ink ring).
@@ -463,7 +535,7 @@ Every data-backed view ships with:
 
 ---
 
-## 12. Changing the system
+## 13. Changing the system
 
 1. Propose the change here (a token or component spec).
 2. Implement it in `tokens.css` / `typography.css` / the component.
