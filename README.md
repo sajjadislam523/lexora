@@ -1,34 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lexora
 
-## Getting Started
+**Find the right English. Use it naturally. Remember it when it matters.**
 
-First, run the development server:
+Lexora is a language-retrieval workspace for IELTS Academic candidates. It helps them find the right word, synonym, preposition, linker, collocation, or sentence pattern for what they want to say, then practise it until it comes naturally.
+
+> Status: **Phase 0 — Foundation.** Only the technical and design foundation exists. See [docs/ROADMAP.md](docs/ROADMAP.md).
+
+## Getting started
+
+Requirements: Node.js 20.9+ (developed on Node 26) and pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- <http://localhost:3000> is the placeholder home.
+- <http://localhost:3000/design-system> is the design system playground.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-## Learn More
+| Command                             | Purpose                                |
+| ----------------------------------- | -------------------------------------- |
+| `pnpm dev`                          | Development server (Turbopack)         |
+| `pnpm build` / `pnpm start`         | Production build / serve               |
+| `pnpm lint`                         | ESLint                                 |
+| `pnpm typecheck`                    | Route type generation + TypeScript     |
+| `pnpm format` / `pnpm format:check` | Prettier (with Tailwind class sorting) |
 
-To learn more about Next.js, take a look at the following resources:
+## Documentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [docs/ROADMAP.md](docs/ROADMAP.md): phases and current status
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): stack, boundaries, data model, intelligence layer
+- [docs/DESIGN.md](docs/DESIGN.md): the design system (visual source of truth)
+- [docs/UX_PRINCIPLES.md](docs/UX_PRINCIPLES.md): product and interaction principles
+- [docs/WORKFLOW.md](docs/WORKFLOW.md): branching, commits, and phase reviews
+- [CLAUDE.md](CLAUDE.md): working agreement for AI-assisted development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Principle
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The core product works **without any external AI API**. AI is an optional layer for later.
