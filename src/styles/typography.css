@@ -1,0 +1,102 @@
+/*
+ * Lexora type roles. Use these instead of composing font-size + weight + tracking ad hoc.
+ * Documented in docs/DESIGN.md → Typography.
+ *
+ * Serif (Newsreader) = editorial voice: page titles, the term being studied, example sentences.
+ * Sans (Inter)       = interface voice: everything you operate.
+ * Mono (JetBrains)   = keys, counts, metadata.
+ */
+
+@utility type-display {
+  font-family: var(--font-serif);
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.75rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+@utility type-title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem; /* 28px */
+  line-height: 2.25rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+@utility type-heading {
+  font-family: var(--font-sans);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@utility type-subheading {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* The term a learner is looking at: "responsible for", "furthermore". */
+@utility type-term {
+  font-family: var(--font-serif);
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+@utility type-body {
+  font-family: var(--font-sans);
+  font-size: 0.875rem; /* 14px — interface default */
+  line-height: 1.375rem;
+  font-weight: 400;
+}
+
+@utility type-reading {
+  font-family: var(--font-sans);
+  font-size: 1rem; /* 16px — explanations and long text */
+  line-height: 1.625rem;
+  font-weight: 400;
+}
+
+/* Example sentences: editorial, slightly larger, comfortable measure. */
+@utility type-example {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.625rem;
+  font-weight: 400;
+}
+
+@utility type-label {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.125rem;
+  font-weight: 500;
+}
+
+@utility type-caption {
+  font-family: var(--font-sans);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem;
+  font-weight: 400;
+}
+
+/* Section eyebrows: "SYNONYMS", "IN WRITING". Use sparingly. */
+@utility type-overline {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility type-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem;
+  font-weight: 400;
+}
