@@ -2,7 +2,11 @@
 
 import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
 
+import type { SafeUser } from "@/server/auth/session";
+
 type ShellState = {
+  /** The signed-in user (safe fields only). */
+  user: SafeUser;
   /** Desktop sidebar collapsed to an icon rail. */
   collapsed: boolean;
   toggleCollapsed: () => void;
@@ -26,7 +30,7 @@ export function useShell() {
  * UI state for the application shell. Lives in the (app) layout, so it survives client-side
  * navigation between pages. Nothing is persisted yet.
  */
-export function ShellProvider({ children }: { children: React.ReactNode }) {
+export function ShellProvider({ user, children }: { user: SafeUser; children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -51,6 +55,7 @@ export function ShellProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      user,
       collapsed,
       toggleCollapsed,
       mobileNavOpen,
@@ -58,7 +63,7 @@ export function ShellProvider({ children }: { children: React.ReactNode }) {
       paletteOpen,
       setPaletteOpen,
     }),
-    [collapsed, toggleCollapsed, mobileNavOpen, paletteOpen],
+    [user, collapsed, toggleCollapsed, mobileNavOpen, paletteOpen],
   );
 
   return <ShellContext value={value}>{children}</ShellContext>;

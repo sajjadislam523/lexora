@@ -1,17 +1,18 @@
 import { AppShell } from "@/components/shell/app-shell";
 import { SavedItemsProvider } from "@/demo/saved-items";
-import { requireSession } from "@/server/auth/session";
+import { requireSession, toSafeUser } from "@/server/auth/session";
 
 /**
  * Every app page renders inside the persistent shell, and only for a signed-in user.
  * requireSession() validates the session against the database (the proxy only checks a cookie).
+ * Only safe user fields cross into client components.
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  await requireSession();
+  const session = await requireSession();
 
   return (
     <SavedItemsProvider>
-      <AppShell>{children}</AppShell>
+      <AppShell user={toSafeUser(session.user)}>{children}</AppShell>
     </SavedItemsProvider>
   );
 }
