@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import { RoutePlaceholder } from "@/components/shell/route-placeholder";
+import { PracticeFromSearchParams } from "@/features/practice/practice-page";
+import { PracticeSession } from "@/features/practice/practice-session";
 
 export const metadata: Metadata = { title: "Practice" };
 
 export default function PracticePage() {
-  return <RoutePlaceholder id="practice" />;
+  return (
+    <Suspense fallback={<PracticeSession />}>
+      <PracticeFromSearchParams />
+    </Suspense>
+  );
 }

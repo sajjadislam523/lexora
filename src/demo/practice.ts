@@ -76,7 +76,7 @@ export const PRACTICE_SESSION: PracticeQuestion[] = [
         label: "devote",
         verdict: "acceptable",
         explanation:
-          "Also natural: “devote more resources to” works well. “Allocate” is slightly more precise.",
+          "“Devote more resources to” works well. “Allocate” is slightly more precise for budgets.",
       },
       {
         id: "distribute",
