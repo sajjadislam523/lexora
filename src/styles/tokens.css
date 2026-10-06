@@ -1,0 +1,183 @@
+/*
+ * Lexora design tokens — the single source of truth for visual values.
+ * Documented in docs/DESIGN.md. Change a value here AND in DESIGN.md together.
+ *
+ * Layering:
+ *   1. :root           raw CSS custom properties (the actual values)
+ *   2. @theme inline   maps them to Tailwind utilities (bg-*, text-*, border-*, shadow-*, …)
+ *
+ * Components must use the semantic utilities, never raw hex values.
+ * Every text/background pair below has been checked for WCAG AA contrast.
+ *
+ * The shadcn/ui variable names (background, card, primary, muted, accent, …) are kept so
+ * the primitives in src/components/ui work unchanged; Lexora-specific tokens are added
+ * alongside them. Note: shadcn's `accent` means "hover surface". Lexora's brand accent is `ink`.
+ *
+ * Theme: light only. Dark mode is deferred — because every component reads semantic
+ * tokens, dark mode will be a value swap under a `.dark` selector, not a component rewrite.
+ */
+
+:root {
+  /* ── Neutrals (warm) ─────────────────────────────────────────── */
+  --background: #faf9f6; /* canvas: the warm off-white page */
+  --foreground: #1f1e1b; /* charcoal: primary text */
+  --card: #ffffff; /* raised surface: cards, inputs */
+  --card-foreground: #1f1e1b;
+  --popover: #ffffff; /* floating surface: menus, dialogs, palette */
+  --popover-foreground: #1f1e1b;
+  --muted: #f3f1ec; /* recessed surface: wells, code, tracks */
+  --muted-foreground: #5f5c55; /* secondary text */
+  --subtle-foreground: #6b675f; /* tertiary text: metadata, placeholders */
+  --accent: #efece6; /* hover / selected row surface */
+  --accent-foreground: #1f1e1b;
+  --secondary: #f3f1ec;
+  --secondary-foreground: #1f1e1b;
+  --sidebar: #f6f4f0; /* sidebar surface, a half-step below canvas */
+
+  /* ── Lines ───────────────────────────────────────────────────── */
+  --border: #e7e4dd; /* default hairline: dividers, card edges */
+  --border-strong: #d5d0c6; /* emphasized hairline: hover edges, table heads */
+  --input: #908b82; /* form-control edge (≥3:1 against canvas and surface) */
+
+  /* ── Brand ───────────────────────────────────────────────────── */
+  --primary: #1f1e1b; /* primary action = charcoal */
+  --primary-foreground: #faf9f6;
+  --ink: #4450a8; /* Lexora ink: links, focus, selection, active state */
+  --ink-foreground: #ffffff;
+  --ink-soft: #eceef8; /* tinted ink surface */
+  --ink-strong: #3a4596; /* ink text on ink-soft */
+  --ring: #4450a8;
+
+  /* ── Feedback ────────────────────────────────────────────────── */
+  --destructive: #b13a30;
+  --success: #2d6a3e;
+  --success-soft: #e8f3ea;
+  --warning: #7f5409;
+  --warning-soft: #fbf1dc;
+  --danger: #a3322a;
+  --danger-soft: #fae9e7;
+  --info: #3a4596;
+  --info-soft: #eceef8;
+
+  /* ── Language categories ─────────────────────────────────────── */
+  /* Each category is a soft/fg/line triplet. Color identifies the KIND of language. */
+  --cat-vocabulary: #3c4757;
+  --cat-vocabulary-soft: #eceef1;
+  --cat-vocabulary-line: #d7dbe1;
+  --cat-synonym: #2e5b39;
+  --cat-synonym-soft: #eaf2ea;
+  --cat-synonym-line: #cfe0cf;
+  --cat-preposition: #235878;
+  --cat-preposition-soft: #e5eff6;
+  --cat-preposition-line: #c8dcea;
+  --cat-collocation: #5a3f8e;
+  --cat-collocation-soft: #efebf7;
+  --cat-collocation-line: #dad1ec;
+  --cat-linker: #73500f;
+  --cat-linker-soft: #f7eedb;
+  --cat-linker-line: #eadbb7;
+  --cat-pattern: #8c3345;
+  --cat-pattern-soft: #f8e8eb;
+  --cat-pattern-line: #ebcdd3;
+  --cat-expression: #874223;
+  --cat-expression-soft: #f8ebe3;
+  --cat-expression-line: #edd3c3;
+
+  /* ── Motion ──────────────────────────────────────────────────── */
+  --duration-fast: 120ms; /* hover, press, color */
+  --duration-base: 180ms; /* popovers, tabs, small reveals */
+  --duration-slow: 240ms; /* dialogs, panels */
+}
+
+@theme inline {
+  /* Typography — font families are injected by next/font in src/app/layout.tsx */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-serif);
+
+  --text-2xs: 0.6875rem; /* 11px */
+  --text-2xs--line-height: 1rem;
+
+  /* Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-sidebar: var(--sidebar);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-strong: var(--ink-strong);
+  --color-ring: var(--ring);
+
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --color-cat-vocabulary: var(--cat-vocabulary);
+  --color-cat-vocabulary-soft: var(--cat-vocabulary-soft);
+  --color-cat-vocabulary-line: var(--cat-vocabulary-line);
+  --color-cat-synonym: var(--cat-synonym);
+  --color-cat-synonym-soft: var(--cat-synonym-soft);
+  --color-cat-synonym-line: var(--cat-synonym-line);
+  --color-cat-preposition: var(--cat-preposition);
+  --color-cat-preposition-soft: var(--cat-preposition-soft);
+  --color-cat-preposition-line: var(--cat-preposition-line);
+  --color-cat-collocation: var(--cat-collocation);
+  --color-cat-collocation-soft: var(--cat-collocation-soft);
+  --color-cat-collocation-line: var(--cat-collocation-line);
+  --color-cat-linker: var(--cat-linker);
+  --color-cat-linker-soft: var(--cat-linker-soft);
+  --color-cat-linker-line: var(--cat-linker-line);
+  --color-cat-pattern: var(--cat-pattern);
+  --color-cat-pattern-soft: var(--cat-pattern-soft);
+  --color-cat-pattern-line: var(--cat-pattern-line);
+  --color-cat-expression: var(--cat-expression);
+  --color-cat-expression-soft: var(--cat-expression-soft);
+  --color-cat-expression-line: var(--cat-expression-line);
+
+  /* Radius — restrained. Pills only for avatars and toggles. */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* Shadows — warm-tinted, low. Borders do most of the separating work. */
+  --shadow-xs: 0 1px 2px 0 rgb(31 30 27 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(31 30 27 / 0.06), 0 1px 2px -1px rgb(31 30 27 / 0.05);
+  --shadow-md: 0 4px 12px -4px rgb(31 30 27 / 0.1), 0 2px 4px -2px rgb(31 30 27 / 0.05);
+  --shadow-lg: 0 16px 40px -12px rgb(31 30 27 / 0.18), 0 4px 10px -4px rgb(31 30 27 / 0.06);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Layout widths */
+  --container-reading: 42rem; /* 672px: long-form text, result lists */
+  --container-page: 72rem; /* 1152px: standard page content */
+  --spacing-sidebar: 15.5rem; /* 248px: expanded sidebar */
+}
