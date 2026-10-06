@@ -397,11 +397,22 @@ The generic container: white, flat, `rounded-lg`, 20px padding, with an optional
 - **Content:** optional eyebrow (string → overline, or a node such as a `Badge`), then the `type-title` in Inter and one `type-reading` line capped at `max-w-prose`.
 - **Actions:** right-aligned; they stack below on mobile.
 
-### 9.12 Navigation ✅ `lexora/nav-item` · 🔜 shell
+### 9.12 Navigation & app shell ✅ `lexora/nav-item`, `shell/*`
 
-- **NavItem:** 30px row (`control-nav`), `rounded-sm`, 16px icon, `type-label`. Hover uses `bg-accent`. Active uses `bg-accent` + semibold foreground + an **ink icon**, with `aria-current="page"`. An optional count is mono and tabular.
-- **Sidebar** (_Phase 1 shell_): `bg-sidebar`, `w-sidebar`, `border-r`. From top to bottom: the logo mark and name, a SearchTrigger, primary nav (Home, Language Finder, Language bank, Practice, Writing Lab, Speaking Lab, Progress), then settings at the bottom behind a hairline.
-- **Top bar** (_Phase 1 shell_): 48px with a `border` bottom. Breadcrumb on the left (caption → label), ghost actions on the right.
+- **NavItem:** 30px row (`control-nav`), `rounded-sm`, 16px icon, `type-label`. Hover uses `bg-accent`. Active uses `bg-accent` + semibold foreground + an **ink icon**, with `aria-current="page"`. An optional count is mono and tabular. In `collapsed` mode it is icon-only, with the label as a right-side tooltip and kept for screen readers.
+- **Sidebar** (`shell/app-sidebar`):
+  - `bg-sidebar`, `border-r`, persistent from `lg` and sticky at full height.
+  - Expanded it is `w-sidebar` (248px). It collapses to a 56px icon rail with the header button or ⌘\ / Ctrl+\, animating width over 180ms.
+  - From top to bottom: the logo mark and name, a SearchTrigger (an icon button when collapsed), primary nav (Home, Language Finder, Language bank, Practice, Writing Lab, Speaking Lab, Progress), then Design system and Settings behind a hairline.
+  - Below `lg` the same contents open in a left **sheet** from the top bar's menu button. Choosing a destination closes the sheet.
+- **Top bar** (`shell/top-bar`):
+  - 48px, sticky, `border` bottom, canvas at 95% with a light blur.
+  - Left: the menu button (below `lg`), then "Lexora / Page" (the caption is hidden on small screens).
+  - Right: a "Prototype" badge while the app is a prototype, plus a search button below `lg`.
+- **Command palette** (`shell/command-palette`): global ⌘K / Ctrl+K. "Go to" lists every destination and navigates for real; "Actions" toggles the sidebar. Language search is added with the Finder (Phase 4).
+- **Page frame** (`shell/page-container`): `max-w-page`, gutters 16 / 24 / 40px, vertical padding 32 → 48px.
+- **Placeholders** (`shell/route-placeholder`): pages not built yet show the page header with a "Not built yet" badge and an empty state naming the phase that delivers them.
+- **Skip link:** the first focusable element on every app page. It jumps to `#main`.
 
 ### 9.13 Overlays ✅ `ui/tooltip`, `ui/dropdown-menu`, `ui/dialog`
 

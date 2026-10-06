@@ -32,8 +32,8 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 **Goal:** see and feel the product end-to-end with static data, before building any backend.
 
 - [x] Design language v0.2 from the reference study: principles translated, tokens and type roles revised (serif = language only), new components (FilterChip, StatusBadge, SearchTrigger, Tile, Table), `/design-system` rebuilt for review — _awaiting owner review_
-- App shell: sidebar (collapsible; a sheet on mobile), top bar, global command palette
-- Navigation between mock pages under an `(app)` route group
+- [x] App shell: sidebar (collapsible to an icon rail; a sheet on mobile), top bar, global command palette, skip link — _awaiting owner review_
+- [x] Navigation between pages under an `(app)` route group, with honest placeholders that name the delivering phase
 - Dashboard mock: items due, weak areas, recent searches (static)
 - Language Finder mock: hero search, sample result groups by category, filters UI (skill, register, category)
 - Language detail mock: overview, examples, collocations, mistakes, alternatives
