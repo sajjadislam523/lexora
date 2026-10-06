@@ -16,7 +16,7 @@ export function EmptyState({ icon: Icon, title, description, action, className }
     <div
       data-slot="empty-state"
       className={cn(
-        "flex flex-col items-center rounded-lg border border-dashed border-border-strong px-6 py-10 text-center",
+        "flex flex-col items-center rounded-lg border border-dashed border-border-strong px-6 py-12 text-center",
         className,
       )}
     >

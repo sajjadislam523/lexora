@@ -38,7 +38,7 @@ function Highlighted({ text, highlight }: LanguageExample) {
   return (
     <>
       {text.slice(0, index)}
-      <mark className="rounded-xs bg-ink-soft px-0.5 text-ink-strong">
+      <mark className="rounded-xs bg-highlight px-0.5 text-highlight-foreground">
         {text.slice(index, index + highlight.length)}
       </mark>
       {text.slice(index + highlight.length)}
@@ -66,7 +66,7 @@ export function LanguageResultCard({
     <article
       data-slot="language-result-card"
       className={cn(
-        "group/result rounded-lg border border-border bg-card p-4 shadow-xs transition-[border-color,box-shadow] duration-120 ease-standard hover:border-border-strong hover:shadow-sm sm:p-5",
+        "group/result rounded-lg border border-border bg-card p-4 transition-[border-color,box-shadow] duration-120 ease-standard hover:border-border-strong hover:shadow-sm sm:p-5",
         className,
       )}
     >
@@ -96,13 +96,13 @@ export function LanguageResultCard({
       <p className="mt-2 type-body text-muted-foreground">{meaning}</p>
 
       {pattern ? (
-        <p className="mt-3 inline-flex max-w-full rounded-sm bg-muted px-2 py-1 type-mono text-foreground">
+        <p className="mt-3 inline-flex max-w-full rounded-xs bg-muted px-2 py-1 type-mono text-foreground">
           {pattern}
         </p>
       ) : null}
 
       {example ? (
-        <blockquote className="mt-3 border-l-2 border-border-strong pl-3 type-example text-foreground">
+        <blockquote className="mt-4 border-l-2 border-border-strong pl-3.5 type-example text-foreground">
           <Highlighted {...example} />
         </blockquote>
       ) : null}

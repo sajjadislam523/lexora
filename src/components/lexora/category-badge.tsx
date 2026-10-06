@@ -38,7 +38,7 @@ export function CategoryBadge({
     <span
       data-slot="category-badge"
       className={cn(
-        "inline-flex h-5 items-center rounded-sm border px-1.5 text-xs font-medium whitespace-nowrap",
+        "inline-flex h-5 items-center rounded-xs border px-1.5 type-micro whitespace-nowrap",
         config.badge,
         className,
       )}
