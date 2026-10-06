@@ -59,14 +59,14 @@ function SectionHeading({
 }
 
 /** The learner's workspace: what to retrieve today, what to fix, where to go next. */
-export function DashboardView() {
+export function DashboardView({ firstName }: { firstName?: string }) {
   const { focus, review, weakAreas, continueLearning, mistakes } = SAMPLE_LEARNER;
 
   return (
     <PageContainer className="space-y-10">
       <PageHeader
         eyebrow={<Badge variant="outline">Sample learner data</Badge>}
-        title="Welcome back"
+        title={firstName ? `Welcome back, ${firstName}` : "Welcome back"}
         description={focus}
         actions={
           <>
