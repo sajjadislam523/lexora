@@ -1,1 +1,44 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../styles/tokens.css";
+@import "../styles/typography.css";
+
+/* Dark mode is not shipped yet; the variant exists so shadcn primitives compile. See tokens.css. */
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply bg-background font-sans text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv05"; /* Inter: tailed lowercase l, so l / I / 1 stay distinct */
+  }
+
+  body {
+    @apply min-h-dvh bg-background type-body text-foreground;
+  }
+
+  ::selection {
+    @apply bg-ink-soft text-ink-strong;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* Respect reduced-motion everywhere, including third-party primitives. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
