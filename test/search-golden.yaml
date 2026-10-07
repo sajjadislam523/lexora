@@ -1,0 +1,138 @@
+# The golden search suite: the initial definition of search correctness (Phase 3).
+# Each case states what a learner must see, not just that something came back.
+#
+#   intent    the query shape the classifier must read
+#   top       the first results, in this order (result terms, across groups)
+#   only      exactly these results, in this order
+#   includes  results that must appear somewhere
+#   excludes  results that must not appear
+#   groups    group headings, in order
+#   term      how the typed term was resolved
+#   mistakes  wrong forms the response must explain
+#   fits      context-gap fit per verb
+#   guide     a fit guide must be shown
+#   outcome   results (default) · fallback · none
+
+# ── The twelve agreed scenarios (Phase 3 specification §14) ─────────────────────────────
+
+- query: better word for important
+  intent: SYNONYM
+  top: [significant, crucial, essential, fundamental]
+  excludes: [considerable, substantial]
+  guide: true
+
+- query: stronger word for important
+  intent: STRONGER_ALTERNATIVE
+  only: [crucial, essential]
+
+- query: preposition after responsible
+  intent: PREPOSITION
+  only: [responsible for, responsible to]
+  mistakes: [responsible of]
+
+- query: responsable for
+  intent: LOOKUP
+  term: { via: typo, resolved: responsible for }
+  top: [responsible for]
+
+- query: collocations with significant
+  intent: COLLOCATION
+  top:
+    [
+      a significant increase,
+      a significant impact,
+      a significant difference,
+      play a significant role,
+    ]
+
+- query: alternative to however
+  intent: ALTERNATIVE
+  includes: [on the other hand, whereas, nevertheless]
+  excludes: [however]
+  guide: true
+
+- query: better linker for contrast
+  intent: LINKER
+  groups: [Between sentences, Within one sentence, Conceding a point]
+  includes: [however, in contrast, on the other hand, whereas, nevertheless]
+
+- query: natural speaking alternative to furthermore
+  intent: ALTERNATIVE
+  only: [on top of that, what's more]
+
+- query: I want to say something increased a lot
+  intent: CONTEXTUAL_EXPRESSION
+  includes: [rise sharply, significant, considerable]
+
+- query: I want to say this caused a serious problem
+  intent: CONTEXTUAL_EXPRESSION
+  includes: [pose a threat, have a detrimental effect on, give rise to, result in]
+
+- query: Governments should ____ more money into public transportation
+  intent: CONTEXT_GAP
+  top: [invest, allocate]
+  fits: { invest: fits, allocate: different_preposition, devote: unlikely }
+  guide: true
+
+- query: analyze
+  intent: LOOKUP
+  term: { via: variant, resolved: analyse }
+  top: [analyse]
+
+- query: signifcant
+  intent: LOOKUP
+  term: { via: typo, resolved: significant }
+  top: [significant]
+
+- query: furthermoe
+  intent: LOOKUP
+  term: { via: typo, resolved: furthermore }
+  top: [furthermore]
+
+# ── The owner's product scenarios ───────────────────────────────────────────────────────
+
+- query: important
+  intent: LOOKUP
+  term: { via: exact, resolved: important }
+  top: [important]
+  includes: [significant, crucial, essential, fundamental]
+  excludes: [considerable]
+  groups: [Similar meaning, Stronger, Alternatives]
+  guide: true
+
+- query: I want to express contrast
+  intent: CONTEXTUAL_EXPRESSION
+  includes: [however, whereas, on the other hand]
+
+# ── Behaviours worth pinning ────────────────────────────────────────────────────────────
+
+- query: responsible of
+  intent: LOOKUP
+  only: [responsible for]
+  mistakes: [responsible of]
+
+- query: Governments should ___ more money to public transport
+  intent: CONTEXT_GAP
+  fits: { allocate: fits, invest: different_preposition, devote: unlikely }
+
+- query: phrase for giving an example
+  intent: PHRASE
+  only: [for instance, such as, a case in point]
+
+- query: preposition after depend
+  intent: PREPOSITION
+  top: [depend on]
+  mistakes: [Many families depend of one income.]
+
+- query: rose sharply
+  intent: LOOKUP
+  term: { via: exact, resolved: rise sharply }
+  top: [rise sharply]
+
+- query: focussed on
+  intent: LOOKUP
+  term: { via: variant, resolved: focus on }
+
+- query: xyzzy
+  intent: LOOKUP
+  outcome: none
