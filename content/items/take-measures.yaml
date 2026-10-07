@@ -1,9 +1,9 @@
 id: take-measures
 kind: collocation
 headword: take measures
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: take measures, type: lemma }
   - { form: takes measures, type: inflection }

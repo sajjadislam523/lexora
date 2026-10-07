@@ -1,9 +1,9 @@
 id: play-a-crucial-role
 kind: collocation
 headword: play a crucial role
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: play a crucial role, type: lemma }
   - { form: plays a crucial role, type: inflection }

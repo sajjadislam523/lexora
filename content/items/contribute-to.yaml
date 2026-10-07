@@ -1,9 +1,9 @@
 id: contribute-to
 kind: preposition_pattern
 headword: contribute to
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: contribute to, type: lemma }
   - { form: contributes to, type: inflection }

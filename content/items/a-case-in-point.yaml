@@ -1,9 +1,9 @@
 id: a-case-in-point
 kind: functional_expression
 headword: a case in point
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: a case in point, type: lemma }
 senses:
