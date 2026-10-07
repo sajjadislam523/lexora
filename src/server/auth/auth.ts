@@ -2,6 +2,7 @@ import "server-only";
 
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { betterAuth } from "better-auth";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { customSession } from "better-auth/plugins";
 
@@ -9,6 +10,8 @@ import { AUTH_COOKIE_PREFIX } from "@/lib/auth-constants";
 import { db } from "@/server/db/client";
 import * as schema from "@/server/db/schema";
 import { serverEnv } from "@/server/env";
+
+import { redactSessionTokens } from "./redact";
 
 const env = serverEnv();
 
@@ -63,6 +66,20 @@ export const auth = betterAuth({
   },
 
   telemetry: { enabled: false },
+
+  hooks: {
+    // Session tokens travel only in the HttpOnly cookie. Strip them from every JSON body
+    // (sign-in, sign-up, list-sessions …) using Better Auth's documented after-hook; the
+    // Set-Cookie headers set by the endpoint are preserved.
+    after: createAuthMiddleware(async (ctx) => {
+      const returned = ctx.context.returned;
+      if (returned === undefined || returned instanceof Response || returned instanceof APIError)
+        return;
+      const redacted = redactSessionTokens(returned);
+      // ctx.json serialises any JSON value; its type only names objects (list-sessions is an array).
+      if (redacted !== returned) return ctx.json(redacted as Record<string, unknown>);
+    }),
+  },
 
   plugins: [
     // The session token lives only in the HttpOnly cookie — strip it from JSON session responses
