@@ -54,6 +54,7 @@ describe.skipIf(!hasDatabase)("authentication against PostgreSQL", () => {
       body: { name: "Integration Learner", email, password },
     });
     expect(result.user.email).toBe(email);
+    expect(result).not.toHaveProperty("token");
 
     const [account] = await mod.db
       .select()
@@ -82,6 +83,44 @@ describe.skipIf(!hasDatabase)("authentication against PostgreSQL", () => {
 
     await mod.auth.api.signOut({ headers });
     expect(await mod.auth.api.getSession({ headers })).toBeNull();
+  });
+
+  it("never returns session tokens or password hashes in JSON responses", async () => {
+    const signIn = await mod.auth.api.signInEmail({ body: { email, password }, asResponse: true });
+    const body = (await signIn.json()) as Record<string, unknown>;
+    expect(body).not.toHaveProperty("token");
+    expect(JSON.stringify(body)).not.toMatch(/password/i);
+    expect(signIn.headers.get("set-cookie")).toMatch(/lexora\.session_token=/);
+
+    const headers = new Headers({
+      cookie: (signIn.headers.get("set-cookie") ?? "").split(";")[0]!,
+    });
+    expect((await mod.auth.api.getSession({ headers }))?.user.email).toBe(email);
+
+    const sessions = await mod.auth.api.listSessions({ headers, asResponse: true });
+    const sessionRows = (await sessions.json()) as Record<string, unknown>[];
+    expect(sessionRows.length).toBeGreaterThan(0);
+    for (const row of sessionRows) expect(row).not.toHaveProperty("token");
+
+    const accounts = await mod.auth.api.listUserAccounts({ headers, asResponse: true });
+    const accountRows = (await accounts.json()) as Record<string, unknown>[];
+    for (const row of accountRows) {
+      expect(row).not.toHaveProperty("password");
+      expect(row).not.toHaveProperty("accessToken");
+    }
+
+    await mod.auth.api.signOut({ headers });
+  });
+
+  it("returns a generic error for a wrong password", async () => {
+    const response = await mod.auth.api.signInEmail({
+      body: { email, password: `wrong-${password}` },
+      asResponse: true,
+    });
+    expect(response.status).toBe(401);
+    const text = await response.text();
+    expect(text).toContain("Invalid email or password");
+    expect(text).not.toContain(email);
   });
 
   it("rejects a forged session cookie", async () => {
