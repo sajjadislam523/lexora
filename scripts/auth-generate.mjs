@@ -8,7 +8,12 @@ import nextEnv from "@next/env";
 
 nextEnv.loadEnvConfig(process.cwd());
 
-const files = ["src/server/auth/auth.ts", "src/server/env.ts", "src/server/db/client.ts"];
+const files = [
+  "src/server/auth/auth.ts",
+  "src/server/env.ts",
+  "src/server/db/client.ts",
+  "src/server/db/connect.ts",
+];
 const marker = 'import "server-only";';
 const disabled = '// auth:generate import "server-only";';
 const originals = new Map(files.map((f) => [f, readFileSync(f, "utf8")]));

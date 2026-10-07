@@ -68,6 +68,10 @@ jobs:
             git status --porcelain drizzle
             exit 1
           fi
+      - name: Import the content into the fresh database
+        run: pnpm content:import
+      - name: Re-import to prove the import is repeatable
+        run: pnpm content:import | tee import.log && grep -q "nothing to import" import.log
       - run: pnpm test
       - run: pnpm build
       - name: End-to-end route checks against the production build

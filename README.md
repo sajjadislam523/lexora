@@ -42,6 +42,8 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 | `pnpm db:migrate`                     | Apply migrations                                           |
 | `pnpm db:studio`                      | Browse the database                                        |
 | `pnpm auth:generate`                  | Regenerate Better Auth tables after changing auth config   |
+| `pnpm content:check`                  | Validate `content/` (no database needed)                   |
+| `pnpm content:import`                 | Validate and import `content/` into the database           |
 
 ## Production (Vercel + Neon)
 
@@ -65,7 +67,19 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 
    Keep migrations backwards-compatible with the running version (add first, remove later).
 
-4. **Deploy:** merge to `main` after the phase PR is approved. Vercel builds with `pnpm build`.
+4. **Content:** import the language content into Neon after migrating and before the new code goes live. Run it from the commit being deployed, with a clean `content/` folder:
+
+   ```bash
+   git checkout main && git pull && git status --short content   # must print nothing
+   DATABASE_URL_UNPOOLED="<neon direct url>" DATABASE_URL="<neon pooled url>" pnpm content:import
+   ```
+
+   - The import validates first and writes everything in one transaction: it either succeeds completely or changes nothing.
+   - It is safe to re-run. Unchanged content prints `nothing to import`; changed content records a new release in `content_releases` (with the git commit, content checksum and counts).
+   - It refuses to run, and changes nothing, if a published item or sense has been deleted from `content/`, a published item is set back to draft, or a slug changed without keeping the old one. Retire content instead (see [content/README.md](content/README.md)).
+   - To roll content back, check out the earlier commit and import again. IDs never change, so saved language survives in both directions.
+
+5. **Deploy:** merge to `main` after the phase PR is approved. Vercel builds with `pnpm build`.
 
 Preview deployments need their own `BETTER_AUTH_URL` and ideally their own Neon branch — see the open decisions in [docs/ROADMAP.md](docs/ROADMAP.md).
 

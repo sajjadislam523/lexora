@@ -218,6 +218,17 @@ Checked automatically:
 - retired content only: `replaced_by`, pointing at published content
 - intent entries point at published senses; no trigger selects two intents
 
+## Importing
+
+`pnpm content:import` validates, then writes the content into PostgreSQL in one transaction:
+
+1. It stops early if the content is unchanged since the last import (same checksum).
+2. It refuses, and changes nothing, if a published or retired item or sense is missing, published content is set back to draft, or a slug changed without listing the old one in `previous_slugs`.
+3. It upserts everything by ID, touching only rows whose values changed, and deletes child rows (examples, collocations, patterns, frames, mistakes, relations, intent triggers and entries) that are no longer authored. Drafts that were never published are deleted when their file goes.
+4. It writes inverse relations, rebuilds the full-text search vectors and records a release (git commit, checksum, counts) in `content_releases`.
+
+The production procedure is in the main [README](../README.md#production-vercel--neon).
+
 ## Reviewer checklist (content PRs)
 
 - [ ] Definition is clear, specific to this sense, and the part of speech is right
