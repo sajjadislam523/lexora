@@ -1,26 +1,26 @@
 "use client";
 
 import { LanguageResultCard } from "@/components/lexora/language-result-card";
-import type { LanguageItem } from "@/language/types";
+import type { SearchResult } from "@/language/search/types";
 
 import { toCardProps } from "./card-props";
 import { useSavedLanguage } from "./saved-language";
 
-/** A result card with the save action. Visitors who save see the save gate. */
+/** A search result card with the save action. Visitors who save see the save gate. */
 export function SaveableResultCard({
-  item,
+  result,
   className,
 }: {
-  item: LanguageItem;
+  result: SearchResult;
   className?: string;
 }) {
   const { isSaved, toggle } = useSavedLanguage();
   return (
     <LanguageResultCard
-      {...toCardProps(item)}
+      {...toCardProps(result)}
       className={className}
-      saved={isSaved(item.slug)}
-      onSaveToggle={() => toggle({ slug: item.slug, term: item.term })}
+      saved={isSaved(result.slug)}
+      onSaveToggle={() => toggle({ slug: result.slug, term: result.term })}
     />
   );
 }

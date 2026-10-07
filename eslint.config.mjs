@@ -45,10 +45,47 @@ const boundaries = [
   {
     // The shared language engine: content and search only. No UI, no server code, no user data.
     files: ["src/language/**"],
+    ignores: ["src/language/index.ts"],
     rules: restrict([
       pattern(
         ["@/features/*", "@/components/*", "@/app/*", "@/server/*"],
         "The language engine holds content and search only; it must not depend on UI or server code.",
+      ),
+    ]),
+  },
+  {
+    // Its composition root wires in the database repository, and nothing else from the server.
+    files: ["src/language/index.ts"],
+    rules: restrict([
+      pattern(
+        ["@/features/*", "@/components/*", "@/app/*"],
+        "The language engine holds content and search only; it must not depend on UI.",
+      ),
+      pattern(
+        [
+          "@/server/*",
+          "!@/server/db",
+          "@/server/db/*",
+          "!@/server/db/client",
+          "!@/server/repositories",
+          "@/server/repositories/*",
+          "!@/server/repositories/language",
+        ],
+        "The language engine reads only the language repository — never auth or user data.",
+      ),
+    ]),
+  },
+  {
+    // Language data access never reaches auth or learner data: the same results serve everyone.
+    files: ["src/server/repositories/language/**"],
+    rules: restrict([
+      pattern(
+        ["@/features/*", "@/components/*", "@/app/*", "@/demo/*"],
+        "Server code must not import UI or prototype content.",
+      ),
+      pattern(
+        ["@/server/auth/*", "@/server/repositories/*", "!@/server/repositories/language"],
+        "The language repository must not read auth or user data.",
       ),
     ]),
   },
@@ -62,6 +99,7 @@ const boundaries = [
   {
     // Server code is the bottom layer for data; it never imports UI.
     files: ["src/server/**"],
+    ignores: ["src/server/repositories/language/**"],
     rules: restrict([
       pattern(
         ["@/features/*", "@/components/*", "@/app/*", "@/demo/*"],

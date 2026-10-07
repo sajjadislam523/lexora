@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { FinderView } from "@/features/finder/finder-view";
-import { languageRepository, languageSearch } from "@/language";
+import { loadFinderState } from "@/features/finder/load-finder-state";
 
 const DESCRIPTION =
   "Search for the word, phrase, preposition, collocation or expression you need for IELTS Academic — and see how to use it naturally.";
@@ -24,11 +24,11 @@ export default async function ExplorePage(props: PageProps<"/explore">) {
 
   return (
     <FinderView
+      // Remount per query so the input and mode follow navigation (back, forward, refresh).
       key={query}
       basePath="/explore"
       query={query}
-      result={languageSearch.search(query)}
-      introSkillPair={languageRepository.getItem("furthermore")?.usage}
+      state={await loadFinderState(query)}
       eyebrow="Explore"
       title="What are you trying to say?"
       description="Describe the idea in your own words. Lexora finds the natural English for it — with meaning, patterns, examples and common mistakes."

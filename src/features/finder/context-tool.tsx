@@ -6,17 +6,54 @@ import { useState } from "react";
 
 import { ChoiceOption } from "@/components/lexora/choice-option";
 import { FitBadge } from "@/components/lexora/fit-badge";
-import { GapSentence } from "@/components/lexora/gap-sentence";
-import { CONTEXT_SENTENCE } from "@/demo/finder";
+import { GapSentence, type GapPart } from "@/components/lexora/gap-sentence";
+import type { SearchResponse, SearchResult } from "@/language/search/types";
 import { cn } from "@/lib/utils";
 
+const GAP_MARKER = /_{2,}|…|\.{3,}/;
+
 /**
- * The signature Lexora interaction: choose a word for a real sentence and see how well it fits,
- * including the preposition it brings with it. Exploration, not a test — every option explains itself.
+ * Splits the learner's sentence around the gap, and around the preposition the engine read after
+ * it, so each choice can fill both: "Governments should [allocate] more money [to] …".
+ * Display only — which verbs fit, and why, comes from the search engine.
  */
-export function ContextTool({ className }: { className?: string }) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = CONTEXT_SENTENCE.options.find((option) => option.id === selectedId);
+function sentenceParts(sentence: string, preposition: string | undefined): GapPart[] {
+  const match = GAP_MARKER.exec(sentence);
+  if (!match) return [sentence];
+  const before = sentence.slice(0, match.index);
+  const after = sentence.slice(match.index + match[0].length);
+  const word = preposition ? new RegExp(`\\b${preposition}\\b`, "i").exec(after) : null;
+  if (!word) return [before, { gap: 0 }, after];
+  return [
+    before,
+    { gap: 0 },
+    after.slice(0, word.index),
+    { gap: 1 },
+    after.slice(word.index + word[0].length),
+  ];
+}
+
+/**
+ * The signature Lexora interaction: choose a word for a real sentence and see whether it fits,
+ * including the preposition it brings with it. Exploration, not a test — every option explains
+ * itself with the engine's reason.
+ */
+export function ContextTool({
+  sentence,
+  response,
+  className,
+}: {
+  /** The sentence as the learner typed it, with the gap. */
+  sentence: string;
+  /** The engine's context-gap response for it. */
+  response: SearchResponse;
+  className?: string;
+}) {
+  const options: SearchResult[] = response.groups.flatMap((group) => group.results);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const selected = options.find((option) => option.key === selectedKey);
+  const parts = sentenceParts(sentence, response.gap?.preposition);
+  const fills = selected ? [selected.fill?.word, selected.fill?.preposition] : undefined;
 
   return (
     <section
@@ -32,26 +69,28 @@ export function ContextTool({ className }: { className?: string }) {
       </p>
 
       <div className="mt-5 rounded-md bg-muted px-4 py-4" aria-live="polite">
-        <GapSentence parts={CONTEXT_SENTENCE.parts} fills={selected?.fills} />
+        <GapSentence parts={parts} fills={fills} />
       </div>
 
       <div role="group" aria-label="Choose a verb" className="mt-4 grid gap-2 sm:grid-cols-2">
-        {CONTEXT_SENTENCE.options.map((option) => {
-          const isSelected = option.id === selectedId;
+        {options.map((option) => {
+          const isSelected = option.key === selectedKey;
           return (
             <ChoiceOption
-              key={option.id}
+              key={option.key}
               pressed={isSelected}
               state={isSelected ? "selected" : "idle"}
               language
-              onClick={() => setSelectedId(option.id)}
+              onClick={() => setSelectedKey(option.key)}
             >
               <span className="flex flex-wrap items-center justify-between gap-2">
                 <span>
-                  {option.fills[0]}{" "}
-                  <span className="text-muted-foreground">… {option.fills[1]}</span>
+                  {option.fill?.word ?? option.term}
+                  {option.fill?.preposition ? (
+                    <span className="text-muted-foreground"> … {option.fill.preposition}</span>
+                  ) : null}
                 </span>
-                {selectedId ? <FitBadge fit={option.fit} /> : null}
+                {selectedKey && option.fit ? <FitBadge fit={option.fit} /> : null}
               </span>
             </ChoiceOption>
           );
@@ -63,20 +102,18 @@ export function ContextTool({ className }: { className?: string }) {
           <div className="space-y-2">
             <p className="flex flex-wrap items-center gap-2">
               <span className="type-term-sm text-foreground">
-                {selected.fills[0]} … {selected.fills[1]}
+                {selected.pattern ?? selected.term}
               </span>
-              <FitBadge fit={selected.fit} />
+              {selected.fit ? <FitBadge fit={selected.fit} /> : null}
             </p>
-            <p className="type-body text-muted-foreground">{selected.note}</p>
-            {selected.slug ? (
-              <Link
-                href={`/language/${selected.slug}`}
-                className="inline-flex items-center gap-1 type-label text-ink hover:underline"
-              >
-                How to use “{selected.fills[0]}”
-                <ArrowRight aria-hidden className="size-3.5" />
-              </Link>
-            ) : null}
+            <p className="type-body text-muted-foreground">{selected.reason}</p>
+            <Link
+              href={`/language/${selected.slug}`}
+              className="inline-flex items-center gap-1 rounded-xs type-label text-ink outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              How to use “{selected.term}”
+              <ArrowRight aria-hidden className="size-3.5" />
+            </Link>
           </div>
         ) : (
           <p className="type-caption text-subtle-foreground">Choose a verb to see how it fits.</p>

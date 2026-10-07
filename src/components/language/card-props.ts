@@ -1,21 +1,41 @@
 import type { LanguageResultCardProps } from "@/components/lexora/language-result-card";
-import type { LanguageItem } from "@/language/types";
+import type { LanguageCategory } from "@/components/lexora/language-category";
+import type { SearchResult } from "@/language/search/types";
+import type { ItemKind } from "@/language/schema/vocabulary";
 
-/** Maps a language item onto the result card. */
+/** The category colour for each kind of language item. */
+export const CATEGORY_BY_KIND: Record<ItemKind, LanguageCategory> = {
+  word: "vocabulary",
+  phrase: "expression",
+  collocation: "collocation",
+  preposition_pattern: "preposition",
+  linker: "linker",
+  sentence_pattern: "pattern",
+  functional_expression: "expression",
+};
+
+/** Maps a search result onto the result card. Everything shown comes from the engine. */
 export function toCardProps(
-  item: LanguageItem,
+  result: SearchResult,
 ): Omit<LanguageResultCardProps, "saved" | "onSaveToggle" | "className"> {
-  const example = item.examples[0];
+  const span = result.example?.highlights[0];
   return {
-    term: item.term,
-    category: item.category,
-    meaning: item.meaning,
-    bestWhen: item.bestWhen,
-    pattern: item.collocations?.length ? undefined : item.pattern,
-    collocations: item.collocations?.slice(0, 4).map((c) => c.phrase),
-    example: example ? { text: example.text, highlight: example.highlight } : undefined,
-    tags: [...item.register, ...item.skills],
-    strength: item.strength,
-    href: `/language/${item.slug}`,
+    term: result.term,
+    category: CATEGORY_BY_KIND[result.kind],
+    ...(result.senseLabel && { senseLabel: result.senseLabel }),
+    reason: result.reason,
+    meaning: result.definition,
+    bestWhen: result.bestWhen,
+    ...(result.pattern && !result.collocations?.length && { pattern: result.pattern }),
+    ...(result.collocations?.length && { collocations: result.collocations.slice(0, 4) }),
+    ...(result.example && {
+      example: {
+        text: result.example.text,
+        ...(span && { highlight: result.example.text.slice(span.start, span.end) }),
+      },
+    }),
+    tags: [...result.registers, ...result.skills],
+    ...(result.strength && { strength: result.strength }),
+    href: `/language/${result.slug}`,
   };
 }

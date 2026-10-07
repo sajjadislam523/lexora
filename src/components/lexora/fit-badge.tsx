@@ -1,10 +1,16 @@
 import { cn } from "@/lib/utils";
 
+/**
+ * The context-gap verdicts the search engine gives (GapFit in src/language/search/types.ts).
+ * Kept as a plain union here so this shared component doesn't depend on the engine.
+ */
 const FITS = {
-  best: { label: "Best fit", className: "bg-success-soft text-success" },
-  natural: { label: "Natural", className: "bg-ink-soft text-ink-strong" },
-  possible: { label: "Possible", className: "bg-warning-soft text-warning" },
-  different: { label: "Different meaning", className: "bg-muted text-muted-foreground" },
+  fits: { label: "Fits", className: "bg-success-soft text-success" },
+  different_preposition: {
+    label: "Different preposition",
+    className: "bg-warning-soft text-warning",
+  },
+  unlikely: { label: "Doesn’t fit", className: "bg-muted text-muted-foreground" },
 } as const;
 
 export type Fit = keyof typeof FITS;
