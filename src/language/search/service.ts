@@ -12,6 +12,7 @@
  */
 import type { SenseSummary } from "../model";
 import { MAX_QUERY_LENGTH, normaliseQuery, words } from "../normalise";
+import { RELATION_GROUPS, RELATION_PHRASE } from "../relations";
 import type { DiscourseFunction, RelationType } from "../schema/vocabulary";
 
 import { classify, type Classification } from "./classify";
@@ -38,38 +39,6 @@ import {
   type SearchResult,
   type TermResolution,
 } from "./types";
-
-/** How a relation reads in a result's reason: "Stronger than important". */
-const RELATION_PHRASE: Record<RelationType, string> = {
-  synonym: "Similar to",
-  alternative: "An alternative to",
-  stronger: "Stronger than",
-  weaker: "Weaker than",
-  more_formal: "More formal than",
-  more_natural: "More natural than",
-  opposite: "Opposite of",
-  confusable: "Often confused with",
-  has_component: "Contains",
-  component_of: "Uses",
-  derived_form: "Another form of",
-  related: "Related to",
-};
-
-/** Group headings on a lookup, in display order. */
-const RELATION_GROUPS: { label: string; types: RelationType[] }[] = [
-  { label: "Similar meaning", types: ["synonym"] },
-  { label: "Stronger", types: ["stronger"] },
-  { label: "Alternatives", types: ["alternative"] },
-  { label: "More formal", types: ["more_formal"] },
-  { label: "More natural", types: ["more_natural"] },
-  { label: "Weaker", types: ["weaker"] },
-  { label: "Often confused", types: ["confusable"] },
-  { label: "Opposite", types: ["opposite"] },
-  { label: "Used in", types: ["component_of"] },
-  { label: "Part of this phrase", types: ["has_component"] },
-  { label: "Other forms", types: ["derived_form"] },
-  { label: "Related", types: ["related"] },
-];
 
 const SYNONYM_TYPES: RelationType[] = [
   "synonym",
