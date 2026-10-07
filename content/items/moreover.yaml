@@ -1,0 +1,41 @@
+id: moreover
+kind: linker
+headword: moreover
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: moreover, type: lemma }
+senses:
+  - key: addition
+    pos: adverb
+    definition: Adds a further point, often one that makes the argument stronger.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    functions: [addition, emphasis]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Adding a point that strengthens the argument, often the most important one.
+    avoid_when: The new point is weaker or just an extra detail. Use "also" or "in addition".
+    skill_note: Very formal; it sounds unnatural in Speaking. Use "what's more" instead.
+    examples:
+      - id: ex1
+        text: Remote work saves commuting time. Moreover, it allows companies to hire from anywhere.
+        highlight: Moreover,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: The new law is unfair. Moreover, it would be almost impossible to enforce.
+        highlight: Moreover,
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: also
+        wrong: Moreover, also it is cheaper.
+        right: Moreover, it is cheaper.
+        type: grammar
+        explanation: Moreover already adds the point, so "also" repeats it.

@@ -1,0 +1,24 @@
+id: express-contrast
+label: Express contrast
+description: Show that two facts or ideas are different, or that the second limits the first.
+function: contrast
+triggers:
+  - express contrast
+  - show contrast
+  - show a difference
+  - contrast two ideas
+  - compare two different things
+  - introduce the other side
+  - say the opposite
+groups:
+  - label: Between sentences
+    entries:
+      - { sense: however.contrast, fit: "any general contrast; the safest choice" }
+      - { sense: in-contrast.difference, fit: "comparing two groups or figures (Task 1)" }
+      - { sense: on-the-other-hand.other-side, fit: "the second side of one argument (Task 2)" }
+  - label: Within one sentence
+    entries:
+      - { sense: whereas.contrast, fit: "two contrasting facts side by side" }
+  - label: Conceding a point
+    entries:
+      - { sense: nevertheless.concession, fit: "accept the first point, then continue" }

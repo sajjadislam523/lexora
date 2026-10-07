@@ -1,0 +1,41 @@
+id: a-case-in-point
+kind: functional_expression
+headword: a case in point
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: a case in point, type: lemma }
+senses:
+  - key: example
+    pos: noun_phrase
+    definition: An example that clearly shows that what you have just said is true.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-3] }
+    functions: [example]
+    best_when: Backing up a general claim with one especially clear example, usually in the pattern "X is a case in point".
+    avoid_when: You are giving several examples. It introduces a single, strong one.
+    examples:
+      - id: ex1
+        text: Many historic cities suffer from overtourism. Venice is a case in point.
+        highlight: a case in point
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Prices in my town have gone up a lot. My rent is a case in point.
+        highlight: a case in point
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: of-point
+        wrong: Venice is a case of point.
+        right: Venice is a case in point.
+        type: collocation
+        explanation: The fixed phrase is "a case in point".
+    relations:
+      - type: alternative
+        to: for-instance.example
+        weight: 2
+        note: For instance introduces any example; a case in point names one example that proves the claim.
