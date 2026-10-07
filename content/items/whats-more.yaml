@@ -1,9 +1,9 @@
 id: whats-more
 kind: linker
 headword: what's more
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: what's more, type: lemma }
   - { form: whats more, type: spelling_variant }

@@ -1,9 +1,9 @@
 id: interested-in
 kind: preposition_pattern
 headword: interested in
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: interested in, type: lemma }
 senses:

@@ -1,9 +1,9 @@
 id: such-as
 kind: functional_expression
 headword: such as
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: such as, type: lemma }
 senses:

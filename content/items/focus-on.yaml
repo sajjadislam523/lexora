@@ -1,9 +1,9 @@
 id: focus-on
 kind: preposition_pattern
 headword: focus on
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 regional_note: Both "focused" and "focussed" are correct in British English; "focused" is more common, and the only spelling in American English.
 forms:
   - { form: focus on, type: lemma }
