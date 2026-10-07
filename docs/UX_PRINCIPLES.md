@@ -86,7 +86,7 @@ Users are adults preparing for a serious exam.
 
 - Use plain, precise English in the interface: no slang, no exclamation marks, no childish copy.
 - Explanations are short and use simple language without talking down.
-- Use British English for interface spelling and content, consistent with IELTS conventions ("practise" as a verb, "colour"). (To be confirmed by the product owner.)
+- Use British English for interface spelling and content, consistent with IELTS conventions ("practise" as a verb, "colour"). Confirmed by the product owner; American spellings are recognised as variants, never treated as errors.
 
 ## 10. Accessible by default
 
@@ -96,6 +96,16 @@ Accessibility is a requirement, not a phase.
 - Never rely on colour alone. Pair it with labels, icons, or text.
 - Respect reduced motion. Support zoom to 200% without loss of content.
 - Speaking features always have text alternatives.
+
+## 11. Demonstrate value before asking for commitment
+
+People should feel what Lexora does before they're asked for anything. Finding language is free and needs no account; keeping it is what an account is for.
+
+- The landing page leads with a working search, not a sign-up form. Explore and every language page work for visitors.
+- Ask for an account only at the moment it adds something: saving, practising, tracking progress. Explain that benefit in one sentence, then offer _Create free account_ and _Sign in_.
+- Never lose the visitor's place. The sign-up and sign-in flow returns them to the page they were on and completes what they were doing (the save they started).
+- No interstitials, countdowns, blurred content or "sign up to see more". Public content is complete.
+- Signed-in learners see the same public pages, with their actions (save, practise) available directly.
 
 ---
 

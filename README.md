@@ -4,7 +4,7 @@
 
 Lexora is a language-retrieval workspace for IELTS Academic candidates. It helps them find the right word, synonym, preposition, linker, collocation, or sentence pattern for what they want to say, then practise it until it comes naturally.
 
-> Status: **Phase 2 — Application Foundation.** Accounts, sessions and the database are real; the language content is still prototype data. See [docs/ROADMAP.md](docs/ROADMAP.md).
+> Status: **Phase 2.1 — Public Discovery Layer.** Anyone can search and read language pages; accounts, sessions and the database are real; the language content is still prototype data. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 Lexora runs fully without any AI provider.
 
@@ -23,7 +23,7 @@ pnpm db:migrate   # create the tables
 pnpm dev          # http://localhost:3000
 ```
 
-Open <http://localhost:3000>, create an account, and you land in the app. `/design-system` is the public design reference.
+Open <http://localhost:3000>: the landing page, `/explore` and `/language/*` work without an account. Create an account to reach the app (`/home`, `/finder`, …). `/design-system` is the public design reference.
 
 To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 
@@ -36,6 +36,7 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 | `pnpm lint` / `pnpm typecheck`        | ESLint (incl. layer boundaries) / TypeScript               |
 | `pnpm format` / `pnpm format:check`   | Prettier (with Tailwind class sorting)                     |
 | `pnpm test`                           | Vitest unit tests + integration tests against the local DB |
+| `pnpm test:e2e`                       | HTTP route checks against a running server (`pnpm start`)  |
 | `pnpm db:up` / `db:down` / `db:reset` | Start / stop / wipe the local Postgres container           |
 | `pnpm db:generate`                    | Create a SQL migration from schema changes (`drizzle/`)    |
 | `pnpm db:migrate`                     | Apply migrations                                           |

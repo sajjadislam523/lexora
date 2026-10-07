@@ -6,37 +6,29 @@ import { useEffect, useRef, useState } from "react";
 
 import { FilterChip } from "@/components/lexora/filter-chip";
 import { Kbd } from "@/components/lexora/kbd";
-import { LanguageResultCard } from "@/components/lexora/language-result-card";
 import { PageHeader } from "@/components/lexora/page-header";
 import { SearchField } from "@/components/lexora/search-field";
 import { SkillComparison } from "@/components/lexora/skill-comparison";
+import { SaveableResultCard } from "@/components/language/saveable-result-card";
 import { PageContainer } from "@/components/shell/page-container";
 import { Button } from "@/components/ui/button";
 import {
-  DEMO_QUERIES,
-  FEATURED_QUERY_IDS,
+  EXAMPLE_SEARCHES,
+  FEATURED_SEARCHES,
   SEARCH_MODES,
-  getDemoQuery,
-  matchDemoQuery,
-  type DemoQuery,
-  type SearchMode,
-} from "@/demo/finder";
-import { getLanguageItem, requireLanguageItem } from "@/demo/language";
-import { useSavedItems } from "@/demo/saved-items";
-import { toCardProps } from "@/demo/card-props";
+  searchHref,
+  type ExampleSearch,
+} from "@/language/examples";
+import type { LanguageItem, SearchMode, SearchResult } from "@/language/types";
 
 import { ContextTool } from "./context-tool";
 import { FitGuide } from "./fit-guide";
-
-function finderHref(text: string) {
-  return text.trim() ? `/finder?q=${encodeURIComponent(text.trim())}` : "/finder";
-}
 
 function ExampleSearches({
   queries,
   onRun,
 }: {
-  queries: DemoQuery[];
+  queries: ExampleSearch[];
   onRun: (text: string) => void;
 }) {
   return (
@@ -56,47 +48,46 @@ function ExampleSearches({
   );
 }
 
-function Results({ query, onRun }: { query: DemoQuery; onRun: (text: string) => void }) {
-  const { isSaved, toggle } = useSavedItems();
-  const items = query.results.map(requireLanguageItem);
-  const skillItem = query.skillPairFrom ? getLanguageItem(query.skillPairFrom) : undefined;
-  const modeLabel = SEARCH_MODES.find((m) => m.id === query.mode)?.label;
+function Results({
+  result,
+  onRun,
+}: {
+  result: Extract<SearchResult, { kind: "match" }>;
+  onRun: (text: string) => void;
+}) {
+  const items = result.items;
+  const modeLabel = SEARCH_MODES.find((m) => m.id === result.mode)?.label;
 
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-border pb-4">
         <div className="min-w-0">
           <p className="type-caption text-subtle-foreground">Understood as</p>
-          <h2 className="mt-0.5 type-heading text-foreground">{query.understoodAs}</h2>
+          <h2 className="mt-0.5 type-heading text-foreground">{result.understoodAs}</h2>
         </div>
         <p className="type-caption text-subtle-foreground">
-          {modeLabel} search
+          Matched on “{result.matchedOn}” · {modeLabel}
           {items.length > 0
             ? ` · ${items.length} ${items.length === 1 ? "result" : "results"}`
             : null}
         </p>
       </div>
 
-      {query.mode === "context" ? (
+      {result.contextTool ? (
         <ContextTool />
       ) : (
         <div className="grid gap-6 xl:grid-cols-3">
-          {query.guide ? (
+          {result.guide ? (
             <aside className="xl:sticky xl:top-16 xl:col-start-3 xl:row-start-1 xl:self-start">
-              <FitGuide guide={query.guide} />
+              <FitGuide guide={result.guide} />
             </aside>
           ) : null}
           <div className="space-y-4 xl:col-span-2 xl:row-start-1">
             <h2 className="sr-only">Results</h2>
             {items.map((item) => (
-              <LanguageResultCard
-                key={item.slug}
-                {...toCardProps(item)}
-                saved={isSaved(item.slug)}
-                onSaveToggle={() => toggle(item.slug)}
-              />
+              <SaveableResultCard key={item.slug} item={item} />
             ))}
-            {skillItem?.usage ? (
+            {result.skillPair ? (
               <section
                 aria-labelledby="skill-pair-title"
                 className="rounded-lg border border-border bg-card p-5"
@@ -106,9 +97,9 @@ function Results({ query, onRun }: { query: DemoQuery; onRun: (text: string) => 
                 </h2>
                 <SkillComparison
                   className="mt-3"
-                  writing={skillItem.usage.writing}
-                  speaking={skillItem.usage.speaking}
-                  note={skillItem.usage.note}
+                  writing={result.skillPair.writing}
+                  speaking={result.skillPair.speaking}
+                  note={result.skillPair.note}
                 />
               </section>
             ) : null}
@@ -116,10 +107,10 @@ function Results({ query, onRun }: { query: DemoQuery; onRun: (text: string) => 
         </div>
       )}
 
-      {query.related && query.related.length > 0 ? (
+      {result.related.length > 0 ? (
         <div className="flex flex-wrap items-center gap-1.5 border-t border-border pt-5">
           <span className="mr-1 type-caption text-subtle-foreground">Related searches</span>
-          {query.related.map((text) => (
+          {result.related.map((text) => (
             <button
               key={text}
               type="button"
@@ -141,23 +132,19 @@ function NoMatch({ text, onRun }: { text: string; onRun: (text: string) => void 
       <span className="mb-3 flex size-9 items-center justify-center rounded-md bg-muted text-muted-foreground">
         <SearchX aria-hidden className="size-4.5" />
       </span>
-      <h2 className="type-subheading text-foreground">No example matches “{text}”</h2>
+      <h2 className="type-subheading text-foreground">Nothing in Lexora matches “{text}” yet</h2>
       <p className="mt-1 max-w-md type-body text-muted-foreground">
-        This prototype only recognises a handful of example searches — it doesn&apos;t search yet.
-        Real search arrives in Phase 4.
+        Lexora’s library is small for now, and searches are matched by keyword. Try a word like
+        “important” or “however”, or one of these:
       </p>
       <div className="mt-5 flex max-w-xl justify-center">
-        <ExampleSearches
-          queries={FEATURED_QUERY_IDS.map((id) => getDemoQuery(id)!).filter(Boolean)}
-          onRun={onRun}
-        />
+        <ExampleSearches queries={FEATURED_SEARCHES} onRun={onRun} />
       </div>
     </div>
   );
 }
 
-function Intro() {
-  const furthermore = requireLanguageItem("furthermore");
+function Intro({ skillPair }: { skillPair?: LanguageItem["usage"] }) {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <ContextTool />
@@ -172,12 +159,12 @@ function Intro() {
         <p className="mt-1 type-body text-muted-foreground">
           What works in a Task 2 essay can sound stiff in Speaking Part 3.
         </p>
-        {furthermore.usage ? (
+        {skillPair ? (
           <SkillComparison
             className="mt-5"
-            writing={furthermore.usage.writing}
-            speaking={furthermore.usage.speaking}
-            note={furthermore.usage.note}
+            writing={skillPair.writing}
+            speaking={skillPair.speaking}
+            note={skillPair.note}
           />
         ) : null}
       </section>
@@ -185,16 +172,39 @@ function Intro() {
   );
 }
 
+export type FinderViewProps = {
+  /** Where searches live: `/finder` inside the app, `/explore` for everyone. */
+  basePath: "/finder" | "/explore";
+  query: string;
+  /** Computed on the server by LanguageSearchService; null when there is no query. */
+  result: SearchResult | null;
+  /** Writing vs speaking example shown before the first search. */
+  introSkillPair?: LanguageItem["usage"];
+  eyebrow: string;
+  title: string;
+  description: string;
+};
+
 /**
- * The Language Finder prototype. The query lives in the URL (`?q=`). Typed queries are matched to
- * a fixed set of example searches by keyword; anything else gets an honest "no example" state.
+ * The Language Finder, shared by the signed-in Finder and public Explore. The query lives in the
+ * URL (`?q=`) and is searched on the server; this view renders the result. Saving goes through
+ * the shared save flow, which shows visitors the save gate.
  */
-export function FinderView({ query }: { query: string }) {
+export function FinderView({
+  basePath,
+  query,
+  result,
+  introSkillPair,
+  eyebrow,
+  title,
+  description,
+}: FinderViewProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const match = query ? matchDemoQuery(query) : undefined;
   const [text, setText] = useState(query);
-  const [mode, setMode] = useState<SearchMode | null>(match?.mode ?? null);
+  const [mode, setMode] = useState<SearchMode | null>(
+    result?.kind === "match" ? result.mode : null,
+  );
 
   // "/" focuses the search field from anywhere on the page.
   useEffect(() => {
@@ -210,24 +220,18 @@ export function FinderView({ query }: { query: string }) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const run = (value: string) => router.push(finderHref(value));
+  const run = (value: string) => router.push(searchHref(basePath, value));
   const activeMode = SEARCH_MODES.find((m) => m.id === mode);
-  const suggestions = mode
-    ? DEMO_QUERIES.filter((q) => q.mode === mode)
-    : FEATURED_QUERY_IDS.map((id) => getDemoQuery(id)!).filter(Boolean);
+  const suggestions = mode ? EXAMPLE_SEARCHES.filter((q) => q.mode === mode) : FEATURED_SEARCHES;
 
   return (
     <PageContainer className="space-y-10">
       <div className="max-w-3xl space-y-5">
-        <PageHeader
-          eyebrow="Language Finder"
-          title="What do you want to say?"
-          description="Describe the idea in your own words. Lexora finds the natural English for it — with context, patterns and examples."
-        />
+        <PageHeader eyebrow={eyebrow} title={title} description={description} />
 
         <form
           role="search"
-          aria-label="Language Finder"
+          aria-label={eyebrow}
           onSubmit={(event) => {
             event.preventDefault();
             run(text);
@@ -237,9 +241,7 @@ export function FinderView({ query }: { query: string }) {
             ref={inputRef}
             size="lg"
             label="Describe what you want to say"
-            placeholder={
-              activeMode?.placeholder ?? "I want to say something increased significantly"
-            }
+            placeholder={activeMode?.placeholder ?? "What are you trying to say?"}
             value={text}
             onChange={(event) => setText(event.target.value)}
             hint={
@@ -252,7 +254,7 @@ export function FinderView({ query }: { query: string }) {
                     aria-label="Clear search"
                     onClick={() => {
                       setText("");
-                      router.push("/finder");
+                      router.push(basePath);
                       inputRef.current?.focus();
                     }}
                   >
@@ -289,18 +291,19 @@ export function FinderView({ query }: { query: string }) {
           <ExampleSearches queries={suggestions} onRun={run} />
           <p className="flex items-center gap-1.5 type-caption text-subtle-foreground">
             <Info aria-hidden className="size-3.5 shrink-0" />
-            Prototype — results come from the example searches. Real search arrives in Phase 4.
+            Lexora covers a small, hand-picked set of language for now. Searches are matched by
+            keyword.
           </p>
         </div>
       </div>
 
       <div aria-live="polite">
-        {!query ? (
-          <Intro />
-        ) : match ? (
-          <Results query={match} onRun={run} />
+        {!result ? (
+          <Intro skillPair={introSkillPair} />
+        ) : result.kind === "match" ? (
+          <Results result={result} onRun={run} />
         ) : (
-          <NoMatch text={query} onRun={run} />
+          <NoMatch text={result.query} onRun={run} />
         )}
       </div>
     </PageContainer>

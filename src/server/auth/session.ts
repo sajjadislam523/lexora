@@ -14,6 +14,14 @@ import { auth } from "./auth";
 export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
 
 /**
+ * The validated session for a route handler's request, or null. Route handlers answer with a
+ * status code (401) instead of redirecting, so API callers can react — e.g. the save gate.
+ */
+export async function getRequestSession(request: Request) {
+  return auth.api.getSession({ headers: request.headers });
+}
+
+/**
  * Returns the session or redirects to sign-in. This is the authoritative check — the proxy only
  * looks for a cookie. Call it in every protected layout, page, server action and route handler.
  */

@@ -1,16 +1,10 @@
 import { Info } from "lucide-react";
 
-import type { DemoQuery } from "@/demo/finder";
+import type { FitGuideData } from "@/language/types";
 import { cn } from "@/lib/utils";
 
 /** "Which one fits?" — the at-a-glance distinction between near-synonyms. */
-export function FitGuide({
-  guide,
-  className,
-}: {
-  guide: NonNullable<DemoQuery["guide"]>;
-  className?: string;
-}) {
+export function FitGuide({ guide, className }: { guide: FitGuideData; className?: string }) {
   return (
     <section
       aria-labelledby="fit-guide-title"

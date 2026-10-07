@@ -30,8 +30,9 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 
 ## Security rules (auth and data)
 
-- **Authorise on the server, every time.** Every protected page, server action and route handler calls `requireSession()` from `@/server/auth/session`. The proxy only checks that a cookie exists; never rely on it for authorisation.
+- **Authorise on the server, every time.** Every protected page and server action calls `requireSession()` from `@/server/auth/session`; route handlers call `getRequestSession(request)` and answer 401, and check `isSameOrigin()` for cookie-authenticated writes. The proxy only checks that a cookie exists; never rely on it for authorisation.
 - **Ids come from the session.** Use `session.user.id`; never accept a user id from form data, params or the client. Repositories take the user id explicitly.
+- **Public pages stay public.** Routes in `src/app/(public)/` and the public features (`discovery`, `finder`, `language`) never import `@/server/*` or read the session on the server, and never render user data. Account actions they offer go through endpoints that authenticate each request themselves (see docs/ARCHITECTURE.md → Route boundary). Don't move a personal-learning page into `(public)` to make it reachable.
 - **Server-only code stays server-side.** Modules under `src/server/` start with `import "server-only"`. Only `SafeUser` (`id`, `name`, `email`) may be passed into client components. ESLint blocks runtime imports of server code from `components`, `lib` and `demo`.
 - **Secrets.** Read env only through `serverEnv()` (`src/server/env.ts`). Never prefix a secret with `NEXT_PUBLIC_`, never log or echo values, never commit `.env*` files except `.env.example`.
 - **Don't hand-roll auth.** Password hashing, sessions, cookies and CSRF are Better Auth's. Configure them in `src/server/auth/auth.ts`; don't write custom crypto or session code.
@@ -50,7 +51,9 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 | Screen composition                           | `src/features/<screen>/` (features don't import each other)                                 |
 | Server-only code: env, auth, db, data access | `src/server/` (`env.ts`, `auth/`, `db/`, `repositories/`)                                   |
 | Database schema / migrations                 | `src/server/db/schema/` → `pnpm db:generate` → `drizzle/` (commit the SQL)                  |
-| Phase 1 prototype content                    | `src/demo/` (not the language dataset; replaced in Phase 3)                                 |
+| Language engine (repository, search)         | `src/language/` — read language only through it (`index.ts` server-only)                    |
+| Public discovery frame / save flow           | `src/components/site/`, `src/components/language/`                                          |
+| Prototype content                            | `src/demo/` (behind `PrototypeLanguageRepository`; replaced in Phase 3)                     |
 | Future: domain logic, curated content        | See ARCHITECTURE.md → Target structure                                                      |
 
 ## Git workflow

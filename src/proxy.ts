@@ -4,8 +4,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_COOKIE_PREFIX } from "@/lib/auth-constants";
 
 /**
- * Optimistic route protection: a fast cookie-presence check that redirects obviously signed-out
- * visitors before rendering. It does NOT validate the session — `requireSession()` in the (app)
+ * Optimistic route protection for personal learning areas: a fast cookie-presence check that
+ * redirects obviously signed-out visitors before rendering. Public discovery pages (/, /explore,
+ * /language/*) are outside the matcher and never run this. It does NOT validate the session — `requireSession()` in the (app)
  * layout and in every server action does that against the database.
  */
 export function proxy(request: NextRequest) {
@@ -34,6 +35,5 @@ export const config = {
     "/speaking/:path*",
     "/progress/:path*",
     "/settings/:path*",
-    "/language/:path*",
   ],
 };

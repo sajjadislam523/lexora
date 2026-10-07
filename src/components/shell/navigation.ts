@@ -11,9 +11,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-// Prototype coupling: item labels come from demo content until the language engine exists (Phase 3).
-import { getLanguageItem } from "@/demo/language";
-
 export type NavEntry = {
   id: string;
   href: string;
@@ -151,16 +148,8 @@ export function findNavEntry(pathname: string) {
   return ALL_NAV.find((entry) => isActive(pathname, entry.href));
 }
 
-/** Breadcrumb for routes that are not themselves in the sidebar (e.g. a language item). */
+/** Breadcrumb for the top bar. Language pages are public and render outside the app shell. */
 export function resolveBreadcrumb(pathname: string): { parent?: NavEntry; label: string } {
-  if (pathname.startsWith("/language/")) {
-    const slug = decodeURIComponent(pathname.slice("/language/".length));
-    const item = getLanguageItem(slug);
-    return {
-      parent: getNavEntry("finder"),
-      label: item ? item.term.replace(/,$/, "") : "Language",
-    };
-  }
   return { label: findNavEntry(pathname)?.label ?? "Lexora" };
 }
 

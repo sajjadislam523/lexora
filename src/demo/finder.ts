@@ -1,7 +1,7 @@
 /**
- * Phase 1 prototype content — NOT search.
- * A fixed set of example searches with hand-written results. The Finder matches a typed
- * query to one of these by keyword and says so honestly when nothing matches.
+ * Prototype content — NOT search.
+ * A fixed set of example searches with hand-written results. LanguageSearchService
+ * (src/language) matches typed queries to these by keyword.
  * Real retrieval (query parsing, intent library, FTS + trigram) arrives in Phase 4.
  */
 import type { GapPart } from "@/components/lexora/gap-sentence";
@@ -182,6 +182,24 @@ export const DEMO_QUERIES: DemoQuery[] = [
     related: ["better word for important"],
   },
   {
+    id: "serious-problem",
+    text: "phrase for causing a serious problem",
+    mode: "phrase",
+    match: ["problem", "problems", "threat", "harm", "harmful", "damage", "danger", "detrimental"],
+    understoodAs: "Ways to say something causes a serious problem",
+    results: ["pose-a-threat", "have-a-detrimental-effect-on", "give-rise-to"],
+    guide: {
+      title: "Which one fits?",
+      rows: [
+        { term: "pose a threat to", when: "a danger that could cause harm in the future" },
+        { term: "have a detrimental effect on", when: "harm that is already happening" },
+        { term: "give rise to", when: "one thing causes a new problem or situation" },
+      ],
+      note: "All three are formal. In Speaking, “is bad for” or “leads to” sound more natural.",
+    },
+    related: ["better word for important", "I want to express contrast"],
+  },
+  {
     id: "context",
     text: "Governments should ___ more money to public transport",
     mode: "context",
@@ -192,28 +210,15 @@ export const DEMO_QUERIES: DemoQuery[] = [
   },
 ];
 
-/** The six example searches shown on first load. */
+/** The six example searches shown first (Finder, Explore and the landing page). */
 export const FEATURED_QUERY_IDS = [
   "important",
   "responsible",
   "however",
-  "example",
   "contrast",
   "furthermore",
+  "serious-problem",
 ];
-
-export function getDemoQuery(id: string) {
-  return DEMO_QUERIES.find((query) => query.id === id);
-}
-
-/** Normalise and match a typed query to a demo query by keyword. Returns undefined when unknown. */
-export function matchDemoQuery(input: string) {
-  const normalised = input.toLowerCase().replace(/[^a-z_'\s]/g, " ");
-  const words = new Set(normalised.split(/\s+/).filter(Boolean));
-  return DEMO_QUERIES.find((query) =>
-    query.match.some((keyword) => (keyword === "___" ? input.includes("___") : words.has(keyword))),
-  );
-}
 
 /** The signature context demo: each verb brings its own preposition. */
 export const CONTEXT_SENTENCE: {
