@@ -38,6 +38,8 @@ describe("normaliseQuery", () => {
 
   it("returns an empty string for punctuation only", () => {
     expect(normaliseQuery(" !!! ")).toBe("");
+    expect(normaliseQuery("?!")).toBe("");
+    expect(normaliseQuery("+ ?")).toBe("");
   });
 });
 

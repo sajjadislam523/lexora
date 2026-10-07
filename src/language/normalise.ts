@@ -19,7 +19,7 @@ const GAP_MARKERS = /_{2,}|…|\.{3,}/g;
  * - `"What’s more,"` → `"what's more"`
  */
 export function normaliseQuery(input: string) {
-  return input
+  const normalised = input
     .normalize("NFKC")
     .split(GAP_MARKERS)
     .map(clean)
@@ -28,6 +28,8 @@ export function normaliseQuery(input: string) {
     .trim()
     .slice(0, MAX_QUERY_LENGTH)
     .trim();
+  // Punctuation alone ("?!", "+") is not a query.
+  return /[\p{L}\p{N}]|_{3}/u.test(normalised) ? normalised : "";
 }
 
 /**
