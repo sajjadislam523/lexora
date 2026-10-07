@@ -1,11 +1,10 @@
 "use client";
 
-import { ArrowLeft, Dumbbell } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { SaveLanguageButton } from "@/components/language/save-language-button";
 import { useViewer } from "@/components/language/saved-language";
-import { Button } from "@/components/ui/button";
 
 /**
  * Back to search: the signed-in Finder for learners, public Explore for visitors.
@@ -25,32 +24,14 @@ export function BackToSearch() {
 }
 
 /**
- * Account actions on a language page. Everyone sees Save (visitors get the save gate);
- * practice links appear for signed-in learners only.
+ * Account actions on a language page. Everyone sees Save (visitors get the save gate). Saving
+ * lasts for this browser session until saved language is stored (Phase 3 step 11).
  */
-export function LanguageActions({
-  slug,
-  term,
-  practiceHref,
-}: {
-  slug: string;
-  term: string;
-  practiceHref: string;
-}) {
+export function LanguageActions({ slug, term }: { slug: string; term: string }) {
   const viewer = useViewer();
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <SaveLanguageButton slug={slug} term={term} />
-        {viewer === "signed-in" ? (
-          <Button asChild variant="ghost">
-            <Link href={practiceHref}>
-              <Dumbbell data-icon="inline-start" />
-              Practise this
-            </Link>
-          </Button>
-        ) : null}
-      </div>
+      <SaveLanguageButton slug={slug} term={term} />
       {viewer === "signed-in" ? (
         <p className="type-caption text-subtle-foreground">
           Saved for this session only — permanent saving arrives with the language bank.

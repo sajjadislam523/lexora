@@ -91,7 +91,9 @@ describe("public discovery layer", () => {
       /<title>significant — meaning, examples and how to use it · Lexora<\/title>/,
     );
     expect(html).toContain(`<link rel="canonical" href="${ORIGIN}/language/significant"/>`);
-    expect(html).toMatch(/<meta name="description" content="significant: Important enough/);
+    expect(html).toMatch(
+      /<meta name="description" content="significant: Large or important enough/,
+    );
     expect(html).toMatch(/<h1[^>]*>significant<\/h1>/);
     expect(html).toContain('"@type":"DefinedTerm"');
   });

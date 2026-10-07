@@ -1,25 +1,34 @@
 import { HighlightedText } from "@/components/lexora/highlighted-text";
 import { TagBadge } from "@/components/lexora/tag-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { DemoExample } from "@/demo/types";
+import type { LanguageExample } from "@/language/model";
 
-function ExampleList({ examples }: { examples: DemoExample[] }) {
+import { IELTS_TASK } from "./labels";
+
+function ExampleList({ examples }: { examples: LanguageExample[] }) {
   return (
     <ul className="space-y-4">
       {examples.map((example) => (
-        <li key={example.text} className="space-y-2 border-l-2 border-border-strong pl-4">
-          <p className="type-example text-foreground">
-            <HighlightedText text={example.text} highlight={example.highlight} />
+        <li key={example.id} className="space-y-2 border-l-2 border-border-strong pl-4">
+          <p className="type-example wrap-break-word text-foreground">
+            <HighlightedText text={example.text} spans={example.highlights} />
           </p>
-          <TagBadge tag={example.skill} />
+          <p className="flex flex-wrap items-center gap-2">
+            <TagBadge tag={example.skill} />
+            {example.task ? (
+              <span className="type-caption text-subtle-foreground">
+                {IELTS_TASK[example.task]}
+              </span>
+            ) : null}
+          </p>
         </li>
       ))}
     </ul>
   );
 }
 
-/** Examples, filterable by skill when both writing and speaking examples exist. */
-export function ExamplesSection({ examples }: { examples: DemoExample[] }) {
+/** Authored examples, filterable by skill when both writing and speaking examples exist. */
+export function ExamplesSection({ examples }: { examples: LanguageExample[] }) {
   const writing = examples.filter((e) => e.skill === "writing");
   const speaking = examples.filter((e) => e.skill === "speaking");
 
@@ -27,7 +36,7 @@ export function ExamplesSection({ examples }: { examples: DemoExample[] }) {
 
   return (
     <Tabs defaultValue="all" className="gap-5">
-      <TabsList>
+      <TabsList aria-label="Show examples for">
         <TabsTrigger value="all">All</TabsTrigger>
         <TabsTrigger value="writing">Writing</TabsTrigger>
         <TabsTrigger value="speaking">Speaking</TabsTrigger>

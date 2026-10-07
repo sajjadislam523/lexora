@@ -119,7 +119,11 @@ describe("Explore and the Finder use the language engine", () => {
 
   it("links results to published language records", async () => {
     const page = await html(search("/explore", "better word for important"));
-    const slugs = [...page.matchAll(/href="\/language\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+    const slugs = [...page.matchAll(/href="\/language\/([a-z0-9-]+)(?:#[a-z0-9-]+)?"/g)].map(
+      (m) => m[1],
+    );
+    // A result about one meaning opens the page at that meaning.
+    expect(page).toContain('href="/language/significant#sense-notable"');
     expect(slugs).toEqual(
       expect.arrayContaining(["significant", "crucial", "essential", "fundamental"]),
     );
