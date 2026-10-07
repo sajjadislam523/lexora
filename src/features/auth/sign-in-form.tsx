@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 import { NETWORK_ERROR, signInErrorMessage } from "./auth-messages";
-import { FormField, fieldAria } from "./form-field";
+import { FormField, fieldAria } from "@/components/lexora/form-field";
 import { PasswordInput } from "./password-input";
 import { fieldErrors, signInSchema, type FieldErrors } from "./schemas";
 import { SubmitButton } from "./submit-button";

@@ -7,7 +7,7 @@ import { Callout } from "@/components/lexora/callout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { FormField, fieldAria } from "@/features/auth/form-field";
+import { FormField, fieldAria } from "@/components/lexora/form-field";
 
 import { updateLearnerProfileAction, updateNameAction } from "./actions";
 import { FOCUS_SKILLS, TARGET_BANDS, type FormState } from "./schemas";
