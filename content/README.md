@@ -203,7 +203,7 @@ A trigger selects exactly one intent. Entries are shown in the order written.
 items/significant.yaml:41 senses[0].relations[2].to: unknown sense "considerable.size"
 ```
 
-Checked automatically:
+Checked automatically, for drafts as well as published content (drafts only skip the review requirement):
 
 - required fields, valid values, kebab-case IDs; IDs, slugs, sense keys and local IDs unique; file name = ID
 - definitions at most 25 words and without the headword
@@ -216,7 +216,7 @@ Checked automatically:
 - one default form per item, British or neutral
 - sources exist and permit their use; external sources have a licence check date; published items have a reviewer and date
 - retired content only: `replaced_by`, pointing at published content
-- intent entries point at published senses; no trigger selects two intents
+- intent entries point at senses that aren't retired (draft entries stay hidden until published); no trigger selects two intents
 
 ## Importing
 
