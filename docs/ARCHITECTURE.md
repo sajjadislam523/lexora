@@ -158,19 +158,19 @@ No variable uses the `NEXT_PUBLIC_` prefix; nothing secret can reach the browser
 
 ### 4.7 Security model
 
-| Concern                | Measure                                                                                                                                                   |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Passwords              | Better Auth scrypt (salted); never logged or returned; 8–128 characters                                                                                   |
-| Sessions               | Opaque DB-backed tokens; HttpOnly + SameSite=Lax (+ Secure on https); token hidden from JSON; revocable instantly                                         |
-| CSRF                   | SameSite=Lax cookies plus Better Auth's origin check against `trustedOrigins` (cross-origin POSTs → 403); server actions use Next's built-in origin check |
-| Brute force            | Database-backed rate limiting: sign-in 5/min, sign-up 3/min, other auth endpoints 100/min per IP                                                          |
-| Account enumeration    | Sign-in errors are generic ("Email or password is incorrect")                                                                                             |
-| Open redirects         | `safeRedirect()` allows only relative paths into protected areas                                                                                          |
-| Authorisation          | `requireSession()` in every protected layout, page, action and route handler; ids from the session only                                                   |
-| Server/client boundary | `server-only` on server modules; ESLint blocks runtime imports of server code from client layers; only `SafeUser` crosses into client components          |
-| Secrets                | Zod-validated, never `NEXT_PUBLIC_`, never echoed in errors; CI uses throwaway values                                                                     |
-| Headers                | `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`, no `X-Powered-By`. Full CSP in Phase 10                 |
-| Telemetry              | Better Auth telemetry disabled                                                                                                                            |
+| Concern                | Measure                                                                                                                                                                                                        |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Passwords              | Better Auth scrypt (salted); never logged or returned; 8–128 characters                                                                                                                                        |
+| Sessions               | Opaque DB-backed tokens; HttpOnly + SameSite=Lax (+ Secure on https); token hidden from JSON; revocable instantly                                                                                              |
+| CSRF                   | SameSite=Lax cookies plus Better Auth's origin check against `trustedOrigins` (cross-origin POSTs → 403); server actions use Next's built-in origin check                                                      |
+| Brute force            | Database-backed rate limiting: sign-in 5/min, sign-up 3/min, other auth endpoints 100/min per IP                                                                                                               |
+| Account enumeration    | Sign-in errors are generic ("Email or password is incorrect")                                                                                                                                                  |
+| Open redirects         | `safeRedirect()` allows only relative paths into protected areas                                                                                                                                               |
+| Authorisation          | `requireSession()` in every protected layout, page, action and route handler; ids from the session only                                                                                                        |
+| Server/client boundary | `server-only` on server modules; ESLint blocks runtime imports of server code from client layers; only `SafeUser` crosses into client components                                                               |
+| Secrets                | Zod-validated, never `NEXT_PUBLIC_`, never echoed in errors; no credentials committed (local and CI databases use localhost-only trust auth; CI generates its auth secret per run); GitGuardian scans every PR |
+| Headers                | `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`, no `X-Powered-By`. Full CSP in Phase 10                                                                      |
+| Telemetry              | Better Auth telemetry disabled                                                                                                                                                                                 |
 
 **Known gaps** (tracked in ROADMAP open decisions): no email provider yet, so no email verification or password reset; no breached-password check; CSP deferred to Phase 10.
 
