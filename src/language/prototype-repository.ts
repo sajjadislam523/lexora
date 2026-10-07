@@ -1,9 +1,8 @@
-import { DEMO_QUERIES } from "@/demo/finder";
 import { DEMO_LANGUAGE } from "@/demo/language";
 import type { DemoLanguageItem } from "@/demo/types";
 
 import type { LanguageRepository } from "./repository";
-import type { ExampleSearchDefinition, LanguageItem } from "./types";
+import type { LanguageItem } from "./types";
 
 /** Strips the prototype's sample learner status so it can never reach a public page. */
 function toLanguageItem({ status: _status, ...item }: DemoLanguageItem): LanguageItem {
@@ -15,10 +14,7 @@ export class PrototypeLanguageRepository implements LanguageRepository {
   private readonly items: readonly LanguageItem[];
   private readonly bySlug: ReadonlyMap<string, LanguageItem>;
 
-  constructor(
-    items: readonly DemoLanguageItem[] = DEMO_LANGUAGE,
-    private readonly searches: readonly ExampleSearchDefinition[] = DEMO_QUERIES,
-  ) {
+  constructor(items: readonly DemoLanguageItem[] = DEMO_LANGUAGE) {
     this.items = items.map(toLanguageItem);
     this.bySlug = new Map(this.items.map((item) => [item.slug, item]));
   }
@@ -29,9 +25,5 @@ export class PrototypeLanguageRepository implements LanguageRepository {
 
   listItems() {
     return this.items;
-  }
-
-  listExampleSearches() {
-    return this.searches;
   }
 }

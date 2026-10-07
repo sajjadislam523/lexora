@@ -428,6 +428,7 @@ export class LanguageSearchService {
       return respond(base, c, {
         summary: "Find a word for the gap — add the words that come after it",
         groups: [],
+        gap: reading,
       });
     }
 
@@ -444,12 +445,16 @@ export class LanguageSearchService {
 
     const fitting = scored.filter((s) => s.fit !== "unlikely");
     const unlikely = scored.filter((s) => s.fit === "unlikely");
-    const toResult = ({ frame, summary, fit }: (typeof scored)[number]): SearchResult =>
-      resultFrom(summary, gapReason(frame, fit, object, preposition), {
+    const toResult = ({ frame, summary, fit }: (typeof scored)[number]): SearchResult => {
+      // The preposition this verb brings: the learner's own when it fits, else the frame's.
+      const takes = fit === "fits" ? preposition : frame.prepositions[0];
+      return resultFrom(summary, gapReason(frame, fit, object, preposition), {
         key: `${summary.senseId}:gap`,
         pattern: frame.display,
         fit,
+        fill: { word: frame.head, ...(takes && { preposition: takes }) },
       });
+    };
     const order = { fits: 0, different_preposition: 1, unlikely: 2 } as const;
     const sorted = (list: typeof scored) =>
       [...list].sort(
@@ -474,6 +479,7 @@ export class LanguageSearchService {
     return respond(base, c, {
       summary: `Verbs for the gap, checked against ${context}`,
       groups,
+      gap: reading,
       guide:
         groups.length > 0
           ? {
@@ -601,7 +607,9 @@ export class LanguageSearchService {
 
     const notes = new Map(relations.map((r) => [r.toSenseId, r.note]));
     return respond(base, c, {
-      summary: `${quote(headword)} and related language`,
+      summary: groups.some((group) => group.label)
+        ? `${quote(headword)} and related language`
+        : quote(headword),
       term: resolution,
       groups,
       guide: guideFrom(groups.slice(1), (result) => notes.get(result.senseId), "How they differ"),
@@ -694,6 +702,7 @@ function respond(
     guide?: FitGuide;
     mistakes?: MistakeHit[];
     outcome?: SearchResponse["outcome"];
+    gap?: SearchResponse["gap"];
   },
 ): SearchResponse {
   const groups = parts.groups.filter((group) => group.results.length > 0);
@@ -716,6 +725,7 @@ function respond(
     groups,
     ...(parts.guide && parts.guide.rows.length > 0 && { guide: parts.guide }),
     mistakes,
+    ...(parts.gap && { gap: parts.gap }),
     outcome: groups.length === 0 ? "none" : (parts.outcome ?? "results"),
   };
 }
@@ -741,16 +751,24 @@ function describeMatch(term: string, forms: FormMatch[]): TermResolution {
       form.region === "us"
         ? `${term} is the US spelling; Lexora shows the British spelling, ${form.headword}. Both are correct.`
         : `${term} is another spelling of ${form.headword}. Both are correct.`;
-    return { input: term, resolved: form.headword, via: "variant", note };
+    return {
+      input: term,
+      resolved: form.headword,
+      via: "variant",
+      note,
+      ...(form.region && { region: form.region }),
+    };
   }
   return { input: term, resolved: form.headword, via: "exact" };
 }
 
+/** Short on purpose: the interpretation (`term.note`) carries the full explanation. */
 function lookupReason(resolution: TermResolution, tier: MatchTier) {
-  if (resolution.via === "variant") return resolution.note ?? "Another spelling";
-  if (resolution.via === "typo") {
-    return `Showing ${quote(resolution.resolved)} — you typed ${quote(resolution.input)}`;
+  if (resolution.via === "variant") {
+    const spelling = resolution.region === "us" ? "the US spelling" : "another spelling";
+    return `Matches ${quote(resolution.input)}, ${spelling}`;
   }
+  if (resolution.via === "typo") return `Closest spelling to ${quote(resolution.input)}`;
   return tier === 6 ? `Contains ${quote(resolution.resolved)}` : "Exact match";
 }
 

@@ -1,5 +1,6 @@
-import { beforeAll, describe, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
+import { EXAMPLE_SEARCHES } from "@/language/examples";
 import { LanguageSearchService } from "@/language/search/service";
 import { buildRows } from "@/server/content/build";
 
@@ -21,6 +22,14 @@ describe("golden search suite (in memory)", () => {
     "%s",
     async (_, golden) => {
       await checkGolden(service, golden);
+    },
+  );
+
+  it.each(EXAMPLE_SEARCHES.map((example) => [example.text] as const))(
+    "example search %j finds real results",
+    async (text) => {
+      const response = await service.search(text);
+      expect(response?.outcome).toBe("results");
     },
   );
 });

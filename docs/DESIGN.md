@@ -334,7 +334,7 @@ Three patterns, never mixed:
 | **Hero** (Finder)    | `lexora/search-field size="lg"` | Raised white field, 56px, `rounded-xl`, `shadow-sm`, 18px text, `/` hint. Suggested queries as quiet pills below.                                      |
 | **Filter** (in page) | `lexora/search-field`           | 40px, `rounded-md`. Filters the visible list.                                                                                                          |
 
-All have an accessible label. Placeholders are prompts ("What do you want to say?"), not labels. Search behaviour arrives in Phase 4.
+All have an accessible label. Placeholders are prompts ("What do you want to say?"), not labels. Searching is done by the language engine on the server (Phase 3); the field only submits the query.
 
 ### 9.4 Command palette ✅ `ui/command`
 
@@ -355,13 +355,13 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 
 **Rectangles say what something is. Pills say where you are with it.**
 
-| Component               | Shape              | Use                                                                                                                   |
-| ----------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                              |
-| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                                      |
-| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                                    |
-| `lexora/fit-badge`      | Pill               | How well a choice fits a sentence: Best fit (success), Natural (ink), Possible (warning), Different meaning (neutral) |
-| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                              |
+| Component               | Shape              | Use                                                                                                             |
+| ----------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                        |
+| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                                |
+| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                              |
+| `lexora/fit-badge`      | Pill               | The search engine's context-gap verdict: Fits (success), Different preposition (warning), Doesn’t fit (neutral) |
+| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                        |
 
 All badges are 20px tall with `type-micro` text.
 
@@ -378,14 +378,15 @@ A tinted, borderless entry point: a white icon square (36px, `rounded-md`), a `t
 The core unit of the Finder. White, flat, 1px `border`, `rounded-lg`. Hover: `border-strong` + `shadow-sm`. Anatomy:
 
 1. `CategoryBadge`
-2. **Term** in `type-term` (serif)
-3. **Meaning**, one line, `type-body` muted
-4. **Best when …** (optional): lightbulb in ink plus one line of context. This is the line that makes near-synonyms distinguishable.
-5. **Pattern** (optional): mono chip on `bg-muted`, shown when there are no collocations
-6. **Collocations** (optional): up to four quiet chips (`border-subtle` on canvas, `type-caption`)
-7. **Example** (optional): serif blockquote with a left rule; the target term is marked with the **highlighter**
-8. **Note** (optional): caption, for common mistakes or register warnings
-9. **Footer**: register and skill tags on the left, `StrengthMeter` on the right
+2. **Term** in `type-term` (serif), with the **sense label** in caption beside it when a word has several meanings ("significant · having a real effect")
+3. **Reason** (search results): why the search engine returned this result, as a caption with an ink corner arrow ("Stronger than important · Crucial means an outcome depends on it."). The text always comes from the engine, never from the UI.
+4. **Meaning**, one line, `type-body` muted
+5. **Best when …** (optional): lightbulb in ink plus one line of context. This is the line that makes near-synonyms distinguishable.
+6. **Pattern** (optional): mono chip on `bg-muted`, shown when there are no collocations
+7. **Collocations** (optional): up to four quiet chips (`border-subtle` on canvas, `type-caption`)
+8. **Example** (optional): serif blockquote with a left rule; the target term is marked with the **highlighter**
+9. **Note** (optional): caption, for common mistakes or register warnings
+10. **Footer**: register and skill tags on the left, `StrengthMeter` on the right
 
 - **Selectable:** with `href`, the term becomes a stretched link, so the whole card opens the detail page. Focus shows a ring on the card.
 - **Save:** a ghost icon button (bookmark) with `aria-pressed`. It sits above the stretched link (`z-10`), so it stays separately clickable and focusable. Saved = ink with a filled-check icon. It is hidden when no handler is passed.
@@ -475,20 +476,27 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
 
 ### 10.2 Language Finder (`/finder`) and Explore (`/explore`)
 
-One view, two homes: `/finder` inside the app shell and `/explore` in the public frame. Only the eyebrow, title and where searches go differ. The server runs the search and passes the result in.
+One view, two homes: `/finder` inside the app shell and `/explore` in the public frame. Only the eyebrow, title and where searches go differ. The server runs the query through the language engine (`LanguageSearchService`) and passes the response in; the view never searches, ranks or corrects anything itself.
 
-- **Search:** header, then the hero `SearchField` inside a `form role="search"`. The query lives in the URL (`?q=`). `/` focuses the field. On mobile a _Find_ button sits inside the field.
-- **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They are intents, so they have no category dots. Selecting one changes the placeholder and the example searches; a recognised query auto-selects its mode. Below `sm` they form one horizontally scrollable row.
-- **Example searches:** quiet `bg-muted` pills.
-- **Coverage caption:** always visible — Lexora covers a small, hand-picked set of language for now, matched by keyword.
+- **Search:** header, then the hero `SearchField` inside a `form role="search"`. The query lives in the URL (`?q=`), so a search can be shared, refreshed and revisited with back/forward. `/` focuses the field; Escape clears it (a second Escape leaves it). On mobile a _Find_ button sits inside the field.
+- **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They change the placeholder and the example searches only; the engine reads the query's shape itself, and the chip for the shape it recognised is selected. Below `sm` they form one horizontally scrollable row.
+- **Example searches:** quiet `bg-muted` pills. Every example is covered by the golden search suite.
+- **Coverage caption:** always visible — Lexora covers a small, reviewed set of language for now, and every result says why it appears.
+- **Before searching:** the context tool on a real example sentence, and the same idea in writing and speaking (_furthermore_ / _on top of that_), both built from engine responses.
 - **Results:**
-  - an "Understood as" heading, with "Matched on “keyword” · mode · n results" — the word that selected the results is always shown, so matching never looks like interpretation
-  - a **fit guide** ("Which one fits?": term → when, plus a note on why they aren't interchangeable), in a sticky right column at `xl` and above the cards below `xl`
-  - result cards
-  - a `SkillComparison` when register matters
-  - related searches
-- **Context tool:** a `GapSentence` in a muted well. Each option fills the gap, including the preposition it brings, and gets a `FitBadge`. A note and a link to the item follow. This is exploration, not a test.
-- **No match:** a dashed empty state that says nothing in Lexora matches yet, that the library is small and keyword-matched, and offers the example searches.
+  - "Understood as" with the engine's interpretation ("Stronger alternatives to “important”"), the mode and the result count
+  - a notice when the term was read differently from how it was typed: a corrected spelling ("Showing results for “responsible for” — you typed …"), a spelling variant, or a full-text fallback
+  - a **fit guide** ("Which one fits?", "How they differ": term → when) in a sticky right column at `xl`, above the cards below `xl`
+  - result cards in the engine's groups (headings such as _Stronger_, _Between sentences_), each with its **reason**
+  - _Common mistakes_ (`MistakeRow`s) when the query concerns one ("responsible of")
+  - _More searches_ pills
+- **Context gap:** a query with a gap (`___`) shows the context tool for the learner's own sentence. Each verb fills the gap with the preposition it brings, and gets a `FitBadge` (Fits · Different preposition · Doesn’t fit) with the engine's reason and a link to the item.
+- **States:**
+  - **Loading:** while a new search loads, the results area becomes a skeleton of the results layout (`aria-busy`, "Searching…" for screen readers). No spinner, no motion.
+  - **Did you mean:** when two words are equally close, the engine doesn't guess; the view offers both as buttons.
+  - **No match:** a dashed empty state that says nothing matches yet, suggests a single word or an "I want to …" query, and offers the example searches.
+  - **Error:** a danger callout ("Search isn’t available right now") with _Try again_.
+  - A visually hidden status line announces the result summary after each search.
 - **Saving:** the card's bookmark. Visitors get the save gate (§10.7).
 
 ### 10.3 Practice (`/practice`)

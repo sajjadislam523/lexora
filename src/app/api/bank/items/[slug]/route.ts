@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { languageRepository } from "@/language";
+import { languageContent } from "@/language";
 import { getRequestSession } from "@/server/auth/session";
 import { isSameOrigin } from "@/server/http/same-origin";
 
@@ -26,9 +26,10 @@ async function setSaved(
   const session = await getRequestSession(request);
   if (!session) return json({ error: "unauthenticated" }, 401);
 
+  // Only published language can be saved; old or retired slugs aren't saveable addresses.
   const { slug } = await params;
-  const item = languageRepository.getItem(slug);
-  if (!item) return json({ error: "not_found" }, 404);
+  const item = await languageContent.getItemBySlug(slug);
+  if (!item || "redirectTo" in item) return json({ error: "not_found" }, 404);
 
   return json({ slug: item.slug, saved, stored: false }, 200);
 }
