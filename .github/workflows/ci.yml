@@ -63,3 +63,8 @@ jobs:
           fi
       - run: pnpm test
       - run: pnpm build
+      - name: End-to-end route checks against the production build
+        run: |
+          pnpm start > next.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/ && break; sleep 1; done
+          pnpm test:e2e || (cat next.log; exit 1)
