@@ -56,6 +56,8 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - name: Validate authored content
+        run: pnpm content:check
       - name: Apply migrations to a fresh database
         run: pnpm db:migrate
       - name: Fail if the schema changed without a migration
