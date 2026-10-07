@@ -40,6 +40,8 @@ export type TermResolution = {
   via: "exact" | "variant" | "typo";
   /** For variants: "US spelling of analyse". */
   note?: string;
+  /** For variants: the region of the spelling that was typed. */
+  region?: "gb" | "us";
 };
 
 /** Context-gap fit: does this verb work in the learner's sentence? */
@@ -66,6 +68,8 @@ export type SearchResult = {
   /** Why this result is here, in plain words. Every result has one. */
   reason: string;
   fit?: GapFit;
+  /** Context-gap results: the word for the gap and the preposition it takes here. */
+  fill?: { word: string; preposition?: string };
 };
 
 export type ResultGroup = { label?: string; results: SearchResult[] };
@@ -87,6 +91,8 @@ export type SearchResponse = {
   mistakes: { wrong: string; right: string; explanation: string }[];
   /** Two equally close corrections: shown instead of guessing. */
   didYouMean?: string[];
+  /** Context-gap queries: the object and preposition read after the gap. */
+  gap?: { object?: string; preposition?: string };
   /** `fallback`: full-text matches only, labelled as such. `none`: nothing matched. */
   outcome: "results" | "fallback" | "none";
 };
