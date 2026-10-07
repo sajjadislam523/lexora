@@ -43,7 +43,7 @@
 
 ---
 
-## 3. Current structure (Phase 2)
+## 3. Current structure (Phase 2.1)
 
 ```text
 lexora/
@@ -56,26 +56,33 @@ lexora/
 ├── scripts/auth-generate.mjs     # Regenerates the Better Auth tables from the auth config
 ├── test/                         # Vitest setup and the server-only stub
 └── src/
-    ├── proxy.ts                  # Optimistic route protection (cookie presence only)
+    ├── proxy.ts                  # Optimistic protection of personal areas (cookie presence only)
     ├── app/
-    │   ├── layout.tsx · globals.css
-    │   ├── page.tsx              # Public landing page (session-aware)
+    │   ├── layout.tsx · globals.css · robots.ts · sitemap.ts · not-found.tsx
+    │   ├── (public)/             # Public discovery: no session read on the server, SiteHeader/Footer
+    │   │   ├── page.tsx          #   Landing page (static)
+    │   │   ├── explore/page.tsx  #   Public Language Finder (server-rendered per query)
+    │   │   └── language/[slug]/page.tsx   # Language pages (static, SEO metadata)
     │   ├── (auth)/               # sign-in, sign-up — own layout, public
-    │   ├── (app)/                # Protected: requireSession() in layout.tsx; persistent AppShell
+    │   ├── (app)/                # Personal learning: requireSession() in layout.tsx; persistent AppShell
     │   │   ├── home|finder|bank|practice|writing|speaking|progress|settings/page.tsx
-    │   │   ├── language/[slug]/page.tsx
-    │   │   └── loading.tsx · error.tsx
-    │   ├── api/auth/[...all]/route.ts   # Better Auth endpoints — the only API route
+    │   │   └── error.tsx
+    │   ├── api/auth/[...all]/route.ts   # Better Auth endpoints
+    │   ├── api/bank/items/[slug]/route.ts   # Save / remove (authenticated per request)
     │   └── design-system/        # Visual review surface (public, static sample data)
     ├── components/
     │   ├── ui/                   # shadcn primitives + NativeSelect, restyled to tokens
     │   ├── lexora/               # Lexora product components (presentational, incl. FormField)
+    │   ├── language/             # Shared save flow: SavedLanguageProvider, save gate, saveable cards
+    │   ├── site/                 # Public header, footer, logo
     │   └── shell/                # AppShell, sidebar, user menu, top bar, command palette
-    ├── features/                 # Screen composition: auth, dashboard, finder, language, practice, settings
-    ├── demo/                     # Phase 1 prototype content + session-only saved state (NOT the dataset)
+    ├── features/                 # Screen composition: auth, dashboard, discovery, finder, language, practice, settings
+    ├── language/                 # Shared language engine: repository, search service, client-safe examples
+    ├── demo/                     # Prototype content behind PrototypeLanguageRepository (NOT the dataset)
     ├── server/                   # Server-only (import "server-only")
-    │   ├── env.ts                #   Zod-validated server environment
+    │   ├── env.ts · site-url.ts  #   Zod-validated server environment; public origin
     │   ├── auth/                 #   Better Auth config + session helpers
+    │   ├── http/                 #   Same-origin guard for cookie-authenticated route handlers
     │   ├── db/                   #   Drizzle client + schema (auth tables generated, product tables hand-written)
     │   └── repositories/         #   Data access; callers pass the session's user id
     ├── lib/                      # Shared, client-safe utilities (cn, auth client, safe redirect, constants)
@@ -95,12 +102,46 @@ lexora/
 - **Endpoints:** `/api/auth/*` via `toNextJsHandler`. Browser code uses `src/lib/auth-client.ts` (same origin, no secrets).
 - **Server helpers** (`src/server/auth/session.ts`): `getSession()` (deduplicated per request), `requireSession()` (redirects to `/sign-in?next=…`, adding `reason=session-expired` when a cookie existed but its session didn't), and `toSafeUser()` — the only user fields (`id`, `name`, `email`) allowed into client components.
 
-### 4.2 Route protection (two layers)
+### 4.2 Route boundary (Phase 2.1)
 
-1. **`src/proxy.ts`** — a fast, optimistic check: on protected paths, no session cookie → redirect to `/sign-in?next=<path>`. It never validates the session and never touches the database.
-2. **`(app)/layout.tsx` → `requireSession()`** — the authoritative check against the database for every app page. **Every server action and route handler calls `requireSession()` itself**; the proxy is never relied on for authorisation.
+Lexora has three layers. Visitors can use the first; the second serves both; the third needs an account.
 
-Protected: `/home`, `/finder`, `/bank`, `/practice`, `/writing`, `/speaking`, `/progress`, `/settings`, `/language/*` (`PROTECTED_ROUTES` in `src/lib/auth-constants.ts`; a test keeps the proxy matcher in sync). Public: `/`, `/sign-in`, `/sign-up`, `/design-system`, `/api/auth/*`. Auth pages redirect signed-in users server-side (never in the proxy, to avoid stale-cookie loops). Post-sign-in destinations pass through `safeRedirect()`, which only allows relative paths inside protected areas (no open redirects).
+```text
+Public Discovery Layer      /  ·  /explore  ·  /language/[slug]            (no account, no user data)
+          │  reads language through
+          ▼
+Shared Language Engine      src/language — LanguageRepository + LanguageSearchService
+          ▲  reads language through
+          │
+Authenticated Personal Learning   /home · /finder · /bank · /practice · /writing · /speaking · /progress · /settings
+```
+
+| Route                         | Access        | Rendering               | Notes                                                                            |
+| ----------------------------- | ------------- | ----------------------- | -------------------------------------------------------------------------------- |
+| `/`                           | Public        | Static                  | Landing page with live search into `/explore`                                    |
+| `/explore`                    | Public        | Dynamic (per `?q=`)     | Public Language Finder; query pages are `noindex`, canonical `/explore`          |
+| `/language/[slug]`            | Public        | Static (SSG), real 404s | Title, description, canonical URL, Open Graph, `DefinedTerm` JSON-LD             |
+| `/sign-in`, `/sign-up`        | Public        | Dynamic                 | Redirect signed-in users to `next`                                               |
+| `/design-system`              | Public        | Static                  | Internal reference                                                               |
+| `/robots.txt`, `/sitemap.xml` | Public        | Static                  | Personal areas and `/api/` disallowed; sitemap lists public pages only           |
+| `/home` … `/settings`         | Authenticated | Dynamic                 | Proxy redirect + `requireSession()` in the `(app)` layout                        |
+| `/api/auth/*`                 | Public        | —                       | Better Auth (origin-checked, rate-limited)                                       |
+| `/api/bank/items/[slug]`      | Authenticated | —                       | `PUT` save / `DELETE` remove; 401 without a session, 403 cross-site, 404 unknown |
+
+**Public pages never read the session on the server.** The `(public)` layout and its pages render the same HTML for everyone, so they can be prerendered and cached and can't leak user data. ESLint enforces it: `src/app/(public)/**` and the public features (`discovery`, `finder`, `language`) can't import `@/server/*`, and public routes read language only through `@/language`. Account-aware UI (header buttons, _Practise this_, the save gate) is resolved in the browser by `SavedLanguageProvider` from Better Auth's `get-session` (token-free).
+
+**Account actions authenticate themselves.** Saving is an HTTP endpoint, not something the page decides: it validates the session cookie against the database, takes the user only from that session (no user id in the URL or body), and checks `Origin` against the app origin because route handlers don't get Next's server-action CSRF protection. A visitor's save gets 401, which opens the save gate. Until the language bank exists (Phase 5) the endpoint stores nothing and says so (`stored: false`); saved state lives in browser memory for the session.
+
+**Public language data is separate from user data.** `LanguageItem` has no learner fields: `PrototypeLanguageRepository` strips the prototype's sample review status, and a test checks it. Personal state (saved, review status) will come from user-owned tables joined in personal-learning pages, never from the public content.
+
+**Return paths.** The save gate sends visitors to `/sign-up?next=<current page>` (or sign-in). `safeRedirect()` accepts relative paths into personal areas and the public return routes (`/explore`, `/language/*`), and nothing else. The started save is remembered in `sessionStorage` for 30 minutes and completed when the session appears.
+
+### 4.2.1 Route protection (two layers)
+
+1. **`src/proxy.ts`** — a fast, optimistic check: on personal-learning paths, no session cookie → redirect to `/sign-in?next=<path>`. It never validates the session and never touches the database. Public routes are outside its matcher.
+2. **`(app)/layout.tsx` → `requireSession()`** — the authoritative check against the database for every app page. **Every server action calls `requireSession()` and every route handler calls `getRequestSession()` itself**; the proxy is never relied on for authorisation.
+
+`PROTECTED_ROUTES` in `src/lib/auth-constants.ts` lists the personal areas; tests keep the proxy matcher in sync and assert it never covers public routes. Auth pages redirect signed-in users server-side (never in the proxy, to avoid stale-cookie loops).
 
 ### 4.3 Authorisation
 
@@ -158,19 +199,20 @@ No variable uses the `NEXT_PUBLIC_` prefix; nothing secret can reach the browser
 
 ### 4.7 Security model
 
-| Concern                | Measure                                                                                                                                                                                                        |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Passwords              | Better Auth scrypt (salted); never logged or returned; 8–128 characters                                                                                                                                        |
-| Sessions               | Opaque DB-backed tokens; HttpOnly + SameSite=Lax (+ Secure on https); the token is never in any JSON body (see Token exposure); revocable instantly                                                            |
-| CSRF                   | SameSite=Lax cookies plus Better Auth's origin check against `trustedOrigins` (cross-origin POSTs → 403); server actions use Next's built-in origin check                                                      |
-| Brute force            | Database-backed rate limiting: sign-in 5/min, sign-up 3/min, other auth endpoints 100/min per IP                                                                                                               |
-| Account enumeration    | Sign-in errors are generic ("Email or password is incorrect")                                                                                                                                                  |
-| Open redirects         | `safeRedirect()` allows only relative paths into protected areas                                                                                                                                               |
-| Authorisation          | `requireSession()` in every protected layout, page, action and route handler; ids from the session only                                                                                                        |
-| Server/client boundary | `server-only` on server modules; ESLint blocks runtime imports of server code from client layers; only `SafeUser` crosses into client components                                                               |
-| Secrets                | Zod-validated, never `NEXT_PUBLIC_`, never echoed in errors; no credentials committed (local and CI databases use localhost-only trust auth; CI generates its auth secret per run); GitGuardian scans every PR |
-| Headers                | `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`, no `X-Powered-By`. Full CSP in Phase 10                                                                      |
-| Telemetry              | Better Auth telemetry disabled                                                                                                                                                                                 |
+| Concern                | Measure                                                                                                                                                                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Passwords              | Better Auth scrypt (salted); never logged or returned; 8–128 characters                                                                                                                                                            |
+| Sessions               | Opaque DB-backed tokens; HttpOnly + SameSite=Lax (+ Secure on https); the token is never in any JSON body (see Token exposure); revocable instantly                                                                                |
+| CSRF                   | SameSite=Lax cookies plus Better Auth's origin check against `trustedOrigins` (cross-origin POSTs → 403); server actions use Next's built-in origin check; route handlers use `isSameOrigin()` (missing or foreign `Origin` → 403) |
+| Brute force            | Database-backed rate limiting: sign-in 5/min, sign-up 3/min, other auth endpoints 100/min per IP                                                                                                                                   |
+| Account enumeration    | Sign-in errors are generic ("Email or password is incorrect")                                                                                                                                                                      |
+| Open redirects         | `safeRedirect()` allows only relative paths into protected areas and the public return routes (`/explore`, `/language/*`)                                                                                                          |
+| Authorisation          | `requireSession()` in every protected layout, page and action; `getRequestSession()` (401) in route handlers; ids from the session only, never from the client                                                                     |
+| Public/private split   | Public routes never read the session server-side and can't import server code (ESLint); public language items carry no learner data                                                                                                |
+| Server/client boundary | `server-only` on server modules; ESLint blocks runtime imports of server code from client layers; only `SafeUser` crosses into client components                                                                                   |
+| Secrets                | Zod-validated, never `NEXT_PUBLIC_`, never echoed in errors; no credentials committed (local and CI databases use localhost-only trust auth; CI generates its auth secret per run); GitGuardian scans every PR                     |
+| Headers                | `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`, no `X-Powered-By`. Full CSP in Phase 10                                                                                          |
+| Telemetry              | Better Auth telemetry disabled                                                                                                                                                                                                     |
 
 **Token exposure.** Lexora authenticates only with the HttpOnly session cookie — no bearer tokens — so a session token in a response body is never needed. Better Auth returns one by default in `sign-in/email`, `sign-up/email` and `list-sessions`. Rather than modifying Better Auth, a documented `hooks.after` middleware (`redactSessionTokens`, `src/server/auth/redact.ts`) removes `token` from every JSON body while the endpoint's `Set-Cookie` headers pass through untouched; `customSession` does the same for `get-session`. Integration tests assert that no auth response contains a session token or password hash. If a future feature ever needs bearer tokens (e.g. a mobile client), this hook is the one place to revisit.
 
@@ -238,7 +280,10 @@ app → features → domain
 - `features/*` may import `domain`, `server` (server-side only), and components. Features don't import each other. Shared needs move down into `domain` or `components/lexora`.
 - `content/` is data, imported only by seed scripts and tests.
 
-These rules are **enforced by ESLint** (`eslint.config.mjs` → boundaries): shared UI, `lib` and `demo` can't import server code or features; server code can't import UI; features can't import each other. Type-only imports are allowed.
+- `language/` (the shared engine) imports no UI, server or app code. `language/index.ts` is server-only; client components import only the client-safe `language/examples` and types.
+- Public routes (`app/(public)`) and public features (`discovery`, `finder`, `language`) never import `server`; public routes never import `demo`.
+
+These rules are **enforced by ESLint** (`eslint.config.mjs` → boundaries): shared UI, `lib` and `demo` can't import server code or features; server code can't import UI; features can't import each other; the language engine stays independent; public discovery code can't import server code. Type-only imports are allowed.
 
 ---
 
@@ -345,35 +390,42 @@ interface ExplanationProvider {
 
 ## 12. Decision log
 
-| #   | Date       | Decision                                                                                                                                                                | Rationale                                                                                                                                                    |
-| --- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | 2026-10-07 | Next.js 16 + TypeScript + Tailwind 4                                                                                                                                    | Requested stack, current stable; RSC suits a data-heavy app                                                                                                  |
-| 2   | 2026-10-07 | shadcn/ui on Radix (`radix-nova`)                                                                                                                                       | Accessible primitives we own and restyle; Radix chosen over Base UI for maturity                                                                             |
-| 3   | 2026-10-07 | Tokens as CSS variables mapped via `@theme inline`; kept shadcn variable names                                                                                          | Primitives work unmodified; one place to change values; dark mode becomes a value swap                                                                       |
-| 4   | 2026-10-07 | Fonts: Inter / Newsreader / JetBrains Mono via `next/font`                                                                                                              | Editorial + interface voices; self-hosted (privacy, no layout shift)                                                                                         |
-| 5   | 2026-10-07 | Light theme only for now                                                                                                                                                | Focus; token architecture keeps dark mode cheap later                                                                                                        |
-| 6   | 2026-10-07 | Zod, DB, ORM, and tests not installed in Phase 0                                                                                                                        | Nothing uses them yet; avoid unused dependencies                                                                                                             |
-| 7   | 2026-10-07 | `shadcn` package as a devDependency                                                                                                                                     | Only its `tailwind.css` (custom variants, utilities) is consumed, at build time                                                                              |
-| 8   | 2026-10-07 | `suppressHydrationWarning` on `<html>` and `<body>` only                                                                                                                | Browser extensions inject attributes there; it doesn't affect children                                                                                       |
-| 9   | 2026-10-07 | No AI dependency; intelligence behind interfaces                                                                                                                        | Product requirement; AI optional in Phase 9                                                                                                                  |
-| 10  | 2026-10-07 | Drizzle ORM for Postgres (confirmed in Phase 2)                                                                                                                         | SQL-close, light, portable, no binary engine; good fit for FTS/trigram/pgvector                                                                              |
-| 11  | 2026-10-07 | Design language v0.2: serif reserved for language content; Inter 600 for all interface headings                                                                         | Owner decision after reference study; serif becomes a reliable "this is English to study" signal                                                             |
-| 12  | 2026-10-07 | Radius scale 4/6/8/12/16; flat resting surfaces; control-height and section-rhythm tokens                                                                               | Translated from the reference's sober geometry, flat cards and two-density sizing                                                                            |
-| 13  | 2026-10-07 | Added shadcn `table` primitive                                                                                                                                          | Needed for the language bank and mistakes views; restyled to the table spec                                                                                  |
-| 14  | 2026-10-07 | App routes live in an `(app)` route group: `/home`, `/finder`, `/bank`, `/practice`, `/writing`, `/speaking`, `/progress`, `/settings`; `/` stays a public landing page | Short, stable URLs; one persistent shell layout; leaves room for `(marketing)` and `(auth)` groups in Phase 2                                                |
-| 15  | 2026-10-07 | Shell UI state (collapse, mobile sheet, palette) in a client context, not persisted                                                                                     | Avoids cookie reads that would make every app page dynamic; persistence can come with user preferences in Phase 2                                            |
-| 16  | 2026-10-07 | Added shadcn `sheet` primitive                                                                                                                                          | Mobile navigation drawer                                                                                                                                     |
-| 17  | 2026-10-07 | Phase 1 demo content lives in `src/demo/`, imported only by UI code (features, shell, palette)                                                                          | Keeps prototype data obviously separate from the Phase 3 curated dataset and domain model; easy to delete                                                    |
-| 18  | 2026-10-07 | Saved items are an in-memory client context in the `(app)` layout, labelled "session only" wherever saving appears                                                      | Believable cross-screen save state without fake persistence                                                                                                  |
-| 19  | 2026-10-07 | `/language/[slug]` is statically generated with `dynamicParams = false`; Finder and Practice read `?q=` / `?step=` via `useSearchParams` inside `Suspense`              | Every route stays static; queries are shareable, and the browser back button works                                                                           |
-| 20  | 2026-10-07 | Screen composition lives in `src/features/<screen>/`; reusable presentation stays in `components/lexora`                                                                | First use of the target feature structure; features don't import each other (enforced by ESLint since Phase 2)                                               |
-| 21  | 2026-10-07 | **Better Auth** for authentication, email + password first                                                                                                              | Owner decision. Self-hosted, Drizzle adapter, sessions in our database, built-in scrypt, rate limiting and origin checks; social providers are configuration |
-| 22  | 2026-10-07 | **PostgreSQL**: Docker locally, **Neon** on **Vercel** in production; postgres.js driver                                                                                | Owner decision. One driver for all environments; pooled URL at runtime, direct URL for migrations                                                            |
-| 23  | 2026-10-07 | Better Auth tables are generated by its CLI and owned by the library; product data lives in separate tables (`learner_profiles` …) referencing `users.id`               | Keeps auth replaceable and invisible; product schema never bends to the auth library                                                                         |
-| 24  | 2026-10-07 | Plural, snake_case table names (`users`, `sessions` …)                                                                                                                  | Avoids the reserved word `user`; conventional SQL                                                                                                            |
-| 25  | 2026-10-07 | Database-validated sessions (no cookie cache); session token hidden from JSON                                                                                           | Immediate revocation and minimal client exposure, at the cost of one indexed query per request                                                               |
-| 26  | 2026-10-07 | Two-layer protection: cookie-presence proxy + `requireSession()` in layouts, pages, actions and route handlers                                                          | Fast redirects without trusting the proxy for authorisation (Next.js guidance)                                                                               |
-| 27  | 2026-10-07 | Database-backed rate limiting                                                                                                                                           | In-memory limits don't work across serverless instances                                                                                                      |
-| 28  | 2026-10-07 | No seed data                                                                                                                                                            | Real sign-up creates users; prototype language content stays in `src/demo` until the Phase 3 content pipeline                                                |
-| 29  | 2026-10-07 | Vitest for unit and Postgres integration tests; CI runs migrations on a fresh database and detects schema drift                                                         | Proves migrations and auth work from zero on every change                                                                                                    |
-| 30  | 2026-10-07 | ESLint `no-restricted-imports` enforces the layer boundaries                                                                                                            | Turns the documented dependency rules into checks                                                                                                            |
+| #   | Date       | Decision                                                                                                                                                                | Rationale                                                                                                                                                     |
+| --- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 2026-10-07 | Next.js 16 + TypeScript + Tailwind 4                                                                                                                                    | Requested stack, current stable; RSC suits a data-heavy app                                                                                                   |
+| 2   | 2026-10-07 | shadcn/ui on Radix (`radix-nova`)                                                                                                                                       | Accessible primitives we own and restyle; Radix chosen over Base UI for maturity                                                                              |
+| 3   | 2026-10-07 | Tokens as CSS variables mapped via `@theme inline`; kept shadcn variable names                                                                                          | Primitives work unmodified; one place to change values; dark mode becomes a value swap                                                                        |
+| 4   | 2026-10-07 | Fonts: Inter / Newsreader / JetBrains Mono via `next/font`                                                                                                              | Editorial + interface voices; self-hosted (privacy, no layout shift)                                                                                          |
+| 5   | 2026-10-07 | Light theme only for now                                                                                                                                                | Focus; token architecture keeps dark mode cheap later                                                                                                         |
+| 6   | 2026-10-07 | Zod, DB, ORM, and tests not installed in Phase 0                                                                                                                        | Nothing uses them yet; avoid unused dependencies                                                                                                              |
+| 7   | 2026-10-07 | `shadcn` package as a devDependency                                                                                                                                     | Only its `tailwind.css` (custom variants, utilities) is consumed, at build time                                                                               |
+| 8   | 2026-10-07 | `suppressHydrationWarning` on `<html>` and `<body>` only                                                                                                                | Browser extensions inject attributes there; it doesn't affect children                                                                                        |
+| 9   | 2026-10-07 | No AI dependency; intelligence behind interfaces                                                                                                                        | Product requirement; AI optional in Phase 9                                                                                                                   |
+| 10  | 2026-10-07 | Drizzle ORM for Postgres (confirmed in Phase 2)                                                                                                                         | SQL-close, light, portable, no binary engine; good fit for FTS/trigram/pgvector                                                                               |
+| 11  | 2026-10-07 | Design language v0.2: serif reserved for language content; Inter 600 for all interface headings                                                                         | Owner decision after reference study; serif becomes a reliable "this is English to study" signal                                                              |
+| 12  | 2026-10-07 | Radius scale 4/6/8/12/16; flat resting surfaces; control-height and section-rhythm tokens                                                                               | Translated from the reference's sober geometry, flat cards and two-density sizing                                                                             |
+| 13  | 2026-10-07 | Added shadcn `table` primitive                                                                                                                                          | Needed for the language bank and mistakes views; restyled to the table spec                                                                                   |
+| 14  | 2026-10-07 | App routes live in an `(app)` route group: `/home`, `/finder`, `/bank`, `/practice`, `/writing`, `/speaking`, `/progress`, `/settings`; `/` stays a public landing page | Short, stable URLs; one persistent shell layout; leaves room for `(marketing)` and `(auth)` groups in Phase 2                                                 |
+| 15  | 2026-10-07 | Shell UI state (collapse, mobile sheet, palette) in a client context, not persisted                                                                                     | Avoids cookie reads that would make every app page dynamic; persistence can come with user preferences in Phase 2                                             |
+| 16  | 2026-10-07 | Added shadcn `sheet` primitive                                                                                                                                          | Mobile navigation drawer                                                                                                                                      |
+| 17  | 2026-10-07 | Phase 1 demo content lives in `src/demo/`, imported only by UI code (features, shell, palette)                                                                          | Keeps prototype data obviously separate from the Phase 3 curated dataset and domain model; easy to delete                                                     |
+| 18  | 2026-10-07 | Saved items are an in-memory client context in the `(app)` layout, labelled "session only" wherever saving appears                                                      | Believable cross-screen save state without fake persistence                                                                                                   |
+| 19  | 2026-10-07 | `/language/[slug]` is statically generated with `dynamicParams = false`; Finder and Practice read `?q=` / `?step=` via `useSearchParams` inside `Suspense`              | Every route stays static; queries are shareable, and the browser back button works                                                                            |
+| 20  | 2026-10-07 | Screen composition lives in `src/features/<screen>/`; reusable presentation stays in `components/lexora`                                                                | First use of the target feature structure; features don't import each other (enforced by ESLint since Phase 2)                                                |
+| 21  | 2026-10-07 | **Better Auth** for authentication, email + password first                                                                                                              | Owner decision. Self-hosted, Drizzle adapter, sessions in our database, built-in scrypt, rate limiting and origin checks; social providers are configuration  |
+| 22  | 2026-10-07 | **PostgreSQL**: Docker locally, **Neon** on **Vercel** in production; postgres.js driver                                                                                | Owner decision. One driver for all environments; pooled URL at runtime, direct URL for migrations                                                             |
+| 23  | 2026-10-07 | Better Auth tables are generated by its CLI and owned by the library; product data lives in separate tables (`learner_profiles` …) referencing `users.id`               | Keeps auth replaceable and invisible; product schema never bends to the auth library                                                                          |
+| 24  | 2026-10-07 | Plural, snake_case table names (`users`, `sessions` …)                                                                                                                  | Avoids the reserved word `user`; conventional SQL                                                                                                             |
+| 25  | 2026-10-07 | Database-validated sessions (no cookie cache); session token hidden from JSON                                                                                           | Immediate revocation and minimal client exposure, at the cost of one indexed query per request                                                                |
+| 26  | 2026-10-07 | Two-layer protection: cookie-presence proxy + `requireSession()` in layouts, pages, actions and route handlers                                                          | Fast redirects without trusting the proxy for authorisation (Next.js guidance)                                                                                |
+| 27  | 2026-10-07 | Database-backed rate limiting                                                                                                                                           | In-memory limits don't work across serverless instances                                                                                                       |
+| 28  | 2026-10-07 | No seed data                                                                                                                                                            | Real sign-up creates users; prototype language content stays in `src/demo` until the Phase 3 content pipeline                                                 |
+| 29  | 2026-10-07 | Vitest for unit and Postgres integration tests; CI runs migrations on a fresh database and detects schema drift                                                         | Proves migrations and auth work from zero on every change                                                                                                     |
+| 30  | 2026-10-07 | ESLint `no-restricted-imports` enforces the layer boundaries                                                                                                            | Turns the documented dependency rules into checks                                                                                                             |
+| 31  | 2026-10-07 | Phase 2.1: discovery is public — `/`, `/explore`, `/language/[slug]` in a `(public)` route group; personal learning stays behind auth                                   | Owner decision: demonstrate value before asking for commitment                                                                                                |
+| 32  | 2026-10-07 | Public pages don't read the session on the server; account-aware UI resolves in the browser                                                                             | Keeps public pages static, cacheable and free of user data. Cost: signed-in learners see the public frame on language pages, with a brief header swap         |
+| 33  | 2026-10-07 | Shared language engine `src/language`: `LanguageRepository` + `LanguageSearchService`, `PrototypeLanguageRepository` over `src/demo`; search runs on the server         | One boundary for public and personal pages; Phase 3 swaps the repository, Phase 4 the search, without touching pages. Keeps the dataset out of client bundles |
+| 34  | 2026-10-07 | Deterministic search rules (exact term → example-search keyword → contained term) and a visible "Matched on …" line                                                     | Honest about how results are found; no AI, embeddings or vector search                                                                                        |
+| 35  | 2026-10-07 | Saving is a route handler (`PUT`/`DELETE /api/bank/items/[slug]`), not a server action; it stores nothing until Phase 5                                                 | Public pages never import authenticated code; the server is the single authority (401 → save gate). Supersedes #18's client-only save                         |
+| 36  | 2026-10-07 | Save gate returns to the current page and completes the started save (`sessionStorage`, 30 min)                                                                         | The visitor's intent survives account creation                                                                                                                |
+| 37  | 2026-10-07 | HTTP end-to-end route tests (`pnpm test:e2e`, Vitest + `fetch`) against a production build in CI                                                                        | Verifies the real route boundary (proxy, layouts, status codes, metadata) without adding a browser test framework                                             |

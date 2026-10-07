@@ -3,11 +3,11 @@
 import { BookMarked } from "lucide-react";
 import Link from "next/link";
 
-import { useSavedItems } from "@/demo/saved-items";
+import { useSavedLanguage } from "@/components/language/saved-language";
 
 /** Shows the session-only saved count, so saving elsewhere is visibly reflected here. */
 export function SavedThisSession() {
-  const { count } = useSavedItems();
+  const { count } = useSavedLanguage();
   return (
     <Link
       href="/bank"

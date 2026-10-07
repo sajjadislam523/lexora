@@ -704,6 +704,209 @@ export const DEMO_LANGUAGE: DemoLanguageItem[] = [
       { relation: "Related", term: "significant", slug: "significant" },
     ],
   },
+  {
+    slug: "important",
+    term: "important",
+    category: "vocabulary",
+    partOfSpeech: "adjective",
+    ipa: "/ɪmˈpɔːtənt/",
+    level: "B1",
+    register: ["neutral"],
+    strength: 1,
+    skills: ["writing", "speaking"],
+    meaning: "Having a great effect or value, or worth paying attention to.",
+    pattern: "important to + person / important for + purpose / it is important to + verb",
+    examples: [
+      {
+        text: "It is important to consider the long-term costs of the project.",
+        highlight: "important",
+        skill: "writing",
+      },
+      {
+        text: "My family is really important to me.",
+        highlight: "important to me",
+        skill: "speaking",
+      },
+    ],
+    bestWhen:
+      "A safe, general choice — and the most natural word for personal importance in Speaking.",
+    avoidWhen:
+      "You have already used it in the same essay. Choose a word that says how something matters: significant, crucial or fundamental.",
+    mistakes: [
+      {
+        wrong: "Family is very important for me.",
+        right: "Family is very important to me.",
+        why: "Use important to for what matters to a person; important for for what something helps — “exercise is important for health”.",
+      },
+      {
+        wrong: "It is important for to learn languages.",
+        right: "It is important to learn languages.",
+        why: "Use it is important to + verb, or it is important for someone to + verb.",
+      },
+    ],
+    related: [
+      { relation: "Similar", term: "significant", slug: "significant" },
+      { relation: "Stronger", term: "crucial", slug: "crucial" },
+      { relation: "Similar", term: "fundamental", slug: "fundamental" },
+      { relation: "Opposite", term: "unimportant" },
+    ],
+  },
+  {
+    slug: "pose-a-threat",
+    term: "pose a threat",
+    category: "collocation",
+    partOfSpeech: "verb phrase",
+    level: "B2",
+    register: ["academic", "formal"],
+    strength: 2,
+    skills: ["writing", "speaking"],
+    meaning: "To be a possible danger to something or someone.",
+    pattern: "pose a (serious / major / growing) threat to + noun",
+    examples: [
+      {
+        text: "Rising sea levels pose a serious threat to coastal cities.",
+        highlight: "pose a serious threat",
+        skill: "writing",
+      },
+      {
+        text: "Antibiotic resistance poses a growing threat to public health.",
+        highlight: "poses a growing threat",
+        skill: "writing",
+      },
+      {
+        text: "I think plastic waste poses a real threat to wildlife where I live.",
+        highlight: "poses a real threat",
+        skill: "speaking",
+      },
+    ],
+    bestWhen:
+      "Describing a danger that could cause harm in the future — environment, health and technology essays in Task 2.",
+    avoidWhen:
+      "The harm has already happened. Use “has caused” or “has led to” for effects you can already see.",
+    mistakes: [
+      {
+        wrong: "pose a threat for the environment",
+        right: "pose a threat to the environment",
+        why: "Threat takes to before the thing in danger.",
+      },
+      {
+        wrong: "make a threat to wildlife",
+        right: "pose a threat to wildlife",
+        why: "“Make a threat” means saying you will hurt someone. For danger, use pose.",
+      },
+    ],
+    related: [
+      {
+        relation: "Related",
+        term: "have a detrimental effect on",
+        slug: "have-a-detrimental-effect-on",
+      },
+      { relation: "Related", term: "give rise to", slug: "give-rise-to" },
+      { relation: "More natural", term: "be a danger to" },
+    ],
+  },
+  {
+    slug: "have-a-detrimental-effect-on",
+    term: "have a detrimental effect on",
+    category: "collocation",
+    partOfSpeech: "verb phrase",
+    level: "C1",
+    register: ["academic", "formal"],
+    strength: 3,
+    skills: ["writing"],
+    meaning: "To cause harm or damage to something.",
+    pattern: "have a detrimental effect on + noun",
+    examples: [
+      {
+        text: "Long working hours can have a detrimental effect on employees' health.",
+        highlight: "have a detrimental effect on",
+        skill: "writing",
+      },
+      {
+        text: "Excessive screen time has a detrimental effect on children's sleep.",
+        highlight: "has a detrimental effect on",
+        skill: "writing",
+      },
+    ],
+    bestWhen:
+      "Explaining the negative result of a habit, policy or trend in a formal Task 2 essay.",
+    avoidWhen:
+      "Speaking. It sounds written and heavy in conversation — “is bad for” or “really harms” sound natural.",
+    usage: {
+      writing: {
+        text: "Air pollution has a detrimental effect on children's health.",
+        highlight: "has a detrimental effect on",
+        skill: "writing",
+      },
+      speaking: {
+        text: "The pollution in my city is really bad for kids' health.",
+        highlight: "really bad for",
+        skill: "speaking",
+      },
+      note: "In Speaking, “is bad for” or “does a lot of damage to” sound more natural.",
+    },
+    mistakes: [
+      {
+        wrong: "a detrimental effect to health",
+        right: "a detrimental effect on health",
+        why: "Effect takes on: an effect on something.",
+      },
+      {
+        wrong: "a detrimental affect on",
+        right: "a detrimental effect on",
+        why: "Effect is the noun; affect is usually the verb.",
+      },
+    ],
+    related: [
+      { relation: "Similar", term: "have an adverse effect on" },
+      { relation: "More natural", term: "be bad for" },
+      { relation: "Related", term: "pose a threat", slug: "pose-a-threat" },
+    ],
+  },
+  {
+    slug: "give-rise-to",
+    term: "give rise to",
+    category: "expression",
+    partOfSpeech: "verb phrase",
+    level: "C1",
+    register: ["academic", "formal"],
+    skills: ["writing"],
+    meaning: "To cause something to happen or exist, often a problem or a new situation.",
+    pattern: "give rise to + noun",
+    examples: [
+      {
+        text: "Rapid urbanisation has given rise to serious housing shortages.",
+        highlight: "given rise to",
+        skill: "writing",
+      },
+      {
+        text: "The decline of local shops has given rise to concerns about isolation among older people.",
+        highlight: "given rise to",
+        skill: "writing",
+      },
+    ],
+    bestWhen:
+      "Linking a cause to its result in formal writing — a more precise alternative to “cause” or “lead to”.",
+    avoidWhen:
+      "Before a verb. It needs a noun: “give rise to higher prices”, not “give rise to increase prices”.",
+    mistakes: [
+      {
+        wrong: "gave arise to",
+        right: "gave rise to",
+        why: "The fixed phrase uses the noun rise, not the verb arise.",
+      },
+      {
+        wrong: "give rise to increase prices",
+        right: "give rise to higher prices",
+        why: "Give rise to is followed by a noun, never a verb.",
+      },
+    ],
+    related: [
+      { relation: "More natural", term: "lead to" },
+      { relation: "Similar", term: "result in" },
+      { relation: "Related", term: "pose a threat", slug: "pose-a-threat" },
+    ],
+  },
 ];
 
 export function getLanguageItem(slug: string) {

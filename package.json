@@ -18,7 +18,8 @@
     "db:studio": "drizzle-kit studio",
     "auth:generate": "node scripts/auth-generate.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "vitest run --config vitest.e2e.config.mts"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.7.7",

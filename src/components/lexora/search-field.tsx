@@ -49,7 +49,7 @@ export function SearchField({
         spellCheck={false}
         className={cn(
           "h-full min-w-0 flex-1 bg-transparent text-foreground outline-none placeholder:text-subtle-foreground [&::-webkit-search-cancel-button]:hidden",
-          size === "lg" ? "ml-3 text-lg" : "ml-2 text-base md:text-sm",
+          size === "lg" ? "ml-3 text-base sm:text-lg" : "ml-2 text-base md:text-sm",
         )}
         {...props}
       />
