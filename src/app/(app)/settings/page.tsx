@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
 
-import { RoutePlaceholder } from "@/components/shell/route-placeholder";
+import { SettingsView } from "@/features/settings/settings-view";
+import { requireSession } from "@/server/auth/session";
+import { getLearnerProfile } from "@/server/repositories/learner-profile";
 
 export const metadata: Metadata = { title: "Settings" };
 
-export default function SettingsPage() {
-  return <RoutePlaceholder id="settings" />;
+export default async function SettingsPage() {
+  const session = await requireSession();
+  const profile = await getLearnerProfile(session.user.id);
+
+  return (
+    <SettingsView
+      user={{
+        name: session.user.name,
+        email: session.user.email,
+        createdAt: session.user.createdAt,
+      }}
+      profile={profile}
+    />
+  );
 }

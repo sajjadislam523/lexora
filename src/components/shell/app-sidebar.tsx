@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 import { PRIMARY_NAV, SECONDARY_NAV, isActive } from "./navigation";
 import { useShell } from "./shell-provider";
+import { UserMenu } from "./user-menu";
 
 function LogoMark() {
   return (
@@ -134,6 +135,15 @@ function SidebarBody({ collapsed, collapsible, onNavigate }: SidebarBodyProps) {
           />
         ))}
       </nav>
+
+      <div
+        className={cn(
+          "shrink-0 border-t border-border px-3 py-2",
+          collapsed && "flex justify-center px-2",
+        )}
+      >
+        <UserMenu collapsed={collapsed} onNavigate={onNavigate} />
+      </div>
     </div>
   );
 }

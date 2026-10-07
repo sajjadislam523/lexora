@@ -12,6 +12,28 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: lexora
+          POSTGRES_DB: lexora
+          # Disposable CI database reachable only from this job.
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lexora -d lexora"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+
+    # CI-only configuration. Real secrets live in Vercel / Neon, never in the repository.
+    env:
+      DATABASE_URL: postgres://lexora@localhost:5432/lexora
+      BETTER_AUTH_URL: http://localhost:3000
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,8 +44,22 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      - name: Generate a throwaway auth secret for this run
+        run: echo "BETTER_AUTH_SECRET=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - name: Apply migrations to a fresh database
+        run: pnpm db:migrate
+      - name: Fail if the schema changed without a migration
+        run: |
+          pnpm db:generate --name ci_drift_check
+          if [ -n "$(git status --porcelain drizzle)" ]; then
+            echo "::error::Schema changes are missing a migration. Run pnpm db:generate and commit the result."
+            git status --porcelain drizzle
+            exit 1
+          fi
+      - run: pnpm test
       - run: pnpm build

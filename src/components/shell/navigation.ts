@@ -137,12 +137,7 @@ export const SECONDARY_NAV: NavEntry[] = [
     label: "Settings",
     icon: Settings,
     description: "Your profile, target band and preferences.",
-    status: "Planned for Phase 2 — Application foundation.",
-    plans: [
-      "Your target band and test date",
-      "Writing or speaking focus, and preferred register",
-      "Account and privacy controls",
-    ],
+    status: "Available.",
   },
 ];
 
