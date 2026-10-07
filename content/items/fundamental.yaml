@@ -1,0 +1,60 @@
+id: fundamental
+kind: word
+headword: fundamental
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: fundamental, type: lemma }
+senses:
+  - key: basic
+    pos: adjective
+    definition: Forming the basic, underlying part of something, on which everything else depends.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [importance]
+    best_when: Principles, rights, causes and changes that everything else rests on — "a fundamental right", "a fundamental change".
+    avoid_when: Something is merely useful or popular. Fundamental claims it is the foundation.
+    skill_note: Mostly a Writing word. In Speaking, "basic" or "the main" usually sounds more natural.
+    examples:
+      - id: ex1
+        text: Access to clean water is a fundamental human right.
+        highlight: fundamental human right
+        skill: writing
+        task: writing-2
+        collocation: right
+      - id: ex2
+        text: Remote working has brought about a fundamental change in the way offices are used.
+        highlight: fundamental change
+        skill: writing
+        task: writing-2
+        collocation: change
+      - id: ex3
+        text: Trust is fundamental to any successful partnership.
+        highlight: fundamental to
+        skill: writing
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: fundamental
+        preposition: to
+        pattern: fundamental to + noun
+        complement: noun
+        note: the system or activity it forms the base of
+    collocations:
+      - id: right
+        phrase: a fundamental right
+        note: education, healthcare, free speech
+      - id: change
+        phrase: a fundamental change
+        pattern: a fundamental change in + noun
+        note: a change to the basic nature of something
+      - id: principle
+        phrase: a fundamental principle
+        note: of law, science or fairness
+      - id: difference
+        phrase: a fundamental difference
+        pattern: a fundamental difference between + noun + and + noun
+        note: a difference in basic nature, not just in detail

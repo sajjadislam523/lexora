@@ -1,0 +1,71 @@
+id: rise-sharply
+kind: collocation
+headword: rise sharply
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: rise sharply, type: lemma }
+  - { form: rises sharply, type: inflection }
+  - { form: rose sharply, type: inflection }
+  - { form: risen sharply, type: inflection }
+  - { form: rising sharply, type: inflection }
+senses:
+  - key: increase
+    pos: verb_phrase
+    definition: To go up quickly by a large amount.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    functions: [increase]
+    best_when: Describing a fast, large increase in a Task 1 graph or chart.
+    avoid_when: The increase was slow or small. Use "rise gradually" or "rise slightly".
+    skill_note: In Speaking, "shot up" or "gone up a lot" is more natural.
+    examples:
+      - id: ex1
+        text: The number of international students rose sharply between 2015 and 2020.
+        highlight: rose sharply
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: There was a sharp rise in house prices in 2021.
+        highlight: sharp rise
+        skill: writing
+        task: writing-1
+        collocation: sharp-rise
+      - id: ex3
+        text: Rents in my city have risen sharply over the last few years.
+        highlight: risen sharply
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: sharp-rise
+        phrase: a sharp rise
+        pattern: a sharp rise in + noun
+        note: the noun form; useful for varying Task 1 sentences
+      - id: dramatically
+        phrase: rise dramatically
+        note: even stronger; use it sparingly
+      - id: steadily
+        phrase: rise steadily
+        note: a regular, continuous increase
+      - id: gradually
+        phrase: rise gradually
+        note: a slow increase over time
+    mistakes:
+      - id: raise
+        wrong: The number of tourists raised sharply.
+        right: The number of tourists rose sharply.
+        type: confusion
+        explanation: Rise has no object (prices rose). Raise needs one (they raised prices).
+      - id: rised
+        wrong: Sales rised sharply in May.
+        right: Sales rose sharply in May.
+        type: grammar
+        explanation: Rise is irregular — rise, rose, risen.
+    relations:
+      - type: alternative
+        to: significant.notable
+        weight: 2
+        note: '"A significant increase" names the change as a noun phrase; "rise sharply" describes it with a verb and stresses speed.'

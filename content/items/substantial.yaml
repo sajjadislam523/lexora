@@ -1,0 +1,50 @@
+id: substantial
+kind: word
+headword: substantial
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: substantial, type: lemma }
+senses:
+  - key: large
+    pos: adjective
+    definition: Large in amount, value or importance, and real enough to matter.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    strength: 2
+    best_when: Money, evidence, proportions and changes that are large and real — "substantial evidence", "a substantial proportion".
+    avoid_when: You want to say how strongly something matters. Substantial is about size, so use "crucial" or "significant" for importance.
+    skill_note: A Writing word. In Speaking, "a lot of" or "a big part of" sounds more natural.
+    examples:
+      - id: ex1
+        text: A substantial proportion of the budget was spent on healthcare.
+        highlight: substantial proportion
+        skill: writing
+        task: writing-1
+        collocation: proportion
+      - id: ex2
+        text: There is substantial evidence that regular exercise improves mood.
+        highlight: substantial evidence
+        skill: writing
+        task: writing-2
+        collocation: evidence
+    collocations:
+      - id: proportion
+        phrase: a substantial proportion
+        pattern: a substantial proportion of + noun
+        note: a large part of a total, useful in Task 1
+      - id: evidence
+        phrase: substantial evidence
+        pattern: substantial evidence that + clause
+        note: enough evidence to be convincing
+      - id: amount
+        phrase: a substantial amount
+        pattern: a substantial amount of + uncountable noun
+        note: usually money or time
+      - id: increase
+        phrase: a substantial increase
+        pattern: a substantial increase in + noun
+        note: a large, lasting rise
