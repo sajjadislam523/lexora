@@ -18,8 +18,9 @@ jobs:
         image: postgres:17-alpine
         env:
           POSTGRES_USER: lexora
-          POSTGRES_PASSWORD: lexora
           POSTGRES_DB: lexora
+          # Disposable CI database reachable only from this job.
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
@@ -28,10 +29,9 @@ jobs:
           --health-timeout 3s
           --health-retries 30
 
-    # Throwaway CI-only values. Real secrets live in Vercel / Neon, never in the repository.
+    # CI-only configuration. Real secrets live in Vercel / Neon, never in the repository.
     env:
-      DATABASE_URL: postgres://lexora:lexora@localhost:5432/lexora
-      BETTER_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
+      DATABASE_URL: postgres://lexora@localhost:5432/lexora
       BETTER_AUTH_URL: http://localhost:3000
 
     steps:
@@ -43,6 +43,9 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+
+      - name: Generate a throwaway auth secret for this run
+        run: echo "BETTER_AUTH_SECRET=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check

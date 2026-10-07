@@ -6,8 +6,10 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: lexora
-      POSTGRES_PASSWORD: lexora
       POSTGRES_DB: lexora
+      # No password: the port is bound to 127.0.0.1 only and the container holds disposable
+      # development data. Never use trust authentication for a reachable database.
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
