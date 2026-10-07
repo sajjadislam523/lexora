@@ -8,6 +8,20 @@
       "when": 1791318665243,
       "tag": "0000_initial_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791357100849,
+      "tag": "0001_enable_pg_trgm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791357105907,
+      "tag": "0002_language_engine",
+      "breakpoints": true
     }
   ]
 }
