@@ -514,18 +514,21 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 
 ### 10.4 Language detail (`/language/[slug]`)
 
-- **Public page.** Rendered in the public frame for everyone; nothing learner-specific is rendered on the server (no review status).
-- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category; the term in `type-term-display` with IPA (only where verified) and part of speech; _Save to language bank_ (outline → secondary "Saved" in ink). Signed-in learners also get _Practise this_ and a caption about session-only saving.
-- **At a glance:** part of speech, register, level (CEFR), strength, skills. A sticky card at `xl`; a compact two- or three-column strip below `xl`.
-- **Sections, divided by hairlines, in this order:**
-  1. Meaning (+ pattern)
-  2. When it works best (muted well with lightbulb)
-  3. Don't use it when… (warning callout)
-  4. Common collocations (2-column grid of phrase + note)
-  5. Examples (segmented All / Writing / Speaking when both exist)
-  6. In writing and speaking (`SkillComparison`)
-  7. Common mistakes (`MistakeRow`s)
-  8. Related language (relation → term, linked when it exists)
+- **Public page**, rendered from the published content in PostgreSQL for everyone; nothing learner-specific is rendered on the server. Only sections with authored content appear.
+- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category (from the item's kind); the term in `type-term-display` (wraps on narrow screens); part of speech, and "n meanings" when there are several; spelling variants ("Also spelled analyze (US)") with the authored regional note; _Save to language bank_ (outline → secondary "Saved" in ink), with a caption about session-only saving for signed-in learners.
+- **At a glance:** part of speech, register, level (CEFR), strength, skills, IELTS relevance and tasks. One meaning: a sticky card at `xl`, a compact two- or three-column strip below `xl`. Several meanings: a _Meanings_ list (sticky at `xl`, in the header below) linking to each meaning, and the strip inside each meaning.
+- **Several meanings:** each is a bordered block, "Meaning 1 · having a real effect" (`h2`, anchor `#sense-<key>`), holding that meaning's own sections (`h3`). Relations, patterns, examples and mistakes never move between meanings.
+- **Sections per meaning, divided by hairlines, in this order:**
+  1. Meaning (the definition)
+  2. When it works best (muted well with lightbulb) and Don't use it when… (warning callout)
+  3. How it links ideas (linkers: what it links, position, punctuation)
+  4. Patterns (preposition patterns with notes, sentence frames) as mono chips
+  5. Common collocations (2-column grid: phrase, pattern, note; linked when the collocation has its own page)
+  6. Examples (segmented All / Writing / Speaking when both exist; highlighter on the authored spans; IELTS task caption)
+  7. In writing and speaking (the authored skill note)
+  8. Common mistakes (`MistakeRow`s with the mistake type)
+  9. Related language (grouped by relation — Similar meaning, Stronger, Alternatives, More formal, More natural… — each term linked, to the right meaning when the target has several, with its note)
+- **Footer:** the content source.
 
 ---
 
