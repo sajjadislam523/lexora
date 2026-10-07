@@ -59,7 +59,7 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 - [x] Auth-aware shell: user menu with sign-out; personal greeting; `/settings` with name and learning profile
 - [x] Security: hashed passwords, HttpOnly/SameSite/Secure cookies, origin checks, rate limiting, hidden session token, security headers
 - [x] Layer boundaries enforced by ESLint
-- [x] Loading, error and not-found pages
+- [x] Error and not-found pages with correct HTTP status (pending states live in forms; route-level loading boundaries are added per page when data loading needs them, since a shell-wide one would turn real 404s into soft 404s)
 - [x] Vitest unit + Postgres integration tests; CI runs migrations on a fresh database, checks schema drift, tests and builds
 - Deferred: preferred register (moves to the Phase 5 preferences table)
 
