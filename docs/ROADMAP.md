@@ -2,7 +2,7 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current phase: Phase 2 — Application Foundation (complete, awaiting review)** · Phase 0 approved (`v0.0.0`) · Phase 1 approved (`v0.1.0`)
+**Current phase: Phase 2.1 — Public Discovery Layer (complete, awaiting review)** · Phase 0 approved (`v0.0.0`) · Phase 1 approved (`v0.1.0`) · Phase 2 approved (PR #6, follow-up PR #7; release tag pending)
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
@@ -46,7 +46,7 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ---
 
-## Phase 2 — Application Foundation ✅ (awaiting review)
+## Phase 2 — Application Foundation ✅ (approved, merged in PR #6)
 
 **Goal:** real users, real persistence, real routing — without changing the product experience.
 
@@ -65,6 +65,28 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 **Exit criteria:** a user can sign up, sign in, sign out and edit their profile; sessions persist and expire correctly; unauthenticated users cannot reach app areas; all checks pass from a fresh database.
 
+Follow-up: the auth response hardening (session tokens removed from every auth JSON body) landed on the phase branch after PR #6 was merged and reaches `main` through PR #7.
+
+---
+
+## Phase 2.1 — Public Discovery Layer ✅ (awaiting review)
+
+**Goal:** let visitors experience Lexora before creating an account. Prerequisite for Phase 3: the language engine is built for public pages as well as personal learning.
+
+- [x] Route boundary: public discovery (`/`, `/explore`, `/language/[slug]`, auth pages, `/design-system`) vs authenticated personal learning (`/home`, `/finder`, `/bank`, `/practice`, `/writing`, `/speaking`, `/progress`, `/settings`)
+- [x] Landing page that leads with a working search ("Find the English you mean.") and real results
+- [x] `/explore`: the public Language Finder, sharing the Finder's view and search
+- [x] Public, server-rendered language pages with titles, descriptions, canonical URLs, structured data, `robots.txt` and a sitemap
+- [x] Shared language engine (`src/language`): `LanguageSearchService` over a `LanguageRepository` (`PrototypeLanguageRepository` today) — deterministic, no AI
+- [x] Save gate: visitors who save are invited to create an account and are returned to the same page with the save completed
+- [x] Save endpoint (`PUT`/`DELETE /api/bank/items/[slug]`) that authenticates every request, ignores client identity and rejects cross-site requests; nothing is stored until the language bank (Phase 5)
+- [x] Public site header and footer; authenticated shell unchanged
+- [x] Lint-enforced boundary: public routes can't import server code or prototype content
+- [x] Tests: search service, return paths, proxy matcher, save endpoint (Postgres), and HTTP end-to-end route checks against a production build
+- Not included: database-backed content (Phase 3), real retrieval (Phase 4), persistent saving (Phase 5)
+
+**Exit criteria:** a visitor can search, read a language page and see the save gate without an account; personal areas still redirect to sign-in; saving is rejected server-side without a session; a new account returns to where it started.
+
 ---
 
 ## Phase 3 — Language Engine ⬜
@@ -74,7 +96,7 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 - Domain types and Zod schemas: items, patterns, examples, relations, preposition links, mistakes, categories, topics
 - Content source files in `src/content/` with validation and a seed script
 - Initial dataset: high-frequency IELTS vocabulary, synonyms, dependent prepositions, collocations, linkers, sentence patterns, speaking expressions (size to be agreed)
-- Read-only language detail pages backed by the database
+- Public language detail pages (built in Phase 2.1) read from the database through `LanguageRepository`
 - Vitest set up for domain logic
 
 **Exit criteria:** the dataset is validated in CI, browsable by detail page, and relationships are visible.
@@ -181,13 +203,13 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 | ---------------------------- | --------------------- | ----------------------------------------------------------------------- |
 | Typography pairing           | —                     | ✅ Inter + Newsreader (serif for language only)                         |
 | Ink accent hue               | —                     | ✅ Muted indigo `#4450A8`                                               |
-| Interface spelling           | Phase 3               | British (proposed) / American                                           |
+| Interface spelling           | —                     | ✅ British English; American spellings recognised as variants           |
 | Auth library                 | —                     | ✅ Better Auth, email + password                                        |
 | ORM                          | —                     | ✅ Drizzle                                                              |
 | Hosting & DB provider        | —                     | ✅ Vercel + Neon (Docker Postgres locally)                              |
-| Email provider               | Before public launch  | Resend / Postmark / SES — enables email verification and password reset |
+| Email provider               | Phase 3               | ✅ Resend, behind an `EmailSender` abstraction                          |
 | Google OAuth                 | When wanted           | Configure `socialProviders.google`; no schema change                    |
 | Vercel preview deployments   | Before using previews | Per-preview `BETTER_AUTH_URL` and a separate Neon branch per preview    |
-| Content sourcing & licensing | Phase 3               | Hand-curated / open lexical sources (licence review) / mixed            |
+| Content sourcing & licensing | Phase 3               | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept |
 | SRS algorithm                | Phase 5               | FSRS (proposed) / SM-2                                                  |
 | Dark mode timing             | Any                   | Phase 10 (current plan)                                                 |

@@ -460,7 +460,7 @@ Components for language and practice. They are presentational and take data as p
 
 ---
 
-## 10. Screen patterns (Phase 1 prototype)
+## 10. Screen patterns
 
 The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and the components above. Every prototype screen says what is sample data and what isn't stored.
 
@@ -473,20 +473,23 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
 - **Quick actions:** a compact link list in the side column from `lg`.
 - **No metric tiles, charts or streaks.**
 
-### 10.2 Language Finder (`/finder`)
+### 10.2 Language Finder (`/finder`) and Explore (`/explore`)
+
+One view, two homes: `/finder` inside the app shell and `/explore` in the public frame. Only the eyebrow, title and where searches go differ. The server runs the search and passes the result in.
 
 - **Search:** header, then the hero `SearchField` inside a `form role="search"`. The query lives in the URL (`?q=`). `/` focuses the field. On mobile a _Find_ button sits inside the field.
 - **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They are intents, so they have no category dots. Selecting one changes the placeholder and the example searches; a recognised query auto-selects its mode. Below `sm` they form one horizontally scrollable row.
 - **Example searches:** quiet `bg-muted` pills.
-- **Prototype caption:** always visible.
+- **Coverage caption:** always visible — Lexora covers a small, hand-picked set of language for now, matched by keyword.
 - **Results:**
-  - an "Understood as" heading with mode and result count
+  - an "Understood as" heading, with "Matched on “keyword” · mode · n results" — the word that selected the results is always shown, so matching never looks like interpretation
   - a **fit guide** ("Which one fits?": term → when, plus a note on why they aren't interchangeable), in a sticky right column at `xl` and above the cards below `xl`
   - result cards
   - a `SkillComparison` when register matters
   - related searches
 - **Context tool:** a `GapSentence` in a muted well. Each option fills the gap, including the preposition it brings, and gets a `FitBadge`. A note and a link to the item follow. This is exploration, not a test.
-- **No match:** a dashed empty state that says the prototype only knows the example searches, and offers them again.
+- **No match:** a dashed empty state that says nothing in Lexora matches yet, that the library is small and keyword-matched, and offers the example searches.
+- **Saving:** the card's bookmark. Visitors get the save gate (§10.7).
 
 ### 10.3 Practice (`/practice`)
 
@@ -503,7 +506,8 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
 
 ### 10.4 Language detail (`/language/[slug]`)
 
-- **Header:** back link; category and status; the term in `type-term-display` with IPA (only where verified) and part of speech; _Save to language bank_ (outline → secondary "Saved" in ink) and _Practise this_; an honest caption about session-only saving.
+- **Public page.** Rendered in the public frame for everyone; nothing learner-specific is rendered on the server (no review status).
+- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category; the term in `type-term-display` with IPA (only where verified) and part of speech; _Save to language bank_ (outline → secondary "Saved" in ink). Signed-in learners also get _Practise this_ and a caption about session-only saving.
 - **At a glance:** part of speech, register, level (CEFR), strength, skills. A sticky card at `xl`; a compact two- or three-column strip below `xl`.
 - **Sections, divided by hairlines, in this order:**
   1. Meaning (+ pattern)
@@ -548,6 +552,22 @@ A narrow page (`max-w-4xl`) of three sections, divided by hairlines. On `lg` eac
 3. **Account:** email, member since, and _Sign out_.
 
 Each form saves on its own. _Save_ shows a spinner and "Saving…" while pending, then a polite "… saved." status beside the button. Values stay as saved (no form reset), and server validation errors appear inline.
+
+### 10.7 Public discovery (`/`, site frame, save gate)
+
+The first thing a visitor sees is the product working, not a sign-up form (UX principle 11).
+
+- **Site header:** 56px, sticky, hairline bottom, `bg-background/95` with blur — the public sibling of the app top bar. Logo · _Explore_ · _How it works_ on the left; _Sign in_ (ghost) and _Get started_ (primary) on the right. Signed-in learners see _Open Lexora_ instead. Below `md` the two links move into a right-hand `Sheet` behind a menu button; the account buttons stay visible. One row at every width from 375px.
+- **Site footer:** `bg-sidebar`, logo, the product promise, a short link row.
+- **Landing page, in order:**
+  1. **Hero:** overline, `type-display` "Find the English you mean.", one `type-reading` line, the hero `SearchField` (placeholder "What are you trying to say?"; the submit button is icon-only below `sm` so the placeholder fits), and the six example searches as pills linking into Explore.
+  2. **Showcase:** a real result — the fit guide plus two saveable result cards for "better word for important".
+  3. **How it works** (`#how-it-works`, `bg-sidebar`): three numbered cards — describe, see how it's used, save and practise.
+  4. **Context tool:** "Choose the word that fits the sentence", the interactive gap sentence.
+  5. **Closing call to action:** _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
+     Sections are separated by hairlines with `py-14 sm:py-20` rhythm, content at `max-w-page`; the hero sits at `max-w-3xl`.
+- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`. Closing it changes nothing.
+- **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and a calm notice ("Saved “term” to your language bank.") appears at the bottom of the viewport for five seconds (`role="status"`).
 
 ## 11. States checklist
 
