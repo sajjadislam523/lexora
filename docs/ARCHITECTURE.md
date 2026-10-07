@@ -161,7 +161,7 @@ No variable uses the `NEXT_PUBLIC_` prefix; nothing secret can reach the browser
 | Concern                | Measure                                                                                                                                                                                                        |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Passwords              | Better Auth scrypt (salted); never logged or returned; 8–128 characters                                                                                                                                        |
-| Sessions               | Opaque DB-backed tokens; HttpOnly + SameSite=Lax (+ Secure on https); token hidden from JSON; revocable instantly                                                                                              |
+| Sessions               | Opaque DB-backed tokens; HttpOnly + SameSite=Lax (+ Secure on https); the token is never in any JSON body (see Token exposure); revocable instantly                                                            |
 | CSRF                   | SameSite=Lax cookies plus Better Auth's origin check against `trustedOrigins` (cross-origin POSTs → 403); server actions use Next's built-in origin check                                                      |
 | Brute force            | Database-backed rate limiting: sign-in 5/min, sign-up 3/min, other auth endpoints 100/min per IP                                                                                                               |
 | Account enumeration    | Sign-in errors are generic ("Email or password is incorrect")                                                                                                                                                  |
@@ -172,7 +172,11 @@ No variable uses the `NEXT_PUBLIC_` prefix; nothing secret can reach the browser
 | Headers                | `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`, no `X-Powered-By`. Full CSP in Phase 10                                                                      |
 | Telemetry              | Better Auth telemetry disabled                                                                                                                                                                                 |
 
-**Known gaps** (tracked in ROADMAP open decisions): no email provider yet, so no email verification or password reset; no breached-password check; CSP deferred to Phase 10.
+**Token exposure.** Lexora authenticates only with the HttpOnly session cookie — no bearer tokens — so a session token in a response body is never needed. Better Auth returns one by default in `sign-in/email`, `sign-up/email` and `list-sessions`. Rather than modifying Better Auth, a documented `hooks.after` middleware (`redactSessionTokens`, `src/server/auth/redact.ts`) removes `token` from every JSON body while the endpoint's `Set-Cookie` headers pass through untouched; `customSession` does the same for `get-session`. Integration tests assert that no auth response contains a session token or password hash. If a future feature ever needs bearer tokens (e.g. a mobile client), this hook is the one place to revisit.
+
+**Logging.** Lexora's code doesn't log; Better Auth logs warnings and errors only, never values; Next.js request logs contain paths but no bodies or cookies; Postgres statement logging is off. Note for Phase 3: email-verification and reset links carry tokens in URLs — keep them out of logs and out of `Referer` (the existing `strict-origin-when-cross-origin` policy already strips paths cross-origin).
+
+**Known gaps** (tracked in ROADMAP open decisions): no email provider yet, so no email verification or password reset; breached-password checking deliberately not enabled yet (Better Auth's `haveIBeenPwned` plugin can be added without architectural change — revisit before public launch); CSP deferred to Phase 10.
 
 ---
 
