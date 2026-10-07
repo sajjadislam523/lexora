@@ -1,0 +1,22 @@
+id: describe-an-increase
+label: Describe an increase
+description: Say that a number, amount or level went up, and how much.
+function: increase
+triggers:
+  - describe an increase
+  - describe a rise
+  - describe growth
+  - say something increased
+  - say something increased a lot
+  - say numbers went up
+groups:
+  - label: With a verb
+    entries:
+      - { sense: rise-sharply.increase, fit: "a fast, large rise in a Task 1 chart" }
+  - label: With a noun phrase
+    entries:
+      - { sense: significant.notable, fit: '"a significant increase in" + noun' }
+      - { sense: substantial.large, fit: '"a substantial increase in" + noun; large and lasting' }
+  - label: Describing the size
+    entries:
+      - { sense: considerable.large, fit: 'a large amount or degree — "by a considerable margin"' }

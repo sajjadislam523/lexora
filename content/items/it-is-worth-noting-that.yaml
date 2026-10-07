@@ -1,0 +1,43 @@
+id: it-is-worth-noting-that
+kind: sentence_pattern
+headword: It is worth noting that …
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: it is worth noting that, type: lemma }
+  - { form: it's worth noting that, type: contraction }
+senses:
+  - key: note
+    pos: clause_frame
+    definition: Introduces an extra fact that the reader should pay attention to.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [emphasis, addition]
+    frames:
+      - id: that
+        parts:
+          - { text: It is worth noting that }
+          - { slot: clause, hint: the figures exclude part-time workers }
+    best_when: Pointing out an important detail — an exception in a Task 1 chart, or a fact that qualifies your argument.
+    avoid_when: The fact is your main point. Then state it directly.
+    skill_note: Formal. In Speaking, "Mind you, …" or "It's worth saying that …" sounds more natural.
+    examples:
+      - id: ex1
+        text: It is worth noting that the figures for 2020 were affected by the pandemic.
+        highlight: It is worth noting that
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: It is worth noting that not all students can afford a laptop.
+        highlight: It is worth noting that
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: to-note
+        wrong: It is worth to note that prices fell.
+        right: It is worth noting that prices fell.
+        type: grammar
+        explanation: '"Worth" is followed by an -ing form: worth noting, worth mentioning.'
