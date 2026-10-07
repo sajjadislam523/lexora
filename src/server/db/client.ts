@@ -1,28 +1,15 @@
 import "server-only";
 
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-
 import { serverEnv } from "@/server/env";
 
-import * as schema from "./schema";
+import { connect, type Database } from "./connect";
 
-/**
- * The single database client. Server-only: never import from client components.
- * Neon's pooled endpoints (PgBouncer in transaction mode) need prepared statements off.
- */
+export type { Database };
+
+/** The app's single database client. Server-only: never import from client components. */
 function createClient() {
-  const url = serverEnv().DATABASE_URL;
-  const pooled = new URL(url).hostname.includes("-pooler");
-  const sql = postgres(url, {
-    prepare: !pooled,
-    // Serverless instances should hold few connections; the pooler multiplexes them.
-    max: process.env.VERCEL ? 5 : 10,
-  });
-  return drizzle(sql, { schema, casing: "snake_case" });
+  return connect(serverEnv().DATABASE_URL);
 }
-
-export type Database = ReturnType<typeof createClient>;
 
 // Reuse one client across hot reloads in development.
 const globalForDb = globalThis as unknown as { lexoraDb?: Database };
