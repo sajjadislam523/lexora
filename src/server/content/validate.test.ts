@@ -317,6 +317,21 @@ describe("validateContent", () => {
       expect(issues).toContainEqual(expect.stringContaining(expected));
     });
 
+    it("accepts a punctuation mistake whose words are unchanged", () => {
+      const issues = issuesAfter((c) => {
+        sense(c, "however").mistakes = [
+          {
+            id: "comma",
+            wrong: "Prices rose, however demand fell.",
+            right: "Prices rose; however, demand fell.",
+            type: "punctuation",
+            explanation: "Use a semicolon.",
+          },
+        ];
+      });
+      expect(issues).toEqual([]);
+    });
+
     it("lets drafts wait for review, but checks their quality", () => {
       const asDraft = (c: FixtureContent) => {
         c.items.analyse!.status = "draft";

@@ -473,7 +473,12 @@ function checkIntegrity(
       if (sense.mistakes.length > 0) needSource("mistakes", at("mistakes"));
       for (const [m, mistake] of sense.mistakes.entries()) {
         const wrong = normaliseTerm(mistake.wrong);
-        if (wrong === normaliseTerm(mistake.right)) {
+        // Punctuation mistakes differ only in punctuation, which normalising removes.
+        const same =
+          mistake.type === "punctuation"
+            ? mistake.wrong === mistake.right
+            : wrong === normaliseTerm(mistake.right);
+        if (same) {
           issues.add(map, at("mistakes", m, "right"), "is the same as the wrong form");
         }
         const spelling = usSpellings.find((form) => containsPhrase(wrong, form));
