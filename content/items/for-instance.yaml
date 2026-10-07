@@ -1,0 +1,44 @@
+id: for-instance
+kind: linker
+headword: for instance
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: for instance, type: lemma }
+senses:
+  - key: example
+    pos: adverbial_phrase
+    definition: Introduces an example of what has just been said.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [example]
+    linker:
+      connects: sentences
+      positions: [start, middle, end]
+      punctuation: A comma after it at the start; between commas in the middle.
+    best_when: Supporting a general claim with a specific example — a good variation on "for example".
+    examples:
+      - id: ex1
+        text: Many cities have reduced car use. Copenhagen, for instance, has built hundreds of kilometres of cycle lanes.
+        highlight: for instance,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I like most outdoor sports — hiking, for instance.
+        highlight: for instance
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: fragment
+        wrong: There are many problems. For instance pollution and traffic.
+        right: There are many problems, such as pollution and traffic.
+        type: grammar
+        explanation: '"For instance" usually introduces a full sentence. Before a short list of nouns, use "such as".'
+    relations:
+      - type: alternative
+        to: such-as.example
+        weight: 2
+        note: Such as introduces examples inside a sentence, directly before a noun; for instance usually adds a new sentence or clause.

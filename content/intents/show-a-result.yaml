@@ -1,0 +1,20 @@
+id: show-a-result
+label: Show a result
+description: Link a cause to its effect.
+function: result
+triggers:
+  - show a result
+  - show the result
+  - show a consequence
+  - link cause and effect
+  - explain the effect
+  - say what happened because of something
+groups:
+  - label: Starting a new sentence
+    entries:
+      - { sense: as-a-result.result, fit: "the effect of what you just described" }
+  - label: Inside one sentence
+    entries:
+      - { sense: result-in.cause, fit: "cause + result in + effect" }
+      - { sense: give-rise-to.cause, fit: "formal; often new problems or questions" }
+      - { sense: contribute-to.help-cause, fit: "one cause among several" }

@@ -1,0 +1,75 @@
+id: play-a-crucial-role
+kind: collocation
+headword: play a crucial role
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: play a crucial role, type: lemma }
+  - { form: plays a crucial role, type: inflection }
+  - { form: played a crucial role, type: inflection }
+  - { form: playing a crucial role, type: inflection }
+senses:
+  - key: main
+    pos: verb_phrase
+    definition: To be a very important part of a process, or of achieving a result.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-2, speaking-3] }
+    functions: [importance]
+    best_when: Saying that something is a key part of a process or result — a classic Task 2 structure.
+    avoid_when: You have already used it in the essay. Examiners notice repeated set phrases; vary the adjective or the structure.
+    skill_note: Natural in both, but in Speaking "a big part in" is more relaxed.
+    examples:
+      - id: ex1
+        text: Teachers play a crucial role in shaping young people's values.
+        highlight: play a crucial role in
+        skill: writing
+        task: writing-2
+        pattern: in
+      - id: ex2
+        text: Public transport plays a crucial role in reducing congestion.
+        highlight: plays a crucial role in
+        skill: writing
+        task: writing-2
+        pattern: in
+      - id: ex3
+        text: My grandmother played a crucial role in bringing me up.
+        highlight: played a crucial role in
+        skill: speaking
+        task: speaking-2
+        pattern: in
+    preposition_patterns:
+      - id: in
+        base: play a crucial role
+        preposition: in
+        pattern: play a crucial role in + noun / -ing
+        complement: noun_or_ing
+        note: the process or result
+        mistake: for
+    collocations:
+      - id: key
+        phrase: play a key role
+        note: very common; slightly less strong
+      - id: vital
+        phrase: play a vital role
+        note: as strong as "crucial"
+      - id: major
+        phrase: play a major role
+        note: stresses size of the part rather than necessity
+    mistakes:
+      - id: for
+        wrong: Tourism plays a crucial role for the economy.
+        right: Tourism plays a crucial role in the economy.
+        type: preposition
+        explanation: '"Play a role" takes "in" before the process or area.'
+      - id: very
+        wrong: play a very crucial role
+        right: play a crucial role
+        type: collocation
+        explanation: Crucial already means extremely important, so it doesn't take "very".
+    relations:
+      - type: has_component
+        to: crucial.essential
+        weight: 2

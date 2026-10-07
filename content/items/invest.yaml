@@ -1,0 +1,70 @@
+id: invest
+kind: word
+headword: invest
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: invest, type: lemma }
+  - { form: invests, type: inflection }
+  - { form: invested, type: inflection }
+  - { form: investing, type: inflection }
+senses:
+  - key: money
+    pos: verb
+    definition: To put money, time or effort into something in order to gain a benefit later.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Spending money now to get a long-term return — "invest in education", "invest in public transport".
+    avoid_when: The money is simply being shared out between areas. That is "allocate".
+    examples:
+      - id: ex1
+        text: Governments should invest more money in public transport.
+        highlight: invest more money in
+        skill: writing
+        task: writing-2
+        pattern: in
+      - id: ex2
+        text: The city has invested heavily in new cycle lanes.
+        highlight: invested heavily in
+        skill: writing
+        task: writing-2
+        pattern: in
+      - id: ex3
+        text: I'd rather invest my time in learning a new skill.
+        highlight: invest my time in
+        skill: speaking
+        task: speaking-2
+        pattern: in
+    preposition_patterns:
+      - id: in
+        base: invest
+        preposition: in
+        pattern: invest + money / time + in + noun / -ing
+        complement: noun_or_ing
+        note: what gets the money or effort; "into" is also used for money put into a project
+        mistake: on
+    frames:
+      - id: money-in
+        parts:
+          - { text: invest, head: true }
+          - { slot: object, fillers: [money, funds, resources, time, effort, billions, millions] }
+          - { text: in, also: [into] }
+          - { slot: noun, hint: public transport }
+    mistakes:
+      - id: on
+        wrong: The government should invest on education.
+        right: The government should invest in education.
+        type: preposition
+        explanation: Invest takes "in" before what receives the money.
+    relations:
+      - type: alternative
+        to: allocate.distribute
+        weight: 2
+        note: Allocate means deciding how money is shared out; invest means spending it to gain a benefit later.
+      - type: alternative
+        to: devote.give
+        weight: 1
+        note: Devote is for time, effort or attention given to one purpose, not usually money.

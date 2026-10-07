@@ -1,0 +1,40 @@
+id: whereas
+kind: linker
+headword: whereas
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: whereas, type: lemma }
+senses:
+  - key: contrast
+    pos: conjunction
+    definition: Introduces a fact that differs from another fact in the same sentence.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [contrast]
+    linker:
+      connects: clauses
+      positions: [start, middle]
+      punctuation: Usually a comma before it in the middle of a sentence; at the start, a comma after the first clause.
+    best_when: Putting two contrasting facts side by side in one sentence — very useful for Task 1 comparisons.
+    avoid_when: You need to start a new sentence. Whereas joins clauses; it can't introduce a sentence on its own.
+    examples:
+      - id: ex1
+        text: Men spent more on transport, whereas women spent more on clothing.
+        highlight: whereas
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: My brother loves the city, whereas I'd rather live in the countryside.
+        highlight: whereas
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: sentence
+        wrong: Men spent more on transport. Whereas, women spent more on clothing.
+        right: Men spent more on transport, whereas women spent more on clothing.
+        type: punctuation
+        explanation: Whereas joins two clauses in one sentence. To start a new sentence, use "In contrast,".

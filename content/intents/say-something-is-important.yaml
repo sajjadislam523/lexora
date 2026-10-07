@@ -1,0 +1,23 @@
+id: say-something-is-important
+label: Say something is important
+description: Stress that something matters, and say how.
+function: importance
+triggers:
+  - say something is important
+  - say something matters
+  - stress importance
+  - emphasise importance
+  - show importance
+groups:
+  - label: General
+    entries:
+      - { sense: important.main, fit: "the safe, general word" }
+      - { sense: significant.notable, fit: "it has a noticeable or measurable effect" }
+  - label: Stronger
+    entries:
+      - { sense: crucial.essential, fit: "an outcome depends on it" }
+      - { sense: essential.necessary, fit: "you can't do without it" }
+      - { sense: fundamental.basic, fit: "everything else rests on it" }
+  - label: As a phrase
+    entries:
+      - { sense: play-a-crucial-role.main, fit: "it is a key part of a process" }

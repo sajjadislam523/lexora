@@ -1,0 +1,58 @@
+id: as-a-result
+kind: linker
+headword: as a result
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: as a result, type: lemma }
+senses:
+  - key: result
+    pos: adverbial_phrase
+    definition: Introduces the effect of what has just been described.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [result]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Starting a new sentence that gives the effect of the previous one.
+    avoid_when: You want to name the cause inside the same clause. Use "as a result of + noun" or "result in".
+    examples:
+      - id: ex1
+        text: Fuel prices rose steeply. As a result, more people switched to public transport.
+        highlight: As a result,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I moved closer to work. As a result, I've got a lot more free time.
+        highlight: As a result,
+        skill: speaking
+        task: speaking-2
+      - id: ex3
+        text: As a result of the new policy, waiting times fell by half.
+        highlight: As a result of
+        skill: writing
+        task: writing-1
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: as a result
+        preposition: of
+        pattern: as a result of + noun
+        complement: noun
+        note: names the cause before the main clause
+    mistakes:
+      - id: as-result
+        wrong: As result, sales increased.
+        right: As a result, sales increased.
+        type: grammar
+        explanation: The fixed phrase needs "a" — as a result.
+    relations:
+      - type: alternative
+        to: result-in.cause
+        weight: 2
+        note: '"Result in" links cause and effect inside one clause; "as a result" starts a new sentence with the effect.'

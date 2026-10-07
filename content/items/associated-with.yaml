@@ -1,0 +1,45 @@
+id: associated-with
+kind: preposition_pattern
+headword: associated with
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: associated with, type: lemma }
+senses:
+  - key: linked
+    pos: adjective_phrase
+    definition: Connected with something, because they happen together or people think of them together.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    best_when: Linking a cause and a risk carefully, without claiming one directly causes the other.
+    skill_note: In Speaking, "linked to" or "goes with" sounds more natural.
+    examples:
+      - id: ex1
+        text: Obesity is associated with a higher risk of heart disease.
+        highlight: associated with
+        skill: writing
+        task: writing-2
+        pattern: with
+      - id: ex2
+        text: City life is often associated with stress and long working hours.
+        highlight: associated with
+        skill: writing
+        task: writing-2
+        pattern: with
+    preposition_patterns:
+      - id: with
+        base: associated
+        preposition: with
+        pattern: be associated with + noun
+        complement: noun
+        note: the risk, problem or idea it is linked to
+        mistake: to
+    mistakes:
+      - id: to
+        wrong: Smoking is associated to lung disease.
+        right: Smoking is associated with lung disease.
+        type: preposition
+        explanation: Associated takes "with". "Linked" can take "to", but "associated" can't.

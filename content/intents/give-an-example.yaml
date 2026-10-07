@@ -1,0 +1,18 @@
+id: give-an-example
+label: Give an example
+description: Support a general statement with a specific example.
+function: example
+triggers:
+  - give an example
+  - give examples
+  - introduce an example
+  - support a point with an example
+  - show an example
+groups:
+  - label: Introducing examples
+    entries:
+      - { sense: for-instance.example, fit: "an example in a new sentence or clause" }
+      - { sense: such-as.example, fit: "examples straight after a noun, in the same sentence" }
+  - label: One strong example
+    entries:
+      - { sense: a-case-in-point.example, fit: "one example that proves your claim" }

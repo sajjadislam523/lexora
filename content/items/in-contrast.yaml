@@ -1,0 +1,54 @@
+id: in-contrast
+kind: linker
+headword: in contrast
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: in contrast, type: lemma }
+senses:
+  - key: difference
+    pos: adverbial_phrase
+    definition: Used to compare two things and show how different they are.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [contrast]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Comparing two groups, places or figures directly — ideal for Task 1 comparisons.
+    avoid_when: You mean that the second idea corrects the first. That is "on the contrary".
+    skill_note: Mainly a Writing linker. In Speaking, "whereas" or "but" sounds more natural.
+    examples:
+      - id: ex1
+        text: Car use rose in the suburbs. In contrast, it fell sharply in the city centre.
+        highlight: In contrast,
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: In contrast to their parents, many young people prefer renting to buying.
+        highlight: In contrast to
+        skill: writing
+        task: writing-2
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: in contrast
+        preposition: to
+        pattern: in contrast to + noun
+        complement: noun
+        note: names the thing being compared; "in contrast with" is also correct
+    mistakes:
+      - id: contrary
+        wrong: In contrary, sales in Spain fell.
+        right: In contrast, sales in Spain fell.
+        type: confusion
+        explanation: '"On the contrary" means "the opposite is true" and corrects an idea. To compare two things, use "in contrast".'
+    relations:
+      - type: alternative
+        to: whereas.contrast
+        weight: 2
+        note: Whereas joins the two facts in one sentence; in contrast starts a new sentence.
