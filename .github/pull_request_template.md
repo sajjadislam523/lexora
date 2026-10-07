@@ -17,6 +17,10 @@
 - [ ] Prototype-only behaviour is clearly labelled
 - [ ] No dependency on an external AI API
 
+## Approval
+
+<!-- Phase PRs into main: the owner approves by adding the `owner-approved` label. CI then re-runs every check on this commit, merges and tags. Pushing after labelling cancels the approval. -->
+
 ## Screenshots
 
 <!-- For UI changes: desktop and mobile. -->
