@@ -668,9 +668,8 @@ export class LanguageSearchService {
           ]
         : [];
     });
-    const first = mistakes[0]!;
     return respond(base, c, {
-      summary: `${quote(base.query)} is a common mistake — use ${quote(first.right)}`,
+      summary: `${quote(base.query)} is a common mistake — here is the correct form`,
       groups: [{ results: dedupe(results) }],
       mistakes,
     });
