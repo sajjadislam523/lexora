@@ -333,7 +333,7 @@ interface ExplanationProvider {
 - **Mutations:** Server Actions with Zod-validated input, and authorisation checks in every action.
 - **Next.js 16 specifics:** async request APIs (`await cookies()`, `await params`); `proxy.ts` replaces `middleware.ts`; Turbopack is the default bundler.
 - **Env:** validated with Zod in `src/server/env.ts` (server-only). No secrets in client bundles. See §4.6.
-- **Errors:** route-level `error.tsx` and `not-found.tsx`, plus typed result objects from actions.
+- **Errors:** route-level `error.tsx` and `not-found.tsx`, plus typed result objects from actions. Avoid a shell-wide `loading.tsx`: a Suspense boundary above a page makes `notFound()` stream with status 200. Add Suspense boundaries inside pages that genuinely load data.
 - **Performance:** fonts self-hosted, static rendering where possible, search debounced on the client and indexed on the server.
 - **Security:** auth on every server action and route handler, row ownership checks in repositories, rate-limiting on search and auth, CSP in Phase 10.
 
