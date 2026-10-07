@@ -1,21 +1,19 @@
-import { ArrowLeft, Dumbbell, Lightbulb } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import Link from "next/link";
 
 import { Callout } from "@/components/lexora/callout";
 import { CategoryBadge } from "@/components/lexora/category-badge";
 import { MistakeRow } from "@/components/lexora/mistake-row";
 import { SkillComparison } from "@/components/lexora/skill-comparison";
-import { StatusBadge } from "@/components/lexora/status-badge";
 import { StrengthMeter } from "@/components/lexora/strength-meter";
 import { TagBadge } from "@/components/lexora/tag-badge";
 import { PageContainer } from "@/components/shell/page-container";
-import { Button } from "@/components/ui/button";
 import { PRACTICE_SESSION } from "@/demo/practice";
-import type { DemoLanguageItem } from "@/demo/types";
+import type { LanguageItem } from "@/language/types";
 import { cn } from "@/lib/utils";
 
 import { ExamplesSection } from "./examples-section";
-import { SaveToBankButton } from "./save-to-bank-button";
+import { BackToSearch, LanguageActions } from "./language-actions";
 
 function practiceHref(slug: string) {
   const index = PRACTICE_SESSION.findIndex((q) => q.focusSlug === slug);
@@ -41,7 +39,7 @@ function Section({
   );
 }
 
-function Glance({ item, className }: { item: DemoLanguageItem; className?: string }) {
+function Glance({ item, className }: { item: LanguageItem; className?: string }) {
   const rows: { label: string; value: React.ReactNode }[] = [
     { label: "Part of speech", value: item.partOfSpeech },
     {
@@ -82,25 +80,19 @@ function Glance({ item, className }: { item: DemoLanguageItem; className?: strin
   );
 }
 
-/** A language item page: teaches how to use the language, not just what it means. */
-export function LanguageDetail({ item }: { item: DemoLanguageItem }) {
+/**
+ * A language item page: teaches how to use the language, not just what it means.
+ * Public and server-rendered; the only account-aware parts are the client-side actions.
+ */
+export function LanguageDetail({ item }: { item: LanguageItem }) {
   return (
     <PageContainer>
-      <Link
-        href="/finder"
-        className="inline-flex items-center gap-1.5 rounded-sm type-label text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        <ArrowLeft aria-hidden className="size-4" />
-        Language Finder
-      </Link>
+      <BackToSearch />
 
       <div className="mt-6 grid gap-x-12 gap-y-10 xl:grid-cols-3">
         <article className="min-w-0 space-y-8 xl:col-span-2">
           <header className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <CategoryBadge category={item.category} />
-              {item.status ? <StatusBadge status={item.status} /> : null}
-            </div>
+            <CategoryBadge category={item.category} />
             <div>
               <h1 className="type-term-display text-foreground">{item.term}</h1>
               <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -110,18 +102,11 @@ export function LanguageDetail({ item }: { item: DemoLanguageItem }) {
                 <span className="type-caption text-muted-foreground">{item.partOfSpeech}</span>
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <SaveToBankButton slug={item.slug} term={item.term} />
-              <Button asChild variant="ghost">
-                <Link href={practiceHref(item.slug)}>
-                  <Dumbbell data-icon="inline-start" />
-                  Practise this
-                </Link>
-              </Button>
-            </div>
-            <p className="type-caption text-subtle-foreground">
-              Prototype — saving lasts for this session only and isn&apos;t stored yet.
-            </p>
+            <LanguageActions
+              slug={item.slug}
+              term={item.term}
+              practiceHref={practiceHref(item.slug)}
+            />
             <div className="rounded-lg border border-border bg-card p-4 xl:hidden">
               <Glance item={item} className="grid-cols-2 sm:grid-cols-3" />
             </div>

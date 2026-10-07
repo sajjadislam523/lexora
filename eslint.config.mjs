@@ -17,6 +17,19 @@ const features = readdirSync("src/features", { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name);
 
+// Features rendered on public pages. Shared UI in components/** already can't import server code.
+const publicFeatures = new Set(["discovery", "finder", "language"]);
+const noServerInPublic = pattern(
+  ["@/server/*"],
+  "Public discovery code must not import server code. Account actions authenticate in their own endpoint.",
+);
+const noDemoInPublic = pattern(
+  ["@/demo/*"],
+  "Read language through @/language, not the prototype content behind it.",
+);
+
+// ESLint replaces (doesn't merge) rule options when several blocks match a file, so each file
+// group gets exactly one block with all of its patterns.
 const boundaries = [
   {
     // Shared UI, utilities and prototype content never reach into server code or features.
@@ -28,6 +41,23 @@ const boundaries = [
       ),
       pattern(["@/features/*"], "Shared layers must not depend on features."),
     ]),
+  },
+  {
+    // The shared language engine: content and search only. No UI, no server code, no user data.
+    files: ["src/language/**"],
+    rules: restrict([
+      pattern(
+        ["@/features/*", "@/components/*", "@/app/*", "@/server/*"],
+        "The language engine holds content and search only; it must not depend on UI or server code.",
+      ),
+    ]),
+  },
+  {
+    // Public routes (docs/ARCHITECTURE.md → Route boundary) render the same for everyone. They
+    // never import server code, so they cannot load user data or call authenticated code, and
+    // they read language through @/language rather than the prototype content behind it.
+    files: ["src/app/(public)/**"],
+    rules: restrict([noServerInPublic, noDemoInPublic]),
   },
   {
     // Server code is the bottom layer for data; it never imports UI.
@@ -47,6 +77,8 @@ const boundaries = [
         features.filter((other) => other !== feature).map((other) => `@/features/${other}/*`),
         "Features don't import each other. Move shared code into components/lexora, lib or server.",
       ),
+      ...(publicFeatures.has(feature) ? [noServerInPublic] : []),
+      ...(feature === "discovery" ? [noDemoInPublic] : []),
     ]),
   })),
 ];

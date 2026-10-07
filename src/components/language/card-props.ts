@@ -1,9 +1,9 @@
 import type { LanguageResultCardProps } from "@/components/lexora/language-result-card";
-import type { DemoLanguageItem } from "@/demo/types";
+import type { LanguageItem } from "@/language/types";
 
-/** Maps a demo language item onto the result card. */
+/** Maps a language item onto the result card. */
 export function toCardProps(
-  item: DemoLanguageItem,
+  item: LanguageItem,
 ): Omit<LanguageResultCardProps, "saved" | "onSaveToggle" | "className"> {
   const example = item.examples[0];
   return {

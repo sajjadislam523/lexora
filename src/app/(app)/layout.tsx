@@ -1,5 +1,4 @@
 import { AppShell } from "@/components/shell/app-shell";
-import { SavedItemsProvider } from "@/demo/saved-items";
 import { requireSession, toSafeUser } from "@/server/auth/session";
 
 /**
@@ -10,9 +9,5 @@ import { requireSession, toSafeUser } from "@/server/auth/session";
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await requireSession();
 
-  return (
-    <SavedItemsProvider>
-      <AppShell user={toSafeUser(session.user)}>{children}</AppShell>
-    </SavedItemsProvider>
-  );
+  return <AppShell user={toSafeUser(session.user)}>{children}</AppShell>;
 }

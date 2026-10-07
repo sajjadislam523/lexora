@@ -19,10 +19,10 @@ export default function NotFound() {
       </div>
       <div className="flex flex-wrap gap-2">
         <Button asChild>
-          <Link href="/home">Go to Home</Link>
+          <Link href="/explore">Explore Lexora</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/finder">Open the Finder</Link>
+          <Link href="/">Go to the home page</Link>
         </Button>
       </div>
     </main>
