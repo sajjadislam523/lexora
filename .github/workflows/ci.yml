@@ -12,6 +12,28 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: lexora
+          POSTGRES_PASSWORD: lexora
+          POSTGRES_DB: lexora
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lexora -d lexora"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+
+    # Throwaway CI-only values. Real secrets live in Vercel / Neon, never in the repository.
+    env:
+      DATABASE_URL: postgres://lexora:lexora@localhost:5432/lexora
+      BETTER_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
+      BETTER_AUTH_URL: http://localhost:3000
+
     steps:
       - uses: actions/checkout@v4
 
@@ -26,4 +48,9 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - name: Apply migrations to a fresh database
+        run: pnpm db:migrate
+      - name: Check the schema and migrations are in sync
+        run: pnpm exec drizzle-kit check
+      - run: pnpm test
       - run: pnpm build
