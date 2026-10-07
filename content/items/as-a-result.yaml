@@ -1,9 +1,9 @@
 id: as-a-result
 kind: linker
 headword: as a result
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: as a result, type: lemma }
 senses:

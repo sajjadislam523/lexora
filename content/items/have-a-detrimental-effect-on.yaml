@@ -1,9 +1,9 @@
 id: have-a-detrimental-effect-on
 kind: collocation
 headword: have a detrimental effect on
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: have a detrimental effect on, type: lemma }
   - { form: has a detrimental effect on, type: inflection }

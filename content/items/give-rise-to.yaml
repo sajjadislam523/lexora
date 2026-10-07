@@ -1,9 +1,9 @@
 id: give-rise-to
 kind: phrase
 headword: give rise to
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: give rise to, type: lemma }
   - { form: gives rise to, type: inflection }

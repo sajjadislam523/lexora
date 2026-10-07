@@ -1,9 +1,9 @@
 id: there-is-growing-concern-about
 kind: sentence_pattern
 headword: There is growing concern about …
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: there is growing concern about, type: lemma }
   - { form: there is growing concern that, type: inflection }

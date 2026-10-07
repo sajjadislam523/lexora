@@ -1,9 +1,9 @@
 id: it-is-worth-noting-that
 kind: sentence_pattern
 headword: It is worth noting that …
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: it is worth noting that, type: lemma }
   - { form: it's worth noting that, type: contraction }

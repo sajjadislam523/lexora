@@ -1,9 +1,9 @@
 id: raise-awareness
 kind: collocation
 headword: raise awareness
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: raise awareness, type: lemma }
   - { form: raises awareness, type: inflection }

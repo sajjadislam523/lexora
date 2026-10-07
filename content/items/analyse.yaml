@@ -1,9 +1,9 @@
 id: analyse
 kind: word
 headword: analyse
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 regional_note: Both spellings are correct. Lexora shows British spelling by default; "analyze" is the American spelling, not a mistake.
 forms:
   - { form: analyse, type: lemma, region: gb, default: true }

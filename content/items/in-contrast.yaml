@@ -1,9 +1,9 @@
 id: in-contrast
 kind: linker
 headword: in contrast
-status: draft
+status: published
 source: lexora-editorial
-review: { author: claude }
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
 forms:
   - { form: in contrast, type: lemma }
 senses:
