@@ -319,6 +319,11 @@ Legend: ✅ built · 🔜 _Planned_ (intent only).
 - Text is 16px on mobile (prevents iOS zoom) and 14px from `md`.
 - Always pair with a visible label.
 
+**Related:**
+
+- **NativeSelect** (`ui/native-select`): a styled native `<select>` matching Input (40 / 44px, flat, 3:1 edge, chevron). It keeps the platform picker, which is the most accessible option on mobile. Use it for short fixed lists such as target band.
+- **FormField** (`lexora/form-field`): label → control → hint or error, with `aria-invalid` and `aria-describedby` wired through `fieldAria()`. Errors appear in `danger` caption text and replace the hint. A field's error clears as soon as the user edits it.
+
 ### 9.3 Search ✅
 
 Three patterns, never mixed:
@@ -418,6 +423,7 @@ The generic container: white, flat, `rounded-lg`, 20px padding, with an optional
 - **Placeholders** (`shell/route-placeholder`): pages not built yet show the page header with a "Not built yet" badge, a dashed "What this screen will do" panel (status plus three planned capabilities), and a "Meanwhile" list linking to built screens.
 - **Breadcrumb:** sub-routes show their parent, e.g. "Language Finder / significant" on a detail page.
 - **Skip link:** the first focusable element on every app page. It jumps to `#main`.
+- **User menu** (`shell/user-menu`): at the foot of the sidebar, below a hairline. It shows a 28px round avatar with initials on `bg-muted`, the name (`type-label`), the email (`type-caption`, subtle) and an up/down chevron. It opens upwards: name and email, _Settings_, then _Sign out_ (spinner and "Signing out…" while pending). In the collapsed rail it's the avatar alone with a tooltip, and the menu opens to the right. This is the only always-visible trace of authentication in the app.
 
 ### 9.13 Overlays ✅ `ui/tooltip`, `ui/dropdown-menu`, `ui/dialog`
 
@@ -510,6 +516,38 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
   8. Related language (relation → term, linked when it exists)
 
 ---
+
+### 10.5 Authentication screens (`/sign-in`, `/sign-up`)
+
+Authentication should be calm and quick, and should look like Lexora rather than a template.
+
+- **Frame:** two columns from `lg`.
+  - The left panel is `bg-sidebar` with a hairline edge. It holds the logo, a sample language card (category badge, a `type-term-display` term, a serif example with the highlighter, a caption) and the product promise.
+  - The form sits on the canvas, centred at `max-w-sm`.
+  - Below `lg` only the form column remains, with the logo above it.
+- **Header:** `type-title` ("Sign in", "Create your account") plus one `type-reading` line.
+- **Fields:** `Input size="lg"` (44px), `FormField` labels, and correct `autoComplete` values (`email`, `current-password`, `new-password`, `name`). Password fields have a show/hide toggle (ghost icon button with `aria-pressed`).
+- **Validation:** Zod mirrors the server rules. Fields validate on blur and on submit, and errors clear on edit. A password hint ("At least 8 characters…") is shown until there's an error.
+- **Submitting:** the full-width primary button shows a spinner with "Signing in…" or "Creating your account…". The fieldset is disabled and `aria-busy` is set.
+- **Messages:** callouts appear above the form.
+  - Invalid credentials (danger, deliberately generic: "Email or password is incorrect.")
+  - Rate limited (danger)
+  - Network failure (danger)
+  - Session ended (info)
+  - Signed out (success)
+  - Account already exists (info, with a _Sign in instead_ link)
+- **No dead ends or fake links:** each screen links to the other and keeps the `next` destination. "Forgot password" only appears once an email provider exists.
+- **Pages without a valid session:** an app URL with no valid session goes to sign-in with the destination remembered, and returns there after signing in.
+
+### 10.6 Settings (`/settings`)
+
+A narrow page (`max-w-4xl`) of three sections, divided by hairlines. On `lg` each section has a title and one-line description in a left column and the form in the right two columns:
+
+1. **Profile:** the name.
+2. **Learning profile:** target band (`NativeSelect`), test date (`Input type="date"`), and focus (a segmented radio group: Writing / Speaking / Both / Not set).
+3. **Account:** email, member since, and _Sign out_.
+
+Each form saves on its own. _Save_ shows a spinner and "Saving…" while pending, then a polite "… saved." status beside the button. Values stay as saved (no form reset), and server validation errors appear inline.
 
 ## 11. States checklist
 

@@ -2,7 +2,7 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current phase: Phase 1 — Visual Prototype (complete, awaiting review)** · Phase 0 approved and tagged `v0.0.0`
+**Current phase: Phase 2 — Application Foundation (complete, awaiting review)** · Phase 0 approved (`v0.0.0`) · Phase 1 approved (`v0.1.0`)
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
@@ -27,7 +27,7 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ---
 
-## Phase 1 — Visual Prototype 🔜 (in progress)
+## Phase 1 — Visual Prototype ✅ (approved, `v0.1.0`)
 
 **Goal:** see and feel the product end-to-end with static data, before building any backend.
 
@@ -46,19 +46,24 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ---
 
-## Phase 2 — Application Foundation ⬜
+## Phase 2 — Application Foundation ✅ (awaiting review)
 
-**Goal:** real users, real persistence, real routing.
+**Goal:** real users, real persistence, real routing — without changing the product experience.
 
-- Choose auth (Better Auth vs Auth.js) and implement email plus one OAuth provider
-- PostgreSQL + Drizzle: client, schema scaffolding, migrations, local Docker setup
-- Zod-validated environment (`src/lib/env.ts`)
-- User profile: target band, test date, skill focus, preferred register
-- `(app)` routes protected via `proxy.ts`; persistent layout
-- Folder boundaries from ARCHITECTURE.md, with ESLint import rules enforcing them
-- Error and not-found pages
+- [x] Better Auth with email + password (Google OAuth deliberately deferred; the schema already supports it)
+- [x] PostgreSQL 17 (Docker locally, Neon in production) + Drizzle ORM: client, schema, SQL migrations, `db:*` scripts
+- [x] Zod-validated server environment (`src/server/env.ts`) with an optional, unused AI boundary
+- [x] Users, sessions, accounts, verifications, rate limits (Better Auth) + `learner_profiles` (target band, test date, focus skill)
+- [x] Sign-in and sign-up screens: validation, pending, invalid-credentials, rate-limit, session-expired and signed-out states
+- [x] Protected `(app)` routes: cookie-presence `proxy.ts` + database-validated `requireSession()`; open-redirect-safe return paths
+- [x] Auth-aware shell: user menu with sign-out; personal greeting; `/settings` with name and learning profile
+- [x] Security: hashed passwords, HttpOnly/SameSite/Secure cookies, origin checks, rate limiting, hidden session token, security headers
+- [x] Layer boundaries enforced by ESLint
+- [x] Loading, error and not-found pages
+- [x] Vitest unit + Postgres integration tests; CI runs migrations on a fresh database, checks schema drift, tests and builds
+- Deferred: preferred register (moves to the Phase 5 preferences table)
 
-**Exit criteria:** a user can sign up, sign in, and edit their profile, and the shell persists across routes.
+**Exit criteria:** a user can sign up, sign in, sign out and edit their profile; sessions persist and expire correctly; unauthenticated users cannot reach app areas; all checks pass from a fresh database.
 
 ---
 
@@ -172,14 +177,17 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ## Open decisions (tracked)
 
-| Decision                     | Needed by | Options                                                      |
-| ---------------------------- | --------- | ------------------------------------------------------------ |
-| Typography pairing           | Phase 1   | Inter + Newsreader (current) / alternatives                  |
-| Ink accent hue               | Phase 1   | Muted indigo `#4450A8` (current) / alternatives              |
-| Interface spelling           | Phase 1   | British (proposed) / American                                |
-| Auth library                 | Phase 2   | Better Auth / Auth.js                                        |
-| ORM                          | Phase 2   | Drizzle (proposed) / Prisma                                  |
-| Hosting & DB provider        | Phase 2   | Vercel + Neon / Supabase / self-hosted                       |
-| Content sourcing & licensing | Phase 3   | Hand-curated / open lexical sources (licence review) / mixed |
-| SRS algorithm                | Phase 5   | FSRS (proposed) / SM-2                                       |
-| Dark mode timing             | Any       | Phase 1 / Phase 10                                           |
+| Decision                     | Needed by             | Status / options                                                        |
+| ---------------------------- | --------------------- | ----------------------------------------------------------------------- |
+| Typography pairing           | —                     | ✅ Inter + Newsreader (serif for language only)                         |
+| Ink accent hue               | —                     | ✅ Muted indigo `#4450A8`                                               |
+| Interface spelling           | Phase 3               | British (proposed) / American                                           |
+| Auth library                 | —                     | ✅ Better Auth, email + password                                        |
+| ORM                          | —                     | ✅ Drizzle                                                              |
+| Hosting & DB provider        | —                     | ✅ Vercel + Neon (Docker Postgres locally)                              |
+| Email provider               | Before public launch  | Resend / Postmark / SES — enables email verification and password reset |
+| Google OAuth                 | When wanted           | Configure `socialProviders.google`; no schema change                    |
+| Vercel preview deployments   | Before using previews | Per-preview `BETTER_AUTH_URL` and a separate Neon branch per preview    |
+| Content sourcing & licensing | Phase 3               | Hand-curated / open lexical sources (licence review) / mixed            |
+| SRS algorithm                | Phase 5               | FSRS (proposed) / SM-2                                                  |
+| Dark mode timing             | Any                   | Phase 10 (current plan)                                                 |
