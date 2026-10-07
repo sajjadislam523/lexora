@@ -267,6 +267,9 @@ describe.skipIf(!hasDatabase)("content import", () => {
       };
       delete c.items.vital.slug;
       delete c.items.vital.previous_slugs;
+      // Drafts meet the same quality rules as published content.
+      (c.items.vital.senses as Record<string, unknown>[]).splice(1);
+      sense(c, "vital").standalone = "Test draft.";
     });
     await importFixture(withDraft);
     const vital = await temp.db
