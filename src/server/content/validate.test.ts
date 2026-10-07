@@ -317,15 +317,43 @@ describe("validateContent", () => {
       expect(issues).toContainEqual(expect.stringContaining(expected));
     });
 
-    it("relaxes publishing rules for drafts", () => {
-      const issues = issuesAfter((c) => {
-        const item = c.items.analyse!;
-        item.status = "draft";
-        item.review = { author: "claude" };
-        delete sense(c, "analyse").standalone;
-        sense(c, "analyse").examples = [];
-      });
-      expect(issues).toEqual([]);
+    it("lets drafts wait for review, but checks their quality", () => {
+      const asDraft = (c: FixtureContent) => {
+        c.items.analyse!.status = "draft";
+        c.items.analyse!.review = { author: "claude" };
+      };
+      expect(issuesAfter(asDraft)).toEqual([]);
+      expect(
+        issuesAfter((c) => {
+          asDraft(c);
+          sense(c, "analyse").examples = [];
+        }),
+      ).toEqual([expect.stringContaining("examples: needs at least 2 examples")]);
+    });
+
+    it("lets an intent list a draft sense, but not a retired one", () => {
+      const toAnalyse = (c: FixtureContent) => {
+        (c.intents["express-contrast"]!.groups as { entries: unknown[] }[])[0]!.entries.push({
+          sense: "analyse.examine",
+          fit: "test entry",
+        });
+      };
+      expect(
+        issuesAfter((c) => {
+          toAnalyse(c);
+          c.items.analyse!.status = "draft";
+        }),
+      ).toEqual([]);
+      expect(
+        issuesAfter((c) => {
+          toAnalyse(c);
+          sense(c, "analyse").retired = true;
+          c.items.analyse!.senses = [
+            ...(c.items.analyse!.senses as unknown[]),
+            { ...sense(c, "analyse"), key: "current", retired: false },
+          ];
+        }),
+      ).toEqual([expect.stringContaining('"analyse.examine" is retired')]);
     });
 
     it("keeps a retired sense valid while it has a published replacement", () => {

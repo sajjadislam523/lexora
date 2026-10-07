@@ -301,13 +301,16 @@ function checkIntegrity(
 
     // Senses.
     const senseKeys = new Set<string>();
-    if (published && !item.senses.some((sense) => !sense.retired)) {
-      issues.add(map, ["senses"], "a published item needs at least one sense that isn't retired");
+    if (item.status !== "retired" && !item.senses.some((sense) => !sense.retired)) {
+      issues.add(map, ["senses"], "needs at least one sense that isn't retired");
     }
 
     for (const [s, sense] of item.senses.entries()) {
       const at = (...path: Path): Path => ["senses", s, ...path];
       const senseId = `${item.id}.${sense.key}`;
+      // Drafts get every quality check, so content is complete before it's reviewed; only the
+      // review itself and links to published content are specific to published items.
+      const checked = item.status !== "retired" && !sense.retired;
       const live = published && !sense.retired;
       if (senseKeys.has(sense.key))
         issues.add(map, at("key"), `duplicate sense key "${sense.key}"`);
@@ -341,17 +344,21 @@ function checkIntegrity(
       if (sense.linker && item.kind !== "linker") {
         issues.add(map, at("linker"), "only linkers have linker details");
       }
-      if (live && item.kind === "linker" && !sense.linker) {
+      if (checked && item.kind === "linker" && !sense.linker) {
         issues.add(map, at("linker"), "linkers need connects, positions and punctuation");
       }
-      if (live && item.kind === "preposition_pattern" && sense.preposition_patterns.length === 0) {
+      if (
+        checked &&
+        item.kind === "preposition_pattern" &&
+        sense.preposition_patterns.length === 0
+      ) {
         issues.add(
           map,
           at("preposition_patterns"),
           "a preposition pattern item needs at least one pattern",
         );
       }
-      if (live && item.kind === "sentence_pattern" && sense.frames.length === 0) {
+      if (checked && item.kind === "sentence_pattern" && sense.frames.length === 0) {
         issues.add(map, at("frames"), "a sentence pattern item needs at least one frame");
       }
 
@@ -374,11 +381,11 @@ function checkIntegrity(
       sense.mistakes.forEach((row, i) => claim("mistake", row.id, at("mistakes", i, "id")));
 
       // Examples.
-      if (live && sense.examples.length < MIN_EXAMPLES_PER_SENSE) {
+      if (checked && sense.examples.length < MIN_EXAMPLES_PER_SENSE) {
         issues.add(map, at("examples"), `needs at least ${MIN_EXAMPLES_PER_SENSE} examples`);
       }
       if (
-        live &&
+        checked &&
         sense.skills.includes("speaking") &&
         !sense.examples.some((e) => e.skill === "speaking")
       ) {
@@ -523,9 +530,9 @@ function checkIntegrity(
     }
   }
 
-  // Every published sense of a relational kind relates to something, unless it says why not.
+  // Every sense of a relational kind relates to something, unless it says why not.
   for (const { data: item, map } of content.items) {
-    if (item.status !== "published" || !KINDS_NEEDING_RELATIONS.has(item.kind)) continue;
+    if (item.status === "retired" || !KINDS_NEEDING_RELATIONS.has(item.kind)) continue;
     for (const [s, sense] of item.senses.entries()) {
       const senseId = `${item.id}.${sense.key}`;
       if (sense.retired || sense.standalone || related.has(senseId)) continue;
@@ -577,8 +584,9 @@ function checkIntents(
         const path: Path = ["groups", g, "entries", e, "sense"];
         const target = sensesById.get(entry.sense);
         if (!target) issues.add(map, path, `unknown sense "${entry.sense}"`);
-        else if (target.item.status !== "published" || target.sense.retired) {
-          issues.add(map, path, `"${entry.sense}" is not published`);
+        // Draft entries wait for review: the engine shows only published senses.
+        else if (target.item.status === "retired" || target.sense.retired) {
+          issues.add(map, path, `"${entry.sense}" is retired`);
         }
         if (senses.has(entry.sense))
           issues.add(map, path, `"${entry.sense}" is already listed in this intent`);
