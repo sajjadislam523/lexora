@@ -1,0 +1,67 @@
+id: result-in
+kind: preposition_pattern
+headword: result in
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: result in, type: lemma }
+  - { form: results in, type: inflection }
+  - { form: resulted in, type: inflection }
+  - { form: resulting in, type: inflection }
+senses:
+  - key: cause
+    pos: verb_phrase
+    definition: To cause a particular situation or effect.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [result]
+    best_when: Linking a cause to its effect in one clause — the effect comes after "in".
+    avoid_when: You want to name the cause after the verb. Then use "result from".
+    examples:
+      - id: ex1
+        text: The new tax resulted in a sharp fall in car sales.
+        highlight: resulted in
+        skill: writing
+        task: writing-2
+        pattern: in
+      - id: ex2
+        text: Many road accidents result from driver tiredness.
+        highlight: result from
+        skill: writing
+        task: writing-2
+        pattern: from
+      - id: ex3
+        text: Skipping breakfast usually results in me feeling tired by eleven.
+        highlight: results in
+        skill: speaking
+        task: speaking-1
+        pattern: in
+    preposition_patterns:
+      - id: in
+        base: result
+        preposition: in
+        pattern: result in + noun / -ing
+        complement: noun_or_ing
+        note: the effect comes after "in"
+        mistake: to
+      - id: from
+        base: result
+        preposition: from
+        pattern: result from + noun / -ing
+        complement: noun_or_ing
+        note: the cause comes after "from"
+        mistake: swap
+    mistakes:
+      - id: swap
+        wrong: Lung disease can result in smoking.
+        right: Lung disease can result from smoking.
+        type: confusion
+        explanation: '"Result in" is followed by the effect; "result from" by the cause.'
+      - id: to
+        wrong: The policy resulted to higher prices.
+        right: The policy resulted in higher prices.
+        type: preposition
+        explanation: Use "result in" for the effect. "Lead to" takes "to", but "result" doesn't.

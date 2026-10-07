@@ -1,0 +1,50 @@
+id: focus-on
+kind: preposition_pattern
+headword: focus on
+status: draft
+source: lexora-editorial
+review: { author: claude }
+regional_note: Both "focused" and "focussed" are correct in British English; "focused" is more common, and the only spelling in American English.
+forms:
+  - { form: focus on, type: lemma }
+  - { form: focuses on, type: inflection }
+  - { form: focused on, type: inflection }
+  - { form: focussed on, type: spelling_variant, region: gb }
+  - { form: focusing on, type: inflection }
+  - { form: focussing on, type: spelling_variant, region: gb }
+senses:
+  - key: attention
+    pos: verb_phrase
+    definition: To give most of your attention or effort to one thing.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-2] }
+    best_when: Saying what a person, policy or text gives priority to.
+    examples:
+      - id: ex1
+        text: Governments should focus on improving public transport rather than building new roads.
+        highlight: focus on
+        skill: writing
+        task: writing-2
+        pattern: on
+      - id: ex2
+        text: At the moment I'm focusing on my exams, so I don't go out much.
+        highlight: focusing on
+        skill: speaking
+        task: speaking-1
+        pattern: on
+    preposition_patterns:
+      - id: on
+        base: focus
+        preposition: on
+        pattern: focus on + noun / -ing
+        complement: noun_or_ing
+        note: what gets the attention
+        mistake: in
+    mistakes:
+      - id: in
+        wrong: The report focuses in the cost of housing.
+        right: The report focuses on the cost of housing.
+        type: preposition
+        explanation: Focus takes "on", both as a verb and as a noun ("the focus on …").

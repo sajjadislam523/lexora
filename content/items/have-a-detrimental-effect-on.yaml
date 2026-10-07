@@ -1,0 +1,63 @@
+id: have-a-detrimental-effect-on
+kind: collocation
+headword: have a detrimental effect on
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: have a detrimental effect on, type: lemma }
+  - { form: has a detrimental effect on, type: inflection }
+  - { form: had a detrimental effect on, type: inflection }
+  - { form: having a detrimental effect on, type: inflection }
+senses:
+  - key: harm
+    pos: verb_phrase
+    definition: To cause harm or damage to something.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [problem, result]
+    best_when: Describing harm that is happening or well established, such as effects on health, the environment or education.
+    avoid_when: The harm is small or uncertain. "Detrimental" is a strong, formal word.
+    skill_note: Formal. In Speaking, "is bad for" or "has a negative effect on" sounds more natural.
+    examples:
+      - id: ex1
+        text: Spending long hours on screens can have a detrimental effect on children's sleep.
+        highlight: have a detrimental effect on
+        skill: writing
+        task: writing-2
+        pattern: on
+      - id: ex2
+        text: Noise from the airport has had a detrimental effect on residents' health.
+        highlight: had a detrimental effect on
+        skill: writing
+        task: writing-2
+        pattern: on
+    preposition_patterns:
+      - id: on
+        base: have a detrimental effect
+        preposition: on
+        pattern: have a detrimental effect on + noun
+        complement: noun
+        note: what is harmed
+        mistake: to
+    collocations:
+      - id: detrimental-to
+        phrase: be detrimental to
+        pattern: be detrimental to + noun
+        note: the adjective on its own, same meaning
+      - id: negative
+        phrase: have a negative effect on
+        note: less formal and less strong
+    mistakes:
+      - id: to
+        wrong: have a detrimental effect to the environment
+        right: have a detrimental effect on the environment
+        type: preposition
+        explanation: '"Effect" takes "on" before what is affected.'
+      - id: affect
+        wrong: have a detrimental affect on health
+        right: have a detrimental effect on health
+        type: confusion
+        explanation: Effect is the noun; affect is usually the verb.
