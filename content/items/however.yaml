@@ -1,0 +1,68 @@
+id: however
+kind: linker
+headword: however
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: however, type: lemma }
+senses:
+  - key: contrast
+    pos: adverb
+    definition: Introduces a statement that contrasts with or limits what came before.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [contrast]
+    linker:
+      connects: sentences
+      positions: [start, middle, end]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle; a comma before it at the end.
+    best_when: Any general contrast between two sentences — the safest contrast linker.
+    avoid_when: You are joining two clauses with only a comma. However starts a new sentence (or follows a semicolon).
+    skill_note: In Speaking, "but" or "though" at the end of a sentence usually sounds more natural.
+    examples:
+      - id: ex1
+        text: Public transport is cheap. However, it is often slow and crowded.
+        highlight: However,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: The number of visitors fell in 2019. Spending per visitor, however, increased.
+        highlight: however,
+        skill: writing
+        task: writing-1
+      - id: ex3
+        text: I'd love to live abroad. However, I think I'd miss my family too much.
+        highlight: However,
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: comma-splice
+        wrong: Prices rose, however demand fell.
+        right: Prices rose; however, demand fell.
+        type: punctuation
+        explanation: However can't join two clauses with only a comma. Use a full stop or a semicolon before it.
+      - id: no-comma
+        wrong: However the plan has some problems.
+        right: However, the plan has some problems.
+        type: punctuation
+        explanation: At the start of a sentence, put a comma after "however".
+    relations:
+      - type: alternative
+        to: on-the-other-hand.other-side
+        weight: 2
+        note: On the other hand introduces the second side of the same issue, usually after "on the one hand".
+      - type: alternative
+        to: whereas.contrast
+        weight: 2
+        note: Whereas joins the two contrasting facts in one sentence.
+      - type: alternative
+        to: in-contrast.difference
+        weight: 2
+        note: In contrast compares two different things directly, which suits figures in Task 1.
+      - type: more_formal
+        to: nevertheless.concession
+        weight: 2
+        note: Nevertheless also accepts the first point before continuing, and sounds more formal.

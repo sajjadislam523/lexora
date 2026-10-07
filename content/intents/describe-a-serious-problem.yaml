@@ -1,0 +1,24 @@
+id: describe-a-serious-problem
+label: Describe a serious problem
+description: Say that something causes, or could cause, harm.
+function: problem
+triggers:
+  - describe a serious problem
+  - describe a problem
+  - say this caused a serious problem
+  - say something caused a problem
+  - say something is harmful
+  - describe a danger
+groups:
+  - label: Harm happening now
+    entries:
+      - sense: have-a-detrimental-effect-on.harm
+        fit: "established harm to health, people or places"
+      - { sense: give-rise-to.cause, fit: "it created new problems" }
+      - { sense: result-in.cause, fit: "a direct cause and effect" }
+  - label: Possible harm
+    entries:
+      - { sense: pose-a-threat.danger, fit: "a serious risk that may cause harm" }
+  - label: Introducing the problem
+    entries:
+      - { sense: there-is-growing-concern-about.problem, fit: "opening a Task 2 paragraph" }

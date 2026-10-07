@@ -1,0 +1,23 @@
+id: add-a-point
+label: Add a point
+description: Add another idea that supports what you have just said.
+function: addition
+triggers:
+  - add a point
+  - add another point
+  - add more information
+  - add another reason
+  - give another reason
+  - add an idea
+groups:
+  - label: In writing
+    entries:
+      - { sense: furthermore.addition, fit: "a further supporting point in a formal essay" }
+      - { sense: moreover.addition, fit: "a stronger point that builds the argument" }
+  - label: In speaking
+    entries:
+      - { sense: on-top-of-that.addition, fit: "one more point, natural in conversation" }
+      - {
+          sense: whats-more.addition,
+          fit: an even stronger point; fine in speech and informal writing,
+        }

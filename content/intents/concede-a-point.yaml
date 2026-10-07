@@ -1,0 +1,18 @@
+id: concede-a-point
+label: Concede a point
+description: Accept part of the other side's argument before continuing with your own.
+function: concession
+triggers:
+  - concede a point
+  - admit a point
+  - accept the other side
+  - acknowledge a counterargument
+  - partly agree
+groups:
+  - label: Accept, then continue
+    entries:
+      - { sense: nevertheless.concession, fit: "the point is true, but your view stands" }
+      - { sense: however.contrast, fit: "a softer turn back to your own view" }
+  - label: Weigh both sides
+    entries:
+      - { sense: on-the-other-hand.other-side, fit: "present the other side fairly" }

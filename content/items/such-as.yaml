@@ -1,0 +1,42 @@
+id: such-as
+kind: functional_expression
+headword: such as
+status: draft
+source: lexora-editorial
+review: { author: claude }
+forms:
+  - { form: such as, type: lemma }
+senses:
+  - key: example
+    pos: preposition
+    definition: Introduces one or more examples of the thing just mentioned, inside the same sentence.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1] }
+    functions: [example]
+    best_when: Listing examples straight after a general noun — "renewable sources such as wind and solar power".
+    avoid_when: The example is a whole sentence. Then use "for instance" or "for example".
+    skill_note: In Speaking, "like" is a natural, informal alternative.
+    examples:
+      - id: ex1
+        text: Renewable sources such as wind and solar power are becoming cheaper.
+        highlight: such as
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I enjoy outdoor activities such as hiking and cycling.
+        highlight: such as
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: for-example
+        wrong: Some countries, such as for example Japan, have ageing populations.
+        right: Some countries, such as Japan, have ageing populations.
+        type: grammar
+        explanation: '"Such as" already introduces the example, so "for example" repeats it.'
+      - id: colon
+        wrong: "There are many sports such as: tennis, golf and sailing."
+        right: There are many sports such as tennis, golf and sailing.
+        type: punctuation
+        explanation: Don't put a colon after "such as"; the examples follow directly.
