@@ -1,5 +1,6 @@
 import type { LanguageResultCardProps } from "@/components/lexora/language-result-card";
 import type { LanguageCategory } from "@/components/lexora/language-category";
+import { languageHref } from "@/language/links";
 import type { SearchResult } from "@/language/search/types";
 import type { ItemKind } from "@/language/schema/vocabulary";
 
@@ -36,6 +37,6 @@ export function toCardProps(
     }),
     tags: [...result.registers, ...result.skills],
     ...(result.strength && { strength: result.strength }),
-    href: `/language/${result.slug}`,
+    href: languageHref(result.slug, { id: result.senseId, label: result.senseLabel }),
   };
 }
