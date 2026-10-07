@@ -50,7 +50,13 @@ jobs:
       - run: pnpm typecheck
       - name: Apply migrations to a fresh database
         run: pnpm db:migrate
-      - name: Check the schema and migrations are in sync
-        run: pnpm exec drizzle-kit check
+      - name: Fail if the schema changed without a migration
+        run: |
+          pnpm db:generate --name ci_drift_check
+          if [ -n "$(git status --porcelain drizzle)" ]; then
+            echo "::error::Schema changes are missing a migration. Run pnpm db:generate and commit the result."
+            git status --porcelain drizzle
+            exit 1
+          fi
       - run: pnpm test
       - run: pnpm build
