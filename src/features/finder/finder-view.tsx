@@ -23,7 +23,7 @@ import {
 } from "@/demo/finder";
 import { getLanguageItem, requireLanguageItem } from "@/demo/language";
 import { useSavedItems } from "@/demo/saved-items";
-import { toCardProps } from "@/features/language/to-card-props";
+import { toCardProps } from "@/demo/card-props";
 
 import { ContextTool } from "./context-tool";
 import { FitGuide } from "./fit-guide";
