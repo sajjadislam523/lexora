@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { parseServerEnv } from "./env";
 
 const base = {
-  DATABASE_URL: "postgres://lexora:lexora@localhost:5432/lexora",
+  DATABASE_URL: "postgres://lexora@localhost:5432/lexora",
   BETTER_AUTH_SECRET: "x".repeat(32),
 };
 
