@@ -28,16 +28,30 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 - **Accessibility is part of done.** Every component needs a visible keyboard focus state and labelled controls, colour can't be the only signal, contrast must meet WCAG AA, and `prefers-reduced-motion` must be respected.
 - **Dependencies.** Don't add a dependency without a clear need. Note the reason in ARCHITECTURE.md → Decision log.
 
+## Security rules (auth and data)
+
+- **Authorise on the server, every time.** Every protected page, server action and route handler calls `requireSession()` from `@/server/auth/session`. The proxy only checks that a cookie exists; never rely on it for authorisation.
+- **Ids come from the session.** Use `session.user.id`; never accept a user id from form data, params or the client. Repositories take the user id explicitly.
+- **Server-only code stays server-side.** Modules under `src/server/` start with `import "server-only"`. Only `SafeUser` (`id`, `name`, `email`) may be passed into client components. ESLint blocks runtime imports of server code from `components`, `lib` and `demo`.
+- **Secrets.** Read env only through `serverEnv()` (`src/server/env.ts`). Never prefix a secret with `NEXT_PUBLIC_`, never log or echo values, never commit `.env*` files except `.env.example`.
+- **Don't hand-roll auth.** Password hashing, sessions, cookies and CSRF are Better Auth's. Configure them in `src/server/auth/auth.ts`; don't write custom crypto or session code.
+- **Validate input with Zod** in server actions, even when the client also validates.
+- **Product data lives outside the auth tables.** `src/server/db/schema/auth.ts` is generated (`pnpm auth:generate`) — don't edit it by hand. New product tables reference `users.id` with `onDelete: "cascade"`.
+
 ## Where things go
 
-| What                                        | Where                                                                                       |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Routes and layouts                          | `src/app/`                                                                                  |
-| shadcn/ui primitives (restyled)             | `src/components/ui/` (add with `pnpm dlx shadcn@latest add <name>`, then restyle to tokens) |
-| Lexora product components                   | `src/components/lexora/`                                                                    |
-| Design tokens / type roles                  | `src/styles/tokens.css`, `src/styles/typography.css`                                        |
-| Design playground                           | `src/app/design-system/` (keep in sync when components change)                              |
-| Future: feature modules, domain logic, data | See ARCHITECTURE.md → Target structure                                                      |
+| What                                         | Where                                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Routes and layouts                           | `src/app/`                                                                                  |
+| shadcn/ui primitives (restyled)              | `src/components/ui/` (add with `pnpm dlx shadcn@latest add <name>`, then restyle to tokens) |
+| Lexora product components                    | `src/components/lexora/`                                                                    |
+| Design tokens / type roles                   | `src/styles/tokens.css`, `src/styles/typography.css`                                        |
+| Design playground                            | `src/app/design-system/` (keep in sync when components change)                              |
+| Screen composition                           | `src/features/<screen>/` (features don't import each other)                                 |
+| Server-only code: env, auth, db, data access | `src/server/` (`env.ts`, `auth/`, `db/`, `repositories/`)                                   |
+| Database schema / migrations                 | `src/server/db/schema/` → `pnpm db:generate` → `drizzle/` (commit the SQL)                  |
+| Phase 1 prototype content                    | `src/demo/` (not the language dataset; replaced in Phase 3)                                 |
+| Future: domain logic, curated content        | See ARCHITECTURE.md → Target structure                                                      |
 
 ## Git workflow
 
@@ -55,9 +69,17 @@ pnpm build          # production build
 pnpm lint           # ESLint
 pnpm typecheck      # route typegen + tsc --noEmit
 pnpm format         # Prettier (sorts Tailwind classes)
+pnpm test           # Vitest: unit + Postgres integration tests (needs the local DB)
+
+pnpm db:up          # start local Postgres (Docker)       pnpm db:down / db:reset (wipes data)
+pnpm db:generate    # schema change → new SQL migration in drizzle/
+pnpm db:migrate     # apply migrations                     pnpm db:studio (browse data)
+pnpm auth:generate  # regenerate Better Auth tables after changing the auth config
 ```
 
-Before reporting work as done, run `pnpm lint && pnpm typecheck && pnpm build`.
+First run: `cp .env.example .env.local`, set `BETTER_AUTH_SECRET` (`openssl rand -base64 32`), then `pnpm db:up && pnpm db:migrate && pnpm dev`.
+
+Before reporting work as done, run `pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`. Schema changes always ship with a generated migration.
 
 ## Next.js version note
 
