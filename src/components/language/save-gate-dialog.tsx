@@ -64,21 +64,23 @@ export function SaveGateDialog({
           You’ll come straight back to this page, and it will be saved for you.
         </p>
         {request && target ? (
-          <DialogFooter>
-            <Button asChild variant="outline">
-              <Link
-                href={withNext("/sign-in", request.returnTo)}
-                onClick={() => onContinue(target)}
-              >
-                Sign in
-              </Link>
-            </Button>
+          <DialogFooter className="flex-col sm:flex-row-reverse sm:justify-start">
+            {/* The primary action comes first, so it is also first in keyboard order; the reversed
+                direction keeps it on top on phones and on the right from sm, as in other dialogs. */}
             <Button asChild>
               <Link
                 href={withNext("/sign-up", request.returnTo)}
                 onClick={() => onContinue(target)}
               >
                 Create free account
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link
+                href={withNext("/sign-in", request.returnTo)}
+                onClick={() => onContinue(target)}
+              >
+                Sign in
               </Link>
             </Button>
           </DialogFooter>
