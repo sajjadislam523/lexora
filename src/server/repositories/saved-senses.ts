@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, inArray } from "drizzle-orm";
 
 import { db } from "@/server/db/client";
 import { languageItems, savedSenses, senses } from "@/server/db/schema";
@@ -18,6 +18,27 @@ export async function listSavedSenseIds(userId: string): Promise<string[]> {
     .where(eq(savedSenses.userId, userId))
     .orderBy(desc(savedSenses.savedAt), savedSenses.senseId);
   return rows.map((row) => row.senseId);
+}
+
+/**
+ * Which of these senses the learner has saved: one bounded query for the senses on a page,
+ * never the whole collection.
+ */
+export async function savedAmong(userId: string, senseIds: readonly string[]): Promise<string[]> {
+  if (senseIds.length === 0) return [];
+  const rows = await db
+    .select({ senseId: savedSenses.senseId })
+    .from(savedSenses)
+    .where(and(eq(savedSenses.userId, userId), inArray(savedSenses.senseId, [...senseIds])));
+  return rows.map((row) => row.senseId);
+}
+
+export async function countSavedSenses(userId: string): Promise<number> {
+  const [row] = await db
+    .select({ total: count() })
+    .from(savedSenses)
+    .where(eq(savedSenses.userId, userId));
+  return row?.total ?? 0;
 }
 
 /**

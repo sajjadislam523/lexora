@@ -13,7 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export type SaveGateRequest = { slug: string; term: string; returnTo: string };
+import type { SaveTarget } from "./saved-language";
+
+export type SaveGateRequest = SaveTarget & { returnTo: string };
 
 function withNext(path: "/sign-up" | "/sign-in", returnTo: string) {
   return `${path}?next=${encodeURIComponent(returnTo)}`;
@@ -30,10 +32,12 @@ export function SaveGateDialog({
 }: {
   request: SaveGateRequest | null;
   onOpenChange: (open: boolean) => void;
-  onContinue: (target: { slug: string; term: string }) => void;
+  onContinue: (target: SaveTarget) => void;
 }) {
-  const term = request?.term.replace(/,$/, "");
-  const target = request ? { slug: request.slug, term: request.term } : null;
+  const term = request?.label;
+  const target: SaveTarget | null = request
+    ? { senseId: request.senseId, label: request.label }
+    : null;
 
   return (
     <Dialog open={request !== null} onOpenChange={onOpenChange}>

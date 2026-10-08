@@ -1,7 +1,4 @@
-import { randomBytes, randomUUID } from "node:crypto";
-
-import postgres from "postgres";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, inject, it } from "vitest";
 
 /**
  * Explore and the Finder over HTTP against a real server and the imported content: both are
@@ -9,7 +6,6 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
  * real language records, and never show the Phase 1 sample data.
  */
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
-const ORIGIN = new URL(BASE_URL).origin;
 
 /** The six acceptance scenarios for Phase 3 step 9, with text each response must contain. */
 const SCENARIOS: [query: string, expected: string[]][] = [
@@ -67,33 +63,7 @@ function resultsText(html: string) {
     .trim();
 }
 
-const email = `e2e-${randomUUID()}@lexora.test`;
-let cookie = "";
-
-beforeAll(async () => {
-  const response = await fetch(`${BASE_URL}/api/auth/sign-up/email`, {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: ORIGIN },
-    body: JSON.stringify({
-      name: "E2E Searcher",
-      email,
-      password: randomBytes(12).toString("hex"),
-    }),
-  });
-  expect(response.status).toBe(200);
-  cookie = response.headers
-    .getSetCookie()
-    .map((c) => c.split(";")[0]!)
-    .filter((c) => c.includes("session_token"))
-    .join("; ");
-});
-
-afterAll(async () => {
-  if (!process.env.DATABASE_URL) return;
-  const sql = postgres(process.env.DATABASE_URL, { max: 1, prepare: false });
-  await sql`delete from users where email = ${email}`;
-  await sql.end();
-});
+const [{ cookie }] = inject("learners");
 
 describe("Explore and the Finder use the language engine", () => {
   it.each(SCENARIOS)(

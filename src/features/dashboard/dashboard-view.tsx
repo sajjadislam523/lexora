@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { requireLanguageItem } from "@/demo/language";
 import { SAMPLE_LEARNER } from "@/demo/learner";
 
-import { SavedThisSession } from "./saved-this-session";
+import { SavedLanguageLink } from "./saved-language-link";
 
 const QUICK_ACTIONS = [
   {
@@ -59,7 +59,14 @@ function SectionHeading({
 }
 
 /** The learner's workspace: what to retrieve today, what to fix, where to go next. */
-export function DashboardView({ firstName }: { firstName?: string }) {
+export function DashboardView({
+  firstName,
+  savedCount,
+}: {
+  firstName?: string;
+  /** Saved meanings, from the database. */
+  savedCount: number;
+}) {
   const { focus, review, weakAreas, continueLearning, mistakes } = SAMPLE_LEARNER;
 
   return (
@@ -195,7 +202,7 @@ export function DashboardView({ firstName }: { firstName?: string }) {
                 </span>
               </Link>
             ))}
-            <SavedThisSession />
+            <SavedLanguageLink count={savedCount} />
           </nav>
         </aside>
       </div>

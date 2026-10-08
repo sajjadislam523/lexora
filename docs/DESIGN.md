@@ -389,7 +389,7 @@ The core unit of the Finder. White, flat, 1px `border`, `rounded-lg`. Hover: `bo
 10. **Footer**: register and skill tags on the left, `StrengthMeter` on the right
 
 - **Selectable:** with `href`, the term becomes a stretched link, so the whole card opens the detail page. Focus shows a ring on the card.
-- **Save:** a ghost icon button (bookmark) with `aria-pressed`. It sits above the stretched link (`z-10`), so it stays separately clickable and focusable. Saved = ink with a filled-check icon. It is hidden when no handler is passed.
+- **Save:** a ghost icon button (bookmark) with `aria-pressed` (and `aria-busy` while its state loads or a change is on its way). It sits above the stretched link (`z-10`), so it stays separately clickable and focusable. Saved = ink with a filled-check icon. It saves the result's **meaning** — for a collocation card, the meaning it belongs to — and its accessible name says which. It is hidden when no handler is passed.
 
 ### 9.9 Table ✅ `ui/table`
 
@@ -457,7 +457,7 @@ Components for language and practice. They are presentational and take data as p
 ### 9.16 Planned
 
 - **Writing Lab annotations** 🔜 _(Phase 7)_: wavy warning underline = repetition; solid danger = preposition or collocation error; dotted info = suggestion. Each opens a popover with a one-click apply.
-- **Toasts** 🔜: bottom-right on desktop, at most one at a time, 4s, with Undo when the action can be reversed. Saving will confirm with a toast once persistence exists.
+- **Toasts** 🔜: bottom-right on desktop, at most one at a time, 4s, with Undo when the action can be reversed. Until then, saving confirms with the calm bottom notice (§10.7): "Saved “…” to your language bank.", "Removed …", or, when the server refuses, "Couldn’t update “…”. Please try again." with the button restored.
 
 ---
 
@@ -515,7 +515,7 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 ### 10.4 Language detail (`/language/[slug]`)
 
 - **Public page**, rendered from the published content in PostgreSQL for everyone; nothing learner-specific is rendered on the server. Only sections with authored content appear.
-- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category (from the item's kind); the term in `type-term-display` (wraps on narrow screens); part of speech, and "n meanings" when there are several; spelling variants ("Also spelled analyze (US)") with the authored regional note; _Save to language bank_ (outline → secondary "Saved" in ink), with a caption about session-only saving for signed-in learners.
+- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category (from the item's kind); the term in `type-term-display` (wraps on narrow screens); part of speech, and "n meanings" when there are several; spelling variants ("Also spelled analyze (US)") with the authored regional note; _Save to language bank_ (outline → secondary "Saved" in ink) when the item has one meaning. With several meanings, the header says each is saved on its own, and each meaning block has its own _Save this meaning_ (`sm`) beside its heading. Every save button's accessible name says exactly which meaning it saves ("Save “significant — having a real effect” to your language bank").
 - **At a glance:** part of speech, register, level (CEFR), strength, skills, IELTS relevance and tasks. One meaning: a sticky card at `xl`, a compact two- or three-column strip below `xl`. Several meanings: a _Meanings_ list (sticky at `xl`, in the header below) linking to each meaning, and the strip inside each meaning.
 - **Several meanings:** each is a bordered block, "Meaning 1 · having a real effect" (`h2`, anchor `#sense-<key>`), holding that meaning's own sections (`h3`). Relations, patterns, examples and mistakes never move between meanings.
 - **Sections per meaning, divided by hairlines, in this order:**

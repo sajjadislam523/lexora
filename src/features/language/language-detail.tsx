@@ -2,6 +2,7 @@ import { Lightbulb } from "lucide-react";
 import Link from "next/link";
 
 import { CATEGORY_BY_KIND } from "@/components/language/card-props";
+import { SaveLanguageButton } from "@/components/language/save-language-button";
 import { Callout } from "@/components/lexora/callout";
 import { CategoryBadge } from "@/components/lexora/category-badge";
 import { MistakeRow } from "@/components/lexora/mistake-row";
@@ -352,7 +353,9 @@ export function LanguageDetail({ item }: { item: LanguageDetailData }) {
               </p>
             </div>
             <Variants item={item} />
-            <LanguageActions slug={item.slug} term={item.headword} />
+            <LanguageActions
+              target={single ? { senseId: first.id, label: item.headword } : undefined}
+            />
             {single ? (
               <div className="rounded-lg border border-border bg-card p-4 xl:hidden">
                 <Glance sense={first} className="grid-cols-2 sm:grid-cols-3" />
@@ -377,10 +380,20 @@ export function LanguageDetail({ item }: { item: LanguageDetailData }) {
                   className="scroll-mt-20 space-y-8 rounded-lg border border-border p-4 sm:p-6"
                 >
                   <div className="space-y-4">
-                    <h2 id={`${anchor}-title`} className="type-heading text-foreground">
-                      <span className="text-muted-foreground">Meaning {index + 1}</span>
-                      {sense.label ? ` · ${sense.label}` : null}
-                    </h2>
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <h2 id={`${anchor}-title`} className="type-heading text-foreground">
+                        <span className="text-muted-foreground">Meaning {index + 1}</span>
+                        {sense.label ? ` · ${sense.label}` : null}
+                      </h2>
+                      <SaveLanguageButton
+                        size="sm"
+                        text={{ save: "Save this meaning", saved: "Saved" }}
+                        target={{
+                          senseId: sense.id,
+                          label: `${item.headword} — ${sense.label ?? `meaning ${index + 1}`}`,
+                        }}
+                      />
+                    </div>
                     <div className="rounded-md bg-muted p-4">
                       <Glance sense={sense} className="grid-cols-2 sm:grid-cols-3" />
                     </div>

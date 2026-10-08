@@ -22,6 +22,7 @@ describe.skipIf(!hasDatabase)("saved senses", () => {
   const draftItemId = `it-draft-${run}`;
   const live = `${itemId}.main`;
   const retired = `${itemId}.old`;
+  const second = `${itemId}.second`;
   const inDraft = `${draftItemId}.main`;
   const learner = `it-user-${run}`;
   const other = `it-other-${run}`;
@@ -71,6 +72,7 @@ describe.skipIf(!hasDatabase)("saved senses", () => {
     await db.insert(schema.senses).values([
       { ...sense, id: live, itemId, position: 0 },
       { ...sense, id: retired, itemId, position: 1, status: "retired" },
+      { ...sense, id: second, itemId, position: 2 },
       { ...sense, id: inDraft, itemId: draftItemId, position: 0 },
     ]);
   });
@@ -110,6 +112,38 @@ describe.skipIf(!hasDatabase)("saved senses", () => {
     await mod.repo.removeSavedSense(learner, live);
     await mod.repo.removeSavedSense(learner, live);
     expect(await mod.repo.listSavedSenseIds(learner)).toEqual([]);
+  });
+
+  it("saves each meaning of an item independently", async () => {
+    await mod.repo.saveSense(learner, live);
+    await mod.repo.saveSense(learner, second);
+    expect((await mod.repo.savedAmong(learner, [live, second, retired])).sort()).toEqual(
+      [live, second].sort(),
+    );
+    await mod.repo.removeSavedSense(learner, live);
+    expect(await mod.repo.savedAmong(learner, [live, second])).toEqual([second]);
+    expect(await mod.repo.countSavedSenses(learner)).toBe(1);
+    await mod.repo.removeSavedSense(learner, second);
+  });
+
+  it("answers saved state only for the senses asked about, and only for that learner", async () => {
+    await mod.repo.saveSense(learner, live);
+    expect(await mod.repo.savedAmong(learner, [second])).toEqual([]);
+    expect(await mod.repo.savedAmong(other, [live])).toEqual([]);
+    expect(await mod.repo.savedAmong(learner, [])).toEqual([]);
+    await mod.repo.removeSavedSense(learner, live);
+  });
+
+  it("keeps a save when its sense is retired, but never saves a retired sense anew", async () => {
+    await mod.repo.saveSense(other, second);
+    await mod.db
+      .update(mod.schema.senses)
+      .set({ status: "retired" })
+      .where(eq(mod.schema.senses.id, second));
+    expect(await mod.repo.savedAmong(other, [second])).toEqual([second]);
+    expect(await mod.repo.saveSense(learner, second)).toBe("not_found");
+    expect(await mod.repo.removeSavedSense(other, second)).toBeUndefined();
+    expect(await mod.repo.savedAmong(other, [second])).toEqual([]);
   });
 
   it("refuses to delete a sense someone has saved", async () => {

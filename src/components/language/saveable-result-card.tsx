@@ -4,9 +4,12 @@ import { LanguageResultCard } from "@/components/lexora/language-result-card";
 import type { SearchResult } from "@/language/search/types";
 
 import { toCardProps } from "./card-props";
-import { useSavedLanguage } from "./saved-language";
+import { useSavedSense } from "./saved-language";
 
-/** A search result card with the save action. Visitors who save see the save gate. */
+/**
+ * A search result card with the save action. It saves the result's sense — for a collocation
+ * card, the meaning it belongs to — and names that sense. Visitors who save see the save gate.
+ */
 export function SaveableResultCard({
   result,
   className,
@@ -14,13 +17,19 @@ export function SaveableResultCard({
   result: SearchResult;
   className?: string;
 }) {
-  const { isSaved, toggle } = useSavedLanguage();
+  const label = result.senseLabel ? `${result.headword} — ${result.senseLabel}` : result.headword;
+  const { saved, loading, pending, toggle } = useSavedSense({
+    senseId: result.senseId,
+    label,
+  });
   return (
     <LanguageResultCard
       {...toCardProps(result)}
       className={className}
-      saved={isSaved(result.slug)}
-      onSaveToggle={() => toggle({ slug: result.slug, term: result.term })}
+      saved={saved}
+      saveLabel={label}
+      saveBusy={loading || pending}
+      onSaveToggle={toggle}
     />
   );
 }
