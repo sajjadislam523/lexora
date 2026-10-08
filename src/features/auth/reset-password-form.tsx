@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 
 import { Callout } from "@/components/lexora/callout";
-import { FormField, fieldAria } from "@/components/lexora/form-field";
+import { FormField, fieldAria, focusFirstInvalid } from "@/components/lexora/form-field";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
@@ -69,6 +69,7 @@ export function ResetPasswordForm() {
     const parsed = resetPasswordSchema.safeParse(values);
     if (!parsed.success) {
       setErrors(fieldErrors<Field>(parsed.error));
+      focusFirstInvalid(event.currentTarget);
       return;
     }
     setPending(true);

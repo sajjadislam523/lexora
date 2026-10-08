@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 import { NETWORK_ERROR, signUpErrorMessage } from "./auth-messages";
-import { FormField, fieldAria } from "@/components/lexora/form-field";
+import { FormField, fieldAria, focusFirstInvalid } from "@/components/lexora/form-field";
 import { PasswordInput } from "./password-input";
 import { PASSWORD_MIN, fieldErrors, signUpSchema, type FieldErrors } from "./schemas";
 import { SubmitButton } from "./submit-button";
@@ -42,6 +42,7 @@ export function SignUpForm({ next }: { next: string }) {
     const parsed = signUpSchema.safeParse(values);
     if (!parsed.success) {
       setErrors(fieldErrors<Field>(parsed.error));
+      focusFirstInvalid(event.currentTarget);
       return;
     }
     setPending(true);

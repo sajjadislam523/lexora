@@ -37,3 +37,13 @@ export function fieldAria(id: string, error?: string, hint?: boolean) {
     "aria-describedby": error ? `${id}-error` : hint ? `${id}-hint` : undefined,
   } as const;
 }
+
+/**
+ * After a submit fails validation, moves focus to the first invalid field, so keyboard and
+ * screen-reader users land on the problem and hear its error (wired by `fieldAria`).
+ * Runs after React has rendered the errors.
+ */
+export function focusFirstInvalid(form: HTMLFormElement | null) {
+  // A task, not an animation frame: frames don't run in a background tab.
+  setTimeout(() => form?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus(), 0);
+}
