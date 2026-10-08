@@ -1,13 +1,13 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 
 import { Callout } from "@/components/lexora/callout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { FormField, fieldAria } from "@/components/lexora/form-field";
+import { FormField, fieldAria, focusFirstInvalid } from "@/components/lexora/form-field";
 
 import { updateLearnerProfileAction, updateNameAction } from "./actions";
 import { FOCUS_SKILLS, TARGET_BANDS, type FormState } from "./schemas";
@@ -24,6 +24,15 @@ function submitWith(action: (formData: FormData) => void) {
     const formData = new FormData(event.currentTarget);
     startTransition(() => action(formData));
   };
+}
+
+/** After the server rejects a field, focus moves to it so its error is read out. */
+function useFocusOnFieldErrors(state: FormState) {
+  const form = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (state.status === "error" && state.fieldErrors) focusFirstInvalid(form.current);
+  }, [state]);
+  return form;
 }
 
 function SaveRow({ pending, state }: { pending: boolean; state: FormState }) {
@@ -45,9 +54,10 @@ function SaveRow({ pending, state }: { pending: boolean; state: FormState }) {
 export function NameForm({ name }: { name: string }) {
   const [state, action, pending] = useActionState(updateNameAction, idle);
   const error = state.status === "error" ? state.fieldErrors?.name : undefined;
+  const form = useFocusOnFieldErrors(state);
 
   return (
-    <form onSubmit={submitWith(action)} className="space-y-4">
+    <form ref={form} onSubmit={submitWith(action)} className="space-y-4">
       {state.status === "error" && !state.fieldErrors ? (
         <Callout role="alert" tone="danger" title={state.message} />
       ) : null}
@@ -82,10 +92,11 @@ export function LearnerProfileForm({
   focusSkill: string | null;
 }) {
   const [state, action, pending] = useActionState(updateLearnerProfileAction, idle);
+  const form = useFocusOnFieldErrors(state);
   const errors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
 
   return (
-    <form onSubmit={submitWith(action)} className="space-y-5">
+    <form ref={form} onSubmit={submitWith(action)} className="space-y-5">
       {state.status === "error" && !state.fieldErrors ? (
         <Callout role="alert" tone="danger" title={state.message} />
       ) : null}

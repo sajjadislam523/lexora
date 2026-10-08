@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# local account email (EMAIL_TRANSPORT=outbox) — contains working links
+/.email-outbox
+
 # next.js
 /.next/
 /out/

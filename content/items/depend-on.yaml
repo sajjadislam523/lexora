@@ -1,0 +1,91 @@
+id: depend-on
+kind: preposition_pattern
+headword: depend on
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: depend on, type: lemma }
+  - { form: depends on, type: inflection }
+  - { form: depended on, type: inflection }
+  - { form: depending on, type: inflection }
+  - { form: depend upon, type: inflection }
+senses:
+  - key: rely
+    label: need for support
+    pos: verb_phrase
+    definition: To need someone or something for help, support or survival.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: Saying that people, places or systems need something to work or survive.
+    skill_note: '"Depend upon" is more formal and rare in Speaking; "rely on" is a close alternative.'
+    examples:
+      - id: ex1
+        text: Many rural communities depend on tourism for most of their income.
+        highlight: depend on
+        skill: writing
+        task: writing-2
+        pattern: on
+      - id: ex2
+        text: I depend on my phone far too much, to be honest.
+        highlight: depend on
+        skill: speaking
+        task: speaking-1
+        pattern: on
+    preposition_patterns:
+      - id: on
+        base: depend
+        preposition: on
+        pattern: depend on + noun / person (+ for + noun)
+        complement: noun
+        note: what or who is needed; add "for" to say what they provide
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: Many families depend of one income.
+        right: Many families depend on one income.
+        type: preposition
+        explanation: Depend always takes "on" (or the formal "upon"), never "of" or "from".
+  - key: vary
+    label: be decided by
+    pos: verb_phrase
+    definition: To be decided or influenced by something else.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: Saying that a result changes with circumstances — "It depends on …" is a natural way to start a balanced Speaking answer.
+    avoid_when: Writing a Task 2 conclusion. "It depends" alone sounds vague; say what it depends on.
+    examples:
+      - id: ex1
+        text: Whether people cycle to work depends largely on the weather.
+        highlight: depends largely on
+        skill: writing
+        task: writing-2
+        pattern: on
+      - id: ex2
+        text: It depends on how much free time I have that week.
+        highlight: It depends on
+        skill: speaking
+        task: speaking-1
+        pattern: on
+      - id: ex3
+        text: Prices vary depending on the season.
+        highlight: depending on
+        skill: writing
+        task: writing-1
+    preposition_patterns:
+      - id: on
+        base: depend
+        preposition: on
+        pattern: depend on + noun / wh-clause
+        complement: clause
+        note: the factor that decides it, often "whether", "how" or "what"
+    mistakes:
+      - id: its-depends
+        wrong: It's depends on the situation.
+        right: It depends on the situation.
+        type: grammar
+        explanation: Depends is already the verb, so it doesn't need "is" before it.

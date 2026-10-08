@@ -1,6 +1,6 @@
 import { Info } from "lucide-react";
 
-import type { FitGuideData } from "@/language/types";
+import type { FitGuide as FitGuideData } from "@/language/search/types";
 import { cn } from "@/lib/utils";
 
 /** "Which one fits?" — the at-a-glance distinction between near-synonyms. */

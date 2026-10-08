@@ -1,0 +1,46 @@
+id: furthermore
+kind: linker
+headword: furthermore
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: furthermore, type: lemma }
+senses:
+  - key: addition
+    pos: adverb
+    definition: Adds another point that supports what has just been said.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    functions: [addition]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Adding a further supporting point in a formal Task 2 paragraph.
+    avoid_when: Every sentence starts with a linker. Use it once or twice in an essay, not in every paragraph.
+    skill_note: In Speaking it can sound stiff; "on top of that" or "what's more" sounds more natural.
+    examples:
+      - id: ex1
+        text: Cycling reduces pollution. Furthermore, it improves people's health.
+        highlight: Furthermore,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: The plan is expensive. Furthermore, there is little evidence that it would work.
+        highlight: Furthermore,
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: more
+        wrong: Further more, it saves money.
+        right: Furthermore, it saves money.
+        type: grammar
+        explanation: Furthermore is one word.
+    relations:
+      - type: synonym
+        to: moreover.addition
+        weight: 2
+        note: Moreover often adds a stronger or more important point.

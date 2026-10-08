@@ -1,0 +1,41 @@
+id: nevertheless
+kind: linker
+headword: nevertheless
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: nevertheless, type: lemma }
+senses:
+  - key: concession
+    pos: adverb
+    definition: Despite what has just been said; used to accept a point and then continue.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [concession, contrast]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle.
+    best_when: Accepting an opposing point and then showing it doesn't change your view — useful in balanced Task 2 essays.
+    avoid_when: The second point isn't surprising after the first. For a simple contrast, use "however".
+    skill_note: Formal. In Speaking, "even so" or "but still" sounds more natural.
+    examples:
+      - id: ex1
+        text: Online learning has clear limitations. Nevertheless, it has made education far more accessible.
+        highlight: Nevertheless,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: The scheme was expensive. It was, nevertheless, a great success.
+        highlight: nevertheless,
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: noun
+        wrong: Nevertheless the cost, the project went ahead.
+        right: Despite the cost, the project went ahead.
+        type: grammar
+        explanation: Nevertheless isn't followed by a noun. Use "despite" or "in spite of" before a noun.

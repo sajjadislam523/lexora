@@ -1,0 +1,49 @@
+id: analyse
+kind: word
+headword: analyse
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+regional_note: Both spellings are correct. Lexora shows British spelling by default; "analyze" is the American spelling, not a mistake.
+forms:
+  - { form: analyse, type: lemma, region: gb, default: true }
+  - { form: analyze, type: spelling_variant, region: us }
+  - { form: analyses, type: inflection, region: gb }
+  - { form: analyzes, type: inflection, region: us }
+  - { form: analysed, type: inflection, region: gb }
+  - { form: analyzed, type: inflection, region: us }
+  - { form: analysing, type: inflection, region: gb }
+  - { form: analyzing, type: inflection, region: us }
+senses:
+  - key: examine
+    pos: verb
+    definition: To study something in detail in order to understand or explain it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-3] }
+    standalone: Wave 1 includes it to show how spelling variants work; alternatives such as "examine" arrive with Wave 2.
+    best_when: Describing how data, problems or texts are studied carefully.
+    avoid_when: You only looked at something briefly. "Analyse" implies careful, detailed study.
+    examples:
+      - id: ex1
+        text: The report analyses how people travelled to work between 2000 and 2020.
+        highlight: analyses
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: Scientists have analysed the data and found a clear link.
+        highlight: analysed
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: I like to analyse a problem properly before I make a decision.
+        highlight: analyse
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: analyse-about
+        wrong: We need to analyse about the results.
+        right: We need to analyse the results.
+        type: grammar
+        explanation: Analyse takes a direct object, with no preposition.

@@ -1,0 +1,77 @@
+id: raise-awareness
+kind: collocation
+headword: raise awareness
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: raise awareness, type: lemma }
+  - { form: raises awareness, type: inflection }
+  - { form: raised awareness, type: inflection }
+  - { form: raising awareness, type: inflection }
+senses:
+  - key: inform
+    pos: verb_phrase
+    definition: To help people understand that a problem or situation exists.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Proposing education or campaigns as a solution in Task 2.
+    avoid_when: People already know about the problem and need to act. Then talk about measures or action.
+    examples:
+      - id: ex1
+        text: Schools could raise awareness of the dangers of online gambling.
+        highlight: raise awareness of
+        skill: writing
+        task: writing-2
+        pattern: of
+      - id: ex2
+        text: Campaigns to raise public awareness about recycling have been very successful.
+        highlight: raise public awareness about
+        skill: writing
+        task: writing-2
+        collocation: public
+      - id: ex3
+        text: I think celebrities can do a lot to raise awareness of mental health.
+        highlight: raise awareness of
+        skill: speaking
+        task: speaking-3
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: raise awareness
+        preposition: of
+        pattern: raise awareness of + noun
+        complement: noun
+        note: the problem or issue
+        mistake: rise
+      - id: about
+        base: raise awareness
+        preposition: about
+        pattern: raise awareness about + noun
+        complement: noun
+        note: also common, especially for campaigns
+    collocations:
+      - id: public
+        phrase: raise public awareness
+        note: awareness among the general public
+      - id: campaign
+        phrase: an awareness campaign
+        note: an organised effort to inform people
+    mistakes:
+      - id: rise
+        wrong: rise awareness of the problem
+        right: raise awareness of the problem
+        type: confusion
+        explanation: Raise needs an object (awareness); rise never takes one.
+      - id: make
+        wrong: make awareness about pollution
+        right: raise awareness about pollution
+        type: collocation
+        explanation: Awareness goes with "raise", not "make".
+    relations:
+      - type: confusable
+        to: rise-sharply.increase
+        weight: 1
+        note: Raise needs an object (raise awareness, raise prices); rise has none (prices rose sharply).

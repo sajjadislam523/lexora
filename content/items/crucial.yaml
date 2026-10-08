@@ -1,0 +1,76 @@
+id: crucial
+kind: word
+headword: crucial
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: crucial, type: lemma }
+senses:
+  - key: essential
+    pos: adjective
+    definition: Extremely important, because something else depends on it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    strength: 3
+    functions: [importance, emphasis]
+    best_when: An outcome depends on it — conditions for success, solutions and decisions.
+    avoid_when: Describing size or amount. "A crucial increase" sounds odd; use "significant" or "considerable".
+    skill_note: Works in both. In Speaking, "absolutely crucial" adds natural emphasis.
+    examples:
+      - id: ex1
+        text: Public investment is crucial to reducing traffic congestion.
+        highlight: crucial to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Getting enough sleep is absolutely crucial before an exam.
+        highlight: absolutely crucial
+        skill: speaking
+        task: speaking-1
+      - id: ex3
+        text: Teachers play a crucial role in shaping children's attitudes.
+        highlight: crucial role
+        skill: writing
+        task: writing-2
+        collocation: role
+    preposition_patterns:
+      - id: to
+        base: crucial
+        preposition: to
+        pattern: crucial to + noun / -ing
+        complement: noun_or_ing
+        note: the goal or process that depends on it
+      - id: for
+        base: crucial
+        preposition: for
+        pattern: crucial for + noun
+        complement: noun
+        note: the person or thing that needs it
+    collocations:
+      - id: role
+        phrase: play a crucial role
+        pattern: play a crucial role in + noun / -ing
+        item: play-a-crucial-role
+      - id: factor
+        phrase: a crucial factor
+        pattern: a crucial factor in + noun
+        note: in a decision, a success or a result
+      - id: that
+        phrase: it is crucial that
+        pattern: it is crucial that + clause
+        note: for urgent recommendations in Task 2
+    mistakes:
+      - id: very
+        wrong: This decision is very crucial.
+        right: This decision is absolutely crucial.
+        type: collocation
+        explanation: Crucial already means extremely important, so "very" sounds wrong. Use "absolutely" or "really" for extra emphasis.
+    relations:
+      - type: synonym
+        to: essential.necessary
+        weight: 2
+        note: Essential means you can't do without it; crucial means a particular outcome depends on it.

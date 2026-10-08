@@ -1,0 +1,67 @@
+id: responsible-for
+kind: preposition_pattern
+headword: responsible for
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: responsible for, type: lemma }
+senses:
+  - key: duty
+    pos: adjective_phrase
+    definition: Having the job of dealing with something, or being the cause of it.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Saying who must deal with a task, or who or what caused a result.
+    skill_note: Equally natural in both. In Speaking, "it's up to …" is a relaxed way to give someone a duty.
+    examples:
+      - id: ex1
+        text: Local councils are responsible for maintaining public parks.
+        highlight: responsible for
+        skill: writing
+        task: writing-2
+        pattern: for
+      - id: ex2
+        text: Cars are largely responsible for air pollution in cities.
+        highlight: responsible for
+        skill: writing
+        task: writing-2
+        pattern: for
+      - id: ex3
+        text: At work I'm responsible for training new staff.
+        highlight: responsible for
+        skill: speaking
+        task: speaking-1
+        pattern: for
+      - id: ex4
+        text: Head teachers are responsible to the school's governors.
+        highlight: responsible to
+        skill: writing
+        pattern: to
+    preposition_patterns:
+      - id: for
+        base: responsible
+        preposition: for
+        pattern: be responsible for + noun / -ing
+        complement: noun_or_ing
+        note: the task, thing or result
+        mistake: of
+      - id: to
+        base: responsible
+        preposition: to
+        pattern: be responsible to + person / organisation
+        complement: person
+        note: the person or body you report to
+    mistakes:
+      - id: of
+        wrong: responsible of
+        right: responsible for
+        type: preposition
+        explanation: Responsible takes "for" before the task or result.
+      - id: to-do
+        wrong: Parents are responsible to teach their children manners.
+        right: Parents are responsible for teaching their children manners.
+        type: grammar
+        explanation: For a task, use "responsible for" with a noun or -ing form, not "responsible to" with a verb.

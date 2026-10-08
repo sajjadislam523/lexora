@@ -1,0 +1,46 @@
+id: whats-more
+kind: linker
+headword: what's more
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: what's more, type: lemma }
+  - { form: whats more, type: spelling_variant }
+  - { form: what is more, type: inflection }
+senses:
+  - key: addition
+    pos: adverbial_phrase
+    definition: Adds a further point, usually one that is even more important or surprising.
+    cefr: B2
+    registers: [neutral]
+    skills: [speaking, writing]
+    ielts: { relevance: high, tasks: [speaking-2, speaking-3] }
+    functions: [addition, emphasis]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Adding a stronger point in Speaking, or in less formal writing.
+    avoid_when: A very formal essay. "Moreover" is the formal equivalent.
+    skill_note: Natural in Speaking; acceptable in Writing, but "furthermore" and "moreover" are more formal.
+    examples:
+      - id: ex1
+        text: The course was free, and what's more, it came with a certificate.
+        highlight: what's more
+        skill: speaking
+        task: speaking-2
+      - id: ex2
+        text: Electric cars are cheap to run. What's more, they are quiet.
+        highlight: What's more,
+        skill: writing
+        task: writing-2
+    relations:
+      - type: more_formal
+        to: furthermore.addition
+        weight: 2
+        note: Furthermore is the formal written equivalent.
+      - type: more_formal
+        to: moreover.addition
+        weight: 2
+        note: Moreover is the formal equivalent and also adds a stronger point.

@@ -5,6 +5,7 @@ import { cn } from "cn";
 import { Dialog as SheetPrimitive } from "radix-ui";
 
 import { Button } from "@/components/ui/button";
+import { useReturnFocus } from "@/components/ui/use-return-focus";
 import { XIcon } from "lucide-react";
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
@@ -49,6 +50,7 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left";
   showCloseButton?: boolean;
 }) {
+  const focusHandlers = useReturnFocus(props);
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -60,6 +62,7 @@ function SheetContent({
           className,
         )}
         {...props}
+        {...focusHandlers}
       >
         {children}
         {showCloseButton && (

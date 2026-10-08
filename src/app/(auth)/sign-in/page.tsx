@@ -11,7 +11,10 @@ export default async function SignInPage(props: PageProps<"/sign-in">) {
   const params = await props.searchParams;
   const next = safeRedirect(typeof params.next === "string" ? params.next : undefined);
   const reason = params.reason;
-  const notice = reason === "session-expired" || reason === "signed-out" ? reason : undefined;
+  const notice =
+    reason === "session-expired" || reason === "signed-out" || reason === "password-reset"
+      ? reason
+      : undefined;
 
   // Already signed in with a valid session: go straight to the app.
   if (await getSession()) redirect(next);

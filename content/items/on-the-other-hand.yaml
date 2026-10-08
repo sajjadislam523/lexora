@@ -1,0 +1,46 @@
+id: on-the-other-hand
+kind: linker
+headword: on the other hand
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: on the other hand, type: lemma }
+senses:
+  - key: other-side
+    pos: adverbial_phrase
+    definition: Introduces a different side of the same issue, often the opposite view.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [contrast]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle.
+    best_when: Weighing two sides of one argument — the advantages and disadvantages of the same thing.
+    avoid_when: The two ideas aren't two sides of one issue. For a general contrast, use "however".
+    skill_note: Natural in both. "On the one hand … on the other hand" is clear, but don't use the pair in every paragraph.
+    examples:
+      - id: ex1
+        text: Living in a city offers more job opportunities. On the other hand, housing is far more expensive.
+        highlight: On the other hand,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I love the energy of big cities. On the other hand, I find them quite tiring.
+        highlight: On the other hand,
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: side
+        wrong: On the other side, tourism damages the environment.
+        right: On the other hand, tourism damages the environment.
+        type: collocation
+        explanation: The fixed phrase is "on the other hand".
+      - id: in
+        wrong: In the other hand, it is expensive.
+        right: On the other hand, it is expensive.
+        type: preposition
+        explanation: The phrase always starts with "on".

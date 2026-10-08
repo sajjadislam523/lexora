@@ -1,6 +1,7 @@
 import { ArrowRight, Dumbbell, Search, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 
+import { Callout } from "@/components/lexora/callout";
 import { CategoryBadge } from "@/components/lexora/category-badge";
 import { LanguageRow } from "@/components/lexora/language-row";
 import { MistakeRow } from "@/components/lexora/mistake-row";
@@ -12,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { requireLanguageItem } from "@/demo/language";
 import { SAMPLE_LEARNER } from "@/demo/learner";
 
-import { SavedThisSession } from "./saved-this-session";
+import { SavedLanguageLink } from "./saved-language-link";
 
 const QUICK_ACTIONS = [
   {
@@ -50,7 +51,10 @@ function SectionHeading({
         {title}
       </h2>
       {link ? (
-        <Link href={link.href} className="type-label text-ink hover:underline">
+        <Link
+          href={link.href}
+          className="-my-1 rounded-sm py-1 type-label text-ink hover:underline"
+        >
           {link.label}
         </Link>
       ) : null}
@@ -59,7 +63,17 @@ function SectionHeading({
 }
 
 /** The learner's workspace: what to retrieve today, what to fix, where to go next. */
-export function DashboardView({ firstName }: { firstName?: string }) {
+export function DashboardView({
+  firstName,
+  savedCount,
+  unverifiedEmail,
+}: {
+  firstName?: string;
+  /** Saved meanings, from the database. */
+  savedCount: number;
+  /** The account email, while it is unverified. A reminder only — nothing is locked. */
+  unverifiedEmail?: string;
+}) {
   const { focus, review, weakAreas, continueLearning, mistakes } = SAMPLE_LEARNER;
 
   return (
@@ -85,6 +99,17 @@ export function DashboardView({ firstName }: { firstName?: string }) {
           </>
         }
       />
+
+      {unverifiedEmail ? (
+        <Callout tone="info" title="Verify your email when it suits you">
+          We sent a link to <span className="font-medium wrap-break-word">{unverifiedEmail}</span>.
+          Everything in Lexora works in the meantime. Need a new link?{" "}
+          <Link href="/settings#account-title" className="font-medium text-ink hover:underline">
+            Send one from Settings
+          </Link>
+          .
+        </Callout>
+      ) : null}
 
       <div className="grid gap-x-10 gap-y-10 lg:grid-cols-3">
         <div className="min-w-0 space-y-10 lg:col-span-2">
@@ -195,7 +220,7 @@ export function DashboardView({ firstName }: { firstName?: string }) {
                 </span>
               </Link>
             ))}
-            <SavedThisSession />
+            <SavedLanguageLink count={savedCount} />
           </nav>
         </aside>
       </div>

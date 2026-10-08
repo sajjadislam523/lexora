@@ -1,0 +1,55 @@
+id: devote
+kind: word
+headword: devote
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: devote, type: lemma }
+  - { form: devotes, type: inflection }
+  - { form: devoted, type: inflection }
+  - { form: devoting, type: inflection }
+senses:
+  - key: give
+    pos: verb
+    definition: To give most of your time, effort or attention to one particular purpose.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-2] }
+    best_when: Commitment of time, energy or attention — "devote time to studying".
+    avoid_when: Talking about money or budgets. Use "invest in" or "allocate to".
+    examples:
+      - id: ex1
+        text: Schools should devote more time to practical skills.
+        highlight: devote more time to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: I devote most of my weekends to playing football.
+        highlight: devote most of my weekends to
+        skill: speaking
+        task: speaking-2
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: devote
+        preposition: to
+        pattern: devote + noun + to + noun / -ing
+        complement: noun_or_ing
+        note: '"to" is a preposition, so a verb after it takes -ing'
+        mistake: to-verb
+    frames:
+      - id: time-to
+        parts:
+          - { text: devote, head: true }
+          - { slot: object, fillers: [time, effort, energy, attention, resources, life, years] }
+          - { text: to }
+          - { slot: noun, hint: research }
+    mistakes:
+      - id: to-verb
+        wrong: She devoted her life to help others.
+        right: She devoted her life to helping others.
+        type: grammar
+        explanation: After "devote … to", use a noun or an -ing form, not the base form of a verb.

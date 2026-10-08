@@ -1,0 +1,61 @@
+id: allocate
+kind: word
+headword: allocate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: allocate, type: lemma }
+  - { form: allocates, type: inflection }
+  - { form: allocated, type: inflection }
+  - { form: allocating, type: inflection }
+senses:
+  - key: distribute
+    pos: verb
+    definition: To decide officially how much money, time or other resources will be given to each purpose.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    best_when: Budgets and official decisions about sharing out resources — "allocate funds to healthcare".
+    avoid_when: You mean spending money for a long-term benefit. That is "invest in".
+    skill_note: Formal. In Speaking, "spend … on" or "set aside … for" sounds more natural.
+    examples:
+      - id: ex1
+        text: The government allocated more funding to rural schools.
+        highlight: allocated more funding to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Around 15% of the budget was allocated to healthcare in 2020.
+        highlight: allocated to
+        skill: writing
+        task: writing-1
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: allocate
+        preposition: to
+        pattern: allocate + noun + to + noun
+        complement: noun
+        note: the purpose or group that receives it; "for" is also used for a purpose
+        mistake: in
+    frames:
+      - id: money-to
+        parts:
+          - { text: allocate, head: true }
+          - { slot: object, fillers: [money, funds, funding, resources, time, budget, places] }
+          - { text: to, also: [for] }
+          - { slot: noun, hint: healthcare }
+    mistakes:
+      - id: in
+        wrong: The council allocated money in education.
+        right: The council allocated money to education.
+        type: preposition
+        explanation: Allocate takes "to" (or "for") before what receives the money.
+    relations:
+      - type: alternative
+        to: devote.give
+        weight: 1
+        note: Devote suggests giving most of something, often your own time or effort, to one purpose.

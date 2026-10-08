@@ -1,0 +1,106 @@
+id: significant
+kind: word
+headword: significant
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: significant, type: lemma }
+senses:
+  - key: notable
+    label: having a real effect
+    pos: adjective
+    definition: Large or important enough to have a noticeable effect.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    strength: 2
+    functions: [importance, increase]
+    best_when: The effect or change is measurable or clearly noticeable — numbers, results and influence. Ideal for Task 1 changes and Task 2 causes and effects.
+    avoid_when: Talking about personal importance. "Significant to me" sounds clinical; say "important to me".
+    skill_note: In conversation, "a big difference" or "a real impact" often sounds more natural than "significant".
+    examples:
+      - id: ex1
+        text: There was a significant increase in the number of cyclists between 2010 and 2020.
+        highlight: significant increase
+        skill: writing
+        task: writing-1
+        collocation: increase
+      - id: ex2
+        text: Social media has had a significant impact on how young people communicate.
+        highlight: significant impact
+        skill: writing
+        task: writing-2
+        collocation: impact
+      - id: ex3
+        text: Moving to a new city made a significant difference to how I study.
+        highlight: significant difference
+        skill: speaking
+        task: speaking-2
+        collocation: difference
+    collocations:
+      - id: increase
+        phrase: a significant increase
+        pattern: a significant increase in + noun
+        note: a rise in numbers, sales or use
+      - id: impact
+        phrase: a significant impact
+        pattern: have a significant impact on + noun
+        note: on people, the economy or the environment
+      - id: difference
+        phrase: a significant difference
+        pattern: make a significant difference to + noun
+        note: to a situation, or between two groups or figures
+      - id: role
+        phrase: play a significant role
+        pattern: play a significant role in + noun / -ing
+        item: play-a-crucial-role
+      - id: proportion
+        phrase: a significant proportion
+        pattern: a significant proportion of + plural noun
+        note: a large part of a group, useful in Task 1
+    mistakes:
+      - id: amount
+        wrong: a significant amount of people
+        right: a significant number of people
+        type: countability
+        explanation: Use "number" with countable nouns such as people and cars, and "amount" with uncountable nouns such as money and time.
+      - id: significance
+        wrong: This decision is very significance.
+        right: This decision is very significant.
+        type: word_form
+        explanation: Significant is the adjective; significance is the noun, as in "a decision of great significance".
+    relations:
+      - type: synonym
+        to: considerable.large
+        weight: 2
+        note: Considerable stresses size or amount; significant stresses the effect.
+      - type: synonym
+        to: substantial.large
+        weight: 2
+        note: Substantial stresses a large, solid amount, often of money or evidence.
+      - type: stronger
+        to: crucial.essential
+        weight: 2
+        note: Crucial means a result depends on it, not just that the effect is large.
+  - key: statistical
+    label: in statistics
+    pos: adjective
+    definition: Unlikely to have happened by chance, according to a statistical test.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1] }
+    standalone: A technical sense; its alternatives belong to the "having a real effect" sense, not to this one.
+    best_when: Reporting research findings precisely.
+    avoid_when: Describing a chart in Task 1 with no statistical test behind it. There, "significant" simply means large or noticeable.
+    examples:
+      - id: ex1
+        text: The difference between the two groups was not statistically significant.
+        highlight: statistically significant
+        skill: writing
+      - id: ex2
+        text: The researchers found a significant correlation between sleep and exam results.
+        highlight: significant correlation
+        skill: writing

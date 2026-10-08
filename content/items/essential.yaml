@@ -1,0 +1,70 @@
+id: essential
+kind: word
+headword: essential
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: essential, type: lemma }
+senses:
+  - key: necessary
+    pos: adjective
+    definition: Absolutely necessary, so that something cannot be done or achieved without it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    strength: 3
+    functions: [importance]
+    best_when: Something cannot be done or achieved without it — skills, resources and conditions.
+    avoid_when: You mean that something has a large effect rather than that it is needed. Use "significant" for that.
+    skill_note: Natural in both. In Speaking, "you really need …" is a relaxed alternative.
+    examples:
+      - id: ex1
+        text: A good command of English is essential for studying abroad.
+        highlight: essential for
+        skill: writing
+        task: writing-2
+        pattern: for
+      - id: ex2
+        text: It is essential that governments act before the problem gets worse.
+        highlight: It is essential that
+        skill: writing
+        task: writing-2
+        collocation: that
+      - id: ex3
+        text: For me, a good breakfast is essential before a long day at work.
+        highlight: essential
+        skill: speaking
+        task: speaking-1
+    preposition_patterns:
+      - id: for
+        base: essential
+        preposition: for
+        pattern: essential for + noun / -ing
+        complement: noun_or_ing
+        note: the activity or person that needs it
+      - id: to
+        base: essential
+        preposition: to
+        pattern: essential to + noun
+        complement: noun
+        note: the goal or process it is part of, such as success or survival
+    collocations:
+      - id: that
+        phrase: it is essential that
+        pattern: it is essential that + clause
+        note: for strong recommendations in Task 2
+      - id: part
+        phrase: an essential part
+        pattern: an essential part of + noun
+        note: a part that something cannot work without
+      - id: skills
+        phrase: essential skills
+        note: skills needed for work, study or daily life
+    mistakes:
+      - id: very
+        wrong: Water is very essential for life.
+        right: Water is absolutely essential for life.
+        type: collocation
+        explanation: Essential already means absolutely necessary, so "very" sounds wrong. Use "absolutely" for extra emphasis.

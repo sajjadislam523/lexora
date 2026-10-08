@@ -1,0 +1,8 @@
+# Provenance registry (content/README.md → Provenance). A source can be referenced only after
+# it is listed here with its licence and the uses it permits.
+- id: lexora-editorial
+  name: Lexora editorial
+  kind: editorial
+  licence: LicenseRef-Lexora-Proprietary
+  attribution: Written by the Lexora team.
+  permitted_uses: [definitions, examples, relations, notes, mistakes]

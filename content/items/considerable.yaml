@@ -1,0 +1,69 @@
+id: considerable
+kind: word
+headword: considerable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: considerable, type: lemma }
+senses:
+  - key: large
+    pos: adjective
+    definition: Large in size, amount or degree.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    strength: 2
+    best_when: Describing a large amount, number or degree — "a considerable amount of time", "considerable debate".
+    avoid_when: You mean that something matters, not that it is large. For influence or results, "significant" is usually better.
+    skill_note: Formal. In Speaking, "quite a lot of" or "a fair amount of" sounds more natural.
+    examples:
+      - id: ex1
+        text: The project required a considerable amount of public money.
+        highlight: considerable amount
+        skill: writing
+        task: writing-2
+        collocation: amount
+      - id: ex2
+        text: There has been considerable debate about banning cars from city centres.
+        highlight: considerable debate
+        skill: writing
+        task: writing-2
+        collocation: debate
+      - id: ex3
+        text: Spending on healthcare rose by a considerable margin over the decade.
+        highlight: considerable margin
+        skill: writing
+        task: writing-1
+    collocations:
+      - id: amount
+        phrase: a considerable amount
+        pattern: a considerable amount of + uncountable noun
+        note: money, time, effort
+      - id: number
+        phrase: a considerable number
+        pattern: a considerable number of + plural noun
+        note: people, cars, students
+      - id: extent
+        phrase: to a considerable extent
+        note: to a large degree; useful for measured opinions in Task 2
+      - id: debate
+        phrase: considerable debate
+        note: also considerable controversy or criticism
+    mistakes:
+      - id: considerate
+        wrong: a considerate amount of money
+        right: a considerable amount of money
+        type: confusion
+        explanation: Considerate means kind and thoughtful towards other people.
+      - id: people
+        wrong: Considerable people use public transport.
+        right: A considerable number of people use public transport.
+        type: grammar
+        explanation: Considerable describes an amount or degree. Before a plural noun, use "a considerable number of".
+    relations:
+      - type: synonym
+        to: substantial.large
+        weight: 2
+        note: Substantial suggests something solid and real, often money, evidence or change.

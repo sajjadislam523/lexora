@@ -1,7 +1,8 @@
 "use client";
 
-import { BookOpen, PanelLeft, Search } from "lucide-react";
+import { PanelLeft, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import {
   Command,
@@ -15,19 +16,19 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 
-import { DEMO_QUERIES } from "@/demo/finder";
-import { DEMO_LANGUAGE } from "@/demo/language";
+import { EXAMPLE_SEARCHES, searchHref } from "@/language/examples";
 
 import { PRIMARY_NAV, SECONDARY_NAV } from "./navigation";
 import { useShell } from "./shell-provider";
 
 /**
- * Global command palette (⌘K / Ctrl+K). Navigation and shell actions are real. In the prototype,
- * "language" results are the example searches and sample items — real search arrives in Phase 4.
+ * Global command palette (⌘K / Ctrl+K): navigation, shell actions, and a way into the Language
+ * Finder. Searching itself happens in the Finder, on the server; the palette holds no language.
  */
 export function CommandPalette() {
   const router = useRouter();
   const { paletteOpen, setPaletteOpen, toggleCollapsed } = useShell();
+  const [typed, setTyped] = useState("");
 
   function run(action: () => void) {
     setPaletteOpen(false);
@@ -42,10 +43,26 @@ export function CommandPalette() {
       description="Jump to a page or run an action"
       className="sm:max-w-xl"
     >
-      <Command>
-        <CommandInput placeholder="Jump to a page, an example search or a word…" />
+      <Command label="Jump to a page or search for language">
+        <CommandInput
+          placeholder="Jump to a page, or search for language…"
+          value={typed}
+          onValueChange={setTyped}
+        />
         <CommandList className="max-h-80">
           <CommandEmpty>No matching pages or actions.</CommandEmpty>
+          {typed.trim() ? (
+            <CommandGroup heading="Language Finder" forceMount>
+              <CommandItem
+                forceMount
+                value={`find ${typed}`}
+                onSelect={() => run(() => router.push(searchHref("/finder", typed)))}
+              >
+                <Search />
+                Search for “{typed.trim()}”
+              </CommandItem>
+            </CommandGroup>
+          ) : null}
           <CommandGroup heading="Go to">
             {[...PRIMARY_NAV, ...SECONDARY_NAV].map((entry) => (
               <CommandItem
@@ -60,32 +77,14 @@ export function CommandPalette() {
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Example searches">
-            {DEMO_QUERIES.filter((q) => q.mode !== "context").map((query) => (
+            {EXAMPLE_SEARCHES.filter((example) => example.mode !== "context").map((example) => (
               <CommandItem
-                key={query.id}
-                value={`search ${query.text}`}
-                onSelect={() =>
-                  run(() => router.push(`/finder?q=${encodeURIComponent(query.text)}`))
-                }
+                key={example.id}
+                value={`search ${example.text}`}
+                onSelect={() => run(() => router.push(searchHref("/finder", example.text)))}
               >
                 <Search />
-                {query.text}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Sample language">
-            {DEMO_LANGUAGE.map((item) => (
-              <CommandItem
-                key={item.slug}
-                value={`language ${item.term} ${item.meaning}`}
-                onSelect={() => run(() => router.push(`/language/${item.slug}`))}
-              >
-                <BookOpen />
-                <span className="type-term-sm">{item.term.replace(/,$/, "")}</span>
-                <CommandShortcut className="font-sans tracking-normal max-sm:hidden">
-                  {item.partOfSpeech}
-                </CommandShortcut>
+                {example.text}
               </CommandItem>
             ))}
           </CommandGroup>
@@ -103,7 +102,7 @@ export function CommandPalette() {
           </CommandGroup>
         </CommandList>
         <div className="border-t border-border-subtle px-3 py-2 type-caption text-subtle-foreground">
-          Prototype — example searches and sample language only. Real search arrives in Phase 4.
+          Type what you want to say, then choose “Search for …” to open it in the Finder.
         </div>
       </Command>
     </CommandDialog>

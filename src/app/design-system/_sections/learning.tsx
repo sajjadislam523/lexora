@@ -98,10 +98,9 @@ export function LearningSection() {
         <Specimen title="Fit, strength & progress">
           <div className="space-y-6">
             <div className="flex flex-wrap gap-2">
-              <FitBadge fit="best" />
-              <FitBadge fit="natural" />
-              <FitBadge fit="possible" />
-              <FitBadge fit="different" />
+              <FitBadge fit="fits" />
+              <FitBadge fit="different_preposition" />
+              <FitBadge fit="unlikely" />
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               <StrengthMeter strength={1} />

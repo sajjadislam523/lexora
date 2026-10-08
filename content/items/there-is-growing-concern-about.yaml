@@ -1,0 +1,47 @@
+id: there-is-growing-concern-about
+kind: sentence_pattern
+headword: There is growing concern about …
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: there is growing concern about, type: lemma }
+  - { form: there is growing concern that, type: inflection }
+senses:
+  - key: problem
+    pos: clause_frame
+    definition: Introduces a problem that more and more people are worried about.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [problem]
+    frames:
+      - id: about
+        parts:
+          - { text: There is growing concern about }
+          - { slot: noun, hint: the cost of housing }
+      - id: that
+        parts:
+          - { text: There is growing concern that }
+          - { slot: clause, hint: young people read less }
+    best_when: Opening a Task 2 introduction or paragraph about a social problem.
+    avoid_when: You can't say who is concerned and why. Follow it with evidence or an example.
+    skill_note: Formal. In Speaking, "A lot of people are worried about …" sounds more natural.
+    examples:
+      - id: ex1
+        text: There is growing concern about the amount of time children spend online.
+        highlight: There is growing concern about
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: There is growing concern that rising rents are forcing young people out of cities.
+        highlight: There is growing concern that
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: for
+        wrong: There is growing concern for the rising cost of housing.
+        right: There is growing concern about the rising cost of housing.
+        type: confusion
+        explanation: '"Concern for" someone means caring about their well-being. For a worrying issue, use "concern about".'

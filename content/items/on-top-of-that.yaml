@@ -1,0 +1,44 @@
+id: on-top-of-that
+kind: linker
+headword: on top of that
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: on top of that, type: lemma }
+senses:
+  - key: addition
+    pos: adverbial_phrase
+    definition: Adds one more point, often one that makes the situation better or worse.
+    cefr: B2
+    registers: [informal, neutral]
+    skills: [speaking]
+    ielts: { relevance: high, tasks: [speaking-1, speaking-2, speaking-3] }
+    functions: [addition]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: In writing, a comma after it at the start of a sentence.
+    best_when: Adding another point naturally in Speaking, especially when listing problems or benefits.
+    avoid_when: Writing a formal Task 2 essay. Use "furthermore" or "in addition" there.
+    skill_note: A natural spoken alternative to "furthermore".
+    examples:
+      - id: ex1
+        text: The flat was tiny, and on top of that, it was really noisy.
+        highlight: on top of that
+        skill: speaking
+        task: speaking-2
+      - id: ex2
+        text: My job is well paid. On top of that, I get to travel a lot.
+        highlight: On top of that,
+        skill: speaking
+        task: speaking-1
+    relations:
+      - type: more_formal
+        to: furthermore.addition
+        weight: 3
+        note: Furthermore is the written equivalent; it sounds stiff in conversation.
+      - type: synonym
+        to: whats-more.addition
+        weight: 2
+        note: '"What''s more" works in both speech and less formal writing.'

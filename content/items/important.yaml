@@ -1,0 +1,81 @@
+id: important
+kind: word
+headword: important
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: important, type: lemma }
+senses:
+  - key: main
+    pos: adjective
+    definition: Having a great effect or value, or worth giving attention to.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    strength: 1
+    functions: [importance]
+    best_when: A safe, general choice, and the natural word in Speaking for what matters to you personally.
+    avoid_when: You have already used it in the same essay. Say how something matters instead — its effect, its size, or what depends on it.
+    skill_note: '"Really important to me" sounds natural in Speaking. In Writing, prefer a word that says why something matters.'
+    examples:
+      - id: ex1
+        text: It is important to consider the long-term costs of the scheme.
+        highlight: important
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My family is really important to me, so I see them every weekend.
+        highlight: important to me
+        skill: speaking
+        task: speaking-1
+        pattern: to
+      - id: ex3
+        text: Regular exercise is important for both physical and mental health.
+        highlight: important for
+        skill: writing
+        task: writing-2
+        pattern: for
+    preposition_patterns:
+      - id: to
+        base: important
+        preposition: to
+        pattern: important to + person
+        complement: person
+        note: what matters to someone
+        mistake: for-me
+      - id: for
+        base: important
+        preposition: for
+        pattern: important for + noun / -ing
+        complement: noun_or_ing
+        note: what something is needed or good for
+    mistakes:
+      - id: for-me
+        wrong: My family is very important for me.
+        right: My family is very important to me.
+        type: preposition
+        explanation: Use "important to" for what matters to a person. "Important for" is about purpose or benefit.
+      - id: importance
+        wrong: Education is of great important.
+        right: Education is of great importance.
+        type: word_form
+        explanation: Importance is the noun. Use it after "of great" or "the".
+    relations:
+      - type: synonym
+        to: significant.notable
+        weight: 3
+        note: Significant suggests a noticeable or measurable effect, which suits changes, results and influence.
+      - type: stronger
+        to: crucial.essential
+        weight: 3
+        note: Crucial means an outcome depends on it.
+      - type: stronger
+        to: essential.necessary
+        weight: 2
+        note: Essential means it is absolutely necessary; you can't do without it.
+      - type: alternative
+        to: fundamental.basic
+        weight: 2
+        note: Fundamental means it forms the base of something else, which suits principles, rights and changes.

@@ -7,14 +7,15 @@ import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import { resolveBreadcrumb } from "./navigation";
+import { findNavEntry, resolveBreadcrumb } from "./navigation";
 import { useShell } from "./shell-provider";
 
 /** 48px bar above every app page: location on the left, global actions on the right. */
 export function TopBar() {
   const pathname = usePathname();
-  const { setMobileNavOpen, setPaletteOpen } = useShell();
+  const { mobileNavOpen, setMobileNavOpen, paletteOpen, setPaletteOpen } = useShell();
   const crumb = resolveBreadcrumb(pathname);
+  const prototype = findNavEntry(pathname)?.prototype;
 
   return (
     <header className="sticky top-0 z-20 flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background/95 px-3 supports-backdrop-filter:bg-background/85 supports-backdrop-filter:backdrop-blur-sm sm:px-4">
@@ -24,6 +25,8 @@ export function TopBar() {
         className="lg:hidden"
         onClick={() => setMobileNavOpen(true)}
         aria-label="Open navigation"
+        aria-haspopup="dialog"
+        aria-expanded={mobileNavOpen}
       >
         <Menu />
       </Button>
@@ -53,15 +56,19 @@ export function TopBar() {
       </nav>
 
       <div className="ml-auto flex items-center gap-2">
-        <Badge variant="outline" title="Static visual prototype — nothing is saved">
-          Prototype
-        </Badge>
+        {prototype ? (
+          <Badge variant="outline" title={prototype}>
+            Prototype<span className="sr-only">: {prototype}</span>
+          </Badge>
+        ) : null}
         <Button
           variant="ghost"
           size="icon-sm"
           className="lg:hidden"
           onClick={() => setPaletteOpen(true)}
           aria-label="Open command palette"
+          aria-haspopup="dialog"
+          aria-expanded={paletteOpen}
         >
           <Search />
         </Button>

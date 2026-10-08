@@ -1,0 +1,59 @@
+id: contribute-to
+kind: preposition_pattern
+headword: contribute to
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: contribute to, type: lemma }
+  - { form: contributes to, type: inflection }
+  - { form: contributed to, type: inflection }
+  - { form: contributing to, type: inflection }
+senses:
+  - key: help-cause
+    pos: verb_phrase
+    definition: To be one of the causes of something, or to help make it happen.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Naming one cause among several — more careful than saying something "causes" a problem.
+    examples:
+      - id: ex1
+        text: Heavy traffic contributes to poor air quality in many cities.
+        highlight: contributes to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Volunteers contribute to keeping the local park clean.
+        highlight: contribute to keeping
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex3
+        text: I think social media has contributed to people feeling more isolated.
+        highlight: contributed to
+        skill: speaking
+        task: speaking-3
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: contribute
+        preposition: to
+        pattern: contribute to + noun / -ing
+        complement: noun_or_ing
+        note: '"to" is a preposition here, so a verb after it takes -ing'
+        mistake: to-infinitive
+    mistakes:
+      - id: to-infinitive
+        wrong: Tourism contributes to improve the economy.
+        right: Tourism contributes to improving the economy.
+        type: grammar
+        explanation: After "contribute to", use a noun or an -ing form, not the base form of a verb.
+      - id: for
+        wrong: Exercise contributes for good health.
+        right: Exercise contributes to good health.
+        type: preposition
+        explanation: Contribute takes "to" before the result.

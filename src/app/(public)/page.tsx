@@ -6,7 +6,7 @@ import { ExampleLinks } from "@/features/discovery/example-links";
 import { HeroSearch } from "@/features/discovery/hero-search";
 import { ContextTool } from "@/features/finder/context-tool";
 import { FitGuide } from "@/features/finder/fit-guide";
-import { languageSearch } from "@/language";
+import { discoveryShowcase } from "@/language/showcase";
 
 const STEPS = [
   {
@@ -37,13 +37,17 @@ function SectionHeader({ id, title, children }: { id: string; title: string; chi
   );
 }
 
+// Real search results, rebuilt at most hourly (content changes with each release's import).
+export const revalidate = 3600;
+
 /**
  * The public landing page. It leads with the product itself — a working search and real
  * results — and asks for an account only when someone wants to keep what they found.
  */
-export default function LandingPage() {
-  const showcase = languageSearch.search("better word for important");
-  const preview = showcase?.kind === "match" ? showcase : null;
+export default async function LandingPage() {
+  const showcase = await discoveryShowcase({ synonyms: true });
+  const preview = showcase.synonyms;
+  const previewResults = preview?.groups.flatMap((group) => group.results).slice(0, 2) ?? [];
 
   return (
     <>
@@ -81,8 +85,8 @@ export default function LandingPage() {
                 </aside>
               ) : null}
               <div className="grid gap-4 lg:col-span-2">
-                {preview.items.slice(0, 2).map((item) => (
-                  <SaveableResultCard key={item.slug} item={item} />
+                {previewResults.map((result) => (
+                  <SaveableResultCard key={result.key} result={result} />
                 ))}
               </div>
             </div>
@@ -126,7 +130,12 @@ export default function LandingPage() {
             The right word depends on the sentence around it. Pick a verb and Lexora explains how
             well it fits — including the preposition it brings with it.
           </SectionHeader>
-          <ContextTool />
+          {showcase.context ? (
+            <ContextTool
+              sentence={showcase.context.sentence}
+              response={showcase.context.response}
+            />
+          ) : null}
         </div>
       </section>
 

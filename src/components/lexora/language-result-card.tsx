@@ -1,4 +1,4 @@
-import { Bookmark, BookmarkCheck, Lightbulb } from "lucide-react";
+import { Bookmark, BookmarkCheck, CornerDownRight, Lightbulb } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -33,10 +33,18 @@ export type LanguageResultCardProps = {
   strength?: 1 | 2 | 3;
   /** Short usage note: register warnings, common mistakes. */
   note?: string;
+  /** Why this result appeared, as the search engine explains it. Shown under the term. */
+  reason?: string;
+  /** Sense label when the term has several meanings ("having a real effect"). */
+  senseLabel?: string;
   /** Makes the whole card selectable, leading to the item's detail page. */
   href?: string;
   /** Save affordance. Omit `onSaveToggle` to hide the button entirely. */
   saved?: boolean;
+  /** What the save button saves, when it isn't the term ("significant — having a real effect"). */
+  saveLabel?: string;
+  /** Saved state is loading or a change is on its way. */
+  saveBusy?: boolean;
   onSaveToggle?: () => void;
   className?: string;
 };
@@ -57,8 +65,12 @@ export function LanguageResultCard({
   tags,
   strength,
   note,
+  reason,
+  senseLabel,
   href,
   saved = false,
+  saveLabel,
+  saveBusy = false,
   onSaveToggle,
   className,
 }: LanguageResultCardProps) {
@@ -87,17 +99,32 @@ export function LanguageResultCard({
             ) : (
               term
             )}
+            {senseLabel ? (
+              <span className="ml-2 align-middle type-caption text-muted-foreground">
+                {senseLabel}
+              </span>
+            ) : null}
           </h3>
+          {reason ? (
+            <p className="flex gap-1.5 type-caption text-muted-foreground">
+              <CornerDownRight aria-hidden className="mt-0.5 size-3.5 shrink-0 text-ink" />
+              <span>
+                <span className="sr-only">Why it’s here: </span>
+                {reason}
+              </span>
+            </p>
+          ) : null}
         </div>
         {onSaveToggle ? (
           <Button
             variant="ghost"
             size="icon-sm"
             aria-pressed={saved}
+            aria-busy={saveBusy}
             aria-label={
               saved
-                ? `Remove "${term}" from your language bank`
-                : `Save "${term}" to your language bank`
+                ? `Saved — remove “${saveLabel ?? term}” from your language bank`
+                : `Save “${saveLabel ?? term}” to your language bank`
             }
             onClick={onSaveToggle}
             className={cn("relative z-10 -mt-1 -mr-1.5", saved && "text-ink hover:text-ink")}

@@ -60,7 +60,7 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 
 - Never commit to `main`. Each phase has an integration branch `phase/<n>-<slug>` cut from `main`.
 - Do the work on `feat/<n>-<slug>`, `fix/…`, `docs/…`, or `chore/…` branches cut from the phase branch, and merge them back with a merge commit.
-- A phase reaches `main` only through a PR that the owner approves.
+- A phase reaches `main` only through a PR that the owner approves. The owner approves by adding the `owner-approved` label, which makes CI re-run every check, merge and tag (docs/WORKFLOW.md → Merge checkpoint). **Never add, remove or simulate that label, and never merge into `main` yourself.**
 - Use Conventional Commits (`feat(finder): …`).
 - Full details are in [docs/WORKFLOW.md](docs/WORKFLOW.md).
 

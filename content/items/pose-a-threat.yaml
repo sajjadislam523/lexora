@@ -1,0 +1,68 @@
+id: pose-a-threat
+kind: collocation
+headword: pose a threat
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: pose a threat, type: lemma }
+  - { form: poses a threat, type: inflection }
+  - { form: posed a threat, type: inflection }
+  - { form: posing a threat, type: inflection }
+senses:
+  - key: danger
+    pos: verb_phrase
+    definition: To be a possible danger to someone or something.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [problem]
+    best_when: Describing a serious risk in Task 2 — climate change, pollution, new technology.
+    avoid_when: The harm is already happening and certain. Then say what effect it has.
+    skill_note: Formal. In Speaking, "is dangerous for" or "puts … at risk" sounds more natural.
+    examples:
+      - id: ex1
+        text: Rising sea levels pose a serious threat to coastal cities.
+        highlight: pose a serious threat to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Plastic waste poses a threat to marine life.
+        highlight: poses a threat to
+        skill: writing
+        task: writing-2
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: pose a threat
+        preposition: to
+        pattern: pose a threat to + noun
+        complement: noun
+        note: what or who is in danger
+        mistake: for
+    collocations:
+      - id: serious
+        phrase: pose a serious threat
+        note: the most common strengthened form
+      - id: risk
+        phrase: pose a risk
+        pattern: pose a risk to + noun
+        note: similar; "risk" stresses the chance of harm
+    mistakes:
+      - id: make
+        wrong: Pollution makes a threat to the environment.
+        right: Pollution poses a threat to the environment.
+        type: collocation
+        explanation: '"Make a threat" means saying you will hurt someone. For a danger, use "pose".'
+      - id: for
+        wrong: pose a threat for wildlife
+        right: pose a threat to wildlife
+        type: preposition
+        explanation: '"Threat" takes "to" before the thing in danger.'
+    relations:
+      - type: alternative
+        to: have-a-detrimental-effect-on.harm
+        weight: 2
+        note: '"Have a detrimental effect on" says the harm is already happening; "pose a threat" says it might.'

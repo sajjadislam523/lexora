@@ -1,0 +1,70 @@
+id: take-measures
+kind: collocation
+headword: take measures
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: take measures, type: lemma }
+  - { form: takes measures, type: inflection }
+  - { form: took measures, type: inflection }
+  - { form: taken measures, type: inflection }
+  - { form: taking measures, type: inflection }
+senses:
+  - key: act
+    pos: verb_phrase
+    definition: To do something official to deal with a problem or reach an aim.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    best_when: Recommending what governments or organisations should do in a Task 2 solution paragraph.
+    skill_note: In Speaking, "do something about" sounds more natural.
+    examples:
+      - id: ex1
+        text: Governments must take urgent measures to reduce carbon emissions.
+        highlight: take urgent measures to
+        skill: writing
+        task: writing-2
+        collocation: urgent
+      - id: ex2
+        text: The city has taken measures against illegal parking.
+        highlight: taken measures against
+        skill: writing
+        task: writing-2
+        pattern: against
+    preposition_patterns:
+      - id: against
+        base: take measures
+        preposition: against
+        pattern: take measures against + noun
+        complement: noun
+        note: the problem being fought
+    collocations:
+      - id: to-verb
+        phrase: take measures to
+        pattern: take measures to + verb
+        note: the aim of the action
+      - id: urgent
+        phrase: take urgent measures
+        note: also "tough", "effective" or "drastic" measures
+      - id: steps
+        phrase: take steps
+        pattern: take steps to + verb
+        note: similar meaning, slightly less formal
+    mistakes:
+      - id: make
+        wrong: The government should make measures to reduce crime.
+        right: The government should take measures to reduce crime.
+        type: collocation
+        explanation: Measures go with "take" (or "introduce"), not "make" or "do".
+      - id: singular
+        wrong: We must take measure to protect wildlife.
+        right: We must take measures to protect wildlife.
+        type: countability
+        explanation: In this meaning, "measure" is countable and usually plural.
+    relations:
+      - type: related
+        to: raise-awareness.inform
+        weight: 1
+        note: Both are common ways to propose a solution in Task 2.

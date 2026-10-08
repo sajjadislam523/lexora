@@ -13,7 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export type SaveGateRequest = { slug: string; term: string; returnTo: string };
+import type { SaveTarget } from "./saved-language";
+
+export type SaveGateRequest = SaveTarget & { returnTo: string };
 
 function withNext(path: "/sign-up" | "/sign-in", returnTo: string) {
   return `${path}?next=${encodeURIComponent(returnTo)}`;
@@ -30,10 +32,12 @@ export function SaveGateDialog({
 }: {
   request: SaveGateRequest | null;
   onOpenChange: (open: boolean) => void;
-  onContinue: (target: { slug: string; term: string }) => void;
+  onContinue: (target: SaveTarget) => void;
 }) {
-  const term = request?.term.replace(/,$/, "");
-  const target = request ? { slug: request.slug, term: request.term } : null;
+  const term = request?.label;
+  const target: SaveTarget | null = request
+    ? { senseId: request.senseId, label: request.label }
+    : null;
 
   return (
     <Dialog open={request !== null} onOpenChange={onOpenChange}>
@@ -60,21 +64,23 @@ export function SaveGateDialog({
           You’ll come straight back to this page, and it will be saved for you.
         </p>
         {request && target ? (
-          <DialogFooter>
-            <Button asChild variant="outline">
-              <Link
-                href={withNext("/sign-in", request.returnTo)}
-                onClick={() => onContinue(target)}
-              >
-                Sign in
-              </Link>
-            </Button>
+          <DialogFooter className="flex-col sm:flex-row-reverse sm:justify-start">
+            {/* The primary action comes first, so it is also first in keyboard order; the reversed
+                direction keeps it on top on phones and on the right from sm, as in other dialogs. */}
             <Button asChild>
               <Link
                 href={withNext("/sign-up", request.returnTo)}
                 onClick={() => onContinue(target)}
               >
                 Create free account
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link
+                href={withNext("/sign-in", request.returnTo)}
+                onClick={() => onContinue(target)}
+              >
+                Sign in
               </Link>
             </Button>
           </DialogFooter>

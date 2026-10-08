@@ -4,13 +4,18 @@ on:
   push:
     branches: [main, "phase/**"]
   pull_request:
+    # `labeled` lets the owner's approval label start the merge checkpoint (see the merge job).
+    types: [opened, synchronize, reopened, labeled]
 
 concurrency:
-  group: ci-${{ github.ref }}
+  # Label events get their own group, so adding an unrelated label can't cancel a running check.
+  group: ci-${{ github.ref }}-${{ github.event.action == 'labeled' && github.event.label.name || 'checks' }}
   cancel-in-progress: true
 
 jobs:
   verify:
+    # Unrelated labels don't re-run the suite; the approval label does, as the final checkpoint.
+    if: github.event.action != 'labeled' || github.event.label.name == 'owner-approved'
     runs-on: ubuntu-latest
 
     services:
@@ -33,6 +38,8 @@ jobs:
     env:
       DATABASE_URL: postgres://lexora@localhost:5432/lexora
       BETTER_AUTH_URL: http://localhost:3000
+      # Account email goes to a local folder the tests read; CI never sends real email.
+      EMAIL_TRANSPORT: outbox
 
     steps:
       - uses: actions/checkout@v4
@@ -51,6 +58,8 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - name: Validate authored content
+        run: pnpm content:check
       - name: Apply migrations to a fresh database
         run: pnpm db:migrate
       - name: Fail if the schema changed without a migration
@@ -61,6 +70,10 @@ jobs:
             git status --porcelain drizzle
             exit 1
           fi
+      - name: Import the content into the fresh database
+        run: pnpm content:import
+      - name: Re-import to prove the import is repeatable
+        run: pnpm content:import | tee import.log && grep -q "nothing to import" import.log
       - run: pnpm test
       - run: pnpm build
       - name: End-to-end route checks against the production build
@@ -68,3 +81,46 @@ jobs:
           pnpm start > next.log 2>&1 &
           for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/ && break; sleep 1; done
           pnpm test:e2e || (cat next.log; exit 1)
+
+  # Final checkpoint (docs/WORKFLOW.md → Approve): when the owner adds the `owner-approved` label
+  # to a phase PR into main, the full suite above runs again on that exact commit, and only then
+  # is the PR merged and the release tagged. Claude Code never applies this label.
+  merge:
+    needs: verify
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'labeled' &&
+      github.event.label.name == 'owner-approved' &&
+      github.event.sender.login == github.repository_owner &&
+      github.event.pull_request.base.ref == 'main' &&
+      startsWith(github.event.pull_request.head.ref, 'phase/') &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - name: Merge the approved commit
+        # --match-head-commit refuses to merge if anything was pushed after the label was added.
+        run: gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --match-head-commit "$HEAD_SHA"
+
+      - name: Tag the phase release
+        # phase/3-language-engine → v0.3.0, phase/2.1-public-discovery → v0.2.1
+        run: |
+          phase="${HEAD_REF#phase/}"
+          phase="${phase%%-*}"
+          major="${phase%%.*}"
+          minor=0
+          if [ "$phase" != "$major" ]; then minor="${phase#*.}"; fi
+          tag="v0.${major}.${minor}"
+          merge_sha=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json mergeCommit --jq .mergeCommit.oid)
+          tag_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/tags" -f tag="$tag" -f message="$PR_TITLE" \
+            -f object="$merge_sha" -f type=commit --jq .sha)
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$tag" -f sha="$tag_sha" > /dev/null
+          echo "Merged PR #$PR and tagged $tag"

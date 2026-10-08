@@ -1,0 +1,65 @@
+id: give-rise-to
+kind: phrase
+headword: give rise to
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-07, level: editorial }
+forms:
+  - { form: give rise to, type: lemma }
+  - { form: gives rise to, type: inflection }
+  - { form: gave rise to, type: inflection }
+  - { form: given rise to, type: inflection }
+  - { form: giving rise to, type: inflection }
+senses:
+  - key: cause
+    pos: verb_phrase
+    definition: To cause something, especially a problem, a feeling or a new situation.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [cause, problem]
+    best_when: Explaining how one development led to new problems or questions in Task 2.
+    avoid_when: Describing a simple, direct physical effect. "Cause" or "lead to" is clearer there.
+    skill_note: Formal. In Speaking, "lead to" or "cause" sounds more natural.
+    examples:
+      - id: ex1
+        text: The growth of social media has given rise to new concerns about privacy.
+        highlight: given rise to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Rapid urbanisation can give rise to serious housing shortages.
+        highlight: give rise to
+        skill: writing
+        task: writing-2
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: give rise
+        preposition: to
+        pattern: give rise to + noun
+        complement: noun
+        note: what is caused; a noun, not a verb
+        mistake: verb
+    mistakes:
+      - id: verb
+        wrong: Pollution can give rise to increase health problems.
+        right: Pollution can give rise to an increase in health problems.
+        type: grammar
+        explanation: '"To" is a preposition here, so it is followed by a noun, not the base form of a verb.'
+      - id: of
+        wrong: The policy gave rise of protests.
+        right: The policy gave rise to protests.
+        type: preposition
+        explanation: The phrase is always "give rise to".
+    relations:
+      - type: alternative
+        to: result-in.cause
+        weight: 2
+        note: Result in puts the effect straight after the verb; give rise to is more formal and often describes new problems or ideas.
+      - type: related
+        to: pose-a-threat.danger
+        weight: 1
+        note: Both describe problems in Task 2; pose a threat is about possible future harm.

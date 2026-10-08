@@ -304,7 +304,7 @@ Legend: ✅ built · 🔜 _Planned_ (intent only).
 | `destructive` | Destructive confirmation only (soft danger fill)        |
 | `link`        | Inline navigation in ink                                |
 
-- **Sizes:** `xs` 24, `sm` 28, `default` 36, `lg` 44, plus `icon-xs`, `icon-sm`, `icon` and `icon-lg`.
+- **Sizes:** `xs` 24, `sm` 28, `default` 36, `lg` 44, plus `icon-xs`, `icon-sm`, `icon` and `icon-lg`. On touch screens (`pointer: coarse`) the compact sizes (`xs`, `sm`, `icon-xs`, `icon-sm`) get an invisible 4px hit area on every side, so they are 32–36px to a finger without looking bigger.
 - **Text and shape:** `type-label` text, `rounded-md` (`rounded-sm` for xs/sm).
 - **Icon-only buttons** need an `aria-label`.
 - **States:** hover lightens or tints, press deepens and shifts 1px, focus is a 2px ink ring with a canvas offset, and disabled is a recessed fill with `disabled-foreground` (no opacity).
@@ -334,7 +334,7 @@ Three patterns, never mixed:
 | **Hero** (Finder)    | `lexora/search-field size="lg"` | Raised white field, 56px, `rounded-xl`, `shadow-sm`, 18px text, `/` hint. Suggested queries as quiet pills below.                                      |
 | **Filter** (in page) | `lexora/search-field`           | 40px, `rounded-md`. Filters the visible list.                                                                                                          |
 
-All have an accessible label. Placeholders are prompts ("What do you want to say?"), not labels. Search behaviour arrives in Phase 4.
+All have an accessible label. Placeholders are prompts ("What do you want to say?"), not labels. Searching is done by the language engine on the server (Phase 3); the field only submits the query.
 
 ### 9.4 Command palette ✅ `ui/command`
 
@@ -355,13 +355,13 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 
 **Rectangles say what something is. Pills say where you are with it.**
 
-| Component               | Shape              | Use                                                                                                                   |
-| ----------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                              |
-| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                                      |
-| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                                    |
-| `lexora/fit-badge`      | Pill               | How well a choice fits a sentence: Best fit (success), Natural (ink), Possible (warning), Different meaning (neutral) |
-| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                              |
+| Component               | Shape              | Use                                                                                                             |
+| ----------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                        |
+| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                                |
+| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                              |
+| `lexora/fit-badge`      | Pill               | The search engine's context-gap verdict: Fits (success), Different preposition (warning), Doesn’t fit (neutral) |
+| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                        |
 
 All badges are 20px tall with `type-micro` text.
 
@@ -378,17 +378,18 @@ A tinted, borderless entry point: a white icon square (36px, `rounded-md`), a `t
 The core unit of the Finder. White, flat, 1px `border`, `rounded-lg`. Hover: `border-strong` + `shadow-sm`. Anatomy:
 
 1. `CategoryBadge`
-2. **Term** in `type-term` (serif)
-3. **Meaning**, one line, `type-body` muted
-4. **Best when …** (optional): lightbulb in ink plus one line of context. This is the line that makes near-synonyms distinguishable.
-5. **Pattern** (optional): mono chip on `bg-muted`, shown when there are no collocations
-6. **Collocations** (optional): up to four quiet chips (`border-subtle` on canvas, `type-caption`)
-7. **Example** (optional): serif blockquote with a left rule; the target term is marked with the **highlighter**
-8. **Note** (optional): caption, for common mistakes or register warnings
-9. **Footer**: register and skill tags on the left, `StrengthMeter` on the right
+2. **Term** in `type-term` (serif), with the **sense label** in caption beside it when a word has several meanings ("significant · having a real effect")
+3. **Reason** (search results): why the search engine returned this result, as a caption with an ink corner arrow ("Stronger than important · Crucial means an outcome depends on it."). The text always comes from the engine, never from the UI.
+4. **Meaning**, one line, `type-body` muted
+5. **Best when …** (optional): lightbulb in ink plus one line of context. This is the line that makes near-synonyms distinguishable.
+6. **Pattern** (optional): mono chip on `bg-muted`, shown when there are no collocations
+7. **Collocations** (optional): up to four quiet chips (`border-subtle` on canvas, `type-caption`)
+8. **Example** (optional): serif blockquote with a left rule; the target term is marked with the **highlighter**
+9. **Note** (optional): caption, for common mistakes or register warnings
+10. **Footer**: register and skill tags on the left, `StrengthMeter` on the right
 
 - **Selectable:** with `href`, the term becomes a stretched link, so the whole card opens the detail page. Focus shows a ring on the card.
-- **Save:** a ghost icon button (bookmark) with `aria-pressed`. It sits above the stretched link (`z-10`), so it stays separately clickable and focusable. Saved = ink with a filled-check icon. It is hidden when no handler is passed.
+- **Save:** a ghost icon button (bookmark) with `aria-pressed` (and `aria-busy` while its state loads or a change is on its way). It sits above the stretched link (`z-10`), so it stays separately clickable and focusable. Saved = ink with a filled-check icon. It saves the result's **meaning** — for a collocation card, the meaning it belongs to — and its accessible name says which. It is hidden when no handler is passed.
 
 ### 9.9 Table ✅ `ui/table`
 
@@ -417,7 +418,7 @@ The generic container: white, flat, `rounded-lg`, 20px padding, with an optional
 - **Top bar** (`shell/top-bar`):
   - 48px, sticky, `border` bottom, canvas at 95% with a light blur.
   - Left: the menu button (below `lg`), then "Lexora / Page" (the caption is hidden on small screens).
-  - Right: a "Prototype" badge while the app is a prototype, plus a search button below `lg`.
+  - Right: a "Prototype" badge only on screens that still show sample data (Home, Practice), set per route in `shell/navigation.ts` with what is sample and what is real, plus a search button below `lg`.
 - **Command palette** (`shell/command-palette`): global ⌘K / Ctrl+K. "Go to" lists every destination and navigates for real. "Example searches" open the Finder, "Sample language" opens detail pages, and "Actions" toggles the sidebar. Real language search arrives in Phase 4.
 - **Page frame** (`shell/page-container`): `max-w-page`, gutters 16 / 24 / 40px, vertical padding 32 → 48px.
 - **Placeholders** (`shell/route-placeholder`): pages not built yet show the page header with a "Not built yet" badge, a dashed "What this screen will do" panel (status plus three planned capabilities), and a "Meanwhile" list linking to built screens.
@@ -456,7 +457,7 @@ Components for language and practice. They are presentational and take data as p
 ### 9.16 Planned
 
 - **Writing Lab annotations** 🔜 _(Phase 7)_: wavy warning underline = repetition; solid danger = preposition or collocation error; dotted info = suggestion. Each opens a popover with a one-click apply.
-- **Toasts** 🔜: bottom-right on desktop, at most one at a time, 4s, with Undo when the action can be reversed. Saving will confirm with a toast once persistence exists.
+- **Toasts** 🔜: bottom-right on desktop, at most one at a time, 4s, with Undo when the action can be reversed. Until then, saving confirms with the calm bottom notice (§10.7): "Saved “…” to your language bank.", "Removed …", or, when the server refuses, "Couldn’t update “…”. Please try again." with the button restored.
 
 ---
 
@@ -467,6 +468,7 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
 ### 10.1 Dashboard (`/home`)
 
 - **Header:** a sample-data badge, "Welcome back", this week's focus, then _Find language_ (outline) and _Start today's practice_ (primary).
+- **Verification reminder:** only while the email is unverified, an info `Callout` under the header: "Verify your email when it suits you", the address the link went to, "Everything in Lexora works in the meantime", and a link to Settings for a new one. It never blocks anything and disappears once the address is verified.
 - **Today's focus:** the single **highlighter panel** on the page. It holds the review count and time, a `ProgressTrack`, _Continue review_, and up to three "needs attention" rows (category dot + reason) on `bg-card/70`.
 - **Continue learning:** `LanguageRow`s with a usage line, not definitions.
 - **Recent mistakes:** `MistakeRow`s, each with a next step (practise, or find alternatives).
@@ -475,20 +477,27 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
 
 ### 10.2 Language Finder (`/finder`) and Explore (`/explore`)
 
-One view, two homes: `/finder` inside the app shell and `/explore` in the public frame. Only the eyebrow, title and where searches go differ. The server runs the search and passes the result in.
+One view, two homes: `/finder` inside the app shell and `/explore` in the public frame. Only the eyebrow, title and where searches go differ. The server runs the query through the language engine (`LanguageSearchService`) and passes the response in; the view never searches, ranks or corrects anything itself.
 
-- **Search:** header, then the hero `SearchField` inside a `form role="search"`. The query lives in the URL (`?q=`). `/` focuses the field. On mobile a _Find_ button sits inside the field.
-- **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They are intents, so they have no category dots. Selecting one changes the placeholder and the example searches; a recognised query auto-selects its mode. Below `sm` they form one horizontally scrollable row.
-- **Example searches:** quiet `bg-muted` pills.
-- **Coverage caption:** always visible — Lexora covers a small, hand-picked set of language for now, matched by keyword.
+- **Search:** header, then the hero `SearchField` inside a `form role="search"`. The query lives in the URL (`?q=`), so a search can be shared, refreshed and revisited with back/forward. `/` focuses the field; Escape clears it (a second Escape leaves it). On mobile a _Find_ button sits inside the field.
+- **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They change the placeholder and the example searches only; the engine reads the query's shape itself, and the chip for the shape it recognised is selected. Below `sm` they form one horizontally scrollable row.
+- **Example searches:** quiet `bg-muted` pills. Every example is covered by the golden search suite.
+- **Coverage caption:** always visible — Lexora covers a small, reviewed set of language for now, and every result says why it appears.
+- **Before searching:** the context tool on a real example sentence, and the same idea in writing and speaking (_furthermore_ / _on top of that_), both built from engine responses.
 - **Results:**
-  - an "Understood as" heading, with "Matched on “keyword” · mode · n results" — the word that selected the results is always shown, so matching never looks like interpretation
-  - a **fit guide** ("Which one fits?": term → when, plus a note on why they aren't interchangeable), in a sticky right column at `xl` and above the cards below `xl`
-  - result cards
-  - a `SkillComparison` when register matters
-  - related searches
-- **Context tool:** a `GapSentence` in a muted well. Each option fills the gap, including the preposition it brings, and gets a `FitBadge`. A note and a link to the item follow. This is exploration, not a test.
-- **No match:** a dashed empty state that says nothing in Lexora matches yet, that the library is small and keyword-matched, and offers the example searches.
+  - "Understood as" with the engine's interpretation ("Stronger alternatives to “important”"), the mode and the result count
+  - a notice when the term was read differently from how it was typed: a corrected spelling ("Showing results for “responsible for” — you typed …"), a spelling variant, or a full-text fallback
+  - a **fit guide** ("Which one fits?", "How they differ": term → when) in a sticky right column at `xl`, above the cards below `xl`
+  - result cards in the engine's groups (headings such as _Stronger_, _Between sentences_), each with its **reason**
+  - _Common mistakes_ (`MistakeRow`s) when the query concerns one ("responsible of")
+  - _More searches_ pills
+- **Context gap:** a query with a gap (`___`) shows the context tool for the learner's own sentence. Each verb fills the gap with the preposition it brings, and gets a `FitBadge` (Fits · Different preposition · Doesn’t fit) with the engine's reason and a link to the item.
+- **States:**
+  - **Loading:** while a new search loads, the results area becomes a skeleton of the results layout (`aria-busy`, "Searching…" for screen readers). No spinner, no motion.
+  - **Did you mean:** when two words are equally close, the engine doesn't guess; the view offers both as buttons.
+  - **No match:** a dashed empty state that says nothing matches yet, suggests a single word or an "I want to …" query, and offers the example searches.
+  - **Error:** a danger callout ("Search isn’t available right now") with _Try again_.
+  - A visually hidden status line announces the result summary after each search.
 - **Saving:** the card's bookmark. Visitors get the save gate (§10.7).
 
 ### 10.3 Practice (`/practice`)
@@ -506,22 +515,25 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 
 ### 10.4 Language detail (`/language/[slug]`)
 
-- **Public page.** Rendered in the public frame for everyone; nothing learner-specific is rendered on the server (no review status).
-- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category; the term in `type-term-display` with IPA (only where verified) and part of speech; _Save to language bank_ (outline → secondary "Saved" in ink). Signed-in learners also get _Practise this_ and a caption about session-only saving.
-- **At a glance:** part of speech, register, level (CEFR), strength, skills. A sticky card at `xl`; a compact two- or three-column strip below `xl`.
-- **Sections, divided by hairlines, in this order:**
-  1. Meaning (+ pattern)
-  2. When it works best (muted well with lightbulb)
-  3. Don't use it when… (warning callout)
-  4. Common collocations (2-column grid of phrase + note)
-  5. Examples (segmented All / Writing / Speaking when both exist)
-  6. In writing and speaking (`SkillComparison`)
-  7. Common mistakes (`MistakeRow`s)
-  8. Related language (relation → term, linked when it exists)
+- **Public page**, rendered from the published content in PostgreSQL for everyone; nothing learner-specific is rendered on the server. Only sections with authored content appear.
+- **Header:** _Back to search_ (to the results this tab last showed, kept in `sessionStorage`; otherwise to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category (from the item's kind); the term in `type-term-display` (wraps on narrow screens); part of speech, and "n meanings" when there are several; spelling variants ("Also spelled analyze (US)") with the authored regional note; _Save to language bank_ (outline → secondary "Saved" in ink) when the item has one meaning. With several meanings, the header says each is saved on its own, and each meaning block has its own _Save this meaning_ (`sm`) beside its heading. Every save button's accessible name says exactly which meaning it saves ("Save “significant — having a real effect” to your language bank").
+- **At a glance:** part of speech, register, level (CEFR), strength, skills, IELTS relevance and tasks. One meaning: a sticky card at `xl`, a compact two- or three-column strip below `xl`. Several meanings: a _Meanings_ list (sticky at `xl`, in the header below) linking to each meaning, and the strip inside each meaning. The strip is always a bordered `bg-card` panel, never a `bg-muted` well, so the `bg-muted` register and skill tags inside it stay visible.
+- **Several meanings:** each is a bordered block, "Meaning 1 · having a real effect" (`h2`, anchor `#sense-<key>`), holding that meaning's own sections (`h3`). Relations, patterns, examples and mistakes never move between meanings.
+- **Sections per meaning, divided by hairlines, in this order:**
+  1. Meaning (the definition)
+  2. When it works best (muted well with lightbulb) and Don't use it when… (warning callout)
+  3. How it links ideas (linkers: what it links, position, punctuation)
+  4. Patterns (preposition patterns with notes, sentence frames) as mono chips
+  5. Common collocations (2-column grid: phrase, pattern, note; linked when the collocation has its own page)
+  6. Examples (segmented All / Writing / Speaking when both exist; highlighter on the authored spans; IELTS task caption)
+  7. In writing and speaking (the authored skill note)
+  8. Common mistakes (`MistakeRow`s with the mistake type)
+  9. Related language (grouped by relation — Similar meaning, Stronger, Alternatives, More formal, More natural… — each term linked, to the right meaning when the target has several, with its note)
+- **Footer:** the content source.
 
 ---
 
-### 10.5 Authentication screens (`/sign-in`, `/sign-up`)
+### 10.5 Authentication screens (`/sign-in`, `/sign-up`, `/forgot-password`, `/reset-password`, `/verify-email`)
 
 Authentication should be calm and quick, and should look like Lexora rather than a template.
 
@@ -540,7 +552,17 @@ Authentication should be calm and quick, and should look like Lexora rather than
   - Session ended (info)
   - Signed out (success)
   - Account already exists (info, with a _Sign in instead_ link)
-- **No dead ends or fake links:** each screen links to the other and keeps the `next` destination. "Forgot password" only appears once an email provider exists.
+  - Password changed (success: "You’ve been signed out on every device. Sign in with your new password.")
+- **No dead ends or fake links:** each screen links to the other and keeps the `next` destination. Sign-in has a right-aligned _Forgot password?_ link under the password field.
+- **Forgot password:** one email field and _Send reset link_. Every address gets the same answer, a success callout: "If an account exists for … we’ve sent a link … It works for 1 hour." It also offers _try again_ and _Back to sign in_. Only a rate limit or a transport failure shows an error.
+- **Choose a new password** (from the email link): _New password_ (with the sign-up hint) and _Confirm new password_ (`autoComplete="new-password"`, show/hide toggles, "The passwords don’t match"). The page says up front that the learner will be signed out everywhere. An expired, used or missing link replaces the form with a danger callout ("This link can’t be used — reset links work once, for 1 hour") and _Send a new link_.
+- **Verify email** (from the email link): "Verifying your email…" (spinner, `role="status"`), then one of:
+  - _Your email is verified_ (success), with _Continue to Lexora_ for a signed-in browser or _Sign in_ otherwise. Verifying never signs anyone in.
+  - _This link has expired_ / _This link isn’t valid_ (warning), saying the account works as normal, with a way to send a new link.
+  - A temporary failure (danger), with _Try again_.
+
+  Messages always reassure the learner that the account works, and never frame verification as required.
+
 - **Pages without a valid session:** an app URL with no valid session goes to sign-in with the destination remembered, and returns there after signing in.
 
 ### 10.6 Settings (`/settings`)
@@ -549,7 +571,7 @@ A narrow page (`max-w-4xl`) of three sections, divided by hairlines. On `lg` eac
 
 1. **Profile:** the name.
 2. **Learning profile:** target band (`NativeSelect`), test date (`Input type="date"`), and focus (a segmented radio group: Writing / Speaking / Both / Not set).
-3. **Account:** email, member since, and _Sign out_.
+3. **Account:** email, member since, and _Sign out_. Under the email is its verification status: _Verified_ (success text with a check icon, so not colour alone), or "Not verified yet. Lexora works fully either way…" with an outline _Send verification email_ button. Its result appears in a polite status line beside the button: sent (with the address and the 24-hour validity), already verified, rate limited, or not sent.
 
 Each form saves on its own. _Save_ shows a spinner and "Saving…" while pending, then a polite "… saved." status beside the button. Values stay as saved (no form reset), and server validation errors appear inline.
 
@@ -566,8 +588,12 @@ The first thing a visitor sees is the product working, not a sign-up form (UX pr
   4. **Context tool:** "Choose the word that fits the sentence", the interactive gap sentence.
   5. **Closing call to action:** _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
      Sections are separated by hairlines with `py-14 sm:py-20` rhythm, content at `max-w-page`; the hero sits at `max-w-3xl`.
-- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`. Closing it changes nothing.
+- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`, primary on the right from `sm`, and the primary first in keyboard order. Closing it changes nothing.
 - **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and a calm notice ("Saved “term” to your language bank.") appears at the bottom of the viewport for five seconds (`role="status"`).
+
+### 10.8 Account email
+
+Verification and password-reset emails (`src/server/email/templates.ts`) are deliberately plain: one card of at most 480px on the canvas colour, the Lexora wordmark, a heading, one sentence, a single charcoal button, how long the link works, the link in full as a fallback, and a muted line on what to do if it wasn't you. Email clients ignore CSS variables, so the templates copy a handful of values from `tokens.css` (canvas, card, border, foreground, muted foreground, primary, ink) into one documented constant, and use system fonts. They never include the account's name or anything else a sign-up form accepted. They contain no marketing and no tracking, and never claim an account is compromised.
 
 ## 11. States checklist
 
@@ -588,6 +614,9 @@ Every data-backed view ships with:
 - Targets are ≥ 24×24px (WCAG 2.2). Primary touch targets on mobile are ≥ 32–44px.
 - Colour is never the only signal (labels, icons, text). Toggle state is exposed with `aria-pressed` or `aria-current`.
 - Radix primitives provide focus trapping, ARIA and keyboard behaviour. Don't break them when restyling.
+- **Overlays return focus to what opened them.** `DialogContent` and `SheetContent` remember the element focused when they open (`ui/use-return-focus`), because Lexora opens overlays from state rather than a Radix `Trigger`. The buttons that open them say so with `aria-haspopup="dialog"`, plus `aria-expanded` when they toggle.
+- **Failed submits move focus to the first invalid field** (`focusFirstInvalid` in `lexora/form-field`), whose error is wired by `fieldAria`. Form-level errors are `role="alert"` callouts; success and progress messages are polite `role="status"` text.
+- **Live regions are mounted empty, then filled**, so updates that arrive with a re-render (search results, save notices) are read out.
 - Landmarks (`header`, `nav`, `main`), one `h1` per page, logical heading order.
 - `prefers-reduced-motion` is respected globally.
 
