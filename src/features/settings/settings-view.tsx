@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/lexora/page-header";
 import { PageContainer } from "@/components/shell/page-container";
 
+import { EmailVerification } from "./email-verification";
 import { LearnerProfileForm, NameForm } from "./settings-forms";
 import { SignOutButton } from "./sign-out-button";
 
@@ -32,7 +33,7 @@ function Section({
 }
 
 type SettingsViewProps = {
-  user: { name: string; email: string; createdAt: Date };
+  user: { name: string; email: string; emailVerified: boolean; createdAt: Date };
   profile: { targetBand: string | null; testDate: string | null; focusSkill: string | null } | null;
 };
 
@@ -70,7 +71,10 @@ export function SettingsView({ user, profile }: SettingsViewProps) {
         <dl className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <dt className="type-overline text-subtle-foreground">Email</dt>
-            <dd className="type-body text-foreground">{user.email}</dd>
+            <dd className="space-y-1.5">
+              <p className="type-body wrap-break-word text-foreground">{user.email}</p>
+              <EmailVerification email={user.email} verified={user.emailVerified} />
+            </dd>
           </div>
           <div className="space-y-1">
             <dt className="type-overline text-subtle-foreground">Member since</dt>

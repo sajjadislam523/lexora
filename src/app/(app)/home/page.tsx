@@ -10,5 +10,11 @@ export default async function HomePage() {
   const session = await requireSession();
   const firstName = session.user.name.trim().split(/\s+/)[0];
   const savedCount = await countSavedSenses(session.user.id);
-  return <DashboardView firstName={firstName} savedCount={savedCount} />;
+  return (
+    <DashboardView
+      firstName={firstName}
+      savedCount={savedCount}
+      unverifiedEmail={session.user.emailVerified ? undefined : session.user.email}
+    />
+  );
 }

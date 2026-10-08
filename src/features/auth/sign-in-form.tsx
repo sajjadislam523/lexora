@@ -21,7 +21,7 @@ export function SignInForm({
   notice,
 }: {
   next: string;
-  notice?: "session-expired" | "signed-out";
+  notice?: "session-expired" | "signed-out" | "password-reset";
 }) {
   const router = useRouter();
   const [values, setValues] = useState({ email: "", password: "" });
@@ -83,6 +83,11 @@ export function SignInForm({
           See you next time.
         </Callout>
       ) : null}
+      {notice === "password-reset" && !formError ? (
+        <Callout role="status" tone="success" title="Your password has been changed">
+          You’ve been signed out on every device. Sign in with your new password.
+        </Callout>
+      ) : null}
       {formError ? (
         <Callout id="sign-in-error" role="alert" tone="danger" title={formError} />
       ) : null}
@@ -114,6 +119,11 @@ export function SignInForm({
             {...fieldAria("password", errors.password)}
           />
         </FormField>
+        <p className="text-right type-body">
+          <Link href="/forgot-password" className="font-medium text-ink hover:underline">
+            Forgot password?
+          </Link>
+        </p>
       </fieldset>
 
       <SubmitButton pending={pending} pendingLabel="Signing in…">

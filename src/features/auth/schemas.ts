@@ -18,6 +18,21 @@ export const signUpSchema = z.object({
     .max(PASSWORD_MAX, `Use ${PASSWORD_MAX} characters or fewer`),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.email("Enter a valid email address"),
+});
+
+/** The same password rules as sign-up; the confirmation only guards against typos. */
+export const resetPasswordSchema = z
+  .object({
+    password: signUpSchema.shape.password,
+    confirm: z.string().min(1, "Enter the new password again"),
+  })
+  .refine((values) => values.password === values.confirm, {
+    path: ["confirm"],
+    message: "The passwords don’t match",
+  });
+
 export type FieldErrors<T extends string> = Partial<Record<T, string>>;
 
 /** First error message per field, for inline display. */
