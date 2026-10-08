@@ -304,7 +304,7 @@ Legend: ✅ built · 🔜 _Planned_ (intent only).
 | `destructive` | Destructive confirmation only (soft danger fill)        |
 | `link`        | Inline navigation in ink                                |
 
-- **Sizes:** `xs` 24, `sm` 28, `default` 36, `lg` 44, plus `icon-xs`, `icon-sm`, `icon` and `icon-lg`.
+- **Sizes:** `xs` 24, `sm` 28, `default` 36, `lg` 44, plus `icon-xs`, `icon-sm`, `icon` and `icon-lg`. On touch screens (`pointer: coarse`) the compact sizes (`xs`, `sm`, `icon-xs`, `icon-sm`) get an invisible 4px hit area on every side, so they are 32–36px to a finger without looking bigger.
 - **Text and shape:** `type-label` text, `rounded-md` (`rounded-sm` for xs/sm).
 - **Icon-only buttons** need an `aria-label`.
 - **States:** hover lightens or tints, press deepens and shifts 1px, focus is a 2px ink ring with a canvas offset, and disabled is a recessed fill with `disabled-foreground` (no opacity).
@@ -418,7 +418,7 @@ The generic container: white, flat, `rounded-lg`, 20px padding, with an optional
 - **Top bar** (`shell/top-bar`):
   - 48px, sticky, `border` bottom, canvas at 95% with a light blur.
   - Left: the menu button (below `lg`), then "Lexora / Page" (the caption is hidden on small screens).
-  - Right: a "Prototype" badge while the app is a prototype, plus a search button below `lg`.
+  - Right: a "Prototype" badge only on screens that still show sample data (Home, Practice), set per route in `shell/navigation.ts` with what is sample and what is real, plus a search button below `lg`.
 - **Command palette** (`shell/command-palette`): global ⌘K / Ctrl+K. "Go to" lists every destination and navigates for real. "Example searches" open the Finder, "Sample language" opens detail pages, and "Actions" toggles the sidebar. Real language search arrives in Phase 4.
 - **Page frame** (`shell/page-container`): `max-w-page`, gutters 16 / 24 / 40px, vertical padding 32 → 48px.
 - **Placeholders** (`shell/route-placeholder`): pages not built yet show the page header with a "Not built yet" badge, a dashed "What this screen will do" panel (status plus three planned capabilities), and a "Meanwhile" list linking to built screens.
@@ -516,8 +516,8 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 ### 10.4 Language detail (`/language/[slug]`)
 
 - **Public page**, rendered from the published content in PostgreSQL for everyone; nothing learner-specific is rendered on the server. Only sections with authored content appear.
-- **Header:** _Back to search_ (to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category (from the item's kind); the term in `type-term-display` (wraps on narrow screens); part of speech, and "n meanings" when there are several; spelling variants ("Also spelled analyze (US)") with the authored regional note; _Save to language bank_ (outline → secondary "Saved" in ink) when the item has one meaning. With several meanings, the header says each is saved on its own, and each meaning block has its own _Save this meaning_ (`sm`) beside its heading. Every save button's accessible name says exactly which meaning it saves ("Save “significant — having a real effect” to your language bank").
-- **At a glance:** part of speech, register, level (CEFR), strength, skills, IELTS relevance and tasks. One meaning: a sticky card at `xl`, a compact two- or three-column strip below `xl`. Several meanings: a _Meanings_ list (sticky at `xl`, in the header below) linking to each meaning, and the strip inside each meaning.
+- **Header:** _Back to search_ (to the results this tab last showed, kept in `sessionStorage`; otherwise to `/finder` for learners, `/explore` for visitors; same label, so nothing shifts); category (from the item's kind); the term in `type-term-display` (wraps on narrow screens); part of speech, and "n meanings" when there are several; spelling variants ("Also spelled analyze (US)") with the authored regional note; _Save to language bank_ (outline → secondary "Saved" in ink) when the item has one meaning. With several meanings, the header says each is saved on its own, and each meaning block has its own _Save this meaning_ (`sm`) beside its heading. Every save button's accessible name says exactly which meaning it saves ("Save “significant — having a real effect” to your language bank").
+- **At a glance:** part of speech, register, level (CEFR), strength, skills, IELTS relevance and tasks. One meaning: a sticky card at `xl`, a compact two- or three-column strip below `xl`. Several meanings: a _Meanings_ list (sticky at `xl`, in the header below) linking to each meaning, and the strip inside each meaning. The strip is always a bordered `bg-card` panel, never a `bg-muted` well, so the `bg-muted` register and skill tags inside it stay visible.
 - **Several meanings:** each is a bordered block, "Meaning 1 · having a real effect" (`h2`, anchor `#sense-<key>`), holding that meaning's own sections (`h3`). Relations, patterns, examples and mistakes never move between meanings.
 - **Sections per meaning, divided by hairlines, in this order:**
   1. Meaning (the definition)
@@ -614,6 +614,9 @@ Every data-backed view ships with:
 - Targets are ≥ 24×24px (WCAG 2.2). Primary touch targets on mobile are ≥ 32–44px.
 - Colour is never the only signal (labels, icons, text). Toggle state is exposed with `aria-pressed` or `aria-current`.
 - Radix primitives provide focus trapping, ARIA and keyboard behaviour. Don't break them when restyling.
+- **Overlays return focus to what opened them.** `DialogContent` and `SheetContent` remember the element focused when they open (`ui/use-return-focus`), because Lexora opens overlays from state rather than a Radix `Trigger`. The buttons that open them say so with `aria-haspopup="dialog"`, plus `aria-expanded` when they toggle.
+- **Failed submits move focus to the first invalid field** (`focusFirstInvalid` in `lexora/form-field`), whose error is wired by `fieldAria`. Form-level errors are `role="alert"` callouts; success and progress messages are polite `role="status"` text.
+- **Live regions are mounted empty, then filled**, so updates that arrive with a re-render (search results, save notices) are read out.
 - Landmarks (`header`, `nav`, `main`), one `h1` per page, logical heading order.
 - `prefers-reduced-motion` is respected globally.
 

@@ -126,7 +126,7 @@ function RelatedLanguage({ relations }: { relations: RelatedSense[] }) {
                       id: relation.senseId,
                       label: relation.senseLabel,
                     })}
-                    className="rounded-xs type-term-sm wrap-break-word text-ink outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                    className="rounded-xs py-0.5 type-term-sm wrap-break-word text-ink outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {relation.headword}
                   </Link>
@@ -394,7 +394,7 @@ export function LanguageDetail({ item }: { item: LanguageDetailData }) {
                         }}
                       />
                     </div>
-                    <div className="rounded-md bg-muted p-4">
+                    <div className="rounded-md border border-border bg-card p-4">
                       <Glance sense={sense} className="grid-cols-2 sm:grid-cols-3" />
                     </div>
                   </div>

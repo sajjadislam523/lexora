@@ -51,7 +51,10 @@ function SectionHeading({
         {title}
       </h2>
       {link ? (
-        <Link href={link.href} className="type-label text-ink hover:underline">
+        <Link
+          href={link.href}
+          className="-my-1 rounded-sm py-1 type-label text-ink hover:underline"
+        >
           {link.label}
         </Link>
       ) : null}

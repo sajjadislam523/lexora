@@ -20,6 +20,8 @@ export type NavEntry = {
   description: string;
   /** Honest build status shown on placeholder screens. */
   status: string;
+  /** Set while the screen shows sample data: the top bar marks it "Prototype" and says why. */
+  prototype?: string;
   /** What the finished screen will do — shown on placeholders. */
   plans?: string[];
   /** Built screens worth visiting from a placeholder. */
@@ -35,6 +37,7 @@ export const PRIMARY_NAV: NavEntry[] = [
     icon: Home,
     description: "What to review today, weak areas and recent searches.",
     status: "Prototype with sample learner data.",
+    prototype: "Sample learner data — only your saved meanings count is real",
   },
   {
     id: "finder",
@@ -42,7 +45,7 @@ export const PRIMARY_NAV: NavEntry[] = [
     label: "Language Finder",
     icon: Search,
     description: "Describe what you want to say and find the language that fits.",
-    status: "Prototype with example searches. Real search is built in Phase 4.",
+    status: "Available.",
   },
   {
     id: "bank",
@@ -50,7 +53,8 @@ export const PRIMARY_NAV: NavEntry[] = [
     label: "Language bank",
     icon: BookMarked,
     description: "Everything you have saved, with notes and review status.",
-    status: "Planned for Phase 5 — Personal learning.",
+    status:
+      "Planned for Phase 5 — Personal learning. The meanings you save are already kept for this screen.",
     plans: [
       "Everything you save from the Finder, grouped by kind of language",
       "Your own notes and example sentences beside each item",
@@ -58,7 +62,7 @@ export const PRIMARY_NAV: NavEntry[] = [
     ],
     seeAlso: [
       { label: "Find language to save", href: "/finder" },
-      { label: "See a saved item", href: "/language/significant" },
+      { label: "Save a meaning from a language page", href: "/language/significant" },
     ],
   },
   {
@@ -68,6 +72,7 @@ export const PRIMARY_NAV: NavEntry[] = [
     icon: Dumbbell,
     description: "Short exercises built from your language bank.",
     status: "Prototype session. Real exercises are generated in Phase 6.",
+    prototype: "Sample session — answers aren’t saved",
   },
   {
     id: "writing",

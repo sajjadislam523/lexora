@@ -91,6 +91,7 @@ function SidebarBody({ collapsed, collapsible, onNavigate }: SidebarBodyProps) {
                 size="icon-sm"
                 onClick={openPalette}
                 aria-label="Open command palette"
+                aria-haspopup="dialog"
               >
                 <Search />
               </Button>

@@ -22,6 +22,7 @@ export function SearchTrigger({
       type="button"
       data-slot="search-trigger"
       aria-keyshortcuts="Meta+K Control+K"
+      aria-haspopup="dialog"
       className={cn(
         "group/trigger flex h-control-md w-full cursor-pointer items-center gap-2 rounded-md border border-border-subtle bg-muted px-2.5 text-left type-body text-subtle-foreground transition-[color,background-color,border-color] duration-120 ease-standard outline-none hover:border-border hover:bg-accent hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring",
         className,

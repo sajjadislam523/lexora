@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Callout } from "@/components/lexora/callout";
-import { FormField, fieldAria } from "@/components/lexora/form-field";
+import { FormField, fieldAria, focusFirstInvalid } from "@/components/lexora/form-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
@@ -30,6 +30,7 @@ export function ForgotPasswordForm() {
     const parsed = forgotPasswordSchema.safeParse({ email });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message);
+      focusFirstInvalid(event.currentTarget);
       return;
     }
     setPending(true);
