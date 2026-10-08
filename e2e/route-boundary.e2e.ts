@@ -1,7 +1,4 @@
-import { randomBytes, randomUUID } from "node:crypto";
-
-import postgres from "postgres";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, inject, it } from "vitest";
 
 /**
  * The route boundary, checked over HTTP against a real server: public discovery pages work for
@@ -42,30 +39,7 @@ function get(path: string, cookie?: string) {
   });
 }
 
-const email = `e2e-${randomUUID()}@lexora.test`;
-let cookie = "";
-
-beforeAll(async () => {
-  const response = await fetch(`${BASE_URL}/api/auth/sign-up/email`, {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: ORIGIN },
-    body: JSON.stringify({ name: "E2E Learner", email, password: randomBytes(12).toString("hex") }),
-  });
-  expect(response.status).toBe(200);
-  cookie = response.headers
-    .getSetCookie()
-    .map((c) => c.split(";")[0]!)
-    .filter((c) => c.includes("session_token"))
-    .join("; ");
-  expect(cookie).not.toBe("");
-});
-
-afterAll(async () => {
-  if (!process.env.DATABASE_URL) return;
-  const sql = postgres(process.env.DATABASE_URL, { max: 1, prepare: false });
-  await sql`delete from users where email = ${email}`;
-  await sql.end();
-});
+const [{ email, cookie }] = inject("learners");
 
 describe("public discovery layer", () => {
   it.each(PUBLIC_PAGES)("GET %s works without an account", async (path) => {
@@ -141,7 +115,7 @@ describe("personal learning areas", () => {
 
 describe("saving language", () => {
   const save = (headers: Record<string, string>) =>
-    fetch(`${BASE_URL}/api/bank/items/significant`, { method: "PUT", headers });
+    fetch(`${BASE_URL}/api/bank/saved/significant.statistical`, { method: "PUT", headers });
 
   it("rejects a visitor", async () => {
     expect((await save({ origin: ORIGIN })).status).toBe(401);
@@ -154,6 +128,10 @@ describe("saving language", () => {
   it("accepts the signed-in learner", async () => {
     const response = await save({ origin: ORIGIN, cookie });
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ slug: "significant", saved: true, stored: false });
+    expect(await response.json()).toEqual({ senseId: "significant.statistical", saved: true });
+    await fetch(`${BASE_URL}/api/bank/saved/significant.statistical`, {
+      method: "DELETE",
+      headers: { origin: ORIGIN, cookie },
+    });
   });
 });
