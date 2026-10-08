@@ -24,17 +24,25 @@ const buttonVariants = cva(
       },
       size: {
         // Compact chrome → comfortable forms. Heights come from the control-* tokens.
-        xs: "h-control-xs gap-1 rounded-sm px-2 type-micro has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-control-sm gap-1.5 rounded-sm px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3.5",
+        // The compact sizes (24–28px) grow an invisible 4px hit area on touch screens, so they
+        // stay ≥32px to a finger without looking bigger (DESIGN.md §12).
+        xs: "relative h-control-xs gap-1 rounded-sm px-2 type-micro has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "relative h-control-sm gap-1.5 rounded-sm px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3.5",
         default:
           "h-control-md gap-2 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         lg: "h-control-lg gap-2 px-4.5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
-        "icon-xs": "size-control-xs rounded-sm [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-control-sm rounded-sm",
+        "icon-xs": "relative size-control-xs rounded-sm [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "relative size-control-sm rounded-sm",
         icon: "size-control-md",
         "icon-lg": "size-control-lg",
       },
     },
+    compoundVariants: [
+      {
+        size: ["xs", "sm", "icon-xs", "icon-sm"],
+        className: "pointer-coarse:after:absolute pointer-coarse:after:-inset-1",
+      },
+    ],
     defaultVariants: {
       variant: "default",
       size: "default",
