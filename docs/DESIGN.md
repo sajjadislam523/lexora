@@ -588,7 +588,7 @@ The first thing a visitor sees is the product working, not a sign-up form (UX pr
   4. **Context tool:** "Choose the word that fits the sentence", the interactive gap sentence.
   5. **Closing call to action:** _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
      Sections are separated by hairlines with `py-14 sm:py-20` rhythm, content at `max-w-page`; the hero sits at `max-w-3xl`.
-- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`. Closing it changes nothing.
+- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`, primary on the right from `sm`, and the primary first in keyboard order. Closing it changes nothing.
 - **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and a calm notice ("Saved “term” to your language bank.") appears at the bottom of the viewport for five seconds (`role="status"`).
 
 ### 10.8 Account email
