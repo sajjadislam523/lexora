@@ -38,6 +38,8 @@ jobs:
     env:
       DATABASE_URL: postgres://lexora@localhost:5432/lexora
       BETTER_AUTH_URL: http://localhost:3000
+      # Account email goes to a local folder the tests read; CI never sends real email.
+      EMAIL_TRANSPORT: outbox
 
     steps:
       - uses: actions/checkout@v4
