@@ -55,6 +55,8 @@ export type SearchResult = {
   slug: string;
   /** What the card shows as the term: a headword, a collocation or a pattern. */
   term: string;
+  /** The item the saved sense belongs to (the term may be one of its collocations). */
+  headword: string;
   kind: ItemKind;
   senseLabel?: string;
   definition: string;
@@ -108,6 +110,7 @@ export function resultFrom(
     senseId: summary.senseId,
     slug: summary.slug,
     term: summary.headword,
+    headword: summary.headword,
     kind: summary.kind,
     ...(summary.senseLabel && { senseLabel: summary.senseLabel }),
     definition: summary.definition,

@@ -41,6 +41,10 @@ export type LanguageResultCardProps = {
   href?: string;
   /** Save affordance. Omit `onSaveToggle` to hide the button entirely. */
   saved?: boolean;
+  /** What the save button saves, when it isn't the term ("significant — having a real effect"). */
+  saveLabel?: string;
+  /** Saved state is loading or a change is on its way. */
+  saveBusy?: boolean;
   onSaveToggle?: () => void;
   className?: string;
 };
@@ -65,6 +69,8 @@ export function LanguageResultCard({
   senseLabel,
   href,
   saved = false,
+  saveLabel,
+  saveBusy = false,
   onSaveToggle,
   className,
 }: LanguageResultCardProps) {
@@ -114,10 +120,11 @@ export function LanguageResultCard({
             variant="ghost"
             size="icon-sm"
             aria-pressed={saved}
+            aria-busy={saveBusy}
             aria-label={
               saved
-                ? `Remove "${term}" from your language bank`
-                : `Save "${term}" to your language bank`
+                ? `Saved — remove “${saveLabel ?? term}” from your language bank`
+                : `Save “${saveLabel ?? term}” to your language bank`
             }
             onClick={onSaveToggle}
             className={cn("relative z-10 -mt-1 -mr-1.5", saved && "text-ink hover:text-ink")}

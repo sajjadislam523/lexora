@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { SaveLanguageButton } from "@/components/language/save-language-button";
-import { useViewer } from "@/components/language/saved-language";
+import { useViewer, type SaveTarget } from "@/components/language/saved-language";
 
 /**
  * Back to search: the signed-in Finder for learners, public Explore for visitors.
@@ -24,19 +24,15 @@ export function BackToSearch() {
 }
 
 /**
- * Account actions on a language page. Everyone sees Save (visitors get the save gate). Saving
- * lasts for this browser session until saved language is stored (Phase 3 step 11).
+ * The page's save action. One meaning: a single Save for that sense. Several meanings: each
+ * meaning has its own Save (in its block), so the header only says so — nothing saves a whole
+ * word. Visitors who save see the save gate.
  */
-export function LanguageActions({ slug, term }: { slug: string; term: string }) {
-  const viewer = useViewer();
+export function LanguageActions({ target }: { target?: SaveTarget }) {
+  if (target) return <SaveLanguageButton target={target} />;
   return (
-    <div className="space-y-2">
-      <SaveLanguageButton slug={slug} term={term} />
-      {viewer === "signed-in" ? (
-        <p className="type-caption text-subtle-foreground">
-          Saved for this session only — permanent saving arrives with the language bank.
-        </p>
-      ) : null}
-    </div>
+    <p className="type-caption text-muted-foreground">
+      Each meaning is saved on its own — use Save on the meaning you need.
+    </p>
   );
 }

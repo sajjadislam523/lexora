@@ -1,13 +1,8 @@
-"use client";
-
 import { BookMarked } from "lucide-react";
 import Link from "next/link";
 
-import { useSavedLanguage } from "@/components/language/saved-language";
-
-/** Shows the session-only saved count, so saving elsewhere is visibly reflected here. */
-export function SavedThisSession() {
-  const { count } = useSavedLanguage();
+/** How many meanings the learner has saved — counted in the database on the server. */
+export function SavedLanguageLink({ count }: { count: number }) {
   return (
     <Link
       href="/bank"
@@ -17,7 +12,7 @@ export function SavedThisSession() {
       <span className="min-w-0 flex-1">
         <span className="block type-label text-foreground">Open language bank</span>
         <span className="block type-caption text-muted-foreground">
-          {count} saved this session · not stored yet
+          {count} {count === 1 ? "meaning" : "meanings"} saved
         </span>
       </span>
     </Link>
