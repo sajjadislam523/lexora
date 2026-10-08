@@ -4,7 +4,7 @@
 
 Lexora is a language-retrieval workspace for IELTS Academic candidates. It helps them find the right word, synonym, preposition, linker, collocation, or sentence pattern for what they want to say, then practise it until it comes naturally.
 
-> Status: **Phase 2.1 — Public Discovery Layer.** Anyone can search and read language pages; accounts, sessions and the database are real; the language content is still prototype data. See [docs/ROADMAP.md](docs/ROADMAP.md).
+> Status: **Phase 3 — Language Engine (in progress).** Anyone can search and read the 40 published language pages from PostgreSQL. Learners save meanings, verify their email and reset their password. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 Lexora runs fully without any AI provider.
 
@@ -26,6 +26,8 @@ pnpm dev          # http://localhost:3000
 Open <http://localhost:3000>: the landing page, `/explore` and `/language/*` work without an account. Create an account to reach the app (`/home`, `/finder`, …). `/design-system` is the public design reference.
 
 To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
+
+**Account email in development.** Nothing is sent. With `EMAIL_TRANSPORT="outbox"` (the default outside production, and set in `.env.example`), each verification or password-reset email is written as a JSON file to `.email-outbox/` (git-ignored). Open the newest file and follow the link in it. The same applies to a local `pnpm build && pnpm start`, which needs `EMAIL_TRANSPORT="outbox"` set because production defaults to Resend. The end-to-end tests read the outbox the same way, so CI never sends email.
 
 ## Scripts
 
@@ -56,8 +58,12 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
    | `DATABASE_URL_UNPOOLED` | Neon direct connection string (used for migrations)   |
    | `BETTER_AUTH_SECRET`    | A new random value (`openssl rand -base64 32`)        |
    | `BETTER_AUTH_URL`       | The production URL, e.g. `https://lexora.app` (https) |
+   | `RESEND_API_KEY`        | A Resend API key with sending access only             |
+   | `EMAIL_FROM`            | e.g. `Lexora <account@mail.lexora.app>`               |
 
    Never reuse the development secret. Don't set `AI_PROVIDER` — Lexora doesn't need it.
+
+   **Resend:** add the sending domain in Resend and publish its DNS records (SPF/DKIM) before deploying. Use that domain in `EMAIL_FROM`, and keep click and open tracking off for it (tracking would rewrite the links that carry account tokens). Production refuses to start without `RESEND_API_KEY` and `EMAIL_FROM`; email links are built from `BETTER_AUTH_URL`.
 
 3. **Migrations:** apply them to Neon before the new code goes live:
 

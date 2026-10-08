@@ -468,6 +468,7 @@ The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and t
 ### 10.1 Dashboard (`/home`)
 
 - **Header:** a sample-data badge, "Welcome back", this week's focus, then _Find language_ (outline) and _Start today's practice_ (primary).
+- **Verification reminder:** only while the email is unverified, an info `Callout` under the header: "Verify your email when it suits you", the address the link went to, "Everything in Lexora works in the meantime", and a link to Settings for a new one. It never blocks anything and disappears once the address is verified.
 - **Today's focus:** the single **highlighter panel** on the page. It holds the review count and time, a `ProgressTrack`, _Continue review_, and up to three "needs attention" rows (category dot + reason) on `bg-card/70`.
 - **Continue learning:** `LanguageRow`s with a usage line, not definitions.
 - **Recent mistakes:** `MistakeRow`s, each with a next step (practise, or find alternatives).
@@ -532,7 +533,7 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 
 ---
 
-### 10.5 Authentication screens (`/sign-in`, `/sign-up`)
+### 10.5 Authentication screens (`/sign-in`, `/sign-up`, `/forgot-password`, `/reset-password`, `/verify-email`)
 
 Authentication should be calm and quick, and should look like Lexora rather than a template.
 
@@ -551,7 +552,17 @@ Authentication should be calm and quick, and should look like Lexora rather than
   - Session ended (info)
   - Signed out (success)
   - Account already exists (info, with a _Sign in instead_ link)
-- **No dead ends or fake links:** each screen links to the other and keeps the `next` destination. "Forgot password" only appears once an email provider exists.
+  - Password changed (success: "You’ve been signed out on every device. Sign in with your new password.")
+- **No dead ends or fake links:** each screen links to the other and keeps the `next` destination. Sign-in has a right-aligned _Forgot password?_ link under the password field.
+- **Forgot password:** one email field and _Send reset link_. Every address gets the same answer, a success callout: "If an account exists for … we’ve sent a link … It works for 1 hour." It also offers _try again_ and _Back to sign in_. Only a rate limit or a transport failure shows an error.
+- **Choose a new password** (from the email link): _New password_ (with the sign-up hint) and _Confirm new password_ (`autoComplete="new-password"`, show/hide toggles, "The passwords don’t match"). The page says up front that the learner will be signed out everywhere. An expired, used or missing link replaces the form with a danger callout ("This link can’t be used — reset links work once, for 1 hour") and _Send a new link_.
+- **Verify email** (from the email link): "Verifying your email…" (spinner, `role="status"`), then one of:
+  - _Your email is verified_ (success), with _Continue to Lexora_ for a signed-in browser or _Sign in_ otherwise. Verifying never signs anyone in.
+  - _This link has expired_ / _This link isn’t valid_ (warning), saying the account works as normal, with a way to send a new link.
+  - A temporary failure (danger), with _Try again_.
+
+  Messages always reassure the learner that the account works, and never frame verification as required.
+
 - **Pages without a valid session:** an app URL with no valid session goes to sign-in with the destination remembered, and returns there after signing in.
 
 ### 10.6 Settings (`/settings`)
@@ -560,7 +571,7 @@ A narrow page (`max-w-4xl`) of three sections, divided by hairlines. On `lg` eac
 
 1. **Profile:** the name.
 2. **Learning profile:** target band (`NativeSelect`), test date (`Input type="date"`), and focus (a segmented radio group: Writing / Speaking / Both / Not set).
-3. **Account:** email, member since, and _Sign out_.
+3. **Account:** email, member since, and _Sign out_. Under the email is its verification status: _Verified_ (success text with a check icon, so not colour alone), or "Not verified yet. Lexora works fully either way…" with an outline _Send verification email_ button. Its result appears in a polite status line beside the button: sent (with the address and the 24-hour validity), already verified, rate limited, or not sent.
 
 Each form saves on its own. _Save_ shows a spinner and "Saving…" while pending, then a polite "… saved." status beside the button. Values stay as saved (no form reset), and server validation errors appear inline.
 
@@ -579,6 +590,10 @@ The first thing a visitor sees is the product working, not a sign-up form (UX pr
      Sections are separated by hairlines with `py-14 sm:py-20` rhythm, content at `max-w-page`; the hero sits at `max-w-3xl`.
 - **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`. Closing it changes nothing.
 - **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and a calm notice ("Saved “term” to your language bank.") appears at the bottom of the viewport for five seconds (`role="status"`).
+
+### 10.8 Account email
+
+Verification and password-reset emails (`src/server/email/templates.ts`) are deliberately plain: one card of at most 480px on the canvas colour, the Lexora wordmark, a heading, one sentence, a single charcoal button, how long the link works, the link in full as a fallback, and a muted line on what to do if it wasn't you. Email clients ignore CSS variables, so the templates copy a handful of values from `tokens.css` (canvas, card, border, foreground, muted foreground, primary, ink) into one documented constant, and use system fonts. They never include the account's name or anything else a sign-up form accepted. They contain no marketing and no tracking, and never claim an account is compromised.
 
 ## 11. States checklist
 
