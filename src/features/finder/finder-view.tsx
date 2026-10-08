@@ -4,6 +4,8 @@ import { Info, SearchX, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 
+import { rememberSearch } from "@/lib/last-search";
+
 import { Callout } from "@/components/lexora/callout";
 import { FilterChip } from "@/components/lexora/filter-chip";
 import { Kbd } from "@/components/lexora/kbd";
@@ -293,6 +295,24 @@ function announcement(state: FinderState) {
 }
 
 /**
+ * Announces search results politely. The view remounts for every query, and a live region that
+ * arrives already filled is often not read out, so the region mounts empty and is filled a moment
+ * later.
+ */
+function SearchStatus({ text }: { text: string }) {
+  const [said, setSaid] = useState("");
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSaid(text), 150);
+    return () => window.clearTimeout(timer);
+  }, [text]);
+  return (
+    <p role="status" className="sr-only">
+      {said}
+    </p>
+  );
+}
+
+/**
  * The Language Finder, shared by the signed-in Finder and public Explore. The query lives in the
  * URL (`?q=`) and is searched on the server by the language engine; this view only renders the
  * response. Saving goes through the shared save flow, which shows visitors the save gate.
@@ -326,6 +346,11 @@ export function FinderView({
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  // Lets a language page's "Back to search" return to these results.
+  useEffect(() => {
+    if (query.trim()) rememberSearch(searchHref(basePath, query));
+  }, [basePath, query]);
 
   const run = (value: string) => {
     setText(value);
@@ -417,9 +442,7 @@ export function FinderView({
         </div>
       </div>
 
-      <p role="status" className="sr-only">
-        {pending ? "" : announcement(state)}
-      </p>
+      <SearchStatus text={pending ? "" : announcement(state)} />
 
       <div aria-busy={pending}>
         {pending ? (

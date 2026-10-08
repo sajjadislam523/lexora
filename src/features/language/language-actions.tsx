@@ -5,17 +5,20 @@ import Link from "next/link";
 
 import { SaveLanguageButton } from "@/components/language/save-language-button";
 import { useViewer, type SaveTarget } from "@/components/language/saved-language";
+import { useLastSearch } from "@/lib/last-search";
 
 /**
- * Back to search: the signed-in Finder for learners, public Explore for visitors.
- * The label is the same for both, so nothing shifts once the session check resolves.
+ * Back to search: to the results this tab last showed, or else to search itself — the signed-in
+ * Finder for learners, public Explore for visitors. The label is the same either way, so nothing
+ * shifts once the session check resolves.
  */
 export function BackToSearch() {
   const viewer = useViewer();
+  const lastSearch = useLastSearch();
   return (
     <Link
-      href={viewer === "signed-in" ? "/finder" : "/explore"}
-      className="inline-flex items-center gap-1.5 rounded-sm type-label text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+      href={lastSearch ?? (viewer === "signed-in" ? "/finder" : "/explore")}
+      className="-my-1 inline-flex items-center gap-1.5 rounded-sm py-1 type-label text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
     >
       <ArrowLeft aria-hidden className="size-4" />
       Back to search
