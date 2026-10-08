@@ -96,4 +96,5 @@ Preview deployments need their own `BETTER_AUTH_URL` and ideally their own Neon 
 - [docs/DESIGN.md](docs/DESIGN.md): the design system (visual source of truth)
 - [docs/UX_PRINCIPLES.md](docs/UX_PRINCIPLES.md): product and interaction principles
 - [docs/WORKFLOW.md](docs/WORKFLOW.md): branching, commits, and phase reviews
+- [docs/audits/](docs/audits/): dated project audits, starting with the post-Phase-3 audit (9 October 2026)
 - [CLAUDE.md](CLAUDE.md): working agreement for AI-assisted development
