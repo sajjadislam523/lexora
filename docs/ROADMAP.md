@@ -2,9 +2,44 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current phase: Phase 2.1 — Public Discovery Layer (complete, awaiting review)** · Phase 0 approved (`v0.0.0`) · Phase 1 approved (`v0.1.0`) · Phase 2 approved (PR #6, follow-up PR #7; release tag pending)
+**Current release: `v0.3.0` — Phase 3, Language Engine (complete)** · Next: Phase 4 — Search Depth (scoped, awaiting owner approval) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1`
 
 Legend: ✅ done · 🔜 next · ⬜ not started
+
+---
+
+## Current release
+
+**v0.3.0 — Phase 3: Language Engine**
+
+Phase 3 is complete and released to `main`.
+
+Delivered:
+
+- Structured language content with one YAML file per language item
+- Zod validation and deterministic content import
+- 40 published language items, 42 senses
+- Sense-level saving
+- PostgreSQL language repository
+- AI-free language search
+- Query classification and search-as modes
+- Full-text and trigram matching
+- Conservative typo correction
+- Deterministic ranking with explained results
+- Explore, Finder, landing-page search and command palette integration
+- Database-backed language pages
+- Related language links by sense
+- Email verification and password reset
+- Local development email outbox
+- Responsive and accessibility pass
+- 346 unit/integration tests
+- 117 production-build E2E checks
+
+Production release:
+
+`v0.3.0`
+
+Phase 3 is closed.
 
 ---
 
@@ -46,7 +81,7 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ---
 
-## Phase 2 — Application Foundation ✅ (approved, merged in PR #6)
+## Phase 2 — Application Foundation ✅ (approved, PR #6 and #7, `v0.2.0`)
 
 **Goal:** real users, real persistence, real routing — without changing the product experience.
 
@@ -69,7 +104,7 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ---
 
-## Phase 2.1 — Public Discovery Layer ✅ (awaiting review)
+## Phase 2.1 — Public Discovery Layer ✅ (approved, PR #8, `v0.2.1`)
 
 **Goal:** let visitors experience Lexora before creating an account. Prerequisite for Phase 3: the language engine is built for public pages as well as personal learning.
 
@@ -89,32 +124,192 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ---
 
-## Phase 3 — Language Engine ⬜
+## Phase 3 — Language Engine ✅ (approved, PR #11, `v0.3.0`)
 
-**Goal:** a curated, structured language dataset and the domain model around it.
+**Goal:** a curated, structured language dataset, the domain model around it, and real search on real data (the scope approved in the Phase 3 specification on 7 October 2026, which moved real search here from Phase 4).
 
-- Domain types and Zod schemas: items, patterns, examples, relations, preposition links, mistakes, categories, topics
-- Content source files in `src/content/` with validation and a seed script
-- Initial dataset: high-frequency IELTS vocabulary, synonyms, dependent prepositions, collocations, linkers, sentence patterns, speaking expressions (size to be agreed)
-- Public language detail pages (built in Phase 2.1) read from the database through `LanguageRepository`
-- Vitest set up for domain logic
+- [x] Content model: one YAML file per item in `content/`, senses with stable authored IDs, Zod validation (`pnpm content:check`)
+- [x] Deterministic, rerunnable import (`pnpm content:import`): one transaction, release records, retire-not-delete
+- [x] Wave 1: 40 published items, 42 senses, reviewed in content PRs #9 and #10
+- [x] PostgreSQL language repository and the AI-free `LanguageSearchService`: query classification, full-text and trigram matching, conservative typo correction, deterministic ranking with explained results, a 23-case golden suite
+- [x] Explore, Finder, landing-page search and command palette on the real engine; database-backed, sense-aware language pages
+- [x] Persistent, sense-level saving (`saved_senses`), owned by the learner
+- [x] Email verification and password reset (Better Auth, Resend, local outbox)
+- [x] Responsive and accessibility quality pass
+- Not included: AI, the Language Bank screen, practice, Wave 2 content (see Phase 4 and later)
 
-**Exit criteria:** the dataset is validated in CI, browsable by detail page, and relationships are visible.
+**Exit criteria (met):** the dataset is validated in CI and imported deterministically, browsable by detail page with relationships visible, searchable through one engine on every surface, and learners' saves persist.
 
 ---
 
-## Phase 4 — Language Finder ⬜
+## Phase 4 — Search Depth 🔜
 
-**Goal:** the core retrieval experience, without AI.
+**Status:** Scoped, awaiting owner approval
+**Release:** TBD
 
-- Query parsing (synonym / preposition / intent / general templates)
-- Intent library with trigger phrases ("I want to express contrast")
-- Postgres full-text search + `pg_trgm` fuzzy matching (typo tolerance)
-- Ranking, grouping by category, filters (skill, register, category, topic)
-- Search UI wired up: debounced, keyboard-navigable, empty, no-result, and error states
-- Command palette search integration
+Phase 4 deepens Lexora's retrieval system rather than introducing new learning surfaces.
 
-**Exit criteria:** the example queries in the product brief return relevant, ranked, grouped results.
+The goal is to make Lexora better at helping learners **browse, filter, contextualise and discover language**, while improving search performance and learning which searches the current content does not satisfy.
+
+Phase 4 remains **AI-free**.
+
+### Scope
+
+#### 1. Browse and filters
+
+Add structured browsing and filtering across the language catalogue.
+
+Filters will support:
+
+- Language kind
+  - word
+  - collocation
+  - linker
+  - preposition
+  - sentence pattern
+  - other approved language kinds
+- Function
+  - contrast
+  - cause
+  - result
+  - comparison
+  - emphasis
+  - other approved functions
+- IELTS task
+- Skill
+
+Filters will be represented in URL state so filtered views are shareable and browser-navigation friendly.
+
+#### 2. Richer context-gap analysis
+
+Expand contextual sentence-gap analysis beyond the Phase 3 verb-gap implementation.
+
+Supported gap types will include:
+
+- noun gaps
+- adjective gaps
+- preposition gaps
+- verb gaps
+- multiple gaps within one sentence
+- whole-sentence fit
+
+The search engine must explain why a candidate fits the supplied context.
+
+#### 3. Unmatched-query feedback
+
+Introduce privacy-conscious recording of searches for which the language engine finds no useful result.
+
+If approved, the system will record:
+
+- normalised query text
+- occurrence count
+
+It will not associate unmatched queries with a learner account.
+
+Retention will be time-limited.
+
+A developer/owner report command will expose the data for content planning. No learner-facing admin screen is planned.
+
+#### 4. Search performance and protection
+
+Improve public-search performance and resilience through:
+
+- caching repeated searches
+- cache invalidation after content import
+- light search rate limiting
+
+Search must remain responsive without weakening the deterministic ranking guarantees established in Phase 3.
+
+#### 5. Ranking review
+
+Review ranking using:
+
+- the existing 23 golden cases
+- an expanded golden suite
+- observed aggregate search behaviour when meaningful traffic exists
+
+Early ranking changes should primarily be validated against the expanded deterministic suite because Lexora may not yet have enough real-world usage data for reliable usage-driven tuning.
+
+#### 6. Topics and Wave 2 content
+
+Introduce a topic taxonomy such as:
+
+- environment
+- education
+- technology
+- society
+- health
+- economy
+- other approved IELTS-relevant topics
+
+The topic model must land before Wave 2 content begins so that topics are part of the authored content format rather than retrofitted later.
+
+Wave 2 will grow the catalogue toward approximately 150 items.
+
+Content will continue to be reviewed in owner-approved batches of approximately 20–25 items per content PR.
+
+### Explicitly deferred
+
+Phase 4 does **not** include:
+
+- AI integration
+- Language Bank screen
+- Practice engine
+- Writing analysis
+- Speaking analysis
+- AI-generated explanations
+- AI semantic search
+
+These remain assigned to later phases.
+
+### Proposed Phase 4 sequence
+
+| Step | Work                                                        |
+| ---- | ----------------------------------------------------------- |
+| 0    | Prerequisites, preview isolation and approved specification |
+| 1    | Topics: content format, validation, migration and import    |
+| 2    | Browse/filter queries in the language engine                |
+| 3    | Filters and browse UI on Explore and Finder                 |
+| 4    | Context-gap depth                                           |
+| 5    | Privacy-first unmatched-query feedback                      |
+| 6    | Search caching and rate limiting                            |
+| 7    | Ranking review against expanded golden suite                |
+| 8    | Wave 2 content in reviewed batches                          |
+| 9    | Responsive/accessibility audit and product review           |
+
+Wave 2 content may begin after Step 1 and proceed alongside subsequent implementation work.
+
+### Phase 4 exit criteria
+
+Phase 4 is complete when:
+
+1. Browse and filtering work across the relevant search surfaces.
+2. Filter state is shareable through URLs and works correctly with browser navigation.
+3. Context-gap analysis supports more than verbs and handles whole-sentence fit.
+4. Multiple gaps are supported where specified by the final Phase 4 specification.
+5. Unmatched searches are recorded only if the owner approves the privacy model.
+6. Recorded unmatched queries follow the approved retention policy.
+7. Repeated searches are cached.
+8. Search traffic is protected by the approved rate limit.
+9. Cache invalidation occurs correctly after content import.
+10. Ranking passes the expanded golden suite.
+11. Topics exist in the authored content format and database.
+12. Wave 2 content is owner-reviewed and imported.
+13. Responsive and accessibility checks pass.
+14. Unit/integration, golden-search, build and E2E checks pass.
+15. Product review is complete.
+16. The Phase 4 branch is approved for merge to `main`.
+
+### Phase 4 approval gate
+
+Phase 4 is **not implementation-approved** by this roadmap update.
+
+Before implementation begins:
+
+1. The preview environment must be isolated from Production.
+2. The Phase 4 specification must be reviewed and approved.
+3. The owner must explicitly approve the Phase 4 scope.
+4. Only then may Phase 4 implementation begin.
 
 ---
 
@@ -199,17 +394,19 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ## Open decisions (tracked)
 
-| Decision                     | Needed by             | Status / options                                                        |
-| ---------------------------- | --------------------- | ----------------------------------------------------------------------- |
-| Typography pairing           | —                     | ✅ Inter + Newsreader (serif for language only)                         |
-| Ink accent hue               | —                     | ✅ Muted indigo `#4450A8`                                               |
-| Interface spelling           | —                     | ✅ British English; American spellings recognised as variants           |
-| Auth library                 | —                     | ✅ Better Auth, email + password                                        |
-| ORM                          | —                     | ✅ Drizzle                                                              |
-| Hosting & DB provider        | —                     | ✅ Vercel + Neon (Docker Postgres locally)                              |
-| Email provider               | Phase 3               | ✅ Resend, behind an `EmailSender` abstraction                          |
-| Google OAuth                 | When wanted           | Configure `socialProviders.google`; no schema change                    |
-| Vercel preview deployments   | Before using previews | Per-preview `BETTER_AUTH_URL` and a separate Neon branch per preview    |
-| Content sourcing & licensing | Phase 3               | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept |
-| SRS algorithm                | Phase 5               | FSRS (proposed) / SM-2                                                  |
-| Dark mode timing             | Any                   | Phase 10 (current plan)                                                 |
+| Decision                      | Needed by                     | Status / options                                                                                          |
+| ----------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Typography pairing            | —                             | ✅ Inter + Newsreader (serif for language only)                                                           |
+| Ink accent hue                | —                             | ✅ Muted indigo `#4450A8`                                                                                 |
+| Interface spelling            | —                             | ✅ British English; American spellings recognised as variants                                             |
+| Auth library                  | —                             | ✅ Better Auth, email + password                                                                          |
+| ORM                           | —                             | ✅ Drizzle                                                                                                |
+| Hosting & DB provider         | —                             | ✅ Vercel + Neon (Docker Postgres locally)                                                                |
+| Email provider                | Phase 3                       | ✅ Resend, behind an `EmailSender` abstraction                                                            |
+| Google OAuth                  | When wanted                   | Configure `socialProviders.google`; no schema change                                                      |
+| Vercel preview deployments    | Before Phase 4 implementation | Isolate Preview from Production: own Neon branch and settings; decide preview sign-in (`BETTER_AUTH_URL`) |
+| Unmatched-query privacy model | Phase 4 specification         | Proposed: normalised query and count only, no account link, time-limited retention                        |
+| Topic taxonomy                | Phase 4 step 1                | Proposed IELTS topics (environment, education, technology, society, health, economy, …)                   |
+| Content sourcing & licensing  | Phase 3                       | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept                                   |
+| SRS algorithm                 | Phase 5                       | FSRS (proposed) / SM-2                                                                                    |
+| Dark mode timing              | Any                           | Phase 10 (current plan)                                                                                   |
