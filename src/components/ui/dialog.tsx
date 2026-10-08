@@ -5,6 +5,7 @@ import { cn } from "cn";
 import { Dialog as DialogPrimitive } from "radix-ui";
 
 import { Button } from "@/components/ui/button";
+import { useReturnFocus } from "@/components/ui/use-return-focus";
 import { XIcon } from "lucide-react";
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
@@ -47,6 +48,7 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
 }) {
+  const focusHandlers = useReturnFocus(props);
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -57,6 +59,7 @@ function DialogContent({
           className,
         )}
         {...props}
+        {...focusHandlers}
       >
         {children}
         {showCloseButton && (

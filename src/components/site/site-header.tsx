@@ -77,6 +77,8 @@ export function SiteHeader() {
             size="icon-sm"
             className="md:hidden"
             aria-label="Open menu"
+            aria-haspopup="dialog"
+            aria-expanded={menuOpen}
             onClick={() => setMenuOpen(true)}
           >
             <Menu />

@@ -43,7 +43,7 @@ export function CommandPalette() {
       description="Jump to a page or run an action"
       className="sm:max-w-xl"
     >
-      <Command>
+      <Command label="Jump to a page or search for language">
         <CommandInput
           placeholder="Jump to a page, or search for language…"
           value={typed}
