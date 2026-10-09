@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 
 import { SavedLanguageProvider } from "@/components/language/saved-language";
+import { SiteAnalytics } from "@/components/site/analytics";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { SITE_URL } from "@/server/site-url";
 
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,10 +50,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body suppressHydrationWarning>
         <TooltipProvider delayDuration={300}>
           {/* Shared by public and signed-in pages, so saved state survives moving between them. */}
-          <SavedLanguageProvider>
-            {children} <Analytics />
-          </SavedLanguageProvider>
+          <SavedLanguageProvider>{children}</SavedLanguageProvider>
         </TooltipProvider>
+        {/* Aggregate page views only; search text and link tokens are removed before sending. */}
+        <SiteAnalytics />
       </body>
     </html>
   );
