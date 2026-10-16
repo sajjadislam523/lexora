@@ -43,7 +43,8 @@ export const auth = betterAuth({
   appName: "Lexora",
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
-  trustedOrigins: [env.BETTER_AUTH_URL],
+  // The app URL, plus the branch URL on Vercel Preview — from configuration, never a request.
+  trustedOrigins: env.APP_ORIGINS,
   database: drizzleAdapter(db, { provider: "pg", schema, usePlural: true }),
 
   emailAndPassword: {

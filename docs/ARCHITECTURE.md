@@ -207,15 +207,26 @@ Validated by Zod in `src/server/env.ts` (server-only) on first use; errors name 
 | `DATABASE_URL`          | Always                                     | Local Docker URL in development; Neon **pooled** URL in production     |
 | `DATABASE_URL_UNPOOLED` | Production (Neon)                          | Direct URL, used only by migrations; falls back to `DATABASE_URL`      |
 | `BETTER_AUTH_SECRET`    | Always                                     | ≥ 32 random characters; unique per environment; rotate by redeploying  |
-| `BETTER_AUTH_URL`       | Production                                 | Public app URL; must be https (http allowed only for localhost)        |
+| `BETTER_AUTH_URL`       | Production                                 | Production/local app URL; https in production; ignored on Preview      |
 | `EMAIL_TRANSPORT`       | No                                         | `resend` (production default) or `outbox` (default elsewhere)          |
 | `RESEND_API_KEY`        | When the transport is `resend`             | Resend API key (sending access only); never logged                     |
 | `EMAIL_FROM`            | When the transport is `resend`             | Sender on a domain verified in Resend, e.g. `Lexora <account@…>`       |
 | `EMAIL_OUTBOX_DIR`      | No                                         | Outbox folder, default `.email-outbox` (git-ignored)                   |
+| `VERCEL_ENV`            | Set by Vercel                              | `preview` switches to Vercel's own addresses (`app-url.ts`)            |
+| `VERCEL_BRANCH_URL`     | Set by Vercel (Preview)                    | Branch hostname: the app URL on Preview                                |
+| `VERCEL_URL`            | Set by Vercel (Preview)                    | Deployment hostname: also trusted on Preview                           |
 | `AI_PROVIDER`           | No                                         | `none` (default) — the optional Phase 9 boundary; nothing reads it yet |
 | `AI_API_KEY`            | Only if `AI_PROVIDER` is a hosted provider | Never needed to run Lexora                                             |
 
 No variable uses the `NEXT_PUBLIC_` prefix; nothing secret can reach the browser bundle. Development uses `.env.local` (git-ignored); production values live in Vercel's environment settings (Neon's Vercel integration provides both database URLs).
+
+**Environments.** Each environment has its own database and auth secret, and they never share one:
+
+- **Local:** Docker PostgreSQL; `BETTER_AUTH_URL=http://localhost:3000` in `.env.local`.
+- **Preview (Vercel):** a dedicated Neon `preview` branch through Preview-only `DATABASE_URL` and `DATABASE_URL_UNPOOLED`, and its own `BETTER_AUTH_SECRET`. The Neon integration is connected to Production only. The app URL comes from Vercel's system variables (`VERCEL_BRANCH_URL`, else `VERCEL_URL`) when `VERCEL_ENV=preview`, and both addresses are trusted, so sign-in works on every preview; `BETTER_AUTH_URL` is ignored there. Email uses the Resend test sender, which only reaches the account owner. Previews stay behind Vercel's Deployment Protection.
+- **Production (Vercel):** the production Neon database through Production-only `DATABASE_URL` and `DATABASE_URL_UNPOOLED`, its own `BETTER_AUTH_SECRET`, and the explicit `BETTER_AUTH_URL`. Production never derives its URL from Vercel's addresses.
+
+The URL rules live in `src/server/app-url.ts` and read configuration only — never a request's `Host` or `Origin`. "Automatically expose System Environment Variables" must stay enabled in the Vercel project (the default). Lexora uses the open-source Better Auth library only, not Better Auth Infrastructure: `BETTER_AUTH_API_KEY` is neither read nor needed.
 
 ### 4.7 Security model
 
@@ -475,3 +486,4 @@ interface ExplanationProvider {
 | 57  | 2026-10-08 | `e2e/accessibility.e2e.ts` checks the HTML of every public and personal page (one h1, named controls, labelled fields, unique ids, labelled landmarks); layout overflow, focus visibility and keyboard behaviour are verified in the browser at each release step                                                           | Catches structural regressions in CI without adding a browser test framework (decision 37)                                                                                                        |
 | 58  | 2026-10-10 | Dependency `@vercel/analytics` (Vercel Web Analytics) for aggregate page-view and traffic insight; mounted only through `components/site/analytics.tsx`, never directly                                                                                                                                                     | First-party to the existing host, cookieless, aggregate: no user identifiers or profiles; not AI. Trade-off: one more script, and the counts live with Vercel                                     |
 | 59  | 2026-10-10 | Every analytics event passes `beforeSend` → `sanitizeAnalyticsEvent` (`lib/analytics-privacy`): only allowlisted parameters with fixed values survive (`reason`, `step`); `q`, `next` and any new parameter are dropped; the fragment is always dropped                                                                     | Learner search text is private input, and reset and verification tokens sit in the fragment: sanitise the payload, don't rely on aggregation. Pages are counted, searches never                   |
+| 60  | 2026-10-17 | Preview isolation: own Neon branch, own `BETTER_AUTH_SECRET`, Neon integration on Production only. On Preview the app URL comes from Vercel's `VERCEL_BRANCH_URL`/`VERCEL_URL` (`app-url.ts`) and both are trusted origins; elsewhere `BETTER_AUTH_URL`. No Better Auth Infrastructure                                      | Previews must never touch production data or auth, and each preview has its own address. The URL comes from Vercel's configuration, never a request; production never takes the preview path      |
