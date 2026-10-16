@@ -14,6 +14,8 @@ async function checkerFor(env: Record<string, string>) {
   vi.stubEnv("NODE_ENV", "production");
   vi.stubEnv("DATABASE_URL", "postgres://lexora@localhost:5432/lexora");
   vi.stubEnv("BETTER_AUTH_SECRET", "x".repeat(32));
+  // A deployed site sends email with Resend (CI sets EMAIL_TRANSPORT=outbox for the whole job).
+  vi.stubEnv("EMAIL_TRANSPORT", "resend");
   vi.stubEnv("RESEND_API_KEY", "re_test_key");
   vi.stubEnv("EMAIL_FROM", "Lexora <account@lexora.app>");
   vi.stubEnv("BETTER_AUTH_URL", PRODUCTION_URL);
