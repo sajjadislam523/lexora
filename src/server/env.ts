@@ -2,6 +2,8 @@ import "server-only";
 
 import { z } from "zod";
 
+import { resolveAppUrls } from "./app-url";
+
 /**
  * Server environment, validated with Zod on first use.
  * Never import this from client components (enforced by `server-only`).
@@ -17,7 +19,14 @@ export const serverEnvSchema = z
     /** Direct (non-pooled) connection for migrations; defaults to DATABASE_URL. */
     DATABASE_URL_UNPOOLED: z.url({ protocol: /^postgres(ql)?$/ }).optional(),
     BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
+    /** The production (or local) app URL. Ignored on Vercel Preview: see `app-url.ts`. */
     BETTER_AUTH_URL: z.url().optional(),
+    /** Set by Vercel itself (system environment variables): production, preview or development. */
+    VERCEL_ENV: z.string().optional(),
+    /** Set by Vercel: this deployment's hostname, without a scheme. Used on Preview only. */
+    VERCEL_URL: z.string().optional(),
+    /** Set by Vercel: the branch's stable hostname, without a scheme. Used on Preview only. */
+    VERCEL_BRANCH_URL: z.string().optional(),
     /**
      * How account email (verification, password reset) is delivered. `resend` sends real email;
      * `outbox` writes each message to a local folder instead (development, tests, CI). Defaults
@@ -34,15 +43,25 @@ export const serverEnvSchema = z
     AI_API_KEY: z.string().min(1).optional(),
   })
   .superRefine((env, ctx) => {
-    if (env.NODE_ENV === "production" && !env.BETTER_AUTH_URL) {
+    const preview = env.VERCEL_ENV === "preview";
+    const app = resolveAppUrls(env);
+    if (preview && !app) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["VERCEL_URL"],
+        message:
+          "A Vercel preview needs Vercel's system environment variables (VERCEL_URL or VERCEL_BRANCH_URL): enable “Automatically expose System Environment Variables” in the project settings",
+      });
+    }
+    // Production (and anything that isn't a Vercel preview) always names its URL explicitly.
+    if (!preview && env.NODE_ENV === "production" && !env.BETTER_AUTH_URL) {
       ctx.addIssue({
         code: "custom",
         path: ["BETTER_AUTH_URL"],
         message: "BETTER_AUTH_URL is required in production",
       });
     }
-    const insecureRemote =
-      env.BETTER_AUTH_URL?.startsWith("http://") && !LOCAL_URL.test(env.BETTER_AUTH_URL);
+    const insecureRemote = app?.url.startsWith("http://") && !LOCAL_URL.test(app.url);
     if (env.NODE_ENV === "production" && insecureRemote) {
       ctx.addIssue({
         code: "custom",
@@ -67,7 +86,7 @@ export const serverEnvSchema = z
     if (
       env.NODE_ENV === "production" &&
       transport === "outbox" &&
-      !LOCAL_URL.test(env.BETTER_AUTH_URL ?? "")
+      !LOCAL_URL.test(app?.url ?? "")
     ) {
       ctx.addIssue({
         code: "custom",
@@ -86,7 +105,10 @@ export const serverEnvSchema = z
   })
   .transform((env) => ({
     ...env,
-    BETTER_AUTH_URL: env.BETTER_AUTH_URL ?? "http://localhost:3000",
+    // Validated above: a preview without a Vercel address never gets this far.
+    BETTER_AUTH_URL: resolveAppUrls(env)!.url,
+    /** Origins trusted for cookie-authenticated requests: the app URL, plus the branch URL on Preview. */
+    APP_ORIGINS: resolveAppUrls(env)!.origins,
     EMAIL_TRANSPORT:
       env.EMAIL_TRANSPORT ?? (env.NODE_ENV === "production" ? "resend" : ("outbox" as const)),
     EMAIL_FROM: env.EMAIL_FROM ?? "Lexora <account@lexora.test>",

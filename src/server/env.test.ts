@@ -97,3 +97,81 @@ describe("server environment", () => {
     }
   });
 });
+
+describe("app URL by environment", () => {
+  const PRODUCTION_URL = "https://lexora-five-sigma.vercel.app";
+  const deployed = { ...base, ...resend, NODE_ENV: "production" };
+  const previewHosts = {
+    VERCEL_URL: "lexora-abc123-team.vercel.app",
+    VERCEL_BRANCH_URL: "lexora-git-feature-team.vercel.app",
+  };
+
+  it("uses localhost for local development", () => {
+    const env = parseServerEnv({ ...base, NODE_ENV: "development" });
+    expect(env.BETTER_AUTH_URL).toBe("http://localhost:3000");
+    expect(env.APP_ORIGINS).toEqual(["http://localhost:3000"]);
+  });
+
+  it("uses the explicit production URL in production, ignoring Vercel's deployment address", () => {
+    const env = parseServerEnv({
+      ...deployed,
+      VERCEL_ENV: "production",
+      BETTER_AUTH_URL: PRODUCTION_URL,
+      ...previewHosts,
+    });
+    expect(env.BETTER_AUTH_URL).toBe(PRODUCTION_URL);
+    expect(env.APP_ORIGINS).toEqual([PRODUCTION_URL]);
+  });
+
+  it("uses Vercel's addresses on a preview, never the production URL it may share", () => {
+    const env = parseServerEnv({
+      ...deployed,
+      VERCEL_ENV: "preview",
+      BETTER_AUTH_URL: PRODUCTION_URL,
+      ...previewHosts,
+    });
+    expect(env.BETTER_AUTH_URL).toBe("https://lexora-git-feature-team.vercel.app");
+    expect(env.APP_ORIGINS).toEqual([
+      "https://lexora-git-feature-team.vercel.app",
+      "https://lexora-abc123-team.vercel.app",
+    ]);
+    expect(env.APP_ORIGINS).not.toContain(PRODUCTION_URL);
+
+    const deploymentOnly = parseServerEnv({
+      ...deployed,
+      VERCEL_ENV: "preview",
+      VERCEL_URL: previewHosts.VERCEL_URL,
+    });
+    expect(deploymentOnly.BETTER_AUTH_URL).toBe("https://lexora-abc123-team.vercel.app");
+  });
+
+  it("refuses a preview without a usable Vercel address instead of falling back", () => {
+    const preview = { ...deployed, VERCEL_ENV: "preview", BETTER_AUTH_URL: PRODUCTION_URL };
+    expect(() => parseServerEnv(preview)).toThrow(/VERCEL_URL/);
+    for (const host of [
+      "https://lexora.vercel.app",
+      "evil.example/lexora.vercel.app",
+      "lexora.vercel.app:443",
+      "user@evil.example",
+      "",
+    ]) {
+      expect(() => parseServerEnv({ ...preview, VERCEL_URL: host }), host).toThrow(/VERCEL_URL/);
+    }
+  });
+
+  it("never lets production enter preview behaviour", () => {
+    // Vercel's deployment address is present, but production still requires its own URL.
+    expect(() =>
+      parseServerEnv({ ...deployed, VERCEL_ENV: "production", ...previewHosts }),
+    ).toThrow(/BETTER_AUTH_URL/);
+    // Any value other than exactly "preview" is not a preview.
+    expect(
+      parseServerEnv({
+        ...deployed,
+        VERCEL_ENV: "Preview",
+        BETTER_AUTH_URL: PRODUCTION_URL,
+        ...previewHosts,
+      }).APP_ORIGINS,
+    ).toEqual([PRODUCTION_URL]);
+  });
+});

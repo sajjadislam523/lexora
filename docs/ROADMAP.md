@@ -404,7 +404,7 @@ Before implementation begins:
 | Hosting & DB provider         | —                             | ✅ Vercel + Neon (Docker Postgres locally)                                                                |
 | Email provider                | Phase 3                       | ✅ Resend, behind an `EmailSender` abstraction                                                            |
 | Google OAuth                  | When wanted                   | Configure `socialProviders.google`; no schema change                                                      |
-| Vercel preview deployments    | Before Phase 4 implementation | Isolate Preview from Production: own Neon branch and settings; decide preview sign-in (`BETTER_AUTH_URL`) |
+| Vercel preview deployments    | Before Phase 4 implementation | ✅ Separate Neon `preview` branch and auth secret; sign-in uses Vercel's preview addresses (`app-url.ts`) |
 | Unmatched-query privacy model | Phase 4 specification         | Proposed: normalised query and count only, no account link, time-limited retention                        |
 | Topic taxonomy                | Phase 4 step 1                | Proposed IELTS topics (environment, education, technology, society, health, economy, …)                   |
 | Content sourcing & licensing  | Phase 3                       | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept                                   |
