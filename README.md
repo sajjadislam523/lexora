@@ -95,6 +95,8 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 | Preview     | Neon `preview` branch    | Vercel's preview address, set automatically | its own     |
 | Production  | Neon production database | `BETTER_AUTH_URL`                           | its own     |
 
+Git pushes deploy only `main` (`vercel.json`), so Vercel creates no Preview deployments from branches or PRs. The Preview environment stays isolated for a deployment made by hand (`vercel deploy`).
+
 **Preview variables** (Vercel → Environment Variables, Preview only): `DATABASE_URL` and `DATABASE_URL_UNPOOLED` from the Neon `preview` branch, a separate `BETTER_AUTH_SECRET`, and `RESEND_API_KEY` and `EMAIL_FROM` with the Resend test sender (`onboarding@resend.dev`), which only delivers to the Resend account owner. Keep the Neon integration connected to Production only. Don't set `BETTER_AUTH_URL` for Preview; it is ignored there. Migrate and import content into the `preview` branch the same way as production, with that branch's connection strings.
 
 Lexora doesn't use Better Auth Infrastructure. If Better Auth's website asks for `BETTER_AUTH_API_KEY`, it's for that separate hosted product; Lexora neither reads nor needs it.
