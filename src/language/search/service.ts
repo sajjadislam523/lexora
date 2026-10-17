@@ -16,7 +16,7 @@ import { RELATION_GROUPS, RELATION_PHRASE } from "../relations";
 import type { DiscourseFunction, RelationType } from "../schema/vocabulary";
 
 import { classify, type Classification } from "./classify";
-import { frameFit, matchIntent, readGap } from "./match";
+import { frameFit, matchIntent, readGap, showsMistake } from "./match";
 import { RELATION_PRIORITY, rank, type Candidate, type MatchTier } from "./rank";
 import type {
   CollocationHit,
@@ -481,7 +481,8 @@ export class LanguageSearchService {
     const phrase = await this.phraseLookup(base, c, text);
     if (phrase) return phrase;
 
-    const mistakes = await this.repo.findMistakes(text);
+    // The repository finds mistakes containing the words; only those the query shows count.
+    const mistakes = (await this.repo.findMistakes(text)).filter((m) => showsMistake(text, m));
     if (mistakes.length > 0) return this.mistakeLookup(base, c, mistakes);
 
     const outcome = chooseCorrection(text, await this.repo.findTermCandidates(text));
