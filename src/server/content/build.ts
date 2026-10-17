@@ -161,6 +161,7 @@ function buildSense(rows: ContentRows, item: ItemFile, sense: SenseFile, positio
     ieltsTasks: sense.ielts.tasks,
     strength: sense.strength ?? null,
     functions: sense.functions ?? [],
+    topics: sense.topics ?? [],
     bestWhen: sense.best_when,
     avoidWhen: sense.avoid_when ?? null,
     skillNote: sense.skill_note ?? null,

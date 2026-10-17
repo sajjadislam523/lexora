@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { fixtureContent, sense, toFiles, type FixtureContent } from "../../../test/content-fixture";
 
+import { DISCOURSE_FUNCTIONS, TOPICS } from "@/language/schema/vocabulary";
+
 import type { ContentFile } from "./files";
 import { formatIssue, validateContent } from "./validate";
 
@@ -377,6 +379,80 @@ describe("validateContent", () => {
         senses.push({ ...senses[0]!, key: "old", retired: true, replaced_by: "crucial.essential" });
       });
       expect(issues).toEqual([]);
+    });
+  });
+
+  describe("topics and discourse functions (Phase 4)", () => {
+    const withTopics = (topics: unknown) =>
+      issuesAfter((c) => {
+        sense(c, "crucial").topics = topics;
+      });
+
+    it("has exactly the ten approved topics", () => {
+      expect([...TOPICS]).toEqual([
+        "education",
+        "environment",
+        "health",
+        "technology",
+        "work",
+        "economy",
+        "government",
+        "cities",
+        "transport",
+        "society",
+      ]);
+    });
+
+    it.each(TOPICS.map((topic) => [topic]))("accepts the topic %s", (topic) => {
+      expect(withTopics([topic])).toEqual([]);
+    });
+
+    it("accepts no topics (general language) and up to three", () => {
+      expect(issuesAfter(() => {})).toEqual([]);
+      expect(withTopics(["environment", "transport", "cities"])).toEqual([]);
+    });
+
+    it("rejects more than three topics", () => {
+      expect(withTopics(["environment", "transport", "cities", "health"])).toEqual([
+        expect.stringMatching(
+          /crucial\.yaml:\d+ senses\[0\]\.topics: at most 3 topics per meaning/,
+        ),
+      ]);
+    });
+
+    it("rejects a repeated topic instead of silently dropping it", () => {
+      expect(withTopics(["health", "health"])).toEqual([
+        expect.stringMatching(/crucial\.yaml:\d+ senses\[0\]\.topics: must not repeat a topic/),
+      ]);
+    });
+
+    it("rejects an empty list: general language omits the field", () => {
+      expect(withTopics([])).toEqual([
+        expect.stringContaining("senses[0].topics: omit topics for general language"),
+      ]);
+    });
+
+    it("names the file, line and field of an unknown topic", () => {
+      const issues = withTopics(["health", "sport"]);
+      expect(issues).toEqual([
+        expect.stringMatching(/crucial\.yaml:\d+ senses\[0\]\.topics\[1\]:/),
+      ]);
+    });
+
+    it("accepts the four approved discourse functions and still rejects unknown ones", () => {
+      for (const fn of ["comparison", "decrease", "opinion", "hedging"] as const) {
+        expect(DISCOURSE_FUNCTIONS).toContain(fn);
+        expect(
+          issuesAfter((c) => {
+            sense(c, "crucial").functions = [fn];
+          }),
+        ).toEqual([]);
+      }
+      expect(
+        issuesAfter((c) => {
+          sense(c, "crucial").functions = ["persuasion"];
+        }),
+      ).toEqual([expect.stringMatching(/crucial\.yaml:\d+ senses\[0\]\.functions\[0\]:/)]);
     });
   });
 });

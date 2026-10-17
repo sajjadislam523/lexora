@@ -77,16 +77,41 @@ export type IeltsTask = (typeof IELTS_TASKS)[number];
 export const DISCOURSE_FUNCTIONS = [
   "addition",
   "cause",
+  "comparison",
   "concession",
   "contrast",
+  "decrease",
   "emphasis",
   "example",
+  "hedging",
   "importance",
   "increase",
+  "opinion",
   "problem",
   "result",
 ] as const;
 export type DiscourseFunction = (typeof DISCOURSE_FUNCTIONS)[number];
+
+/**
+ * IELTS topics a meaning is commonly used for (Phase 4 decision D4): optional, one to three per
+ * sense. General language that works for every topic ("however") has none.
+ */
+export const TOPICS = [
+  "education",
+  "environment",
+  "health",
+  "technology",
+  "work",
+  "economy",
+  "government",
+  "cities",
+  "transport",
+  "society",
+] as const;
+export type Topic = (typeof TOPICS)[number];
+
+/** At most this many topics per sense: a sense tagged with everything says nothing. */
+export const MAX_TOPICS = 3;
 
 export const LINKER_CONNECTS = ["sentences", "clauses", "both"] as const;
 export type LinkerConnects = (typeof LINKER_CONNECTS)[number];
