@@ -2,8 +2,11 @@
  * The search contract: what LanguageSearchService returns for a query. Content only — the same
  * query gives every visitor the same response; saved state is added in the browser.
  */
+import type { SearchFilters } from "../filters";
 import type { SenseSummary, Span } from "../model";
 import type { ItemKind, Register, Skill } from "../schema/vocabulary";
+
+import type { FilterCounts } from "./repository";
 
 /** The shape of a question, recognised by the ordered patterns in classify.ts. */
 export const QUERY_INTENTS = [
@@ -97,6 +100,26 @@ export type SearchResponse = {
   gap?: { object?: string; preposition?: string };
   /** `fallback`: full-text matches only, labelled as such. `none`: nothing matched. */
   outcome: "results" | "fallback" | "none";
+  /**
+   * Only when filters were applied: the filters, and how many results the search found before
+   * and after them. `before > 0` with `after === 0` means the filters hid every result.
+   */
+  filters?: { applied: SearchFilters; before: number; after: number };
+};
+
+/** Browsing by filters, without a query (`LanguageSearchService.browse`). */
+export type BrowseResponse = {
+  filters: SearchFilters;
+  page: number;
+  pageSize: number;
+  /** Matching senses in total, across pages. */
+  total: number;
+  /** At least 1. */
+  pages: number;
+  /** This page's senses, in browse order. Empty when `page` is past the last page. */
+  items: SenseSummary[];
+  /** Matches per value of each dimension, with the other dimensions' filters applied. */
+  counts: FilterCounts;
 };
 
 /** Builds a result from a sense summary, with the reason it appears. */

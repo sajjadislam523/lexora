@@ -9,7 +9,19 @@
  * 5. Rank with a fixed score tuple (rank.ts).
  * 6. Shape the response: an interpretation line, groups, a fit guide, mistakes, and a reason for
  *    every result.
+ * 7. With filters (Phase 4), keep only the results whose sense matches them. Filters never change
+ *    how a query is read or ranked: the answer is the same, with fewer results.
+ *
+ * Browsing (filters without a query) lists matching senses in a fixed order, filtered in the
+ * repository, page by page.
  */
+import {
+  BROWSE_PAGE_SIZE,
+  hasFilters,
+  matchesFilters,
+  searchFiltersSchema,
+  type SearchFilters,
+} from "../filters";
 import type { SenseSummary } from "../model";
 import { MAX_QUERY_LENGTH, normaliseQuery, words } from "../normalise";
 import { RELATION_GROUPS, RELATION_PHRASE } from "../relations";
@@ -31,6 +43,7 @@ import type {
 import { chooseCorrection } from "./text";
 import {
   resultFrom,
+  type BrowseResponse,
   type FitGuide,
   type GapFit,
   type Modifier,
@@ -74,7 +87,78 @@ const quote = (text: string) => `“${text}”`;
 export class LanguageSearchService {
   constructor(private readonly repo: LanguageSearchRepository) {}
 
-  async search(input: string): Promise<SearchResponse | null> {
+  /**
+   * Searches published language. Without filters the response is exactly the engine's answer.
+   * With filters it is the same answer restricted to results whose sense matches every filter.
+   * Invalid filters throw: callers validate input (src/language/filters.ts) first.
+   */
+  async search(input: string, filters?: SearchFilters): Promise<SearchResponse | null> {
+    const applied = filters === undefined ? undefined : searchFiltersSchema.parse(filters);
+    const response = await this.answer(input);
+    if (!response || !hasFilters(applied)) return response;
+    return this.restrict(response, applied);
+  }
+
+  /** One page of published senses matching the filters (at least one), in browse order. */
+  async browse(filters: SearchFilters, page = 1): Promise<BrowseResponse> {
+    const applied = searchFiltersSchema.parse(filters);
+    if (!hasFilters(applied)) throw new Error("Browsing needs at least one filter");
+    if (!Number.isInteger(page) || page < 1) throw new Error(`Invalid browse page: ${page}`);
+    const [{ senseIds, total }, counts] = await Promise.all([
+      this.repo.browseSenses(applied, {
+        limit: BROWSE_PAGE_SIZE,
+        offset: (page - 1) * BROWSE_PAGE_SIZE,
+      }),
+      this.repo.filterCounts(applied),
+    ]);
+    const summaries = await this.summaries(senseIds);
+    return {
+      filters: applied,
+      page,
+      pageSize: BROWSE_PAGE_SIZE,
+      total,
+      pages: Math.max(1, Math.ceil(total / BROWSE_PAGE_SIZE)),
+      items: senseIds.flatMap((id) => summaries.get(id) ?? []),
+      counts,
+    };
+  }
+
+  /**
+   * Keeps the results, fit-guide rows and mistakes whose sense matches the filters. The reading,
+   * groups, order and verdicts are the engine's; only what doesn't match is left out.
+   */
+  private async restrict(response: SearchResponse, filters: SearchFilters) {
+    const results = response.groups.flatMap((group) => group.results);
+    const mistakeSenses = MISTAKE_SENSES.get(response) ?? [];
+    const facets = new Map(
+      (await this.repo.senseFacets([...results.map((r) => r.senseId), ...mistakeSenses])).map(
+        (f) => [f.senseId, f],
+      ),
+    );
+    const keep = (senseId: string | undefined) => {
+      const f = senseId === undefined ? undefined : facets.get(senseId);
+      return f !== undefined && matchesFilters(f, filters);
+    };
+
+    const groups = response.groups
+      .map((group) => ({ ...group, results: group.results.filter((r) => keep(r.senseId)) }))
+      .filter((group) => group.results.length > 0);
+    const visible = groups.flatMap((group) => group.results);
+    // Guide rows name a result by its term, or for context gaps by its frame (the pattern).
+    const shown = new Set(visible.flatMap((r) => [r.term, ...(r.pattern ? [r.pattern] : [])]));
+    const rows = response.guide?.rows.filter((row) => shown.has(row.term)) ?? [];
+    const { guide: _, ...rest } = response;
+    return {
+      ...rest,
+      groups,
+      ...(response.guide && rows.length > 0 && { guide: { ...response.guide, rows } }),
+      mistakes: response.mistakes.filter((_, index) => keep(mistakeSenses[index])),
+      outcome: visible.length === 0 ? "none" : response.outcome,
+      filters: { applied: filters, before: results.length, after: visible.length },
+    } satisfies SearchResponse;
+  }
+
+  private async answer(input: string): Promise<SearchResponse | null> {
     const query = input.trim().slice(0, MAX_QUERY_LENGTH);
     const normalised = normaliseQuery(query);
     if (!normalised) return null;
@@ -680,14 +764,13 @@ function respond(
   },
 ): SearchResponse {
   const groups = parts.groups.filter((group) => group.results.length > 0);
-  const mistakes = dedupeBy(parts.mistakes ?? [], (m) => m.id).map(
-    ({ wrong, right, explanation }) => ({
-      wrong,
-      right,
-      explanation,
-    }),
-  );
-  return {
+  const hits = dedupeBy(parts.mistakes ?? [], (m) => m.id);
+  const mistakes = hits.map(({ wrong, right, explanation }) => ({
+    wrong,
+    right,
+    explanation,
+  }));
+  const response: SearchResponse = {
     query: base.query,
     normalised: base.normalised,
     interpretation: {
@@ -702,7 +785,18 @@ function respond(
     ...(parts.gap && { gap: parts.gap }),
     outcome: groups.length === 0 ? "none" : (parts.outcome ?? "results"),
   };
+  MISTAKE_SENSES.set(
+    response,
+    hits.map((m) => m.senseId),
+  );
+  return response;
 }
+
+/**
+ * The sense of each mistake in a response, in order, for filtering. Kept beside the response
+ * rather than in it, so the response a visitor receives is unchanged by filters existing.
+ */
+const MISTAKE_SENSES = new WeakMap<SearchResponse, string[]>();
 
 function didYouMean(
   base: { query: string; normalised: string },

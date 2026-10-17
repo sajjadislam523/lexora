@@ -4,9 +4,16 @@ import { and, asc, desc, eq, inArray, or, sql, type SQL } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { LanguageContentRepository } from "@/language/engine";
+import {
+  FILTER_DIMENSIONS,
+  type FilterDimension,
+  type IeltsUse,
+  type SearchFilters,
+} from "@/language/filters";
 import { toGapFrame } from "@/language/search/match";
 import type {
   CollocationHit,
+  FilterCounts,
   FormMatch,
   GapFrame,
   IntentDefinition,
@@ -14,6 +21,7 @@ import type {
   MistakeHit,
   PatternHit,
   RelationHit,
+  SenseFacets,
   SenseRef,
 } from "@/language/search/repository";
 import type { DiscourseFunction, ItemKind, RelationType } from "@/language/schema/vocabulary";
@@ -343,6 +351,92 @@ export class DatabaseLanguageRepository
     return rows.map((row) => row.id);
   }
 
+  // ── Filters and browse (Phase 4) ─────────────────────────────────────────────────────────
+
+  async senseFacets(senseIds: readonly string[]): Promise<SenseFacets[]> {
+    if (senseIds.length === 0) return [];
+    const rows = await this.db
+      .select({
+        senseId: senses.id,
+        kind: languageItems.kind,
+        functions: senses.functions,
+        topics: senses.topics,
+        skills: senses.skills,
+        ieltsTasks: senses.ieltsTasks,
+      })
+      .from(senses)
+      .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+      .where(
+        and(
+          inArray(senses.id, [...new Set(senseIds)]),
+          eq(senses.status, "published"),
+          published(languageItems),
+        ),
+      );
+    return rows;
+  }
+
+  async browseSenses(
+    filters: SearchFilters,
+    page: { limit: number; offset: number },
+  ): Promise<{ senseIds: string[]; total: number }> {
+    const where = and(livePublished(), ...filterConditions(filters));
+    const [rows, [count]] = await Promise.all([
+      this.db
+        .select({ id: senses.id })
+        .from(senses)
+        .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+        .where(where)
+        .orderBy(
+          asc(senses.ieltsRelevance),
+          sql`${languageItems.normalized} collate "C"`,
+          asc(senses.position),
+          asc(senses.id),
+        )
+        .limit(page.limit)
+        .offset(page.offset),
+      this.db
+        .select({ total: sql<number>`count(*)::int` })
+        .from(senses)
+        .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+        .where(where),
+    ]);
+    return { senseIds: rows.map((row) => row.id), total: count?.total ?? 0 };
+  }
+
+  async filterCounts(filters: SearchFilters): Promise<FilterCounts> {
+    // One statement: per dimension, the values of the senses that match the other filters.
+    const others = (dimension: FilterDimension) =>
+      and(livePublished(), ...filterConditions({ ...filters, [dimension]: undefined }));
+    const rows = await this.db.execute<{
+      dimension: FilterDimension;
+      value: string;
+      n: number;
+    }>(sql`
+      select 'kind' as dimension, language_items.kind::text as value, count(*)::int as n
+        from senses join language_items on language_items.id = senses.item_id
+        where ${others("kind")} group by 2
+      union all
+      select 'function', f::text, count(*)::int
+        from senses join language_items on language_items.id = senses.item_id,
+          unnest(senses.functions) f
+        where ${others("function")} group by 2
+      union all
+      select 'use', u, count(*)::int
+        from senses join language_items on language_items.id = senses.item_id,
+          unnest(senses.skills::text[] || senses.ielts_tasks::text[]) u
+        where ${others("use")} group by 2
+      union all
+      select 'topic', t::text, count(*)::int
+        from senses join language_items on language_items.id = senses.item_id,
+          unnest(senses.topics) t
+        where ${others("topic")} group by 2
+    `);
+    const counts: FilterCounts = { kind: {}, function: {}, use: {}, topic: {} };
+    for (const row of rows) counts[row.dimension][row.value] = row.n;
+    return counts;
+  }
+
   private async patternsWhere(condition: SQL): Promise<PatternHit[]> {
     const rows = await this.db
       .select({ pattern: prepositionPatterns })
@@ -650,6 +744,34 @@ export class DatabaseLanguageRepository
 
 function published(table: typeof languageItems) {
   return eq(table.status, "published");
+}
+
+/** Published senses of published items: the rows browsing and counting start from. */
+function livePublished() {
+  return and(eq(senses.status, "published"), published(languageItems));
+}
+
+/**
+ * SQL conditions for validated filters (src/language/filters.ts). Values are bound parameters;
+ * the column a value is compared with is fixed by its dimension.
+ */
+function filterConditions(filters: SearchFilters): SQL[] {
+  const conditions: SQL[] = [];
+  for (const dimension of FILTER_DIMENSIONS) {
+    const value = filters[dimension];
+    if (value === undefined) continue;
+    if (dimension === "kind") conditions.push(sql`${languageItems.kind} = ${value}`);
+    if (dimension === "function") conditions.push(sql`${value} = any(${senses.functions})`);
+    if (dimension === "topic") conditions.push(sql`${value} = any(${senses.topics})`);
+    if (dimension === "use") conditions.push(ieltsUseCondition(value as IeltsUse));
+  }
+  return conditions;
+}
+
+function ieltsUseCondition(use: IeltsUse): SQL {
+  return use === "writing" || use === "speaking"
+    ? sql`${use} = any(${senses.skills})`
+    : sql`${use} = any(${senses.ieltsTasks})`;
 }
 
 function escapeLike(text: string) {

@@ -4,10 +4,19 @@
  * (published only) and uses pg_trgm-style similarity for typo candidates.
  * Test infrastructure only; the golden suite runs against the real database repository.
  */
+import {
+  FILTER_DIMENSIONS,
+  FILTER_VALUES,
+  matchesFilters,
+  matchesUse,
+  type FilterFacets,
+  type SearchFilters,
+} from "@/language/filters";
 import type { FramePart, SenseSummary } from "@/language/model";
 import { toGapFrame } from "@/language/search/match";
 import type {
   CollocationHit,
+  FilterCounts,
   FormMatch,
   GapFrame,
   IntentDefinition,
@@ -15,6 +24,7 @@ import type {
   MistakeHit,
   PatternHit,
   RelationHit,
+  SenseFacets,
   SenseRef,
 } from "@/language/search/repository";
 import { trigramSimilarity } from "@/language/search/text";
@@ -270,6 +280,75 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
       });
   }
 
+  // ── Filters and browse: the same rules as the database repository ──────────────────────
+
+  private liveFacets(): (SenseFacets & {
+    relevance: number;
+    headword: string;
+    position: number;
+  })[] {
+    return this.rows.senses
+      .filter((sense) => this.isLiveSense(sense.id))
+      .map((sense) => {
+        const item = this.items.find((i) => i.id === sense.itemId)!;
+        return {
+          senseId: sense.id,
+          kind: item.kind,
+          functions: sense.functions ?? [],
+          topics: sense.topics ?? [],
+          skills: sense.skills,
+          ieltsTasks: sense.ieltsTasks,
+          relevance: RELEVANCE_ORDER[sense.ieltsRelevance],
+          headword: item.normalized,
+          position: sense.position,
+        };
+      });
+  }
+
+  async senseFacets(senseIds: readonly string[]): Promise<SenseFacets[]> {
+    const wanted = new Set(senseIds);
+    return this.liveFacets()
+      .filter((facets) => wanted.has(facets.senseId))
+      .map(({ senseId, kind, functions, topics, skills, ieltsTasks }) => ({
+        senseId,
+        kind,
+        functions,
+        topics,
+        skills,
+        ieltsTasks,
+      }));
+  }
+
+  async browseSenses(filters: SearchFilters, page: { limit: number; offset: number }) {
+    const matching = this.liveFacets()
+      .filter((facets) => matchesFilters(facets, filters))
+      .sort(
+        (a, b) =>
+          a.relevance - b.relevance ||
+          byCodePoint(a.headword, b.headword) ||
+          a.position - b.position ||
+          byCodePoint(a.senseId, b.senseId),
+      );
+    return {
+      senseIds: matching.slice(page.offset, page.offset + page.limit).map((f) => f.senseId),
+      total: matching.length,
+    };
+  }
+
+  async filterCounts(filters: SearchFilters): Promise<FilterCounts> {
+    const counts: FilterCounts = { kind: {}, function: {}, use: {}, topic: {} };
+    const live = this.liveFacets();
+    for (const dimension of FILTER_DIMENSIONS) {
+      const others = { ...filters, [dimension]: undefined };
+      const pool = live.filter((facets) => matchesFilters(facets, others));
+      for (const value of FILTER_VALUES[dimension]) {
+        const n = pool.filter((facets) => hasValue(facets, dimension, value)).length;
+        if (n > 0) counts[dimension][value] = n;
+      }
+    }
+    return counts;
+  }
+
   async fullText(normalised: string) {
     const words = normalised.split(" ").filter((w) => w.length > 3);
     return this.rows.senses
@@ -279,8 +358,21 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
   }
 }
 
+/** The database enum order of `ielts_relevance`. */
+const RELEVANCE_ORDER = { core: 0, high: 1, useful: 2 } as const;
+
+/** Code-point order, like PostgreSQL's `collate "C"`. */
+const byCodePoint = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
 function similar(terms: string[], normalised: string) {
   return [...new Set(terms)]
     .filter((term) => trigramSimilarity(term, normalised) >= SIMILARITY)
     .sort();
+}
+
+function hasValue(facets: FilterFacets, dimension: keyof SearchFilters, value: string) {
+  if (dimension === "kind") return facets.kind === value;
+  if (dimension === "function") return (facets.functions as readonly string[]).includes(value);
+  if (dimension === "topic") return (facets.topics as readonly string[]).includes(value);
+  return matchesUse(facets, value as Parameters<typeof matchesUse>[1]);
 }
