@@ -1,6 +1,7 @@
 "use client";
 
 import { Info, SearchX, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 
@@ -22,14 +23,17 @@ import {
   FEATURED_SEARCHES,
   SEARCH_MODES,
   modeForResponse,
-  searchHref,
   type ExampleSearch,
   type SearchMode,
 } from "@/language/examples";
-import type { SearchResponse } from "@/language/search/types";
+import { finderHref, hasFilters, type FinderState as FinderUrlState } from "@/language/filters";
+import type { FilterCounts } from "@/language/search/repository";
+import type { BrowseResponse, SearchResponse } from "@/language/search/types";
 import type { DiscoveryShowcase } from "@/language/showcase";
 
+import { BrowseList } from "./browse-list";
 import { ContextTool } from "./context-tool";
+import { FilterBar, FilterCaption } from "./filter-bar";
 import { FitGuide } from "./fit-guide";
 
 function ExampleSearches({
@@ -202,6 +206,32 @@ function NoMatch({ text, onRun }: { text: string; onRun: (text: string) => void 
   );
 }
 
+/** The search found results, but the filters hide all of them: say so, with the way back. */
+function FilteredOut({ response, allHref }: { response: SearchResponse; allHref: string }) {
+  const before = response.filters?.before ?? 0;
+  return (
+    <div className="flex flex-col items-center rounded-lg border border-dashed border-border-strong px-6 py-12 text-center">
+      <span className="mb-3 flex size-9 items-center justify-center rounded-md bg-muted text-muted-foreground">
+        <SearchX aria-hidden className="size-4.5" />
+      </span>
+      <h2 className="type-subheading text-foreground">
+        Your search found {before} {before === 1 ? "result" : "results"}, but none match these
+        filters
+      </h2>
+      <p className="mt-1 max-w-md type-body text-muted-foreground">
+        {response.interpretation.summary}. Remove a filter above, or show every result.
+      </p>
+      <Link
+        href={allHref}
+        scroll={false}
+        className="mt-4 rounded-xs type-label text-foreground underline underline-offset-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Show all {before} {before === 1 ? "result" : "results"}
+      </Link>
+    </div>
+  );
+}
+
 function SearchError({ onRetry }: { onRetry: () => void }) {
   return (
     <Callout tone="danger" title="Search isn’t available right now" role="alert">
@@ -268,16 +298,33 @@ function Intro({ showcase }: { showcase: DiscoveryShowcase }) {
   );
 }
 
-/** What the server found for the URL's query. */
+/** The caption's result state: "3 of 6 results", "12 meanings". */
+function filterSummary(state: FinderState) {
+  if (state.kind === "browse") {
+    const { total } = state.response;
+    return `${total} ${total === 1 ? "meaning" : "meanings"}`;
+  }
+  if (state.kind !== "results" || !state.response.filters) return undefined;
+  const { before, after } = state.response.filters;
+  return `${after} of ${before} ${before === 1 ? "result" : "results"}`;
+}
+
+/** What the server found for the URL: a search, a browse, or the introduction. */
 export type FinderState =
-  | { kind: "intro"; showcase: DiscoveryShowcase }
+  | { kind: "intro"; showcase: DiscoveryShowcase; counts: FilterCounts }
   | { kind: "results"; response: SearchResponse }
+  | { kind: "browse"; response: BrowseResponse }
   | { kind: "error" };
+
+/** The search filters hid every result the query found. */
+const filteredOut = (response: SearchResponse) =>
+  response.filters !== undefined && response.filters.before > 0 && response.filters.after === 0;
 
 export type FinderViewProps = {
   /** Where searches live: `/finder` inside the app, `/explore` for everyone. */
   basePath: "/finder" | "/explore";
-  query: string;
+  /** The canonical URL state: query, filters and browse page. */
+  url: FinderUrlState;
   state: FinderState;
   eyebrow: string;
   title: string;
@@ -287,7 +334,15 @@ export type FinderViewProps = {
 function announcement(state: FinderState) {
   if (state.kind === "error") return "Search isn’t available right now.";
   if (state.kind === "intro") return "";
+  if (state.kind === "browse") {
+    const { total, page, pages } = state.response;
+    if (total === 0) return "No language matches these filters yet.";
+    return `${total} ${total === 1 ? "meaning matches" : "meanings match"} these filters${pages > 1 ? `, page ${page} of ${pages}` : ""}.`;
+  }
   const { response } = state;
+  if (filteredOut(response)) {
+    return `Your search found ${response.filters!.before} results, but none match these filters.`;
+  }
   const count = response.groups.reduce((total, group) => total + group.results.length, 0);
   if (response.didYouMean) return response.interpretation.summary;
   if (count === 0) return `Nothing matches “${response.query}” yet.`;
@@ -317,15 +372,10 @@ function SearchStatus({ text }: { text: string }) {
  * URL (`?q=`) and is searched on the server by the language engine; this view only renders the
  * response. Saving goes through the shared save flow, which shows visitors the save gate.
  */
-export function FinderView({
-  basePath,
-  query,
-  state,
-  eyebrow,
-  title,
-  description,
-}: FinderViewProps) {
+export function FinderView({ basePath, url, state, eyebrow, title, description }: FinderViewProps) {
   const router = useRouter();
+  const query = url.q;
+  const href = finderHref(basePath, url);
   const inputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState(query);
   const [pending, startTransition] = useTransition();
@@ -347,20 +397,25 @@ export function FinderView({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Lets a language page's "Back to search" return to these results.
+  // Lets a language page's "Back to search" return to these results (or this browse page).
   useEffect(() => {
-    if (query.trim()) rememberSearch(searchHref(basePath, query));
-  }, [basePath, query]);
+    if (query || hasFilters(url.filters)) rememberSearch(href);
+  }, [href, query, url.filters]);
 
+  // A new query keeps the filters and starts again from the first page.
   const run = (value: string) => {
     setText(value);
-    startTransition(() => router.push(searchHref(basePath, value)));
+    const next = finderHref(basePath, { q: value.trim(), filters: url.filters, page: 1 });
+    startTransition(() => router.push(next));
   };
   const clear = () => {
     setText("");
-    startTransition(() => router.push(basePath));
+    const next = finderHref(basePath, { q: "", filters: url.filters, page: 1 });
+    startTransition(() => router.push(next));
     inputRef.current?.focus();
   };
+  // Filter changes keep the scroll position and focus on the control that changed.
+  const navigate = (next: string) => startTransition(() => router.push(next, { scroll: false }));
   const activeMode = SEARCH_MODES.find((m) => m.id === mode);
   const suggestions = mode ? EXAMPLE_SEARCHES.filter((q) => q.mode === mode) : FEATURED_SEARCHES;
 
@@ -440,6 +495,22 @@ export function FinderView({
             appears.
           </p>
         </div>
+
+        <div className="space-y-2 border-t border-border-subtle pt-4">
+          <FilterBar
+            basePath={basePath}
+            url={url}
+            counts={
+              state.kind === "intro"
+                ? state.counts
+                : state.kind === "browse"
+                  ? state.response.counts
+                  : undefined
+            }
+            onNavigate={navigate}
+          />
+          <FilterCaption basePath={basePath} url={url} summary={filterSummary(state)} />
+        </div>
       </div>
 
       <SearchStatus text={pending ? "" : announcement(state)} />
@@ -451,6 +522,13 @@ export function FinderView({
           <SearchError onRetry={() => startTransition(() => router.refresh())} />
         ) : state.kind === "intro" ? (
           <Intro showcase={state.showcase} />
+        ) : state.kind === "browse" ? (
+          <BrowseList basePath={basePath} url={url} response={state.response} />
+        ) : filteredOut(state.response) ? (
+          <FilteredOut
+            response={state.response}
+            allHref={finderHref(basePath, { q: query, filters: {}, page: 1 })}
+          />
         ) : state.response.didYouMean ? (
           <DidYouMean response={state.response} onRun={run} />
         ) : state.response.outcome === "none" ? (
