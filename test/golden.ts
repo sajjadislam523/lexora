@@ -57,3 +57,50 @@ export async function checkGolden(service: LanguageSearchService, golden: Golden
   }
   return r;
 }
+
+/**
+ * The ranking snapshot (test/search-snapshot.txt): for every golden query and example search, how
+ * the engine read it and every result in order, by authored ID (sense, collocation or pattern),
+ * so any change in reading, grouping or order shows up as a reviewable diff. Update it with
+ * `pnpm vitest run -u` and explain every changed line in the PR.
+ *
+ * Full-text fallback lists are recorded as present or absent only: they come from ts_rank,
+ * which the in-memory repository only approximates, and both runs share this one file.
+ */
+export function snapshotQueries(examples: readonly string[]) {
+  return [...new Set([...GOLDEN_CASES.map((golden) => golden.query), ...examples])];
+}
+
+export async function rankingSnapshot(service: LanguageSearchService, queries: readonly string[]) {
+  const blocks: string[] = [];
+  for (const query of queries) {
+    const r = await service.search(query);
+    if (!r) {
+      blocks.push(`## ${JSON.stringify(query)}\nnull`);
+      continue;
+    }
+    const term = r.interpretation.term;
+    const head = [
+      r.interpretation.intent,
+      r.outcome,
+      term && `${term.via} → ${term.resolved}`,
+      r.didYouMean && `did you mean ${r.didYouMean.join(" | ")}`,
+      r.guide && `guide ${r.guide.rows.length}`,
+    ].filter(Boolean);
+    const lines = [`## ${JSON.stringify(query)}`, head.join(" · ")];
+    if (r.outcome === "fallback") {
+      const count = r.groups.reduce((total, group) => total + group.results.length, 0);
+      lines.push(`fallback results: ${count > 0 ? "some" : "none"} (list not snapshotted)`);
+    } else {
+      for (const group of r.groups) {
+        const keys = group.results.map((result) =>
+          result.fit ? `${result.key} (${result.fit})` : result.key,
+        );
+        lines.push(`[${group.label ?? ""}] ${keys.join(", ")}`);
+      }
+    }
+    for (const mistake of r.mistakes) lines.push(`mistake: ${mistake.wrong}`);
+    blocks.push(lines.join("\n"));
+  }
+  return `${blocks.join("\n\n")}\n`;
+}

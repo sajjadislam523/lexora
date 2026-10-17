@@ -4,7 +4,7 @@ import { EXAMPLE_SEARCHES } from "@/language/examples";
 import { LanguageSearchService } from "@/language/search/service";
 import { buildRows } from "@/server/content/build";
 
-import { checkGolden, GOLDEN_CASES } from "./golden";
+import { checkGolden, GOLDEN_CASES, rankingSnapshot, snapshotQueries } from "./golden";
 import { MemoryLanguageRepository } from "./memory-language-repository";
 import { loadPublishedContent } from "./published-content";
 
@@ -24,6 +24,13 @@ describe("golden search suite (in memory)", () => {
       await checkGolden(service, golden);
     },
   );
+
+  it("matches the ranking snapshot", async () => {
+    const queries = snapshotQueries(EXAMPLE_SEARCHES.map((example) => example.text));
+    await expect(await rankingSnapshot(service, queries)).toMatchFileSnapshot(
+      "./search-snapshot.txt",
+    );
+  });
 
   it.each(EXAMPLE_SEARCHES.map((example) => [example.text] as const))(
     "example search %j finds real results",

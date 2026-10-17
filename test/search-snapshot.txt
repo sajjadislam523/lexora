@@ -1,0 +1,359 @@
+## "better word for important"
+SYNONYM · results · exact → important · guide 4
+[] significant.notable, crucial.essential, essential.necessary, fundamental.basic
+
+## "stronger word for important"
+STRONGER_ALTERNATIVE · results · exact → important · guide 2
+[] crucial.essential, essential.necessary
+
+## "preposition after responsible"
+PREPOSITION · results · exact → responsible
+[] responsible-for.duty:for, responsible-for.duty:to
+mistake: responsible of
+
+## "responsable for"
+LOOKUP · results · typo → responsible for
+[] responsible-for.duty
+
+## "collocations with significant"
+COLLOCATION · results · exact → significant
+[] significant.notable:increase, significant.notable:impact, significant.notable:difference, significant.notable:role, significant.notable:proportion
+
+## "alternative to however"
+ALTERNATIVE · results · exact → however · guide 4
+[] in-contrast.difference, on-the-other-hand.other-side, whereas.contrast, nevertheless.concession
+
+## "better linker for contrast"
+LINKER · results · guide 5
+[Between sentences] however.contrast, in-contrast.difference, on-the-other-hand.other-side
+[Within one sentence] whereas.contrast
+[Conceding a point] nevertheless.concession
+
+## "natural speaking alternative to furthermore"
+ALTERNATIVE · results · exact → furthermore · guide 2
+[] on-top-of-that.addition, whats-more.addition
+
+## "I want to say something increased a lot"
+CONTEXTUAL_EXPRESSION · results · guide 4
+[With a verb] rise-sharply.increase
+[With a noun phrase] significant.notable, substantial.large
+[Describing the size] considerable.large
+
+## "I want to say this caused a serious problem"
+CONTEXTUAL_EXPRESSION · results · guide 5
+[Harm happening now] have-a-detrimental-effect-on.harm, give-rise-to.cause, result-in.cause
+[Possible harm] pose-a-threat.danger
+[Introducing the problem] there-is-growing-concern-about.problem
+
+## "Governments should ____ more money into public transportation"
+CONTEXT_GAP · results · guide 3
+[Fits this sentence] invest.money:gap (fits), allocate.distribute:gap (different_preposition)
+[Doesn't fit this sentence] devote.give:gap (unlikely)
+
+## "analyze"
+LOOKUP · results · variant → analyse
+[] analyse.examine
+
+## "signifcant"
+LOOKUP · results · typo → significant · guide 5
+[] significant.notable, significant.statistical
+[Similar meaning] important.main, considerable.large, substantial.large
+[Stronger] crucial.essential
+[Alternatives] rise-sharply.increase
+
+## "furthermoe"
+LOOKUP · results · typo → furthermore · guide 3
+[] furthermore.addition
+[Similar meaning] moreover.addition
+[More natural] on-top-of-that.addition, whats-more.addition
+
+## "important"
+LOOKUP · results · exact → important · guide 4
+[] important.main
+[Similar meaning] significant.notable
+[Stronger] crucial.essential, essential.necessary
+[Alternatives] fundamental.basic
+
+## "I want to express contrast"
+CONTEXTUAL_EXPRESSION · results · guide 5
+[Between sentences] however.contrast, in-contrast.difference, on-the-other-hand.other-side
+[Within one sentence] whereas.contrast
+[Conceding a point] nevertheless.concession
+
+## "responsible of"
+LOOKUP · results
+[] responsible-for.duty
+mistake: responsible of
+
+## "Governments should ___ more money to public transport"
+CONTEXT_GAP · results · guide 3
+[Fits this sentence] allocate.distribute:gap (fits), invest.money:gap (different_preposition)
+[Doesn't fit this sentence] devote.give:gap (unlikely)
+
+## "phrase for giving an example"
+PHRASE · results · guide 3
+[Introducing examples] for-instance.example, such-as.example
+[One strong example] a-case-in-point.example
+
+## "preposition after depend"
+PREPOSITION · results · exact → depend
+[] depend-on.rely:on, depend-on.vary:on
+mistake: Many families depend of one income.
+
+## "rose sharply"
+LOOKUP · results · exact → rise sharply · guide 2
+[] rise-sharply.increase
+[Alternatives] significant.notable
+[Often confused] raise-awareness.inform
+
+## "focussed on"
+LOOKUP · results · variant → focus on
+[] focus-on.attention
+
+## "xyzzy"
+LOOKUP · none
+
+## "  HOWEVER,  "
+LOOKUP · results · exact → however · guide 4
+[] however.contrast
+[Alternatives] in-contrast.difference, on-the-other-hand.other-side, whereas.contrast
+[More formal] nevertheless.concession
+
+## "What’s more"
+LOOKUP · results · exact → what's more · guide 3
+[] whats-more.addition
+[Similar meaning] on-top-of-that.addition
+[More formal] furthermore.addition, moreover.addition
+
+## "whats more"
+LOOKUP · results · variant → what's more · guide 3
+[] whats-more.addition
+[Similar meaning] on-top-of-that.addition
+[More formal] furthermore.addition, moreover.addition
+
+## "It is worth noting that"
+LOOKUP · results · exact → It is worth noting that …
+[] it-is-worth-noting-that.note
+
+## "contributed to"
+LOOKUP · results · exact → contribute to
+[] contribute-to.help-cause
+
+## "allocated"
+LOOKUP · results · exact → allocate · guide 2
+[] allocate.distribute
+[Alternatives] invest.money, devote.give
+
+## "raise awareness"
+LOOKUP · results · exact → raise awareness · guide 2
+[] raise-awareness.inform
+[Often confused] rise-sharply.increase
+[Related] take-measures.act
+
+## "focussing on"
+LOOKUP · results · variant → focus on
+[] focus-on.attention
+
+## "analyzes"
+LOOKUP · results · exact → analyse
+[] analyse.examine
+
+## "nevertheles"
+LOOKUP · results · typo → nevertheless · guide 1
+[] nevertheless.concession
+[More natural] however.contrast
+
+## "crucal"
+LOOKUP · results · typo → crucial · guide 3
+[] crucial.essential
+[Similar meaning] essential.necessary
+[Weaker] important.main, significant.notable
+[Used in] play-a-crucial-role.main
+
+## "contibute to"
+LOOKUP · results · typo → contribute to
+[] contribute-to.help-cause
+
+## "responsable"
+LOOKUP · results · typo → responsible
+[] responsible-for.duty:for, responsible-for.duty:to
+mistake: responsible of
+
+## "synonyms for considerable"
+SYNONYM · results · exact → considerable · guide 2
+[] significant.notable, substantial.large
+
+## "stronger word for significant"
+STRONGER_ALTERNATIVE · results · exact → significant · guide 1
+[] crucial.essential
+
+## "weaker word for crucial"
+WEAKER_ALTERNATIVE · results · exact → crucial · guide 2
+[] important.main, significant.notable
+
+## "alternative to moreover"
+ALTERNATIVE · results · exact → moreover · guide 2
+[] furthermore.addition, whats-more.addition
+
+## "instead of however"
+SYNONYM · results · exact → however · guide 4
+[] in-contrast.difference, on-the-other-hand.other-side, whereas.contrast, nevertheless.concession
+
+## "speaking alternative to moreover"
+ALTERNATIVE · results · exact → moreover · guide 1
+[] whats-more.addition
+
+## "replace furthermore"
+ALTERNATIVE · results · exact → furthermore · guide 3
+[] on-top-of-that.addition, moreover.addition, whats-more.addition
+
+## "preposition after interested"
+PREPOSITION · results · exact → interested
+[] interested-in.want:in
+mistake: I'm interested about history.
+
+## "contribute + ?"
+PREPOSITION · results · exact → contribute
+[] contribute-to.help-cause:to
+mistake: Tourism contributes to improve the economy.
+mistake: Exercise contributes for good health.
+
+## "associated with or to"
+PREPOSITION · results · exact → associated
+[] associated-with.linked:with
+mistake: Smoking is associated to lung disease.
+
+## "prepositions for result"
+PREPOSITION · results · exact → result
+[] result-in.cause:in, result-in.cause:from
+mistake: Lung disease can result in smoking.
+mistake: The policy resulted to higher prices.
+
+## "preposition after responsable"
+PREPOSITION · results · typo → responsible
+[] responsible-for.duty:for, responsible-for.duty:to
+mistake: responsible of
+
+## "collocations with crucial"
+COLLOCATION · results · exact → crucial
+[] crucial.essential:role, crucial.essential:factor, crucial.essential:that
+
+## "words that go with considerable"
+COLLOCATION · results · exact → considerable
+[] considerable.large:amount, considerable.large:number, considerable.large:extent, considerable.large:debate
+
+## "linkers for addition"
+LINKER · results · guide 4
+[In writing] furthermore.addition, moreover.addition
+[In speaking] on-top-of-that.addition, whats-more.addition
+
+## "linking words to show result"
+LINKER · results · guide 4
+[Starting a new sentence] as-a-result.result
+[Inside one sentence] result-in.cause, give-rise-to.cause, contribute-to.help-cause
+
+## "sentence starters for a problem"
+SENTENCE_PATTERN · results · guide 5
+[Introducing the problem] there-is-growing-concern-about.problem
+[Harm happening now] have-a-detrimental-effect-on.harm, give-rise-to.cause, result-in.cause
+[Possible harm] pose-a-threat.danger
+
+## "how do I give an example"
+CONTEXTUAL_EXPRESSION · results · guide 3
+[Introducing examples] for-instance.example, such-as.example
+[One strong example] a-case-in-point.example
+
+## "I want to say something is important"
+CONTEXTUAL_EXPRESSION · results · guide 6
+[General] important.main, significant.notable
+[Stronger] crucial.essential, essential.necessary, fundamental.basic
+[As a phrase] play-a-crucial-role.main
+
+## "We need to ___ more resources to healthcare"
+CONTEXT_GAP · results · guide 3
+[Fits this sentence] allocate.distribute:gap (fits), devote.give:gap (fits), invest.money:gap (different_preposition)
+
+## "Companies ___ billions into research"
+CONTEXT_GAP · results · guide 3
+[Fits this sentence] invest.money:gap (fits)
+[Doesn't fit this sentence] allocate.distribute:gap (unlikely), devote.give:gap (unlikely)
+
+## "The city should ___ more funds in cycle lanes"
+CONTEXT_GAP · results · guide 3
+[Fits this sentence] invest.money:gap (fits), allocate.distribute:gap (different_preposition)
+[Doesn't fit this sentence] devote.give:gap (unlikely)
+
+## "Governments should ___ to public transport"
+CONTEXT_GAP · none
+
+## "make measures"
+LOOKUP · results
+[] take-measures.act
+mistake: The government should make measures to reduce crime.
+
+## "worth to note"
+LOOKUP · results
+[] it-is-worth-noting-that.note
+mistake: It is worth to note that prices fell.
+
+## "a significant"
+LOOKUP · results · typo → significant · guide 5
+[] significant.notable, significant.statistical
+[Similar meaning] important.main, considerable.large, substantial.large
+[Stronger] crucial.essential
+[Alternatives] rise-sharply.increase
+
+## "a significant amount"
+LOOKUP · results
+[] significant.notable
+mistake: a significant amount of people
+
+## "amount of people"
+LOOKUP · results
+[] significant.notable
+mistake: a significant amount of people
+
+## "very important"
+LOOKUP · results · exact → important · guide 4
+[] important.main
+[Similar meaning] significant.notable
+[Stronger] crucial.essential, essential.necessary
+[Alternatives] fundamental.basic
+
+## "such as tennis"
+LOOKUP · results · exact → such as · guide 1
+[] such-as.example
+[Alternatives] for-instance.example
+
+## "depend on public transport"
+LOOKUP · results · exact → depend on
+[] depend-on.rely, depend-on.vary
+
+## "we should raise awareness"
+LOOKUP · results · exact → raise awareness · guide 2
+[] raise-awareness.inform
+[Often confused] rise-sharply.increase
+[Related] take-measures.act
+
+## "the"
+LOOKUP · none
+
+## "environment"
+LOOKUP · fallback
+fallback results: some (list not snapshotted)
+
+## "public transport"
+LOOKUP · fallback
+fallback results: some (list not snapshotted)
+
+## "I want to say something increased significantly"
+CONTEXTUAL_EXPRESSION · results · guide 4
+[With a verb] rise-sharply.increase
+[With a noun phrase] significant.notable, substantial.large
+[Describing the size] considerable.large
+
+## "phrase for causing a serious problem"
+PHRASE · results · guide 5
+[Harm happening now] have-a-detrimental-effect-on.harm, give-rise-to.cause, result-in.cause
+[Possible harm] pose-a-threat.danger
+[Introducing the problem] there-is-growing-concern-about.problem
