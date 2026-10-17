@@ -4,6 +4,7 @@
  * Every method returns published content only.
  */
 import type { LanguageContentRepository } from "../engine";
+import type { FilterDimension, FilterFacets, SearchFilters } from "../filters";
 import type { Span } from "../model";
 import type {
   Complement,
@@ -88,6 +89,16 @@ export type IntentDefinition = {
   entries: { senseId: string; group: string; fit: string }[];
 };
 
+/** A sense's filterable metadata (kind from its item). */
+export type SenseFacets = FilterFacets & { senseId: string };
+
+/**
+ * For each filter dimension, how many published senses each value would match together with the
+ * other dimensions' selected filters (a dimension's own selection is ignored). Values with no
+ * match are absent.
+ */
+export type FilterCounts = { [D in FilterDimension]: Partial<Record<string, number>> };
+
 /** A verb frame usable for context-gap search: head word, object fillers, prepositions after. */
 export type GapFrame = {
   senseId: string;
@@ -127,4 +138,15 @@ export interface LanguageSearchRepository extends Pick<
   listGapFrames(): Promise<GapFrame[]>;
   /** Senses whose definition, notes or examples match the words (labelled fallback). */
   fullText(normalised: string): Promise<string[]>;
+  /** Filter metadata of these published senses, for restricting a search response. */
+  senseFacets(senseIds: readonly string[]): Promise<SenseFacets[]>;
+  /**
+   * One page of the published senses that match every filter, in browse order: IELTS relevance
+   * (core, high, useful), then the item's normalised headword by code point, then sense position.
+   */
+  browseSenses(
+    filters: SearchFilters,
+    page: { limit: number; offset: number },
+  ): Promise<{ senseIds: string[]; total: number }>;
+  filterCounts(filters: SearchFilters): Promise<FilterCounts>;
 }
