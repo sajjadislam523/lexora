@@ -94,6 +94,11 @@ export const FINDER_PARAMS = ["q", "kind", "function", "use", "topic", "page"] a
 /** Kinds are kebab-case in URLs (`preposition-pattern`), like every other value. */
 const toUrlValue = (value: string) => value.replaceAll("_", "-");
 
+/** A filter value as it appears in the URL (and in a filter form's option values). */
+export function filterUrlValue(value: string) {
+  return toUrlValue(value);
+}
+
 const URL_VALUES: { [D in FilterDimension]: Map<string, NonNullable<SearchFilters[D]>> } = {
   kind: new Map(ITEM_KINDS.map((kind) => [toUrlValue(kind), kind])),
   function: new Map(DISCOURSE_FUNCTIONS.map((fn) => [fn, fn])),

@@ -483,6 +483,12 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 - **Search as:** single-select `FilterChip`s for Word · Phrase · Preposition · Collocation · Linker · Expression · Context. They change the placeholder and the example searches only; the engine reads the query's shape itself, and the chip for the shape it recognised is selected. Below `sm` they form one horizontally scrollable row.
 - **Example searches:** quiet `bg-muted` pills. Every example is covered by the golden search suite.
 - **Coverage caption:** always visible — Lexora covers a small, reviewed set of language for now, and every result says why it appears.
+- **Show only (Phase 4 filters):** below the caption, a hairline, then four labelled `NativeSelect`s — Kind · Function · IELTS use · Topic — each with **Any** first. Choosing a value navigates straight away (focus stays on the select); _Any_ removes that filter. There is no removable chip row: the "Search as" chips stay the only pill row.
+  - **Counts:** while browsing and on the start page, each option shows how many meanings it would match given the other filters ("Linker (11)"). Options that would match nothing stay listed, show (0) and are disabled; the selected option is never disabled. With a query the options show no counts (the engine counts only the query's own results, in the caption).
+  - **Caption:** one line under the row when any filter is on: "Showing only _Linker_, _Writing Task 2_ · 3 of 6 results · _Clear filters_". Each value is an underlined link that removes it (named "Remove the kind filter: Linker"); _Clear filters_ removes them all and keeps the query.
+  - **Layout:** a container grid — one column, two from `@sm`, four from `@3xl` (one row of four on Explore at `lg`). Below `sm` the row sits behind a full-width outline **Filters** button (`aria-expanded`, "2 on" when filters are active) that opens it in place; Escape closes it and returns focus to the button. No sheet, no overlay.
+  - **No JavaScript:** the row is a GET form with an _Apply filters_ button inside `<noscript>`; the page redirects to the canonical URL.
+- **Browse (filters without a query):** the matching meanings as `LanguageRow`s (term, kind dot, the sense label and best-when line) in one bordered card, `max-w-reading`, under "41 meanings" and "Core IELTS language first, then A–Z · 1–30 of 41". 30 per page; _Previous_ · "Page 1 of 2" · _Next_ below (a dimmed placeholder at either end, so the controls don't move; 44px tall on touch). Changing page moves focus to the list heading.
 - **Before searching:** the context tool on a real example sentence, and the same idea in writing and speaking (_furthermore_ / _on top of that_), both built from engine responses.
 - **Results:**
   - "Understood as" with the engine's interpretation ("Stronger alternatives to “important”"), the mode and the result count
@@ -496,6 +502,8 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
   - **Loading:** while a new search loads, the results area becomes a skeleton of the results layout (`aria-busy`, "Searching…" for screen readers). No spinner, no motion.
   - **Did you mean:** when two words are equally close, the engine doesn't guess; the view offers both as buttons.
   - **No match:** a dashed empty state that says nothing matches yet, suggests a single word or an "I want to …" query, and offers the example searches.
+  - **Filtered out:** when a search found results but the filters hide them all, the dashed empty state says so with the engine's own count — "Your search found 5 results, but none match these filters" — and links to _Show all 5 results_. Never "no results".
+  - **Nothing to browse:** "No language matches these filters yet", with _Clear filters_. With a topic it explains that general language isn't tagged with one.
   - **Error:** a danger callout ("Search isn’t available right now") with _Try again_.
   - A visually hidden status line announces the result summary after each search.
 - **Saving:** the card's bookmark. Visitors get the save gate (§10.7).

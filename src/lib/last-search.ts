@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 /**
- * The last search results page this tab showed (`/explore?q=…` or `/finder?q=…`), so a language
+ * The last search or browse page this tab showed (`/explore?q=…`, `/finder?kind=…`), so a language
  * page's "Back to search" returns to those results. A per-tab convenience in sessionStorage —
  * never learner data — that is simply absent when storage is unavailable.
  */
@@ -23,7 +23,7 @@ export function rememberSearch(url: string) {
 export function readLastSearch() {
   try {
     const url = window.sessionStorage.getItem(KEY);
-    return url && /^\/(explore|finder)\?q=/.test(url) ? url : null;
+    return url && /^\/(explore|finder)\?(q|kind|function|use|topic)=/.test(url) ? url : null;
   } catch {
     return null;
   }

@@ -10,6 +10,7 @@ import type {
   MistakeType,
   PartOfSpeech,
 } from "@/language/schema/vocabulary";
+import { IELTS_TASK_LABEL } from "@/language/filter-labels";
 
 export const PART_OF_SPEECH: Record<PartOfSpeech, string> = {
   noun: "noun",
@@ -37,13 +38,8 @@ export const MISTAKE_TYPE: Record<MistakeType, string> = {
   grammar: "Grammar",
 };
 
-export const IELTS_TASK: Record<IeltsTask, string> = {
-  "writing-1": "Writing Task 1",
-  "writing-2": "Writing Task 2",
-  "speaking-1": "Speaking Part 1",
-  "speaking-2": "Speaking Part 2",
-  "speaking-3": "Speaking Part 3",
-};
+/** Shared with the Finder's IELTS-use filter, so a task has one name everywhere. */
+export const IELTS_TASK: Record<IeltsTask, string> = IELTS_TASK_LABEL;
 
 export const IELTS_RELEVANCE: Record<IeltsRelevance, string> = {
   core: "Core",
