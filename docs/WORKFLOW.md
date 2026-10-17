@@ -26,7 +26,7 @@ main                         ← approved phases only (always releasable)
 ## Lifecycle of a phase
 
 1. **Start.** Create `phase/<n>-<slug>` from the latest `main` and push it.
-2. **Build.** Work on feature branches cut from the phase branch. Open a PR into the phase branch for each one. CI must pass. The owner approves each one with the `owner-approved` label, and CI merges it with a merge commit (`--no-ff`) so the feature boundary stays visible (see [Feature checkpoint](#feature-checkpoint)).
+2. **Build.** Work on feature branches cut from the phase branch. Open a PR into the phase branch for each one. When CI passes, CI merges it with a merge commit (`--no-ff`) so the feature boundary stays visible; open it as a draft to hold it for review (see [Feature auto-merge](#feature-auto-merge)).
 3. **Review.** When the phase's exit criteria in ROADMAP.md are met, open a PR **phase → main** with the phase report: what was built, decisions, and what remains.
 4. **Approve.** The product owner reviews the phase PR and approves it by adding the `owner-approved` label. That label is the final checkpoint: CI runs the full suite again on exactly that commit and, only if it passes, merges the PR into `main` (see [Merge checkpoint](#merge-checkpoint)). The next phase can't start before this.
 5. **Close.** CI tags the merge (`v0.<n>.0`, e.g. `v0.1.0` for Phase 1; `v0.2.1` for Phase 2.1). Then delete merged feature branches.
@@ -46,15 +46,27 @@ Safeguards:
 - **Claude Code never adds this label.** It runs with the owner's GitHub credentials, so this is a working rule (also in `CLAUDE.md`), not something GitHub can enforce. Claude Code opens the PR, reports, and stops.
 - If a merge conflict appears, the job fails and nothing is merged. Merge `main` into the phase branch, push, and label again.
 
-## Feature checkpoint
+## Feature auto-merge
 
-Feature, fix, docs and chore PRs into a phase branch use the same label. The `merge-feature` job in `.github/workflows/ci.yml`:
+Feature, fix, docs and chore PRs into a phase branch need no label. The `merge-feature` job in `.github/workflows/ci.yml`:
 
-1. The owner adds `owner-approved` to a `feat/*`, `fix/*`, `docs/*` or `chore/*` PR into a `phase/*` branch.
-2. CI runs the complete `verify` job on that commit (the PR merged with the current phase branch).
+1. A `feat/*`, `fix/*`, `docs/*` or `chore/*` PR into a `phase/*` branch is opened, pushed to, reopened or marked ready for review.
+2. CI runs the complete `verify` job on its latest commit (the PR merged with the current phase branch).
 3. If it passes, CI merges it into the phase branch with a merge commit. There is no tag: only the phase PR into `main` releases.
 
-The same safeguards apply: owner only, branches of this repository only, pinned to the labelled commit, a conflict merges nothing (merge the phase branch into the feature branch, push, and label again), and Claude Code never adds the label. A merge made by CI doesn't trigger a second CI run on the phase branch; the labelled run already tested the PR merged with the phase branch. If the phase branch moved after the label was added, update the feature branch and label again.
+Safeguards:
+
+- **Drafts wait.** A draft PR is checked but never merged. Open a PR as a draft to review it first, then click _Ready for review_: CI runs again and merges it if it passes.
+- **Owner's PRs, this repository only.** The PR must be opened by the repository owner (Claude Code uses the owner's credentials), from a branch of this repository.
+- **Exact commit.** The merge is pinned to the commit that was tested (`--match-head-commit`). A newer push cancels the older run and starts a new one.
+- **Failures merge nothing.** If a check fails, fix it and push; the next green run merges. A PR with a merge conflict gets no CI run: merge the phase branch into the feature branch and push.
+- A merge made by CI doesn't trigger a second CI run on the phase branch; the PR's run already tested it merged with the phase branch.
+
+This never touches `main`: the phase PR into `main` still waits for the owner's label ([Merge checkpoint](#merge-checkpoint)).
+
+## Deployments
+
+Vercel deploys from `main` only. `vercel.json` turns Git deployments off for every other branch (`git.deploymentEnabled`), so phase and feature branches and their PRs create no Preview deployments. Each merge into `main` deploys Production. CI is what checks a branch before it merges.
 
 ## Commits
 
