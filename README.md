@@ -4,7 +4,7 @@
 
 Lexora is a language-retrieval workspace for IELTS Academic candidates. It helps them find the right word, synonym, preposition, linker, collocation, or sentence pattern for what they want to say, then practise it until it comes naturally.
 
-> Status: **Phase 3 — Language Engine (in progress).** Anyone can search and read the 40 published language pages from PostgreSQL. Learners save meanings, verify their email and reset their password. See [docs/ROADMAP.md](docs/ROADMAP.md).
+> Status: **Phase 3 — Language Engine released (`v0.3.0`); Phase 4 — Search Depth in progress** ([specification](docs/specs/phase-4-search-depth.md)). Anyone can search and read the 40 published language pages from PostgreSQL. Learners save meanings, verify their email and reset their password. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 Lexora runs fully without any AI provider.
 

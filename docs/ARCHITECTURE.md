@@ -1,6 +1,6 @@
 # Lexora Architecture
 
-> Technical architecture, boundaries, and decisions. Status: **Phase 2 — Application Foundation**. Real accounts, sessions and a database exist; language content is still prototype data. Anything marked _Target_ is agreed direction, not built code.
+> Technical architecture, boundaries, and decisions. Status: **Phase 3 — Language Engine released (`v0.3.0`); Phase 4 — Search Depth in progress** ([approved specification](specs/phase-4-search-depth.md)). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
 
 ---
 
@@ -29,40 +29,44 @@
 | Class merging              | `cn` (shadcn's clsx + tailwind-merge replacement), `class-variance-authority`              | ✅           |
 | Lint / format              | ESLint 9 flat config (`eslint-config-next`), Prettier + `prettier-plugin-tailwindcss`      | ✅           |
 | Package manager            | **pnpm**                                                                                   | ✅           |
-| Validation                 | **Zod 4**: env, server action inputs, form schemas (content files in Phase 3)              | ✅           |
+| Validation                 | **Zod 4**: env, server action inputs, form schemas, authored content files                 | ✅           |
 | Database                   | **PostgreSQL 17** — Docker locally, **Neon** in production                                 | ✅           |
 | ORM / migrations           | **Drizzle ORM** 0.45 + **drizzle-kit** (SQL migrations in `drizzle/`), postgres.js driver  | ✅           |
 | Auth                       | **Better Auth** 1.7 (email + password; social providers later)                             | ✅           |
-| Fuzzy search               | Postgres full-text search + `pg_trgm`                                                      | Phase 4      |
+| Fuzzy search               | Postgres full-text search + `pg_trgm` (typo candidates, labelled fallback)                 | ✅ Phase 3   |
 | Semantic search (optional) | `pgvector` + embeddings (local model or AI provider)                                       | Phase 9      |
 | Spaced repetition          | FSRS (`ts-fsrs`) or SM-2, decided in Phase 5                                               | Phase 5      |
 | Unit / integration tests   | **Vitest** — unit tests plus integration tests against Postgres                            | ✅           |
-| E2E / a11y tests           | **Playwright** + axe                                                                       | Phase 6–10   |
+| E2E / a11y tests           | HTTP checks (Vitest + `fetch`, production build) ✅; browser: Playwright + axe             | Phase 6–10   |
 | Speech                     | Browser `MediaRecorder` + Web Speech API (no paid STT)                                     | Phase 8      |
 | Hosting                    | **Vercel** (app) + **Neon** (PostgreSQL)                                                   | Configured   |
 
 ---
 
-## 3. Current structure (Phase 2.1)
+## 3. Current structure (Phase 3)
 
 ```text
 lexora/
 ├── CLAUDE.md · AGENTS.md · README.md
 ├── docs/                         # DESIGN, UX_PRINCIPLES, ARCHITECTURE, ROADMAP, WORKFLOW
+│   ├── specs/                    # Approved phase specifications (Phase 4 onward)
+│   └── audits/                   # Dated project audits: snapshots, not living documents
+├── content/                      # Authored language: one YAML file per item, intents, sources (see content/README.md)
 ├── docker-compose.yml            # Local PostgreSQL 17 (development only)
 ├── drizzle.config.ts             # drizzle-kit: schema path, migrations dir, direct DB URL
 ├── drizzle/                      # Generated SQL migrations (committed; never edited by hand)
 ├── .env.example                  # Documented environment template (real .env files are ignored)
-├── scripts/auth-generate.mjs     # Regenerates the Better Auth tables from the auth config
-├── test/                         # Vitest setup and the server-only stub
+├── scripts/                      # auth-generate.mjs (Better Auth tables), content.mts (content:check, content:import)
+├── test/                         # Vitest setup, fixtures, Postgres integration tests, the golden search suite
+├── e2e/                          # HTTP end-to-end checks against a production build (pnpm test:e2e)
 └── src/
     ├── proxy.ts                  # Optimistic protection of personal areas (cookie presence only)
     ├── app/
     │   ├── layout.tsx · globals.css · robots.ts · sitemap.ts · not-found.tsx
     │   ├── (public)/             # Public discovery: no session read on the server, SiteHeader/Footer
-    │   │   ├── page.tsx          #   Landing page (static)
-    │   │   ├── explore/page.tsx  #   Public Language Finder (server-rendered per query)
-    │   │   └── language/[slug]/page.tsx   # Language pages (static, SEO metadata)
+    │   │   ├── page.tsx          #   Landing page (static, revalidated hourly)
+    │   │   ├── explore/page.tsx  #   Public Language Finder (searched on the server per ?q=)
+    │   │   └── language/[slug]/page.tsx   # Language pages from PostgreSQL (ISR, SEO metadata)
     │   ├── (auth)/               # sign-in, sign-up, forgot/reset password, verify email — own layout, public
     │   ├── (app)/                # Personal learning: requireSession() in layout.tsx; persistent AppShell
     │   │   ├── home|finder|bank|practice|writing|speaking|progress|settings/page.tsx
@@ -74,19 +78,25 @@ lexora/
     │   ├── ui/                   # shadcn primitives + NativeSelect, restyled to tokens
     │   ├── lexora/               # Lexora product components (presentational, incl. FormField)
     │   ├── language/             # Shared save flow: SavedLanguageProvider, save gate, saveable cards
-    │   ├── site/                 # Public header, footer, logo
+    │   ├── site/                 # Public header, footer, logo, analytics
     │   └── shell/                # AppShell, sidebar, user menu, top bar, command palette
     ├── features/                 # Screen composition: auth, dashboard, discovery, finder, language, practice, settings
-    ├── language/                 # Shared language engine: repository, search service, client-safe examples
+    ├── language/                 # Shared language engine (§7)
+    │   ├── model.ts · engine.ts  #   Domain types and the content repository interface
+    │   ├── schema/               #   Authored content format (Zod) and the closed vocabularies shared with the DB enums
+    │   ├── search/               #   classify, match, rank, service: the deterministic search pipeline
+    │   ├── examples.ts           #   Client-safe search modes and example searches
+    │   └── index.ts              #   Server-only composition root (repository + search service)
     ├── demo/                     # Sample learner data for the prototype dashboard and practice screens (NOT language content)
     ├── server/                   # Server-only (import "server-only")
-    │   ├── env.ts · site-url.ts  #   Zod-validated server environment; public origin
+    │   ├── env.ts · site-url.ts · app-url.ts  # Zod-validated environment; public origin; app URL per environment
     │   ├── auth/                 #   Better Auth config, session helpers, account-email links
+    │   ├── content/              #   Content validation, row building and the import transaction
     │   ├── email/                #   EmailSender (Resend / outbox) and the account email templates
     │   ├── http/                 #   Same-origin guard for cookie-authenticated route handlers
     │   ├── db/                   #   Drizzle client + schema (auth tables generated, product tables hand-written)
-    │   └── repositories/         #   Data access; callers pass the session's user id
-    ├── lib/                      # Shared, client-safe utilities (cn, auth client, safe redirect, constants)
+    │   └── repositories/         #   Data access: language (published content, read-only), saved senses, learner profiles
+    ├── lib/                      # Shared, client-safe utilities (cn, auth client, safe redirect, analytics privacy, constants)
     └── styles/                   # Design tokens and type roles
 ```
 
@@ -169,7 +179,7 @@ Authorisation is ownership: product data belongs to one user. Server actions tak
 - **Schema:** `src/server/db/schema/` — `auth.ts` is **generated** by the Better Auth CLI (`pnpm auth:generate`) and owned by the library; product tables (`profile.ts`, and future tables) are hand-written and reference `users.id`. Casing: `snake_case` columns.
 - **Migrations:** `pnpm db:generate` writes SQL to `drizzle/` (committed, reviewed in PRs); `pnpm db:migrate` applies it. Migrations use `DATABASE_URL_UNPOOLED` when set (Neon requires a direct connection for DDL). CI applies all migrations to a fresh database and fails if the schema changed without a migration.
 - **Production rollout:** run `pnpm db:migrate` against Neon's direct URL before (or as part of) deploying code that needs the new schema. Migrations must be backwards-compatible with the running version (expand → migrate → contract).
-- **Seeding:** none needed — sign-up creates real users, and the prototype language content lives in `src/demo` until the Phase 3 content pipeline (curated files → Zod validation → seed script).
+- **Seeding:** none for users — sign-up creates real users. Language content is imported, not seeded: `pnpm content:import` validates `content/` and writes it in one transaction, recording a release (see content/README.md → Importing).
 
 ### 4.5 Data model
 
@@ -181,13 +191,15 @@ Authorisation is ownership: product data belongs to one user. Server actions tak
 | `verifications`    | Better Auth | Password-reset tokens, stored as SHA-256 hashes (verification links are signed JWTs, not stored)      |
 | `rate_limits`      | Better Auth | Rate-limit counters shared across serverless instances                                                |
 | `learner_profiles` | Lexora      | One per user: target band (4.0–9.0, step 0.5, DB-checked), test date, focus skill → `users` (cascade) |
+| `saved_senses`     | Lexora      | A learner's saved meanings: user → sense, saved at; `users` cascade, `senses` restrict (Phase 3)      |
+| Language tables    | Lexora      | Global, imported language content with no user columns (§6)                                           |
 
 **Future tables** (designed for, not created): every one references `users.id` with `on delete cascade`, so deleting an account removes its data.
 
 ```text
 users ─┬─ learner_profiles (1:1)          Phase 2 ✅
        ├─ preferences (1:1)               daily goal, register, reminders        Phase 5
-       ├─ saved_items (1:n) ─── language_items (Phase 3)                         Phase 5
+       ├─ saved_senses (1:n) ─── senses                                         Phase 3 ✅
        ├─ item_mastery (1:n, per item)    SRS state (FSRS fields), last review   Phase 5
        │    └─ review_log (1:n)           every rating, for scheduling + history Phase 5
        ├─ mistakes (1:n)                  wrong form, right form, source         Phase 5–7
@@ -196,7 +208,7 @@ users ─┬─ learner_profiles (1:1)          Phase 2 ✅
        └─ speaking_sessions (1:n) ─ speaking_attempts (1:n)                      Phase 8
 ```
 
-Language content (`language_items`, relations, examples, intents) is **global**, not per user, and arrives in Phase 3.
+Language content (§6) is **global**, not per user. Phase 4 (approved, not yet built) adds `senses.topics` and one table of unmatched-search counts that holds no user data (specification §6 and §8).
 
 ### 4.6 Environment
 
@@ -322,50 +334,52 @@ These rules are **enforced by ESLint** (`eslint.config.mjs` → boundaries): sha
 
 ---
 
-## 6. Language data model (draft, finalised in Phase 3)
+## 6. Language data model (Phase 3, as built)
 
-The goal is `idea → language → context → pattern → practice`, so the model is a **graph of language items with context**, not a word list.
+The goal is `idea → language → context → pattern → practice`, so the model is a **graph of meanings with context**, not a word list. Authoring rules, fields and validation are in [content/README.md](../content/README.md); the closed value sets are in `src/language/schema/vocabulary.ts` and are shared with the Postgres enums.
 
-| Entity             | Purpose                                                                      | Key fields                                                                                                                               |
-| ------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `language_item`    | Any retrievable unit: word, phrase, linker, collocation, pattern, expression | `id`, `slug`, `text`, `category`, `meaning`, `register`, `skills[]`, `band_hint?`, `strength?`                                           |
-| `pattern`          | Structural usage                                                             | `item_id`, `template` (e.g. `responsible for + noun / -ing`), `notes`                                                                    |
-| `example`          | Sentence in context                                                          | `item_id`, `text`, `highlight_span`, `skill`, `source`                                                                                   |
-| `relation`         | Typed edge between items                                                     | `from_id`, `to_id`, `type` (`synonym`, `stronger`, `weaker`, `more_formal`, `more_natural`, `opposite`, `collocates_with`, `instead_of`) |
-| `preposition_link` | Word → required preposition                                                  | `head_item_id`, `preposition`, `pattern`, `common_error?`                                                                                |
-| `mistake`          | Known learner errors                                                         | `item_id`, `wrong_form`, `explanation`                                                                                                   |
-| `intent`           | An idea the user might express                                               | `slug`, `label` ("express contrast"), `phrases[]` (trigger phrasings)                                                                    |
-| `intent_item`      | Intent → items, ranked                                                       | `intent_id`, `item_id`, `rank`, `context_note`                                                                                           |
-| `topic`            | IELTS topic tags (environment, education…)                                   | `slug`, `label`                                                                                                                          |
+| Table                                          | Purpose                                                                                                                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `language_items`                               | A retrievable unit: `kind` (word, phrase, collocation, preposition pattern, linker, sentence pattern, functional expression), headword, slug, status, provenance and review |
+| `item_forms`, `item_slug_history`              | Every spelling and inflection search should recognise (British default, US variants); old slugs that redirect                                                               |
+| `senses`                                       | One meaning of an item, and the unit that is searched, shown and saved: part of speech, definition, CEFR, registers, skills, IELTS relevance and tasks, strength, functions |
+| `examples`                                     | Sentences in context with highlight spans, skill and IELTS task, optionally linked to a collocation or pattern                                                              |
+| `collocations`, `preposition_patterns`         | Collocations of a sense; the preposition a base word takes, with its complement and the mistake it prevents                                                                 |
+| `frames`                                       | Sentence patterns and verb frames as literal parts and typed slots with fillers (context-gap search)                                                                        |
+| `mistakes`                                     | Errors learners really make, typed, with the correction and why                                                                                                             |
+| `relations`                                    | Typed sense-to-sense edges with weight and note; the importer writes inverses                                                                                               |
+| `linker_details`                               | What a linker connects, its positions and punctuation                                                                                                                       |
+| `intents`, `intent_triggers`, `intent_entries` | Expression intents ("express contrast"): trigger phrasings and the senses that answer them, grouped and in authored order                                                   |
+| `content_sources`, `content_releases`          | Provenance and licences; one record per import (git commit, checksum, counts)                                                                                               |
 
-**User data (Phase 5):** `user_item` (saved, mastery state, SRS fields), `review_log`, `user_mistake`, `practice_session`, `writing_sample`, `speaking_attempt`.
+IDs are authored and permanent; published content is retired, never deleted (decision #40).
 
-**Content pipeline:** curated source files in `src/content/` → validated by Zod schemas in `domain/language` → seeded into Postgres by a script. Content is version-controlled and reviewable in pull requests. Content licensing must be checked before importing any external lexical source (see review items).
+**Planned (Phase 4, approved):** topics as 1–3 optional values per sense from a closed list of 10 (`senses.topics`), authored in YAML. **User data (Phase 5 onward):** see §4.5.
+
+**Content pipeline:** `content/*.yaml` → Zod and cross-file validation (`pnpm content:check`, in CI) → `pnpm content:import` into PostgreSQL in one transaction. The app never reads YAML at runtime. External lexical sources may only inform the choice of items, after a recorded licence check.
 
 ---
 
-## 7. Search strategy (Phase 4)
+## 7. Search (Phase 3, as built)
 
-A deterministic, layered pipeline:
+`LanguageSearchService` (`src/language/search/service.ts`) over a `LanguageSearchRepository` (PostgreSQL in `src/server/repositories/language`, in memory for tests). Deterministic: no AI, embeddings or learned ranking. The full behaviour is documented in the [Phase 4 specification, §3](specs/phase-4-search-depth.md).
 
-1. **Normalise** the query: lowercase, trim, strip punctuation, expand contractions.
-2. **Parse the query shape** with rule-based templates:
-   - `synonyms for X` / `better word for X` / `instead of X` → relation lookup on X
-   - `preposition after X` / `X + ?` → preposition_link lookup
-   - `I want to (say|express) …` / `how to …` → intent matching
-   - otherwise → general item search
-3. **Intent matching:** compare against the curated `intent.phrases` with trigram similarity and keyword overlap.
-4. **Item retrieval:** Postgres full-text search (`tsvector` over text, meaning, and examples) plus `pg_trgm` for typos ("responsable" → "responsible").
-5. **Rank:** exact match > intent rank > relation strength > FTS rank > trigram similarity, then adjust by user filters (skill, register) and personal signals (saved, weak areas).
-6. **Group** results by category for display.
+1. **Normalise** (`normaliseQuery`, shared with the importer): NFKC, lower case, straight apostrophes, gap markers → `___`, at most 200 characters.
+2. **Classify** (`classify.ts`): a gap → context gap; otherwise ordered rules, first match wins (preposition, stronger/weaker, alternative, synonym, collocation, linker, sentence pattern, phrase, "I want to …"); qualifier words become modifiers (writing, speaking, formal, academic, informal, natural); no match → lookup.
+3. **Resolve the term:** exact form → spelling variant (with a note) → one clear typo correction (trigram candidates, 1–2 edits by length); never silent, ties become "Did you mean".
+4. **Retrieve by intent** through small, indexed repository lookups: relations, preposition patterns, collocations, expression intents, verb frames for context gaps; the lookup cascade ends in a labelled full-text fallback.
+5. **Rank** (`rank.ts`): a fixed tuple — match tier, editorial weight, modifier fit, IELTS relevance, relation priority, authored position, A–Z.
+6. **Shape:** an interpretation line, groups, a fit guide, mistakes, and a reason for every result.
 
-All steps are pure functions in `domain/search` except retrieval (in a repository). That makes the pipeline testable with fixtures.
+Correctness is pinned by the golden search suite (`test/search-golden.yaml`, run in memory and against PostgreSQL). Search runs on the server when `/explore?q=` or `/finder?q=` renders; there is no search API. Search text never reaches analytics (decision #59).
+
+**Planned (Phase 4, approved):** filters and browse, richer context-gap analysis, privacy-first unmatched-query feedback, measured performance, light rate limiting and a ranking review against an expanded golden suite — see the [specification](specs/phase-4-search-depth.md).
 
 ---
 
 ## 8. Intelligence layer
 
-Interfaces in `domain/intelligence`. Each has a deterministic implementation that ships first.
+_Target._ Interfaces in `domain/intelligence`, each with a deterministic implementation that ships first. Today the deterministic search is `LanguageSearchService` in `src/language` (§7); the interfaces below are introduced when a second implementation (Phase 9) needs them.
 
 ```ts
 interface IntentResolver {
@@ -418,8 +432,8 @@ interface ExplanationProvider {
 - **Next.js 16 specifics:** async request APIs (`await cookies()`, `await params`); `proxy.ts` replaces `middleware.ts`; Turbopack is the default bundler.
 - **Env:** validated with Zod in `src/server/env.ts` (server-only). No secrets in client bundles. See §4.6.
 - **Errors:** route-level `error.tsx` and `not-found.tsx`, plus typed result objects from actions. Avoid a shell-wide `loading.tsx`: a Suspense boundary above a page makes `notFound()` stream with status 200. Add Suspense boundaries inside pages that genuinely load data.
-- **Performance:** fonts self-hosted, static rendering where possible, search debounced on the client and indexed on the server.
-- **Security:** auth on every server action and route handler, row ownership checks in repositories, rate-limiting on search and auth, CSP in Phase 10.
+- **Performance:** fonts self-hosted, static rendering where possible, search run on the server per submitted query over indexed lookups (Phase 4 measures it against a latency budget before any caching).
+- **Security:** auth on every server action and route handler, row ownership checks in repositories, rate limiting on auth (Better Auth, database-backed) with light search rate limiting planned in Phase 4, CSP in Phase 10.
 
 ---
 
@@ -487,3 +501,4 @@ interface ExplanationProvider {
 | 58  | 2026-10-10 | Dependency `@vercel/analytics` (Vercel Web Analytics) for aggregate page-view and traffic insight; mounted only through `components/site/analytics.tsx`, never directly                                                                                                                                                     | First-party to the existing host, cookieless, aggregate: no user identifiers or profiles; not AI. Trade-off: one more script, and the counts live with Vercel                                     |
 | 59  | 2026-10-10 | Every analytics event passes `beforeSend` → `sanitizeAnalyticsEvent` (`lib/analytics-privacy`): only allowlisted parameters with fixed values survive (`reason`, `step`); `q`, `next` and any new parameter are dropped; the fragment is always dropped                                                                     | Learner search text is private input, and reset and verification tokens sit in the fragment: sanitise the payload, don't rely on aggregation. Pages are counted, searches never                   |
 | 60  | 2026-10-17 | Preview isolation: own Neon branch, own `BETTER_AUTH_SECRET`, Neon integration on Production only. On Preview the app URL comes from Vercel's `VERCEL_BRANCH_URL`/`VERCEL_URL` (`app-url.ts`) and both are trusted origins; elsewhere `BETTER_AUTH_URL`. No Better Auth Infrastructure                                      | Previews must never touch production data or auth, and each preview has its own address. The URL comes from Vercel's configuration, never a request; production never takes the preview path      |
+| 61  | 2026-10-17 | Phase 4 (Search Depth) specification approved: `docs/specs/phase-4-search-depth.md`, with the unmatched-query privacy model, browse/filter and indexing model, topics, Wave 2 pace, deferred caching, Firewall rate limiting (to verify), golden suite first, gap scope and step order                                      | One reviewed reference for the phase. Each decision gets its own entry when its step lands; decisions marked proposed are confirmed at their step                                                 |

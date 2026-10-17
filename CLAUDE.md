@@ -6,7 +6,7 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 
 ## Read before any significant change
 
-1. [docs/ROADMAP.md](docs/ROADMAP.md): which phase we are in and what is in or out of scope.
+1. [docs/ROADMAP.md](docs/ROADMAP.md): which phase we are in and what is in or out of scope. The current phase's approved specification is in [docs/specs/](docs/specs/) (Phase 4: [phase-4-search-depth.md](docs/specs/phase-4-search-depth.md)).
 2. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): boundaries, folder layout, data and intelligence layers.
 3. [docs/DESIGN.md](docs/DESIGN.md): the visual source of truth (tokens, components, states).
 4. [docs/UX_PRINCIPLES.md](docs/UX_PRINCIPLES.md): how the product should feel and behave.
@@ -53,7 +53,7 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 | Database schema / migrations                 | `src/server/db/schema/` → `pnpm db:generate` → `drizzle/` (commit the SQL)                  |
 | Language engine (repository, search)         | `src/language/` — read language only through it (`index.ts` server-only)                    |
 | Public discovery frame / save flow           | `src/components/site/`, `src/components/language/`                                          |
-| Prototype content                            | `src/demo/` (behind `PrototypeLanguageRepository`; replaced in Phase 3)                     |
+| Prototype sample data (not language)         | `src/demo/` (sample learner data for the prototype dashboard and practice screens)          |
 | Future: domain logic, curated content        | See ARCHITECTURE.md → Target structure                                                      |
 
 ## Git workflow
