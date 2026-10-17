@@ -208,7 +208,7 @@ users ─┬─ learner_profiles (1:1)          Phase 2 ✅
        └─ speaking_sessions (1:n) ─ speaking_attempts (1:n)                      Phase 8
 ```
 
-Language content (§6) is **global**, not per user. Phase 4 (approved, not yet built) adds `senses.topics` and one table of unmatched-search counts that holds no user data (specification §6 and §8).
+Language content (§6) is **global**, not per user. Phase 4 added `senses.topics` (Step 2); it will add one table of unmatched-search counts that holds no user data (specification §8).
 
 ### 4.6 Environment
 
@@ -354,7 +354,7 @@ The goal is `idea → language → context → pattern → practice`, so the mod
 
 IDs are authored and permanent; published content is retired, never deleted (decision #40).
 
-**Planned (Phase 4, approved):** topics as 1–3 optional values per sense from a closed list of 10 (`senses.topics`), authored in YAML. **User data (Phase 5 onward):** see §4.5.
+**Topics (Phase 4, Step 2):** `senses.topics`, an array of the `topic` enum (10 values, `TOPICS` in the vocabulary): 1–3 distinct values per sense, or none for general language. Validated in content; the database checks the limit of three (`senses_topics_max`). Not yet used by search. **User data (Phase 5 onward):** see §4.5.
 
 **Content pipeline:** `content/*.yaml` → Zod and cross-file validation (`pnpm content:check`, in CI) → `pnpm content:import` into PostgreSQL in one transaction. The app never reads YAML at runtime. External lexical sources may only inform the choice of items, after a recorded licence check.
 
@@ -502,3 +502,5 @@ interface ExplanationProvider {
 | 59  | 2026-10-10 | Every analytics event passes `beforeSend` → `sanitizeAnalyticsEvent` (`lib/analytics-privacy`): only allowlisted parameters with fixed values survive (`reason`, `step`); `q`, `next` and any new parameter are dropped; the fragment is always dropped                                                                     | Learner search text is private input, and reset and verification tokens sit in the fragment: sanitise the payload, don't rely on aggregation. Pages are counted, searches never                   |
 | 60  | 2026-10-17 | Preview isolation: own Neon branch, own `BETTER_AUTH_SECRET`, Neon integration on Production only. On Preview the app URL comes from Vercel's `VERCEL_BRANCH_URL`/`VERCEL_URL` (`app-url.ts`) and both are trusted origins; elsewhere `BETTER_AUTH_URL`. No Better Auth Infrastructure                                      | Previews must never touch production data or auth, and each preview has its own address. The URL comes from Vercel's configuration, never a request; production never takes the preview path      |
 | 61  | 2026-10-17 | Phase 4 (Search Depth) specification approved: `docs/specs/phase-4-search-depth.md`, with the unmatched-query privacy model, browse/filter and indexing model, topics, Wave 2 pace, deferred caching, Firewall rate limiting (to verify), golden suite first, gap scope and step order                                      | One reviewed reference for the phase. Each decision gets its own entry when its step lands; decisions marked proposed are confirmed at their step                                                 |
+| 62  | 2026-10-17 | Topics are a closed enum (`topic`, 10 values) stored as `senses.topics topic[]` (default empty, at most three by check constraint); YAML `topics` is optional, 1–3, distinct                                                                                                                                                | Phase 4 D4: topics belong to a meaning and cross topics; an enum array matches `functions` and needs no join                                                                                      |
+| 63  | 2026-10-17 | Discourse functions gain comparison, decrease, opinion and hedging (`ALTER TYPE … ADD VALUE`)                                                                                                                                                                                                                               | Owner decision D11 (17 October 2026): Task 1 trends and comparison, Task 2 stance                                                                                                                 |

@@ -52,12 +52,16 @@ const SYNONYM_TYPES: RelationType[] = [
 const FUNCTION_LABEL: Record<DiscourseFunction, string> = {
   addition: "adding a point",
   cause: "giving a cause",
+  comparison: "comparing",
   concession: "conceding a point",
   contrast: "contrast",
+  decrease: "describing a decrease",
   emphasis: "emphasis",
   example: "giving examples",
+  hedging: "softening a claim",
   importance: "importance",
   increase: "describing an increase",
+  opinion: "giving an opinion",
   problem: "describing a problem",
   result: "showing a result",
 };

@@ -357,7 +357,7 @@ Phase 4 is complete when (measurable details in the specification, §16):
 | Search caching                | Phase 4 step 8                | ✅ Deferred; measure first, p95 ≤ 150 ms on warm Preview (D6)                                             |
 | Search rate limiting          | Phase 4 step 6                | Approved: 120 req/min/IP via Vercel Firewall, if available; else stop and report (D7)                     |
 | Ranking changes               | Phase 4 step 1                | ✅ Golden suite and snapshot first; fix demonstrated failures only (D8)                                   |
-| New discourse functions       | Phase 4 step 2                | Proposed: comparison, decrease, opinion, hedging; owner chooses (D11)                                     |
+| New discourse functions       | Phase 4 step 2                | ✅ comparison, decrease, opinion, hedging (owner, 17 October 2026; D11)                                   |
 | Content sourcing & licensing  | Phase 3                       | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept                                   |
 | SRS algorithm                 | Phase 5                       | FSRS (proposed) / SM-2                                                                                    |
 | Dark mode timing              | Any                           | Phase 10 (current plan)                                                                                   |

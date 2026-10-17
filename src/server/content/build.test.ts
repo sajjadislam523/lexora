@@ -49,6 +49,20 @@ describe("buildRows", () => {
     ]);
   });
 
+  it("writes each sense's own topics, and none for general language", () => {
+    const tagged = buildRows(
+      validated((c) => {
+        sense(c, "crucial").topics = ["health", "education"];
+        sense(c, "important").topics = ["work"];
+      }),
+    );
+    const topicsOf = (id: string) => tagged.senses.find((row) => row.id === id)?.topics;
+    expect(topicsOf("crucial.essential")).toEqual(["health", "education"]);
+    expect(topicsOf("important.main")).toEqual(["work"]);
+    expect(topicsOf("however.contrast")).toEqual([]);
+    expect(rows.senses.every((row) => row.topics?.length === 0)).toBe(true);
+  });
+
   it("marks one default form per item", () => {
     const analyse = rows.forms.filter((form) => form.itemId === "analyse");
     expect(analyse.map((form) => [form.normalized, form.isDefault, form.region])).toEqual([
@@ -108,5 +122,9 @@ describe("contentChecksum", () => {
       sense(c, "crucial").best_when = "When an outcome depends on it.";
     });
     expect(contentChecksum(b)).not.toBe(contentChecksum(a));
+    const tagged = validated((c) => {
+      sense(c, "crucial").topics = ["health"];
+    });
+    expect(contentChecksum(tagged)).not.toBe(contentChecksum(a));
   });
 });
