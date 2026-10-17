@@ -124,3 +124,32 @@ jobs:
             -f object="$merge_sha" -f type=commit --jq .sha)
           gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$tag" -f sha="$tag_sha" > /dev/null
           echo "Merged PR #$PR and tagged $tag"
+
+  # Feature checkpoint (docs/WORKFLOW.md → Build): the same label on a feat/fix/docs/chore PR into
+  # a phase branch re-runs the full suite on that exact commit and merges it into the phase branch
+  # with a merge commit. No tag: a phase is released only by the checkpoint above.
+  merge-feature:
+    needs: verify
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'labeled' &&
+      github.event.label.name == 'owner-approved' &&
+      github.event.sender.login == github.repository_owner &&
+      startsWith(github.event.pull_request.base.ref, 'phase/') &&
+      (startsWith(github.event.pull_request.head.ref, 'feat/') ||
+       startsWith(github.event.pull_request.head.ref, 'fix/') ||
+       startsWith(github.event.pull_request.head.ref, 'docs/') ||
+       startsWith(github.event.pull_request.head.ref, 'chore/')) &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Merge the approved commit into the phase branch
+        # --match-head-commit refuses to merge if anything was pushed after the label was added.
+        run: gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --match-head-commit "$HEAD_SHA"
