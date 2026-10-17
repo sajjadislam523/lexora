@@ -1,9 +1,10 @@
 /**
  * Matching an idea to an expression intent ("say something increased a lot" → Describe an
- * increase), and reading a sentence with a gap. Pure functions over normalised text.
+ * increase), reading a sentence with a gap, and telling whether a query shows a known mistake.
+ * Pure functions over normalised text.
  */
 import type { FramePart } from "../model";
-import { GAP_TOKEN, normaliseTerm } from "../normalise";
+import { GAP_TOKEN, normaliseTerm, words } from "../normalise";
 
 import { functionIn } from "./classify";
 import type { GapFrame, IntentDefinition } from "./repository";
@@ -163,4 +164,42 @@ export function toGapFrame(
       after && "text" in after ? [after.text, ...(after.also ?? [])].map(normaliseTerm) : [],
     display,
   };
+}
+
+/**
+ * Whether a query shows an authored mistake, rather than only sharing words with it. A query
+ * equal to the whole wrong form always does. A query found inside a longer wrong form ("depend
+ * of" in "Many families depend of one income.") does only when it covers the wrong part: the
+ * words left after the start and end the wrong form shares with its correction. So "a
+ * significant" doesn't show "a significant amount of people" (the wrong part is "amount"), and a
+ * mistake whose wrong form differs only in punctuation is shown only by the whole sentence.
+ */
+export function showsMistake(normalised: string, mistake: { wrong: string; right: string }) {
+  const query = words(normalised);
+  const wrong = words(normaliseTerm(mistake.wrong));
+  const right = words(normaliseTerm(mistake.right));
+  if (query.join(" ") === wrong.join(" ")) return true;
+
+  let start = 0;
+  while (start < wrong.length && start < right.length && wrong[start] === right[start]) start++;
+  let shared = 0;
+  while (
+    start + shared < wrong.length &&
+    start + shared < right.length &&
+    wrong[wrong.length - 1 - shared] === right[right.length - 1 - shared]
+  ) {
+    shared++;
+  }
+  const end = wrong.length - shared;
+  // Punctuation only: normalised, the wrong form and its correction are the same words.
+  if (start === wrong.length && wrong.length === right.length) return false;
+  // The wrong part, or for a missing word ("as result") the two words around the gap.
+  const [from, to] =
+    start < end ? [start, end - 1] : [Math.max(start - 1, 0), Math.min(start, wrong.length - 1)];
+
+  for (let at = 0; at + query.length <= wrong.length; at++) {
+    const here = query.every((word, offset) => wrong[at + offset] === word);
+    if (here && at <= from && at + query.length - 1 >= to) return true;
+  }
+  return false;
 }

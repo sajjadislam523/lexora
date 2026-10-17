@@ -95,4 +95,15 @@ describe("LanguageSearchService", () => {
     ]);
     expect(terms(response)).toEqual(["important"]);
   });
+
+  it("doesn't call correct words a mistake because they appear inside one", async () => {
+    const service = serviceFor();
+    const correct = await service.search("very important");
+    expect(correct?.mistakes).toEqual([]);
+    expect(correct?.interpretation.summary).not.toContain("common mistake");
+
+    const wrong = await service.search("important for me");
+    expect(wrong?.mistakes.map((m) => m.wrong)).toEqual(["Family is very important for me."]);
+    expect(terms(wrong)).toEqual(["important"]);
+  });
 });
