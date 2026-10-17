@@ -43,11 +43,12 @@ jobs:
       EMAIL_TRANSPORT: outbox
 
     steps:
-      - uses: actions/checkout@v4
+      # Majors that run on Node 24; GitHub is retiring Node 20 for actions.
+      - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -79,7 +80,11 @@ jobs:
       - run: pnpm build
       - name: End-to-end route checks against the production build
         run: |
-          pnpm start > next.log 2>&1 &
+          # Own process group, so the whole server tree (pnpm → sh → next-server) stops with the step
+          # instead of being left for the runner to clean up as orphans.
+          setsid pnpm start > next.log 2>&1 &
+          server=$!
+          trap 'kill -TERM -- "-$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
           for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/ && break; sleep 1; done
           pnpm test:e2e || (cat next.log; exit 1)
 
