@@ -268,6 +268,8 @@ Existing content: a small tagging PR in Step 2 is expected to tag only a handful
 
 ## 7. Richer context-gap analysis
 
+> Detailed audit and implementation specification: [phase-4-step-4-context-gaps.md](phase-4-step-4-context-gaps.md) (Step 4.0).
+
 Deterministic and structured throughout. No parser, tagger or model is involved: the engine aligns the learner's words against **authored structures** (patterns, collocations, frames, linker details) and reports which structure matched.
 
 ### 7.1 Gap reading (replaces `readGap`)
