@@ -106,7 +106,18 @@ export type CollocationTemplate = {
   normalized: string;
   /** As authored. */
   display: string;
+  /** Item forms only: the item's base form (its normalised headword), "take measures". */
+  base?: string;
 };
+
+/** An authored item form (normalised), for reading which first words inflect one another. */
+export type ItemFormHit = { itemId: string; normalized: string };
+
+/**
+ * Templates for context gaps, and the forms of every item that has a form starting with one of
+ * the words: the evidence that "took" and "take" are one word (Step 4.4).
+ */
+export type CollocationTemplates = { templates: CollocationTemplate[]; forms: ItemFormHit[] };
 
 /** A published linker sense: where it goes and what it connects. */
 export type LinkerHit = {
@@ -129,11 +140,15 @@ export type FilterCounts = { [D in FilterDimension]: Partial<Record<string, numb
 
 /** A verb frame usable for context-gap search: head word, object fillers, prepositions after. */
 export type GapFrame = {
+  /** The authored frame's id. */
+  id: string;
   senseId: string;
   head: string;
   fillers: string[];
   /** Normalised prepositions accepted after the object (`in`, `into`). */
   prepositions: string[];
+  /** What the frame says follows its preposition, when that is a complement ("noun"). */
+  next?: Complement;
   display: string;
 };
 
@@ -182,8 +197,12 @@ export interface LanguageSearchRepository extends Pick<
    * that have one of `forms` (inflections such as "depends on"), with the form that matched.
    */
   findGapPatterns(bases: readonly string[], forms: readonly string[]): Promise<GapPatternHit[]>;
-  /** Published collocations and collocation/phrase item forms containing any of these words. */
-  findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplate[]>;
+  /**
+   * Published collocations and collocation/phrase item forms containing any of these words (or
+   * its stem), or starting with a first word of a form of an item that has a form starting with
+   * one of them; and the forms of those items.
+   */
+  findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplates>;
   /** Every published linker sense with its position and connection details. */
   listLinkers(): Promise<LinkerHit[]>;
 }

@@ -37,11 +37,15 @@ import {
   baseCandidates,
   collocationCandidates,
   formCandidates,
+  framePrepositionCandidates,
   gapWindows,
+  headCandidates,
+  inflectionFamilies,
   linkerCandidates,
   linkerSlot,
   orderCandidates,
   prepositionCandidates,
+  reachesFrameHead,
   type CandidateFacts,
   type GapCandidate,
   type GapCandidateType,
@@ -50,6 +54,7 @@ import {
 import { planGaps, type Blank, type GapPlan } from "./gap/reader";
 import {
   collocationVerdict,
+  framePrepositionVerdict,
   frameVerdict,
   linkerVerdict,
   prepositionVerdict,
@@ -574,7 +579,7 @@ export class LanguageSearchService {
     const gaps = (framed.gaps ?? []).map((slot) => {
       if (slot.type !== "unknown") return slot;
       const first = found.candidates.find((c) => c.gap === slot.index);
-      return first ? { ...slot, type: first.type } : slot;
+      return first ? { ...slot, type: publicGapType(first.type) } : slot;
     });
     const newGroups = groups.slice(frameFits ? framed.groups.length : 0);
     return respond(
@@ -597,21 +602,31 @@ export class LanguageSearchService {
     );
   }
 
-  /** Candidates for each window from three bounded reads, ordered by the fixed rule. */
+  /**
+   * Candidates for each window from three bounded reads (and the verb frames, only when a frame's
+   * head and object stand before a blank), ordered by the fixed rule.
+   */
   private async gapCandidates(windows: GapWindow[]) {
     const unique = (list: string[]) => [...new Set(list)];
     const words = unique(windows.flatMap(anchorWords));
     const [patterns, templates, linkers] = await Promise.all([
       this.repo.findGapPatterns(
-        unique(windows.flatMap(baseCandidates)),
+        unique(windows.flatMap((window) => [...baseCandidates(window), ...headCandidates(window)])),
         unique(windows.flatMap(formCandidates)),
       ),
-      words.length > 0 ? this.repo.findCollocationTemplates(words) : Promise.resolve([]),
+      words.length > 0
+        ? this.repo.findCollocationTemplates(words)
+        : Promise.resolve({ templates: [], forms: [] }),
       windows.some((window) => linkerSlot(window)) ? this.repo.listLinkers() : Promise.resolve([]),
     ]);
+    const frames = windows.some((window) => reachesFrameHead(window, patterns))
+      ? await this.repo.listGapFrames()
+      : [];
+    const families = inflectionFamilies(templates.forms);
     const raw = windows.flatMap((window) => [
       ...prepositionCandidates(window, patterns),
-      ...collocationCandidates(window, templates),
+      ...framePrepositionCandidates(window, patterns, frames),
+      ...collocationCandidates(window, templates.templates, families),
       ...linkerCandidates(window, linkers),
     ]);
     if (raw.length === 0) {
@@ -644,9 +659,11 @@ export class LanguageSearchService {
         candidate,
         candidate.type === "preposition"
           ? prepositionVerdict(candidate, window, own)
-          : candidate.type === "collocation"
-            ? collocationVerdict(candidate, window, own)
-            : linkerVerdict(linkerSlot(window)!, fn ? FUNCTION_LABEL[fn] : undefined),
+          : candidate.type === "frame_preposition"
+            ? framePrepositionVerdict(candidate, window, own)
+            : candidate.type === "collocation"
+              ? collocationVerdict(candidate, window, own)
+              : linkerVerdict(linkerSlot(window)!, fn ? FUNCTION_LABEL[fn] : undefined),
       );
     }
     const linked = new Set(
@@ -1007,7 +1024,16 @@ function respond(
  */
 const MISTAKE_SENSES = new WeakMap<SearchResponse, string[]>();
 
-const GAP_CANDIDATE_TYPES: readonly GapCandidateType[] = ["preposition", "collocation", "linker"];
+const GAP_CANDIDATE_TYPES: readonly GapCandidateType[] = [
+  "preposition",
+  "frame_preposition",
+  "collocation",
+  "linker",
+];
+
+/** The kind a learner sees: the preposition after a frame's object is a preposition. */
+const publicGapType = (type: GapCandidateType) =>
+  type === "frame_preposition" ? "preposition" : type;
 
 /** The heading of one blank's candidates of one kind. Describes what was read, not a verdict. */
 function gapGroupLabel(type: GapCandidateType, list: GapCandidate[], window: GapWindow) {
@@ -1015,6 +1041,7 @@ function gapGroupLabel(type: GapCandidateType, list: GapCandidate[], window: Gap
     const base = list[0]!.term.split(" ").slice(0, -1).join(" ");
     return `Prepositions after ${quote(base)}`;
   }
+  if (type === "frame_preposition") return `Prepositions after ${quote(list[0]!.context!)}`;
   if (type === "collocation") return "Collocations with these words";
   const slot = linkerSlot(window);
   return slot === "start"
@@ -1033,11 +1060,13 @@ function gapCandidateResult(
   return resultFrom(summary, verdict.reason, {
     key: `${candidate.evidence.id}:gap${candidate.gap}:${candidate.fill}`,
     term: candidate.term,
-    ...(candidate.type === "preposition" && { pattern: candidate.evidence.display }),
+    ...((candidate.type === "preposition" || candidate.type === "frame_preposition") && {
+      pattern: candidate.evidence.display,
+    }),
     fill: { word: candidate.fill },
     gapMatch: {
       gap: candidate.gap,
-      type: candidate.type,
+      type: publicGapType(candidate.type),
       evidence: candidate.evidence.id,
       verdict: verdict.verdict,
       signals: verdict.signals,

@@ -5,6 +5,7 @@
  */
 import type { FramePart } from "../model";
 import { GAP_TOKEN, normaliseTerm, words } from "../normalise";
+import { COMPLEMENTS, type Complement } from "../schema/vocabulary";
 
 import { functionIn } from "./classify";
 import type { GapFrame, IntentDefinition } from "./repository";
@@ -55,7 +56,7 @@ export function matchIntent(
 }
 
 /** Words skipped between the gap and the object: "___ more money", "___ a lot of time". */
-const SKIP = new Set([
+export const SKIP = new Set([
   "a",
   "an",
   "the",
@@ -144,9 +145,11 @@ export function frameFit(frame: GapFrame, reading: GapReading): GapFit {
 
 /**
  * A frame usable for gap search: it has a head word and an object slot with fillers. The
- * literal part right after the object gives the accepted prepositions ("in", also "into").
+ * literal part right after the object gives the accepted prepositions ("in", also "into"), and
+ * the slot after that what follows them ("noun").
  */
 export function toGapFrame(
+  id: string,
   senseId: string,
   display: string,
   parts: readonly FramePart[],
@@ -156,12 +159,19 @@ export function toGapFrame(
   if (!head || !("text" in head) || objectIndex < 0) return undefined;
   const object = parts[objectIndex]!;
   const after = parts[objectIndex + 1];
+  const next = parts[objectIndex + 2];
+  const complement =
+    next && "slot" in next && (COMPLEMENTS as readonly string[]).includes(next.slot)
+      ? (next.slot as Complement)
+      : undefined;
   return {
+    id,
     senseId,
     head: normaliseTerm(head.text),
     fillers: "fillers" in object ? (object.fillers ?? []).map(normaliseTerm) : [],
     prepositions:
       after && "text" in after ? [after.text, ...(after.also ?? [])].map(normaliseTerm) : [],
+    ...(complement && { next: complement }),
     display,
   };
 }

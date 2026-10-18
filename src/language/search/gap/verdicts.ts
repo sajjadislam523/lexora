@@ -23,6 +23,7 @@ import type { MistakeHit } from "../repository";
 import type { GapFit } from "../types";
 
 import type { GapCandidate, GapWindow } from "./candidates";
+import { DETERMINERS } from "./words";
 
 export const GAP_VERDICTS = [
   "fits",
@@ -49,35 +50,6 @@ export type Verdict = {
   reason: string;
   mistake?: MistakeHit;
 };
-
-/** Words that start a noun phrase: what follows them is a noun phrase. */
-const DETERMINERS = new Set([
-  "the",
-  "a",
-  "an",
-  "this",
-  "that",
-  "these",
-  "those",
-  "my",
-  "your",
-  "his",
-  "her",
-  "its",
-  "our",
-  "their",
-  "some",
-  "any",
-  "no",
-  "every",
-  "each",
-  "many",
-  "much",
-  "more",
-  "most",
-  "several",
-  "both",
-]);
 
 /** Pronouns that name a person (a closed class: the only persons Lexora can recognise). */
 const PERSONS = new Set([
@@ -158,31 +130,34 @@ function mistakeVerdict(mistake: MistakeHit): Verdict {
 }
 
 /** A noun complement: a determiner shows a noun phrase follows; any other word can't be checked. */
-function nounPhraseVerdict(next: string, matches: string): Verdict {
+function nounPhraseVerdict(next: string, matches: string, lead: string): Verdict {
   return DETERMINERS.has(next)
     ? {
         verdict: "fits",
-        signals: ["pattern", "noun_phrase_follows"],
+        signals: [lead, "noun_phrase_follows"],
         reason: `${matches}, with a noun phrase after it.`,
       }
     : {
         verdict: "likely_fits",
-        signals: ["pattern", "noun_unchecked"],
+        signals: [lead, "noun_unchecked"],
         reason: `${matches}; Lexora can't check that ${quote(next)} starts a noun phrase.`,
       };
 }
 
-/** What follows the blank, against what the pattern says follows. */
+/**
+ * What follows the blank, against what the structure says follows. `matches` says which
+ * structure matched; `lead` is its evidence code (`pattern`, or `frame_object` for a frame).
+ */
 function complementVerdict(
   complement: Complement,
   next: string | undefined,
-  structure: string,
+  matches: string,
+  lead: string,
 ): Verdict {
-  const matches = `Matches the pattern ${quote(structure)}`;
   if (next === undefined) {
     return {
       verdict: "depends",
-      signals: ["pattern", "nothing_follows"],
+      signals: [lead, "nothing_follows"],
       reason: `${matches}; it depends on what comes after the gap.`,
     };
   }
@@ -191,48 +166,48 @@ function complementVerdict(
       return PERSONS.has(next)
         ? {
             verdict: "fits",
-            signals: ["pattern", "person_follows"],
+            signals: [lead, "person_follows"],
             reason: `${matches}, with a person after it.`,
           }
         : {
             verdict: "depends",
-            signals: ["pattern", "person_unknown"],
+            signals: [lead, "person_unknown"],
             reason: `${matches} — it depends on whether a person follows.`,
           };
     case "clause":
       return CLAUSE_STARTS.has(next)
         ? {
             verdict: "fits",
-            signals: ["pattern", "clause_follows"],
+            signals: [lead, "clause_follows"],
             reason: `${matches}, with a clause after it.`,
           }
         : {
             verdict: "depends",
-            signals: ["pattern", "clause_unknown"],
+            signals: [lead, "clause_unknown"],
             reason: `${matches} — it depends on whether a clause such as “whether …” follows.`,
           };
     case "ing":
       return isIng(next)
         ? {
             verdict: "fits",
-            signals: ["pattern", "ing_follows"],
+            signals: [lead, "ing_follows"],
             reason: `${matches}, with an -ing form after it.`,
           }
         : {
             verdict: "depends",
-            signals: ["pattern", "ing_unknown"],
+            signals: [lead, "ing_unknown"],
             reason: `${matches} — it depends on an -ing form following.`,
           };
     case "noun_or_ing":
       return isIng(next)
         ? {
             verdict: "fits",
-            signals: ["pattern", "ing_follows"],
+            signals: [lead, "ing_follows"],
             reason: `${matches}, with an -ing form after it.`,
           }
-        : nounPhraseVerdict(next, matches);
+        : nounPhraseVerdict(next, matches, lead);
     case "noun":
-      return nounPhraseVerdict(next, matches);
+      return nounPhraseVerdict(next, matches, lead);
   }
 }
 
@@ -247,11 +222,44 @@ export function prepositionVerdict(
   return complementVerdict(
     candidate.complement ?? "noun",
     window.after[0],
-    candidate.evidence.display,
+    `Matches the pattern ${quote(candidate.evidence.display)}`,
+    "pattern",
   );
 }
 
-/** A collocation candidate: a recreated mistake, else the words as written or only inflected. */
+/**
+ * The preposition after a verb frame's object (Step 4.4): a recreated mistake; else an object the
+ * frame doesn't author (the frame doesn't cover this sentence); else what follows the blank.
+ */
+export function framePrepositionVerdict(
+  candidate: GapCandidate,
+  window: GapWindow,
+  mistakes: readonly MistakeHit[],
+): Verdict {
+  const mistake = recreatedMistake(window, candidate.fill, mistakes);
+  if (mistake) return mistakeVerdict(mistake);
+  const frame = quote(candidate.evidence.display);
+  const object = quote(window.before[0]!);
+  if (!candidate.objectAuthored) {
+    return {
+      verdict: "not_supported",
+      signals: ["frame_object_not_authored"],
+      reason: `Lexora's frame ${frame} doesn't list ${object} among its objects, so it can't say which preposition follows.`,
+    };
+  }
+  return complementVerdict(
+    candidate.complement ?? "noun",
+    window.after[0],
+    `Matches the frame ${frame} with ${object} as its object`,
+    "frame_object",
+  );
+}
+
+/**
+ * A collocation candidate: a recreated mistake; else the learner's words as written (an authored
+ * inflection of the first word counts as written) or only through the stemmer; at most Likely
+ * fits when the collocation ends at the blank and the content word after it isn't covered.
+ */
 export function collocationVerdict(
   candidate: GapCandidate,
   window: GapWindow,
@@ -259,16 +267,31 @@ export function collocationVerdict(
 ): Verdict {
   const mistake = recreatedMistake(window, candidate.fill, mistakes);
   if (mistake) return mistakeVerdict(mistake);
-  return candidate.inflected
+  const collocation = quote(candidate.evidence.display);
+  const open = candidate.openRight ? ["other_side_unchecked"] : [];
+  const unchecked = candidate.openRight
+    ? `; Lexora can't check ${quote(window.after[0]!)} after it`
+    : "";
+  if (candidate.inflected) {
+    return {
+      verdict: "likely_fits",
+      signals: ["collocation", "inflected", ...open],
+      reason: `Matches the collocation ${collocation} in another form of its words${unchecked}.`,
+    };
+  }
+  const authored = candidate.authoredForm ? ["authored_form"] : [];
+  return candidate.openRight
     ? {
         verdict: "likely_fits",
-        signals: ["collocation", "inflected"],
-        reason: `Matches the collocation ${quote(candidate.evidence.display)} in another form of its words.`,
+        signals: ["collocation", ...authored, ...open],
+        reason: `Matches the collocation ${collocation}${unchecked}.`,
       }
     : {
         verdict: "fits",
-        signals: ["collocation"],
-        reason: `Matches the collocation ${quote(candidate.evidence.display)}.`,
+        signals: ["collocation", ...authored],
+        reason: candidate.authoredForm
+          ? `Matches the collocation ${collocation}, in a form Lexora's content lists.`
+          : `Matches the collocation ${collocation}.`,
       };
 }
 

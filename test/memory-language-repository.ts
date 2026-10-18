@@ -16,7 +16,7 @@ import type { FramePart, SenseSummary } from "@/language/model";
 import { toGapFrame } from "@/language/search/match";
 import type {
   CollocationHit,
-  CollocationTemplate,
+  CollocationTemplates,
   FilterCounts,
   FormMatch,
   GapPatternHit,
@@ -181,11 +181,25 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
     return [...byBase, ...byForm];
   }
 
-  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplate[]> {
-    if (words.length === 0) return [];
+  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplates> {
+    if (words.length === 0) return { templates: [], forms: [] };
+    const firstWord = (normalized: string) => normalized.split(" ")[0]!;
+    const liveItem = (itemId: string) => this.items.some((i) => i.id === itemId);
+    // Items with a form starting with one of the words, and every first word of their forms.
+    const family = new Set(
+      this.rows.forms
+        .filter((form) => words.includes(firstWord(form.normalized)) && liveItem(form.itemId))
+        .map((form) => form.itemId),
+    );
+    const heads = new Set(
+      this.rows.forms.filter((form) => family.has(form.itemId)).map((f) => firstWord(f.normalized)),
+    );
     const wanted = (normalized: string) => {
       const padded = ` ${normalized} `;
-      return words.some((w) => padded.includes(` ${w} `) || padded.includes(` ${stem(w)}`));
+      return (
+        words.some((w) => padded.includes(` ${w} `) || padded.includes(` ${stem(w)}`)) ||
+        heads.has(firstWord(normalized))
+      );
     };
     const fromCollocations = this.rows.collocations
       .filter((c) => this.isLiveSense(c.senseId) && wanted(c.normalized))
@@ -211,11 +225,24 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
               itemId: item.id,
               normalized: form.normalized,
               display: form.form,
+              base: item.normalized,
             },
           ]
         : [];
     });
-    return [...fromCollocations, ...fromForms];
+    const forms = this.rows.forms
+      .filter((form) => family.has(form.itemId))
+      .map((form) => ({ itemId: form.itemId, normalized: form.normalized }))
+      .sort((a, b) =>
+        a.itemId !== b.itemId
+          ? a.itemId < b.itemId
+            ? -1
+            : 1
+          : a.normalized < b.normalized
+            ? -1
+            : 1,
+      );
+    return { templates: [...fromCollocations, ...fromForms], forms };
   }
 
   async listLinkers(): Promise<LinkerHit[]> {
@@ -355,7 +382,7 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
     return this.rows.frames
       .filter((f) => this.isLiveSense(f.senseId))
       .flatMap((f) => {
-        const gap = toGapFrame(f.senseId, f.display, f.parts as FramePart[]);
+        const gap = toGapFrame(f.id, f.senseId, f.display, f.parts as FramePart[]);
         return gap ? [gap] : [];
       });
   }

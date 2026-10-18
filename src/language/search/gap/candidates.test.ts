@@ -1,18 +1,23 @@
 import { describe, expect, it } from "vitest";
 
 import { normaliseQuery } from "../../normalise";
-import type { CollocationTemplate, LinkerHit, PatternHit } from "../repository";
+import type { CollocationTemplate, GapFrame, LinkerHit, PatternHit } from "../repository";
 
 import {
   anchorWords,
   baseCandidates,
   collocationCandidates,
+  differsInFirstWordOnly,
   formCandidates,
+  framePrepositionCandidates,
   gapWindows,
+  headCandidates,
+  inflectionFamilies,
   linkerCandidates,
   linkerSlot,
   orderCandidates,
   prepositionCandidates,
+  reachesFrameHead,
   type GapCandidate,
 } from "./candidates";
 import { planGaps } from "./reader";
@@ -163,7 +168,8 @@ describe("preposition candidates", () => {
 describe("collocation candidates", () => {
   it("fills the blank with the one collocation word it lines up with", () => {
     const window = first("There was a ___ increase in cycling");
-    expect(anchorWords(window)).toEqual(["increase"]);
+    // Every content word around the blank (Step 4.4), not only the ones next to it.
+    expect(anchorWords(window)).toEqual(["was", "there", "increase", "cycling"]);
     const found = collocationCandidates(window, [template({})]);
     expect(found.map((c) => [c.fill, c.senseId, c.term])).toEqual([
       ["significant", "significant.notable", "a significant increase"],
@@ -187,7 +193,7 @@ describe("collocation candidates", () => {
     expect(collocationCandidates(first("___ increase"), [template({})])).toEqual([]);
   });
 
-  it("needs a content word next to the blank, and never puts a stopword in it", () => {
+  it("needs a content word in the collocation, and never puts a stopword in the blank", () => {
     expect(anchorWords(first("a ___ the"))).toEqual([]);
     expect(
       collocationCandidates(first("a ___ the"), [
@@ -221,6 +227,7 @@ describe("collocation candidates", () => {
         itemId: "play-a-crucial-role",
         normalized: "play a crucial role",
         display: "play a crucial role",
+        base: "play a crucial role",
       }),
     ]);
     expect(found.map((c) => c.senseId)).toEqual(["play-a-crucial-role.main"]);
@@ -235,6 +242,259 @@ describe("collocation candidates", () => {
     expect(collocationCandidates(window, rows)).toEqual(
       collocationCandidates(window, [...rows].reverse()),
     );
+  });
+});
+
+describe("Step 4.4: inflected multiword bases", () => {
+  const pose = pattern({
+    id: "pose-a-threat.danger:to",
+    senseId: "pose-a-threat.danger",
+    base: "pose a threat",
+    preposition: "to",
+    pattern: "pose a threat to + noun",
+    complement: "noun",
+  });
+
+  it("looks the bare base runs up as forms too", () => {
+    expect(formCandidates(first("Plastic waste poses a threat ___ marine life"))).toEqual(
+      expect.arrayContaining(["poses a threat", "a threat", "threat", "poses a threat to"]),
+    );
+  });
+
+  it("reaches a pattern through a form that inflects only the base's first word", () => {
+    const window = first("Plastic waste poses a threat ___ marine life");
+    const found = prepositionCandidates(window, [{ pattern: pose, viaForm: "poses a threat" }]);
+    expect(found.map((c) => [c.fill, c.senseId, c.span])).toEqual([
+      ["to", "pose-a-threat.danger", 3],
+    ]);
+  });
+
+  it("doesn't let a form that differs elsewhere stand in for the base", () => {
+    expect(differsInFirstWordOnly("poses a threat", "pose a threat")).toBe(true);
+    expect(differsInFirstWordOnly("depend upon", "depend on")).toBe(false);
+    expect(differsInFirstWordOnly("pose threats", "pose a threat")).toBe(false);
+    const window = first("Plastic waste poses threats ___ marine life");
+    expect(prepositionCandidates(window, [{ pattern: pose, viaForm: "poses threats" }])).toEqual(
+      [],
+    );
+  });
+});
+
+describe("Step 4.4: prepositions after a verb frame's object", () => {
+  const allocatePattern = pattern({
+    id: "allocate.distribute:to",
+    senseId: "allocate.distribute",
+    base: "allocate",
+    preposition: "to",
+    pattern: "allocate + noun + to + noun",
+    complement: "noun",
+    mistakeId: "allocate.distribute:in",
+  });
+  const allocate: GapFrame = {
+    id: "allocate.distribute:money-to",
+    senseId: "allocate.distribute",
+    head: "allocate",
+    fillers: ["money", "funds", "time"],
+    prepositions: ["to", "for"],
+    next: "noun",
+    display: "allocate something to / for + noun",
+  };
+  const rows = [{ pattern: allocatePattern, viaForm: "allocated" }];
+
+  it("looks up the words a frame's head can be: before[1…3]", () => {
+    expect(headCandidates(first("The council allocated more money ___ schools"))).toEqual([
+      "more",
+      "allocated",
+      "council",
+    ]);
+  });
+
+  it("offers the frame's prepositions in authored order, with its evidence", () => {
+    const window = first("The council allocated money ___ education");
+    expect(reachesFrameHead(window, rows)).toBe(true);
+    const found = framePrepositionCandidates(window, rows, [allocate]);
+    expect(
+      found.map((c) => [
+        c.type,
+        c.fill,
+        c.complement,
+        c.evidence,
+        c.span,
+        c.context,
+        c.objectAuthored,
+      ]),
+    ).toEqual([
+      [
+        "frame_preposition",
+        "to",
+        "noun",
+        {
+          id: "allocate.distribute:money-to",
+          display: "allocate something to / for + noun",
+          mistakeId: "allocate.distribute:in",
+        },
+        2,
+        "allocated money",
+        true,
+      ],
+      [
+        "frame_preposition",
+        "for",
+        "noun",
+        { id: "allocate.distribute:money-to", display: "allocate something to / for + noun" },
+        2,
+        "allocated money",
+        true,
+      ],
+    ]);
+  });
+
+  it("skips skip words between the head and the object, and keeps an unauthored object", () => {
+    const [to] = framePrepositionCandidates(
+      first("They allocated more land ___ housing"),
+      [{ pattern: allocatePattern }].map((row) => ({ ...row, viaForm: "allocated" })),
+      [allocate],
+    );
+    expect([to?.span, to?.context, to?.objectAuthored]).toEqual([3, "allocated more land", false]);
+  });
+
+  it.each([
+    "We need to allocate ___ education",
+    "They allocated it ___ schools",
+    "Councils allocated sums quickly ___ schools",
+    "The money was allocated ___ schools",
+  ])("finds no head and object before the blank in %j", (query) => {
+    const window = first(query);
+    expect(reachesFrameHead(window, rows)).toBe(false);
+    expect(framePrepositionCandidates(window, rows, [allocate])).toEqual([]);
+  });
+
+  it("ignores patterns whose preposition follows the base, and frames of other senses", () => {
+    const window = first("The council allocated money ___ education");
+    expect(
+      framePrepositionCandidates(window, rows, [{ ...allocate, senseId: "other.sense" }]),
+    ).toEqual([]);
+    expect(
+      framePrepositionCandidates(
+        window,
+        [{ pattern: pattern({}), viaForm: "allocated" }],
+        [allocate],
+      ),
+    ).toEqual([]);
+  });
+});
+
+describe("Step 4.4: collocation guards, anchor and authored inflections", () => {
+  const takeForms = [
+    { itemId: "take-measures", normalized: "take measures" },
+    { itemId: "take-measures", normalized: "takes measures" },
+    { itemId: "take-measures", normalized: "took measures" },
+  ];
+  const form = (normalized: string, base = "take measures"): CollocationTemplate =>
+    template({
+      id: `form:take-measures:${normalized}`,
+      senseId: "take-measures.act",
+      itemId: "take-measures",
+      normalized,
+      display: normalized,
+      base,
+    });
+  const steps = template({
+    id: "take-measures.act:steps",
+    senseId: "take-measures.act",
+    normalized: "take steps",
+    display: "take steps",
+  });
+
+  it("reads inflection families from forms that differ only in their first word", () => {
+    const families = inflectionFamilies([
+      ...takeForms,
+      { itemId: "in-contrast", normalized: "in contrast" },
+      { itemId: "in-contrast", normalized: "by contrast" },
+      { itemId: "depend-on", normalized: "depend on" },
+      { itemId: "depend-on", normalized: "depend upon" },
+      { itemId: "allocate", normalized: "allocate" },
+      { itemId: "allocate", normalized: "allocated" },
+    ]);
+    expect(families("take", "took")).toBe(true);
+    expect(families("takes", "took")).toBe(true);
+    expect(families("allocate", "allocated")).toBe(true);
+    expect(families("take", "take")).toBe(false);
+    // A function word isn't an inflection, and later words never make a family.
+    expect(families("in", "by")).toBe(false);
+    expect(families("on", "upon")).toBe(false);
+  });
+
+  it("never offers the learner's own neighbouring word, or an inflection of it (G1, G2)", () => {
+    const families = inflectionFamilies(takeForms);
+    const found = collocationCandidates(
+      first("Governments must take ___ measures"),
+      [form("take measures"), form("takes measures"), form("took measures"), steps],
+      families,
+    );
+    expect(found.map((c) => c.fill)).toEqual(["steps"]);
+  });
+
+  it("offers from an inflected form only the words of its item's base form (G2)", () => {
+    const found = collocationCandidates(first("There is ___ measures"), [
+      form("takes measures"),
+      form("take measures"),
+    ]);
+    expect(found.map((c) => [c.fill, c.evidence.id])).toEqual([
+      ["take", "form:take-measures:take measures"],
+    ]);
+    expect(
+      collocationCandidates(first("There is ___ measures"), [form("takes measures", "")]),
+    ).toEqual([]);
+  });
+
+  it("marks a collocation that ends at the blank before an unchecked content word (G3)", () => {
+    const [open] = collocationCandidates(first("They take ___ measures"), [steps]);
+    expect(open?.openRight).toBe(true);
+    const [closed] = collocationCandidates(first("They take ___ to cut costs"), [steps]);
+    expect(closed?.openRight).toBeUndefined();
+    const [end] = collocationCandidates(first("They take ___"), [steps]);
+    expect(end?.openRight).toBeUndefined();
+  });
+
+  it("anchors on any content word of the collocation, not only the one next to the blank", () => {
+    const threat = template({
+      id: "form:pose-a-threat:pose a threat",
+      senseId: "pose-a-threat.danger",
+      itemId: "pose-a-threat",
+      normalized: "pose a threat",
+      display: "pose a threat",
+      base: "pose a threat",
+    });
+    const window = first("Plastic waste ___ a threat to marine life");
+    expect(anchorWords(window)).toEqual(["waste", "plastic", "threat", "marine"]);
+    expect(collocationCandidates(window, [threat]).map((c) => c.fill)).toEqual(["pose"]);
+    const crucial = template({ normalized: "it is crucial that", display: "it is crucial that" });
+    expect(collocationCandidates(first("It is ___ that we act"), [crucial])).toEqual([]);
+  });
+
+  it("matches a first word through an authored inflection as written, and only the first", () => {
+    const families = inflectionFamilies([
+      ...takeForms,
+      { itemId: "rise-sharply", normalized: "rise sharply" },
+      { itemId: "rise-sharply", normalized: "rose sharply" },
+    ]);
+    const [took] = collocationCandidates(first("They took ___ to cut costs"), [steps], families);
+    expect([took?.fill, took?.authoredForm, took?.inflected]).toEqual(["steps", true, undefined]);
+    expect(collocationCandidates(first("They took ___ to cut costs"), [steps])).toEqual([]);
+    const sharpRise = template({ normalized: "a sharp rise", display: "a sharp rise" });
+    expect(collocationCandidates(first("There was a ___ rose"), [sharpRise], families)).toEqual([]);
+  });
+
+  it("prefers a match as written over an authored inflection over the stemmer", () => {
+    const families = inflectionFamilies(takeForms);
+    const [found] = collocationCandidates(
+      first("They took ___ to cut costs"),
+      [form("take measures"), form("took measures")],
+      families,
+    );
+    expect(found?.evidence.id).toBe("form:take-measures:took measures");
+    expect(found?.authoredForm).toBeUndefined();
   });
 });
 

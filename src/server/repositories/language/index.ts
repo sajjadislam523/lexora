@@ -14,7 +14,7 @@ import { toGapFrame } from "@/language/search/match";
 import { stem } from "@/language/search/text";
 import type {
   CollocationHit,
-  CollocationTemplate,
+  CollocationTemplates,
   FilterCounts,
   FormMatch,
   GapPatternHit,
@@ -339,7 +339,7 @@ export class DatabaseLanguageRepository
       .where(and(eq(senses.status, "published"), published(languageItems)))
       .orderBy(asc(frames.id));
     return rows.flatMap(({ frame }) => {
-      const gap = toGapFrame(frame.senseId, frame.display, frame.parts as FramePart[]);
+      const gap = toGapFrame(frame.id, frame.senseId, frame.display, frame.parts as FramePart[]);
       return gap ? [gap] : [];
     });
   }
@@ -406,16 +406,33 @@ export class DatabaseLanguageRepository
     ];
   }
 
-  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplate[]> {
-    if (words.length === 0) return [];
+  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplates> {
+    if (words.length === 0) return { templates: [], forms: [] };
     // A word or its stem as a whole-word prefix; the exact alignment happens in the engine.
     const likes = [
       ...new Set(words.flatMap((w) => [`% ${escapeLike(w)} %`, `% ${escapeLike(stem(w))}%`])),
     ];
-    const any = sql`any(array[${sql.join(
-      likes.map((like) => sql`${like}`),
-      sql`, `,
-    )}]::text[])`;
+    const list = (values: readonly string[]) =>
+      sql`array[${sql.join(
+        values.map((value) => sql`${value}`),
+        sql`, `,
+      )}]::text[]`;
+    // Items with a form starting with one of the words ("took measures"), and every first word of
+    // their forms ("take", "takes"…): templates starting with one of those count too (Step 4.4).
+    const family = sql`
+      family as (
+        select distinct f.item_id from item_forms f
+          join language_items i on i.id = f.item_id and i.status = 'published'
+          where f.normalized = any(${list(words)})
+            or f.normalized like any(${list(words.map((w) => `${escapeLike(w)} %`))})
+      ),
+      heads as (
+        select distinct split_part(f.normalized, ' ', 1) as word from item_forms f
+          where f.item_id in (select item_id from family)
+      )`;
+    const wanted = (column: SQL) => sql`
+      ((' ' || ${column} || ' ') like any(${list(likes)})
+        or split_part(${column}, ' ', 1) in (select word from heads))`;
     const [fromCollocations, fromForms] = await Promise.all([
       this.db.execute<{
         id: string;
@@ -424,49 +441,63 @@ export class DatabaseLanguageRepository
         normalized: string;
         display: string;
       }>(sql`
+        with ${family}
         select c.id, c.sense_id, c.item_id, c.normalized, c.phrase as display from collocations c
           join senses s on s.id = c.sense_id and s.status = 'published'
           join language_items i on i.id = s.item_id and i.status = 'published'
-          where (' ' || c.normalized || ' ') like ${any}
+          where ${wanted(sql`c.normalized`)}
           order by c.id
       `),
       this.db.execute<{
         item_id: string;
-        sense_id: string;
+        sense_id: string | null;
         normalized: string;
         display: string;
+        base: string;
+        template: boolean;
+        in_family: boolean;
       }>(sql`
-        select f.item_id, f.normalized, f.form as display,
+        with ${family}
+        select f.item_id, f.normalized, f.form as display, i.normalized as base,
+            (i.kind in ('collocation', 'phrase') and ${wanted(sql`f.normalized`)}) as template,
+            (f.item_id in (select item_id from family)) as in_family,
             (select s.id from senses s where s.item_id = i.id and s.status = 'published'
               order by s.position limit 1) as sense_id
           from item_forms f
           join language_items i on i.id = f.item_id and i.status = 'published'
-          where i.kind in ('collocation', 'phrase') and (' ' || f.normalized || ' ') like ${any}
+          where (i.kind in ('collocation', 'phrase') and ${wanted(sql`f.normalized`)})
+            or f.item_id in (select item_id from family)
           order by f.item_id, f.normalized
       `),
     ]);
-    return [
-      ...fromCollocations.map((row) => ({
-        id: row.id,
-        senseId: row.sense_id,
-        ...(row.item_id && { itemId: row.item_id }),
-        normalized: row.normalized,
-        display: row.display,
-      })),
-      ...fromForms.flatMap((row) =>
-        row.sense_id
-          ? [
-              {
-                id: `form:${row.item_id}:${row.normalized}`,
-                senseId: row.sense_id,
-                itemId: row.item_id,
-                normalized: row.normalized,
-                display: row.display,
-              },
-            ]
-          : [],
-      ),
-    ];
+    return {
+      templates: [
+        ...fromCollocations.map((row) => ({
+          id: row.id,
+          senseId: row.sense_id,
+          ...(row.item_id && { itemId: row.item_id }),
+          normalized: row.normalized,
+          display: row.display,
+        })),
+        ...fromForms.flatMap((row) =>
+          row.template && row.sense_id
+            ? [
+                {
+                  id: `form:${row.item_id}:${row.normalized}`,
+                  senseId: row.sense_id,
+                  itemId: row.item_id,
+                  normalized: row.normalized,
+                  display: row.display,
+                  base: row.base,
+                },
+              ]
+            : [],
+        ),
+      ],
+      forms: fromForms
+        .filter((row) => row.in_family)
+        .map((row) => ({ itemId: row.item_id, normalized: row.normalized })),
+    };
   }
 
   async listLinkers(): Promise<LinkerHit[]> {
