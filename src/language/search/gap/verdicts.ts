@@ -257,8 +257,10 @@ export function framePrepositionVerdict(
 
 /**
  * A collocation candidate: a recreated mistake; else the learner's words as written (an authored
- * inflection of the first word counts as written) or only through the stemmer; at most Likely
- * fits when the collocation ends at the blank and the content word after it isn't covered.
+ * inflection of the first word counts as written) or only through the stemmer. At most Likely
+ * fits when a side of the blank the collocation doesn't cover can't be checked: it ends at the
+ * blank before a content word it doesn't cover, or starts at the blank after a function word that
+ * combines with its first word ("There is ___ a threat").
  */
 export function collocationVerdict(
   candidate: GapCandidate,
@@ -268,10 +270,13 @@ export function collocationVerdict(
   const mistake = recreatedMistake(window, candidate.fill, mistakes);
   if (mistake) return mistakeVerdict(mistake);
   const collocation = quote(candidate.evidence.display);
-  const open = candidate.openRight ? ["other_side_unchecked"] : [];
+  const openSide = candidate.openRight || candidate.openLeft;
+  const open = openSide ? ["other_side_unchecked"] : [];
   const unchecked = candidate.openRight
     ? `; Lexora can't check ${quote(window.after[0]!)} after it`
-    : "";
+    : candidate.openLeft
+      ? `; Lexora can't check ${quote(window.before[0]!)} before it`
+      : "";
   if (candidate.inflected) {
     return {
       verdict: "likely_fits",
@@ -280,7 +285,7 @@ export function collocationVerdict(
     };
   }
   const authored = candidate.authoredForm ? ["authored_form"] : [];
-  return candidate.openRight
+  return openSide
     ? {
         verdict: "likely_fits",
         signals: ["collocation", ...authored, ...open],

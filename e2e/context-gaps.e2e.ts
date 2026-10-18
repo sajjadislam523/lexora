@@ -192,6 +192,15 @@ describe("context coverage on Explore (Step 4.4)", () => {
     expect(page).toContain("authored_form");
   });
 
+  it("never fits a collocation after a function word it can't check", async () => {
+    const page = await html(explore("There is ___ a threat"));
+    expect(fillsIn(page)).toEqual(["pose"]);
+    expect(verdictsIn(page)).toEqual(["likely_fits"]);
+    expect(verdictsIn(await html(explore("Plastic waste ___ a threat to marine life")))).toEqual([
+      "fits",
+    ]);
+  });
+
   it('still makes nothing up for "It is ___ that"', async () => {
     expect(verdictsIn(await html(explore("It is ___ that governments act")))).toEqual([]);
   });

@@ -178,6 +178,28 @@ describe("Step 4.4: collocation verdicts", () => {
     ).toEqual(["collocation", "inflected", "other_side_unchecked"]);
   });
 
+  it("is at most likely fits when a function word before it is unchecked", () => {
+    const pose = steps({
+      fill: "pose",
+      term: "pose a threat",
+      evidence: { id: "form:pose-a-threat:pose a threat", display: "pose a threat" },
+      openLeft: true,
+    });
+    expect(collocationVerdict(pose, window("There is ___ a threat"), [])).toEqual({
+      verdict: "likely_fits",
+      signals: ["collocation", "other_side_unchecked"],
+      reason: "Matches the collocation “pose a threat”; Lexora can't check “is” before it.",
+    });
+    expect(
+      collocationVerdict({ ...pose, authoredForm: true }, window("There is ___ a threat"), [])
+        .signals,
+    ).toEqual(["collocation", "authored_form", "other_side_unchecked"]);
+    expect(
+      collocationVerdict({ ...pose, openLeft: undefined }, window("Waste ___ a threat"), [])
+        .verdict,
+    ).toBe("fits");
+  });
+
   it("fits through an authored inflection, and says so", () => {
     expect(
       collocationVerdict(steps({ authoredForm: true }), window("They took ___ to cut costs"), []),

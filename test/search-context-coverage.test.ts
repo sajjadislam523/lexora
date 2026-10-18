@@ -63,8 +63,9 @@ describe("4.4-1 collocation guards", () => {
     expect(verdicts(await service.search("Campaigns to raise ___ awareness"))).toEqual([
       "public{raise-awareness.inform}=fits",
     ]);
+    // One candidate, not four forms; and only likely fits: "is" before the blank isn't checked.
     expect(verdicts(await service.search("There is ___ awareness"))).toEqual([
-      "raise{raise-awareness.inform}=fits",
+      "raise{raise-awareness.inform}=likely_fits",
     ]);
   });
 });
@@ -182,6 +183,43 @@ describe("4.4-4 collocations anchored by any content word", () => {
     ],
   ])("%j (D1–D3)", async (query, expected) => {
     expect(verdicts(await service.search(query))).toEqual(expected);
+  });
+
+  it("keeps a collocation starting at the blank fit after a content word or nothing", async () => {
+    for (const query of [
+      "Plastic waste ___ a threat to marine life",
+      "___ a threat to marine life",
+    ]) {
+      expect(verdicts(await service.search(query)), query).toEqual([
+        "pose{pose-a-threat.danger}=fits",
+      ]);
+    }
+  });
+
+  it.each([
+    ["There is ___ a threat", "pose{pose-a-threat.danger}", "is"],
+    ["It is ___ a key role", "play{play-a-crucial-role.main}", "is"],
+    ["There is ___ awareness", "raise{raise-awareness.inform}", "is"],
+    ["Campaigns aim to ___ awareness", "raise{raise-awareness.inform}", "to"],
+    ["The report lists the ___ skills", "essential{essential.necessary}", "the"],
+  ])(
+    "never fits %j: the function word before a collocation's first word is unchecked",
+    async (query, candidate, word) => {
+      const response = await service.search(query);
+      expect(verdicts(response)).toEqual([`${candidate}=likely_fits`]);
+      const [result] = results(response);
+      expect(result?.gapMatch?.signals).toEqual(["collocation", "other_side_unchecked"]);
+      expect(result?.reason).toContain(`Lexora can't check “${word}” before it`);
+    },
+  );
+
+  it("still fits the same collocations where the words before the blank aren't function words", async () => {
+    expect(verdicts(await service.search("Schools should ___ awareness about pollution"))).toEqual([
+      "raise{raise-awareness.inform}=fits",
+    ]);
+    expect(verdicts(await service.search("There has been ___ debate about cars"))).toEqual([
+      "considerable{considerable.large}=fits",
+    ]);
   });
 
   it.each([
