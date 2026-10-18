@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
  * Context gaps on the real pages, over HTTP against a production build. Step 4.1: an ellipsis used
  * as punctuation is an ordinary search, blanks are read as before, more than two are not
  * interpreted, URLs are unchanged. Step 4.2: prepositions, collocations and linkers are offered
- * from authored structures, and nothing is made up.
+ * from authored structures, and nothing is made up. Step 4.3: each candidate carries a verdict
+ * with its evidence, in the response the page receives (the verdict UI is Step 4.6).
  */
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 
@@ -102,4 +103,53 @@ describe("the gap reader on Explore", () => {
     expect(page).not.toContain("Collocations with these words");
     expect(page).not.toContain("Prepositions after");
   });
+
+  /** The verdicts and evidence codes in the response serialised into the page, in order. */
+  const verdictsIn = (page: string) =>
+    [...page.matchAll(/verdict\\":\\"(\w+)\\"/g)].map(([, verdict]) => verdict);
+
+  it("sends a verdict with its evidence for each candidate", async () => {
+    const page = await html(explore("My family is very important ___ me"));
+    expect(page).toContain("Prepositions after “important”");
+    expect(verdictsIn(page)).toEqual(["fits", "unlikely"]);
+    expect(page).toContain("authored_mistake");
+    expect(page).toContain("person_follows");
+  });
+
+  it("says when the fit depends on what follows", async () => {
+    expect(verdictsIn(await html(explore("responsible ___ the project")))).toEqual([
+      "fits",
+      "depends",
+    ]);
+    const linkers = await html(explore("___, it is often slow and crowded"));
+    expect(new Set(verdictsIn(linkers))).toEqual(new Set(["depends"]));
+    expect(linkers).toContain("position:start");
+  });
+
+  it("keeps the verb-frame answer and adds its verdicts", async () => {
+    const page = await html(
+      explore("Governments should ____ more money into public transportation"),
+    );
+    expect(page).toContain("Verbs for the gap, checked against “money” and “into”");
+    expect(verdictsIn(page)).toEqual(["fits", "unlikely", "not_supported"]);
+  });
+
+  it("judges two blanks one at a time", async () => {
+    const page = await html(explore("Cars are responsible ___ pollution and depend ___ oil"));
+    expect(page).toContain("Gap 1 · Prepositions after “responsible”");
+    expect(page).toContain("Gap 2 · Prepositions after “depend”");
+    expect(verdictsIn(page)).toEqual(["likely_fits", "depends", "likely_fits", "depends"]);
+  });
+
+  it("filters after judging, and says what the filters hid", async () => {
+    const page = await html(`${explore("responsible ___ the project")}&kind=word`);
+    expect(page).toContain("Your search found 2 results, but none match these filters");
+  });
+
+  it.each(["important", "however..."])(
+    "gives the ordinary search %j no verdicts",
+    async (query) => {
+      expect(verdictsIn(await html(explore(query)))).toEqual([]);
+    },
+  );
 });

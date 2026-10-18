@@ -176,9 +176,32 @@ export function toGapFrame(
  */
 export function showsMistake(normalised: string, mistake: { wrong: string; right: string }) {
   const query = words(normalised);
+  const part = mistakeWrongPart(mistake);
+  if (query.join(" ") === part.wrong.join(" ")) return true;
+  if (!part.span) return false;
+  const { wrong } = part;
+  const [from, to] = part.span;
+
+  for (let at = 0; at + query.length <= wrong.length; at++) {
+    const here = query.every((word, offset) => wrong[at + offset] === word);
+    if (here && at <= from && at + query.length - 1 >= to) return true;
+  }
+  return false;
+}
+
+/**
+ * An authored mistake's normalised wrong words and the span (word positions, inclusive) that
+ * differs from its correction: the wrong words, or for a missing word the two words around it.
+ * No span when the two differ only in punctuation.
+ */
+export function mistakeWrongPart(mistake: { wrong: string; right: string }): {
+  wrong: string[];
+  span?: [number, number];
+  /** True when a word is missing (the span is the two words around the gap). */
+  missing?: boolean;
+} {
   const wrong = words(normaliseTerm(mistake.wrong));
   const right = words(normaliseTerm(mistake.right));
-  if (query.join(" ") === wrong.join(" ")) return true;
 
   let start = 0;
   while (start < wrong.length && start < right.length && wrong[start] === right[start]) start++;
@@ -192,14 +215,9 @@ export function showsMistake(normalised: string, mistake: { wrong: string; right
   }
   const end = wrong.length - shared;
   // Punctuation only: normalised, the wrong form and its correction are the same words.
-  if (start === wrong.length && wrong.length === right.length) return false;
+  if (start === wrong.length && wrong.length === right.length) return { wrong };
   // The wrong part, or for a missing word ("as result") the two words around the gap.
-  const [from, to] =
-    start < end ? [start, end - 1] : [Math.max(start - 1, 0), Math.min(start, wrong.length - 1)];
-
-  for (let at = 0; at + query.length <= wrong.length; at++) {
-    const here = query.every((word, offset) => wrong[at + offset] === word);
-    if (here && at <= from && at + query.length - 1 >= to) return true;
-  }
-  return false;
+  return start < end
+    ? { wrong, span: [start, end - 1] }
+    : { wrong, span: [Math.max(start - 1, 0), Math.min(start, wrong.length - 1)], missing: true };
 }

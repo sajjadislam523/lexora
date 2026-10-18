@@ -12,7 +12,7 @@
  * - Linker: the blank starts a sentence before a comma, or sits after a comma; linkers whose
  *   authored position and `connects` allow it.
  */
-import type { DiscourseFunction, IeltsRelevance } from "../../schema/vocabulary";
+import type { Complement, DiscourseFunction, IeltsRelevance } from "../../schema/vocabulary";
 import type { CollocationTemplate, GapPatternHit, LinkerHit, PatternHit } from "../repository";
 import { STOPWORDS, stem } from "../text";
 
@@ -69,6 +69,10 @@ export type GapCandidate = {
   evidence: { id: string; display: string; mistakeId?: string };
   /** How many of the learner's words the structure covers (more is more specific). */
   span: number;
+  /** Prepositions: what the authored pattern says follows ("noun_or_ing", "person"…). */
+  complement?: Complement;
+  /** Collocations: a learner's word matched only through the stemmer, not as written. */
+  inflected?: boolean;
 };
 
 const GAP = "___";
@@ -168,6 +172,7 @@ export function prepositionCandidates(
       senseId: pattern.senseId,
       fill: pattern.preposition,
       term: `${pattern.base} ${pattern.preposition}`,
+      complement: pattern.complement,
       evidence: {
         id: pattern.id,
         display: pattern.pattern,
@@ -217,16 +222,24 @@ export function collocationCandidates(
       if (left.length > window.before.length || right.length > window.after.length) continue;
       if (!left.every((word, i) => sameWord(word, window.before[i]!))) continue;
       if (!right.every((word, i) => sameWord(word, window.after[i]!))) continue;
+      const inflected =
+        left.some((word, i) => word !== window.before[i]) ||
+        right.some((word, i) => word !== window.after[i]);
       if (!isContent(left[0]) && !isContent(right[0])) continue;
       const key = `${template.senseId}|${fill}`;
       const existing = found.get(key);
-      // The longest collocation wins; a tie goes to the smaller id, whatever order rows came in.
-      if (
-        existing &&
-        (existing.span > words.length - 1 ||
-          (existing.span === words.length - 1 && existing.evidence.id <= template.id))
-      ) {
-        continue;
+      // The longest collocation wins, then one matched as written over one matched only through
+      // an inflection, then the smaller id — whatever order the rows came in.
+      const rank = (span: number, stemmed: boolean, id: string) =>
+        [-span, stemmed ? 1 : 0, id] as const;
+      if (existing) {
+        const [a, b] = [
+          rank(existing.span, Boolean(existing.inflected), existing.evidence.id),
+          rank(words.length - 1, inflected, template.id),
+        ];
+        const keepExisting =
+          a[0] !== b[0] ? a[0] < b[0] : a[1] !== b[1] ? a[1] < b[1] : a[2] <= b[2];
+        if (keepExisting) continue;
       }
       found.set(key, {
         gap: window.index,
@@ -236,6 +249,7 @@ export function collocationCandidates(
         term: template.display,
         evidence: { id: template.id, display: template.display },
         span: words.length - 1,
+        ...(inflected && { inflected }),
       });
     }
   }
