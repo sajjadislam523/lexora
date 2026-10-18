@@ -48,10 +48,11 @@ export type TermResolution = {
 };
 
 /**
- * What a blank was read as (Phase 4 Step 4). Step 4.1 knows only the Phase 3 verb frames;
- * `unknown` means the blank was read but nothing in Lexora answers it yet.
+ * What a blank was read as (Phase 4 Step 4): the first kind of structure that answered it, in the
+ * order verb frame, preposition pattern, collocation, linker. `unknown`: read, but nothing in
+ * Lexora answers it.
  */
-export type GapType = "verb_frame" | "unknown";
+export type GapType = "verb_frame" | "preposition" | "collocation" | "linker" | "unknown";
 
 /** One blank of a context-gap query, in order (at most two). */
 export type GapSlot = {
@@ -91,6 +92,12 @@ export type SearchResult = {
   fit?: GapFit;
   /** Context-gap results: the word for the gap and the preposition it takes here. */
   fill?: { word: string; preposition?: string };
+  /**
+   * Context-gap candidates other than verb frames (Step 4.2): which blank, what kind of structure,
+   * and the authored structure's id (a preposition pattern, collocation, item form or linker
+   * sense). No verdict yet.
+   */
+  gapMatch?: { gap: 0 | 1; type: "preposition" | "collocation" | "linker"; evidence: string };
 };
 
 export type ResultGroup = { label?: string; results: SearchResult[] };

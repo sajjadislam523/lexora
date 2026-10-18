@@ -42,7 +42,7 @@ describe("gap queries", () => {
   });
 
   it("keeps underscore blanks as gap queries even when nothing answers them yet", async () => {
-    for (const query of ["responsible ___ the project", "depend ___ others", "I like ___"]) {
+    for (const query of ["I like ___", "a ___ the", "Governments should ___ to public transport"]) {
       const response = await service.search(query);
       expect(response?.interpretation.intent, query).toBe("CONTEXT_GAP");
       expect(response?.outcome, query).toBe("none");
