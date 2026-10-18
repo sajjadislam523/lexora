@@ -195,14 +195,14 @@ describe("two blanks", () => {
 });
 
 describe("what stays as it was", () => {
-  it("adds nothing to the protected verb-frame answers", async () => {
+  it("adds no candidates to the protected verb-frame answers (only Step 4.3 verdicts)", async () => {
     for (const golden of GOLDEN_CASES.filter((g) => g.intent === "CONTEXT_GAP")) {
       const response = await service.search(golden.query);
       const results = response!.groups.flatMap((g) => g.results);
-      expect(
-        results.some((r) => r.gapMatch),
-        golden.query,
-      ).toBe(false);
+      for (const result of results) {
+        expect(result.fit, golden.query).toBeDefined();
+        expect(result.gapMatch?.type, golden.query).toBe("verb_frame");
+      }
     }
   });
 

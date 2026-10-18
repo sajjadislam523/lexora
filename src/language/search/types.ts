@@ -3,6 +3,7 @@
  * query gives every visitor the same response; saved state is added in the browser.
  */
 import type { SearchFilters } from "../filters";
+import type { GapVerdict } from "./gap/verdicts";
 import type { SenseSummary, Span } from "../model";
 import type { ItemKind, Register, Skill } from "../schema/vocabulary";
 
@@ -93,11 +94,20 @@ export type SearchResult = {
   /** Context-gap results: the word for the gap and the preposition it takes here. */
   fill?: { word: string; preposition?: string };
   /**
-   * Context-gap candidates other than verb frames (Step 4.2): which blank, what kind of structure,
-   * and the authored structure's id (a preposition pattern, collocation, item form or linker
-   * sense). No verdict yet.
+   * Context-gap candidates (Steps 4.2–4.3): which blank, what kind of structure, the authored
+   * structure, and the context-fit verdict with its evidence. Verb-frame results also keep their
+   * Phase 3 `fit`.
    */
-  gapMatch?: { gap: 0 | 1; type: "preposition" | "collocation" | "linker"; evidence: string };
+  gapMatch?: {
+    gap: 0 | 1;
+    type: "verb_frame" | "preposition" | "collocation" | "linker";
+    /** The authored structure's id (a verb frame's display text: frames carry no id here). */
+    evidence: string;
+    /** Step 4.3: how well it fits this sentence, from authored evidence (never a score). */
+    verdict: GapVerdict;
+    /** The evidence behind the verdict, as stable codes ("pattern", "authored_mistake"…). */
+    signals: string[];
+  };
 };
 
 export type ResultGroup = { label?: string; results: SearchResult[] };
