@@ -16,18 +16,21 @@ import type { FramePart, SenseSummary } from "@/language/model";
 import { toGapFrame } from "@/language/search/match";
 import type {
   CollocationHit,
+  CollocationTemplate,
   FilterCounts,
   FormMatch,
+  GapPatternHit,
   GapFrame,
   IntentDefinition,
   LanguageSearchRepository,
+  LinkerHit,
   MistakeHit,
   PatternHit,
   RelationHit,
   SenseFacets,
   SenseRef,
 } from "@/language/search/repository";
-import { trigramSimilarity } from "@/language/search/text";
+import { stem, trigramSimilarity } from "@/language/search/text";
 import type { DiscourseFunction, ItemKind, RelationType } from "@/language/schema/vocabulary";
 import type { ContentRows } from "@/server/content/build";
 
@@ -153,6 +156,83 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
         ...(p.mistakeId && { mistakeId: p.mistakeId }),
         position: p.position,
       }));
+  }
+
+  // ── Context gaps: the same rows as the database repository ───────────────────────────────
+
+  async findGapPatterns(
+    bases: readonly string[],
+    forms: readonly string[],
+  ): Promise<GapPatternHit[]> {
+    const byBase = this.patterns((p) => bases.includes(p.baseNormalized)).map((pattern) => ({
+      pattern,
+    }));
+    const byForm = this.rows.forms
+      .filter(
+        (form) => forms.includes(form.normalized) && this.items.some((i) => i.id === form.itemId),
+      )
+      .flatMap((form) => {
+        const senseIds = this.rows.senses.filter((s) => s.itemId === form.itemId).map((s) => s.id);
+        return this.patterns((p) => senseIds.includes(p.senseId)).map((pattern) => ({
+          pattern,
+          viaForm: form.normalized,
+        }));
+      });
+    return [...byBase, ...byForm];
+  }
+
+  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplate[]> {
+    if (words.length === 0) return [];
+    const wanted = (normalized: string) => {
+      const padded = ` ${normalized} `;
+      return words.some((w) => padded.includes(` ${w} `) || padded.includes(` ${stem(w)}`));
+    };
+    const fromCollocations = this.rows.collocations
+      .filter((c) => this.isLiveSense(c.senseId) && wanted(c.normalized))
+      .map((c) => ({
+        id: c.id,
+        senseId: c.senseId,
+        ...(c.itemId && { itemId: c.itemId }),
+        normalized: c.normalized,
+        display: c.phrase,
+      }));
+    const fromForms = this.rows.forms.flatMap((form) => {
+      const item = this.items.find((i) => i.id === form.itemId);
+      if (!item || (item.kind !== "collocation" && item.kind !== "phrase")) return [];
+      if (!wanted(form.normalized)) return [];
+      const sense = this.rows.senses
+        .filter((s) => s.itemId === item.id && this.isLiveSense(s.id))
+        .sort((a, b) => a.position - b.position)[0];
+      return sense
+        ? [
+            {
+              id: `form:${item.id}:${form.normalized}`,
+              senseId: sense.id,
+              itemId: item.id,
+              normalized: form.normalized,
+              display: form.form,
+            },
+          ]
+        : [];
+    });
+    return [...fromCollocations, ...fromForms];
+  }
+
+  async listLinkers(): Promise<LinkerHit[]> {
+    return this.rows.linkers
+      .filter((linker) => this.isLiveSense(linker.senseId))
+      .map((linker) => {
+        const sense = this.rows.senses.find((s) => s.id === linker.senseId)!;
+        const item = this.items.find((i) => i.id === sense.itemId)!;
+        return {
+          senseId: linker.senseId,
+          headword: item.headword,
+          positions: linker.positions,
+          connects: linker.connects,
+          functions: sense.functions ?? [],
+        };
+      })
+      .sort((a, b) => (a.senseId < b.senseId ? -1 : a.senseId > b.senseId ? 1 : 0));
   }
 
   async findCollocationsByPhrase(normalised: string) {

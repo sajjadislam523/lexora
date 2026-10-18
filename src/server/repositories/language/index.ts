@@ -11,13 +11,17 @@ import {
   type SearchFilters,
 } from "@/language/filters";
 import { toGapFrame } from "@/language/search/match";
+import { stem } from "@/language/search/text";
 import type {
   CollocationHit,
+  CollocationTemplate,
   FilterCounts,
   FormMatch,
+  GapPatternHit,
   GapFrame,
   IntentDefinition,
   LanguageSearchRepository,
+  LinkerHit,
   MistakeHit,
   PatternHit,
   RelationHit,
@@ -349,6 +353,137 @@ export class DatabaseLanguageRepository
         limit 10
     `);
     return rows.map((row) => row.id);
+  }
+
+  // ── Context gaps (Phase 4 Step 4.2) ──────────────────────────────────────────────────────
+
+  async findGapPatterns(
+    bases: readonly string[],
+    forms: readonly string[],
+  ): Promise<GapPatternHit[]> {
+    const [byBase, byForm] = await Promise.all([
+      bases.length > 0
+        ? this.patternsWhere(inArray(prepositionPatterns.baseNormalized, [...bases]))
+        : Promise.resolve([]),
+      forms.length > 0
+        ? this.db
+            .select({ pattern: prepositionPatterns, form: itemForms.normalized })
+            .from(prepositionPatterns)
+            .innerJoin(senses, eq(senses.id, prepositionPatterns.senseId))
+            .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+            .innerJoin(itemForms, eq(itemForms.itemId, languageItems.id))
+            .where(
+              and(
+                inArray(itemForms.normalized, [...forms]),
+                eq(senses.status, "published"),
+                published(languageItems),
+              ),
+            )
+            .orderBy(
+              asc(languageItems.headword),
+              asc(senses.position),
+              asc(prepositionPatterns.position),
+              asc(itemForms.normalized),
+            )
+        : Promise.resolve([]),
+    ]);
+    return [
+      ...byBase.map((pattern) => ({ pattern })),
+      ...byForm.map(({ pattern, form }) => ({
+        pattern: {
+          id: pattern.id,
+          senseId: pattern.senseId,
+          base: pattern.base,
+          preposition: pattern.preposition,
+          pattern: pattern.pattern,
+          complement: pattern.complement,
+          ...(pattern.note && { note: pattern.note }),
+          ...(pattern.mistakeId && { mistakeId: pattern.mistakeId }),
+          position: pattern.position,
+        },
+        viaForm: form,
+      })),
+    ];
+  }
+
+  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplate[]> {
+    if (words.length === 0) return [];
+    // A word or its stem as a whole-word prefix; the exact alignment happens in the engine.
+    const likes = [
+      ...new Set(words.flatMap((w) => [`% ${escapeLike(w)} %`, `% ${escapeLike(stem(w))}%`])),
+    ];
+    const any = sql`any(array[${sql.join(
+      likes.map((like) => sql`${like}`),
+      sql`, `,
+    )}]::text[])`;
+    const [fromCollocations, fromForms] = await Promise.all([
+      this.db.execute<{
+        id: string;
+        sense_id: string;
+        item_id: string | null;
+        normalized: string;
+        display: string;
+      }>(sql`
+        select c.id, c.sense_id, c.item_id, c.normalized, c.phrase as display from collocations c
+          join senses s on s.id = c.sense_id and s.status = 'published'
+          join language_items i on i.id = s.item_id and i.status = 'published'
+          where (' ' || c.normalized || ' ') like ${any}
+          order by c.id
+      `),
+      this.db.execute<{
+        item_id: string;
+        sense_id: string;
+        normalized: string;
+        display: string;
+      }>(sql`
+        select f.item_id, f.normalized, f.form as display,
+            (select s.id from senses s where s.item_id = i.id and s.status = 'published'
+              order by s.position limit 1) as sense_id
+          from item_forms f
+          join language_items i on i.id = f.item_id and i.status = 'published'
+          where i.kind in ('collocation', 'phrase') and (' ' || f.normalized || ' ') like ${any}
+          order by f.item_id, f.normalized
+      `),
+    ]);
+    return [
+      ...fromCollocations.map((row) => ({
+        id: row.id,
+        senseId: row.sense_id,
+        ...(row.item_id && { itemId: row.item_id }),
+        normalized: row.normalized,
+        display: row.display,
+      })),
+      ...fromForms.flatMap((row) =>
+        row.sense_id
+          ? [
+              {
+                id: `form:${row.item_id}:${row.normalized}`,
+                senseId: row.sense_id,
+                itemId: row.item_id,
+                normalized: row.normalized,
+                display: row.display,
+              },
+            ]
+          : [],
+      ),
+    ];
+  }
+
+  async listLinkers(): Promise<LinkerHit[]> {
+    const rows = await this.db
+      .select({
+        senseId: linkerDetails.senseId,
+        headword: languageItems.headword,
+        positions: linkerDetails.positions,
+        connects: linkerDetails.connects,
+        functions: senses.functions,
+      })
+      .from(linkerDetails)
+      .innerJoin(senses, eq(senses.id, linkerDetails.senseId))
+      .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+      .where(and(eq(senses.status, "published"), published(languageItems)))
+      .orderBy(asc(linkerDetails.senseId));
+    return rows;
   }
 
   // ── Filters and browse (Phase 4) ─────────────────────────────────────────────────────────

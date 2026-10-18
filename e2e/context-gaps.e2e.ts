@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 /**
- * The gap reader on the real pages (Phase 4 Step 4.1), over HTTP against a production build: an
- * ellipsis used as punctuation is an ordinary search, blanks are read as before, more than two are
- * not interpreted, and URLs are unchanged.
+ * Context gaps on the real pages, over HTTP against a production build. Step 4.1: an ellipsis used
+ * as punctuation is an ordinary search, blanks are read as before, more than two are not
+ * interpreted, URLs are unchanged. Step 4.2: prepositions, collocations and linkers are offered
+ * from authored structures, and nothing is made up.
  */
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 
@@ -54,5 +55,51 @@ describe("the gap reader on Explore", () => {
       const response = await fetch(`${BASE_URL}${explore(query)}`, { redirect: "manual" });
       expect(response.status, query).toBe(200);
     }
+  });
+
+  it.each([
+    [
+      "responsible ___ the project",
+      "Prepositions after “responsible”",
+      ["responsible for", "responsible to"],
+    ],
+    ["depend ___ others", "Prepositions after “depend”", ["depend on"]],
+    [
+      "There was a ___ increase in cycling",
+      "Collocations with these words",
+      ["significant", "substantial"],
+    ],
+    [
+      "Governments should take ___ to reduce crime",
+      "Collocations with these words",
+      ["measures", "steps"],
+    ],
+    [
+      "___, it is often slow and crowded",
+      "Linkers that start a sentence",
+      ["however", "furthermore"],
+    ],
+    [
+      "My brother loves the city, ___ I prefer the country",
+      "Linkers that join two clauses",
+      ["whereas"],
+    ],
+  ])("offers authored candidates for %j", async (query, reading, words) => {
+    const page = await html(explore(query));
+    expect(page).toContain(reading);
+    for (const word of words) expect(page).toContain(word);
+  });
+
+  it("answers two blanks one at a time", async () => {
+    const page = await html(explore("Cars are responsible ___ pollution and depend ___ oil"));
+    expect(page).toContain("Language Lexora knows for these gaps");
+    expect(page).toContain("responsible for");
+    expect(page).toContain("depend on");
+  });
+
+  it.each(["a ___ the", "The ___ is high"])("makes nothing up for %j", async (query) => {
+    const page = await html(explore(query));
+    expect(page).not.toContain("Collocations with these words");
+    expect(page).not.toContain("Prepositions after");
   });
 });

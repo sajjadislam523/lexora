@@ -146,6 +146,16 @@ type GapCandidate = {
 
 **CG-D7:** retrieval reuses the existing repository and two small new reads (collocation templates, linker details), both "load published rows of one table". Matching is in memory over at most a few hundred rows. No embeddings, LLMs or full-text search for gap candidates.
 
+**As built in Step 4.2** (`src/language/search/gap/candidates.ts`; the owner's Step 4.2 scope: candidates for prepositions, collocations and linkers together, **no verdicts** — those move to Step 4.3, which also takes the plan's former 4.2–4.4 verdict work):
+
+- **Where it runs:** `gapAnswer` wraps the unchanged Phase 3 `gapSearch`. When a verb frame fits the first blank, that answer stands as it is and no candidate read runs; other blanks are matched on their own. When nothing matches, the existing answer (or its prompt) is returned.
+- **Reads** (three, in parallel, published rows only): `findGapPatterns(bases, forms)` (patterns by base, and patterns of items with an inflected form such as "depends on", with the form that matched), `findCollocationTemplates(words)` (collocations and collocation/phrase item forms containing a content word next to a blank, or its stem as a prefix; the exact alignment happens in the engine), `listLinkers()`. Then one summaries read and, when patterns link mistakes, one mistakes read.
+- **Prepositions:** a pattern counts only when its authored pattern text puts the preposition directly after the base (`be responsible for + noun`), not after an object (`allocate + noun + to`).
+- **Collocations:** exactly one collocation word in the blank, never a stopword; every other word matches (an inflection counts); a content word next to the blank. A collocation authored as a full item's form ("play a crucial role" under _crucial_) is answered by that item, as on result cards.
+- **Windows** stop at punctuation next to the blank, so nothing is read across a comma or a sentence break; the punctuation is the linker evidence (start + comma; between commas; after a comma).
+- **Order** (no scores): linkers by their first discourse function in vocabulary order; then the structure covering more of the learner's words; IELTS relevance; headword by code point; evidence id. At most 20 candidates per blank and type.
+- **Response:** groups per blank and type ("Prepositions after “responsible”", "Collocations with these words", "Linkers that start a sentence"; "Gap 1 · …" with two blanks); each candidate has `fill.word`, `gapMatch: { gap, type, evidence }` (the authored id) and a reason naming its structure; mistakes linked from matched patterns appear in `mistakes`. `gaps[].type` is the first kind that answered the blank. Verb-frame results are unchanged (no `gapMatch`). An ellipsis blank now counts when any analyser answers it.
+
 ## 8. Context fit
 
 What "fits" can honestly mean with today's data:

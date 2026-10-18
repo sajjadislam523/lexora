@@ -11,6 +11,8 @@ import type {
   DiscourseFunction,
   FormType,
   ItemKind,
+  LinkerConnects,
+  LinkerPosition,
   MistakeType,
   Region,
   RelationType,
@@ -89,6 +91,32 @@ export type IntentDefinition = {
   entries: { senseId: string; group: string; fit: string }[];
 };
 
+/** A preposition pattern for a context gap; `viaForm` is the item form that found it ("depends on"). */
+export type GapPatternHit = { pattern: PatternHit; viaForm?: string };
+
+/** A collocation, or a form of a collocation or phrase item, as a template for a context gap. */
+export type CollocationTemplate = {
+  /** The collocation's id, or `form:<item>:<form>` for an item form. */
+  id: string;
+  /** The sense it belongs to (for an item form, the item's first published sense). */
+  senseId: string;
+  /** The full collocation item: the collocation's linked item, or the form's own item. */
+  itemId?: string;
+  /** Normalised words. */
+  normalized: string;
+  /** As authored. */
+  display: string;
+};
+
+/** A published linker sense: where it goes and what it connects. */
+export type LinkerHit = {
+  senseId: string;
+  headword: string;
+  positions: LinkerPosition[];
+  connects: LinkerConnects;
+  functions: DiscourseFunction[];
+};
+
 /** A sense's filterable metadata (kind from its item). */
 export type SenseFacets = FilterFacets & { senseId: string };
 
@@ -149,4 +177,13 @@ export interface LanguageSearchRepository extends Pick<
     page: { limit: number; offset: number },
   ): Promise<{ senseIds: string[]; total: number }>;
   filterCounts(filters: SearchFilters): Promise<FilterCounts>;
+  /**
+   * Context gaps (Step 4.2): patterns whose base is one of `bases`, and patterns of the items
+   * that have one of `forms` (inflections such as "depends on"), with the form that matched.
+   */
+  findGapPatterns(bases: readonly string[], forms: readonly string[]): Promise<GapPatternHit[]>;
+  /** Published collocations and collocation/phrase item forms containing any of these words. */
+  findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplate[]>;
+  /** Every published linker sense with its position and connection details. */
+  listLinkers(): Promise<LinkerHit[]>;
 }

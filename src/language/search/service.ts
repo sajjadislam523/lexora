@@ -25,9 +25,28 @@ import {
 import type { SenseSummary } from "../model";
 import { MAX_QUERY_LENGTH, normaliseQuery, words } from "../normalise";
 import { RELATION_GROUPS, RELATION_PHRASE } from "../relations";
-import type { DiscourseFunction, RelationType } from "../schema/vocabulary";
+import {
+  DISCOURSE_FUNCTIONS,
+  type DiscourseFunction,
+  type RelationType,
+} from "../schema/vocabulary";
 
 import { classify, type Classification } from "./classify";
+import {
+  anchorWords,
+  baseCandidates,
+  collocationCandidates,
+  formCandidates,
+  gapWindows,
+  linkerCandidates,
+  linkerSlot,
+  orderCandidates,
+  prepositionCandidates,
+  type CandidateFacts,
+  type GapCandidate,
+  type GapCandidateType,
+  type GapWindow,
+} from "./gap/candidates";
 import { planGaps, type Blank, type GapPlan } from "./gap/reader";
 import { frameFit, matchIntent, readGap, showsMistake } from "./match";
 import { RELATION_PRIORITY, rank, type Candidate, type MatchTier } from "./rank";
@@ -200,8 +219,8 @@ export class LanguageSearchService {
         return this.expressionSearch(base, classification);
       case "CONTEXT_GAP": {
         if (plan.kind !== "gap") return this.gapSearch(base, []);
-        const response = await this.gapSearch(base, plan.blanks);
-        // An ellipsis is only a possible blank: without a verb frame for it, search as usual.
+        const response = await this.gapAnswer(base, query, plan.blanks);
+        // An ellipsis is only a possible blank: when nothing answers it, search as usual.
         const onlyEllipses = plan.blanks.every((blank) => blank.marker === "ellipsis");
         if (onlyEllipses && response.groups.length === 0) {
           return this.interpret(query, plan.withoutBlanks, { kind: "ordinary", text: "" });
@@ -503,6 +522,123 @@ export class LanguageSearchService {
   }
 
   // ── Context gap ──────────────────────────────────────────────────────────────────────────
+
+  /**
+   * A context-gap answer (Phase 4 Step 4.2). The Phase 3 verb-frame answer comes first and, when a
+   * frame fits the first blank, stands as it is. Every other blank is matched on its own against
+   * preposition patterns, collocations and linkers, without combining candidates across blanks;
+   * when nothing matches, the verb-frame answer (or its prompt) is the answer.
+   */
+  private async gapAnswer(
+    base: { query: string; normalised: string },
+    query: string,
+    blanks: Blank[],
+  ): Promise<SearchResponse> {
+    const framed = await this.gapSearch(base, blanks);
+    const frameFits = framed.groups.length > 0;
+    const windows = gapWindows(base.normalised, query, blanks).filter(
+      (window) => !(frameFits && window.index === 0),
+    );
+    if (windows.length === 0) return framed;
+
+    const found = await this.gapCandidates(windows);
+    if (found.candidates.length === 0) return framed;
+
+    const twoGaps = blanks.length > 1;
+    const groups: ResultGroup[] = frameFits ? [...framed.groups] : [];
+    for (const window of windows) {
+      for (const type of GAP_CANDIDATE_TYPES) {
+        const list = found.candidates.filter((c) => c.gap === window.index && c.type === type);
+        if (list.length === 0) continue;
+        const label = gapGroupLabel(type, list, window);
+        groups.push({
+          label: twoGaps ? `Gap ${window.index + 1} · ${label}` : label,
+          results: list.flatMap((candidate) => {
+            const summary = found.summaries.get(candidate.senseId);
+            return summary ? [gapCandidateResult(summary, candidate, found.linkers)] : [];
+          }),
+        });
+      }
+    }
+
+    const gaps = (framed.gaps ?? []).map((slot) => {
+      if (slot.type !== "unknown") return slot;
+      const first = found.candidates.find((c) => c.gap === slot.index);
+      return first ? { ...slot, type: first.type } : slot;
+    });
+    const newGroups = groups.slice(frameFits ? framed.groups.length : 0);
+    return respond(
+      base,
+      { intent: "CONTEXT_GAP", modifiers: [] },
+      {
+        summary: frameFits
+          ? framed.interpretation.summary
+          : newGroups.length === 1 && !twoGaps
+            ? newGroups[0]!.label!
+            : twoGaps
+              ? "Language Lexora knows for these gaps"
+              : "Language Lexora knows for this gap",
+        groups,
+        ...(frameFits && framed.guide && { guide: framed.guide }),
+        mistakes: found.mistakes,
+        ...(framed.gap && { gap: framed.gap }),
+        gaps,
+      },
+    );
+  }
+
+  /** Candidates for each window from three bounded reads, ordered by the fixed rule. */
+  private async gapCandidates(windows: GapWindow[]) {
+    const unique = (list: string[]) => [...new Set(list)];
+    const words = unique(windows.flatMap(anchorWords));
+    const [patterns, templates, linkers] = await Promise.all([
+      this.repo.findGapPatterns(
+        unique(windows.flatMap(baseCandidates)),
+        unique(windows.flatMap(formCandidates)),
+      ),
+      words.length > 0 ? this.repo.findCollocationTemplates(words) : Promise.resolve([]),
+      windows.some((window) => linkerSlot(window)) ? this.repo.listLinkers() : Promise.resolve([]),
+    ]);
+    const raw = windows.flatMap((window) => [
+      ...prepositionCandidates(window, patterns),
+      ...collocationCandidates(window, templates),
+      ...linkerCandidates(window, linkers),
+    ]);
+    if (raw.length === 0) {
+      return { candidates: [], summaries: new Map<string, SenseSummary>(), mistakes: [], linkers };
+    }
+
+    const mistakeIds = new Set(
+      raw.flatMap((c) => (c.evidence.mistakeId ? [c.evidence.mistakeId] : [])),
+    );
+    const [summaries, mistakes] = await Promise.all([
+      this.summaries(raw.map((c) => c.senseId)),
+      mistakeIds.size > 0
+        ? this.repo
+            .mistakesOf([...new Set(raw.filter((c) => c.evidence.mistakeId).map((c) => c.senseId))])
+            .then((list) => list.filter((m) => mistakeIds.has(m.id)))
+        : Promise.resolve([] as MistakeHit[]),
+    ]);
+    const firstFunction = new Map(linkers.map((l) => [l.senseId, l.functions[0]]));
+    const candidates = windows.flatMap((window) =>
+      GAP_CANDIDATE_TYPES.flatMap((type) =>
+        orderCandidates(
+          raw.filter((c) => c.gap === window.index && c.type === type),
+          (senseId): CandidateFacts | undefined => {
+            const summary = summaries.get(senseId);
+            if (!summary) return undefined;
+            return {
+              relevance: summary.ieltsRelevance,
+              headword: summary.headword.toLowerCase(),
+              ...(type === "linker" && { firstFunction: firstFunction.get(senseId) }),
+            };
+          },
+          DISCOURSE_FUNCTIONS,
+        ),
+      ),
+    );
+    return { candidates, summaries, mistakes, linkers };
+  }
 
   private async gapSearch(
     base: { query: string; normalised: string },
@@ -830,6 +966,48 @@ function respond(
  * rather than in it, so the response a visitor receives is unchanged by filters existing.
  */
 const MISTAKE_SENSES = new WeakMap<SearchResponse, string[]>();
+
+const GAP_CANDIDATE_TYPES: readonly GapCandidateType[] = ["preposition", "collocation", "linker"];
+
+/** The heading of one blank's candidates of one kind. Describes what was read, not a verdict. */
+function gapGroupLabel(type: GapCandidateType, list: GapCandidate[], window: GapWindow) {
+  if (type === "preposition") {
+    const base = list[0]!.term.split(" ").slice(0, -1).join(" ");
+    return `Prepositions after ${quote(base)}`;
+  }
+  if (type === "collocation") return "Collocations with these words";
+  const slot = linkerSlot(window);
+  return slot === "start"
+    ? "Linkers that start a sentence"
+    : slot === "between_commas"
+      ? "Linkers between commas"
+      : "Linkers that join two clauses";
+}
+
+/** A candidate as a result card: the sense it belongs to, its words, and its evidence. */
+function gapCandidateResult(
+  summary: SenseSummary,
+  candidate: GapCandidate,
+  linkers: readonly { senseId: string; functions: DiscourseFunction[] }[],
+): SearchResult {
+  const reason =
+    candidate.type === "preposition"
+      ? `${quote(candidate.fill)} after ${candidate.term.split(" ").slice(0, -1).join(" ")} — ${candidate.evidence.display}`
+      : candidate.type === "collocation"
+        ? `${quote(candidate.fill)} in the collocation ${quote(candidate.evidence.display)}`
+        : linkerReason(linkers.find((l) => l.senseId === candidate.senseId)?.functions[0]);
+  return resultFrom(summary, reason, {
+    key: `${candidate.evidence.id}:gap${candidate.gap}:${candidate.fill}`,
+    term: candidate.term,
+    ...(candidate.type === "preposition" && { pattern: candidate.evidence.display }),
+    fill: { word: candidate.fill },
+    gapMatch: { gap: candidate.gap, type: candidate.type, evidence: candidate.evidence.id },
+  });
+}
+
+function linkerReason(fn: DiscourseFunction | undefined) {
+  return fn ? `A linker for ${FUNCTION_LABEL[fn]}` : "A linker";
+}
 
 /**
  * The blanks of a gap query as the response reports them: in order, each at its `___` token in
