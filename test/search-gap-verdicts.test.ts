@@ -84,13 +84,14 @@ describe("collocations", () => {
     ]);
   });
 
-  it("likely fits when a word matched only through an inflection; an exact form fits", async () => {
-    expect(verdicts(await service.search("Public transport plays a ___ role"))).toEqual([
-      "crucial{play-a-crucial-role.main}=fits",
-      "key{play-a-crucial-role.main}=likely_fits",
-      "major{play-a-crucial-role.main}=likely_fits",
-      "vital{play-a-crucial-role.main}=likely_fits",
-      "significant{significant.notable}=likely_fits",
+  it("likely fits when a word matched only through the stemmer", async () => {
+    // Step 4.4: an inflection the content authors ("plays" / "play") counts as written, so
+    // "Public transport plays a ___ role" is all fits (test/search-context-coverage.test.ts).
+    expect(verdicts(await service.search("This job requires ___ skill"))).toEqual([
+      "essential{essential.necessary}=likely_fits",
+    ]);
+    expect(verdicts(await service.search("This job requires ___ skills"))).toEqual([
+      "essential{essential.necessary}=fits",
     ]);
   });
 

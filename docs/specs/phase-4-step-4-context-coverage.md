@@ -1,6 +1,6 @@
 # Phase 4 · Step 4.4 — Context coverage: audit and specification
 
-Written: 18 October 2026 · Baseline: `phase/4-search-depth` at `99fdb62` (Steps 0–3 and 4.0–4.3 merged) · Status: **proposal, awaiting owner approval** · Parents: [phase-4-step-4-context-gaps.md](phase-4-step-4-context-gaps.md) (Step 4.0, as built in 4.1–4.3), [phase-4-search-depth.md](phase-4-search-depth.md) §7
+Written: 18 October 2026 · Baseline: `phase/4-search-depth` at `99fdb62` (Steps 0–3 and 4.0–4.3 merged) · Status: **approved; built in Step 4.4 (§6.7)** · Parents: [phase-4-step-4-context-gaps.md](phase-4-step-4-context-gaps.md) (Step 4.0, as built in 4.1–4.3), [phase-4-search-depth.md](phase-4-search-depth.md) §7
 
 This step is an audit and a specification only. Nothing in the engine, schema, content, UI or tests changed while writing it. Decisions are numbered **CC-D1 … CC-D9** so they don't collide with CG-D1 … CG-D18 or the parent register.
 
@@ -197,7 +197,7 @@ Phases: **done** = 4.1–4.3; **4.4** = this step; **content** = editorial conte
 | Punctuation boundaries                                        | Yes                                                  | Raw query                                                      | Windows stop at `, ; : . ? !`                 | —                                                   | —                                       | —                                      | done            |
 | Unknown / unreadable context                                  | Yes                                                  | —                                                              | Outcome `none`, gap type `unknown`            | —                                                   | Content widens it                       | —                                      | done            |
 
-## 6. Approved improvements (proposed for approval)
+## 6. Approved improvements
 
 Five changes, all **engine-only**: no content, no schema, no new verdict, no new response field. Implement them in this order, because each later change relies on 4.4-1's guards.
 
@@ -340,6 +340,54 @@ Terms: the **window** is 4.2's (`before[0]` is the word right before the blank).
 | `gap/verdicts.ts`              | Frame-object complement verdict (reuses `complementVerdict`); `other_side_unchecked`; `authored_form` |
 | `SearchResult.gapMatch`        | Unchanged shape. New signal codes: `frame_object`, `other_side_unchecked`, `authored_form`            |
 | `SearchResponse`, URL, API, UI | Unchanged                                                                                             |
+
+### 6.7 As built in Step 4.4
+
+Implemented on `feat/4-context-coverage`. The five changes follow §6 in order, and every row of §13 passes in memory and on Postgres. Where the build differs from the text above, the build is described here.
+
+- **Shared closed lists.** `search/gap/words.ts` holds the gap prepositions, the determiners and `isFunctionWord` (stopwords ∪ prepositions ∪ determiners). The anchor rule (4.4-4) and the open-right rule (G3) both use it.
+- **4.4-1:**
+  - G1 compares the fill with `before[0]` and `after[0]` (equal, same stem, or one inflection family).
+  - G2 needs the form template's `base` (the item's normalised headword) to have the same length and the same word at the fill's position. A form template without `base` offers nothing.
+  - G3 sets `openRight` on the candidate. The verdict adds `other_side_unchecked` and stays at most _Likely fits_.
+  - **Addition:** between two collocations of equal length for the same sense and word, one matched as written now wins over one matched through an authored inflection, which wins over one matched only by the stemmer. So "plays a ___ role" answers _crucial_ from the item form "plays a crucial role" (plain `collocation`), not from the base form through "plays" / "play".
+- **4.4-2:** the bare base runs are passed as `forms` to `findGapPatterns`. A pattern reached through one counts when the form differs from the pattern's base only in its first word (`differsInFirstWordOnly`).
+- **4.4-3:**
+  - **New candidate source:** `framePrepositionCandidates`. `before[1…3]` are passed as both `bases` and `forms`. The candidates have the internal type `frame_preposition`; responses show them as `gapMatch.type: "preposition"` and `gaps[].type: "preposition"`.
+  - **Frames carry more:** `GapFrame` gains `id` (the evidence id) and `next` (the complement slot after the preposition, from `toGapFrame`). The protected `gapSearch` is unchanged.
+  - **Frames are read only when needed:** `listGapFrames()` runs only when `reachesFrameHead` finds an object pattern's head, and an object, in place before a blank.
+  - **The object** must be a content word that is not in the Phase 3 skip list. "They invest it ___ property" stays `none`.
+  - **Card text:** the term is "allocate … to", so the learner's object isn't presented as authored. The group label quotes the learner's words from the head to the object, skip words included ("Prepositions after “devoted her life”", "… “invest more money”"). §6 said head + object.
+  - **The _Not supported_ reason** says the frame doesn't list the object, so Lexora can't say which preposition follows.
+- **4.4-4:** `anchorWords` returns every non-function word in the windows (deduplicated). A collocation needs at least one non-function word among its other words.
+- **4.4-5:**
+  - **Return shape:** `findCollocationTemplates(words)` returns `{ templates, forms }` instead of §6.6's `{ templates, variants }`. `forms` are the authored forms of every item that has a form starting with one of the words.
+  - **Families are built in the engine:** `inflectionFamilies(forms)` derives them in one place, not in each repository.
+  - **No new round trip:** the expansion is a CTE inside the two existing parallel statements (collocations, item forms). Memory applies the same filter.
+  - **Matching:** a template's first word matches through a family (`authoredForm`, signal `authored_form`, Fits); any other position only as written or through the stemmer.
+- **Measured** (local Postgres, statements logged by Drizzle):
+
+  | Query                                       | Statements             |
+  | ------------------------------------------- | ---------------------- |
+  | Protected verb frame                        | 5                      |
+  | Candidate queries                           | ≤ 14                   |
+  | "The council allocated money ___ education" | 15 (frames read again) |
+  | "The council allocated money ___"           | 10                     |
+  | Unreadable gap                              | 9                      |
+  | Ordinary lookup                             | 7                      |
+
+  Every gap query takes at most 35 ms (4.3: 15–30 ms).
+
+- **Limitations found while building:**
+  - **The ±4-word window** stops "The council allocated a lot of money ___ schools" from reaching the head; it stays `none`.
+  - **Function words outside the closed lists** ("between", "last") count as content, so "Prices rise ___ between 2015 and 2020" is _Likely fits_ (`other_side_unchecked`).
+  - **The left side stays unchecked**, as §7 says: "There is ___ a threat" offers _pose_ (Fits).
+- **Tests:**
+  - `test/search-context-coverage.test.ts`: every §13 row; filters × every single filter value; independence; determinism.
+  - `test/search-context-coverage.integration.test.ts`: memory = Postgres for 22 queries and under filters.
+  - Unit tests for every new helper and verdict rule.
+  - 5 e2e checks.
+  - One 4.3 test changed intentionally: "likely fits when a word matched only through the stemmer" now uses "This job requires ___ skill", since "plays a ___ role" is all _Fits_.
 
 ## 7. Explicit non-goals
 

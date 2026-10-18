@@ -5,7 +5,8 @@ import { describe, expect, it } from "vitest";
  * as punctuation is an ordinary search, blanks are read as before, more than two are not
  * interpreted, URLs are unchanged. Step 4.2: prepositions, collocations and linkers are offered
  * from authored structures, and nothing is made up. Step 4.3: each candidate carries a verdict
- * with its evidence, in the response the page receives (the verdict UI is Step 4.6).
+ * with its evidence, in the response the page receives (the verdict UI is Step 4.6). Step 4.4:
+ * no false fits from the learner's own word, and more of the authored evidence is read.
  */
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 
@@ -152,4 +153,46 @@ describe("the gap reader on Explore", () => {
       expect(verdictsIn(await html(explore(query)))).toEqual([]);
     },
   );
+});
+
+describe("context coverage on Explore (Step 4.4)", () => {
+  const verdictsIn = (page: string) =>
+    [...page.matchAll(/verdict\\":\\"(\w+)\\"/g)].map(([, verdict]) => verdict);
+  const fillsIn = (page: string) =>
+    [...page.matchAll(/fill\\":\{\\"word\\":\\"([\w ]+)\\"/g)].map(([, word]) => word);
+
+  it("doesn't offer the learner's own word, and hedges what it can't check", async () => {
+    const page = await html(explore("Governments must take ___ measures"));
+    expect(fillsIn(page)).toEqual(["urgent", "steps"]);
+    expect(verdictsIn(page)).toEqual(["fits", "likely_fits"]);
+    expect(page).toContain("other_side_unchecked");
+  });
+
+  it("reads a preposition after an inflected phrase", async () => {
+    const page = await html(explore("Plastic waste poses a threat ___ marine life"));
+    expect(page).toContain("Prepositions after “pose a threat”");
+    expect(verdictsIn(page)).toEqual(["likely_fits"]);
+  });
+
+  it("reads the preposition after a verb frame's object", async () => {
+    const page = await html(explore("The council allocated money ___ education"));
+    expect(page).toContain("Prepositions after “allocated money”");
+    expect(fillsIn(page)).toEqual(["to", "for"]);
+    expect(page).toContain("frame_object");
+    const unauthored = await html(explore("The council allocated land ___ housing"));
+    expect(verdictsIn(unauthored)).toEqual(["not_supported", "not_supported"]);
+  });
+
+  it("reads a verb collocation before an article, and authored inflections", async () => {
+    expect(fillsIn(await html(explore("Plastic waste ___ a threat to marine life")))).toEqual([
+      "pose",
+    ]);
+    const page = await html(explore("The government took ___ to reduce crime"));
+    expect(fillsIn(page)).toEqual(["measures", "steps"]);
+    expect(page).toContain("authored_form");
+  });
+
+  it('still makes nothing up for "It is ___ that"', async () => {
+    expect(verdictsIn(await html(explore("It is ___ that governments act")))).toEqual([]);
+  });
 });
