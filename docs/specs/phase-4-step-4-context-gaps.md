@@ -419,6 +419,8 @@ Gap queries are `/explore?q=…` pages: `noindex, follow`, canonical `/explore`,
 
 Each step is one feature PR into the phase branch, with golden cases for what it adds. Opening each as a draft lets the owner review it before CI's auto-merge.
 
+**Re-planned after Step 4.3:** steps 4.1–4.3 delivered the reader, all four candidate kinds and the verdicts, so the table's 4.2–4.4 are done. **Step 4.4** is now context coverage from existing evidence, specified in [phase-4-step-4-context-coverage.md](phase-4-step-4-context-coverage.md). The joint two-gap reading (the table's 4.5) awaits an owner decision there (OQ-B).
+
 ## 23. Deferred
 
 - The gapless sentence-level check (parent §7.3 item 2; parent D18 still _proposed_).
