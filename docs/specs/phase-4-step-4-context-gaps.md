@@ -210,6 +210,14 @@ Verdicts and groups are never recomputed. "Doesn't fit" rows are filtered like a
 
 An underscore blank is an explicit request for a gap, so it never silently becomes ordinary search. That keeps the pinned `Governments should ___ to public transport` and the learner's intent. Ellipses are ambiguous, so they fall back.
 
+**As built in Step 4.1** (`src/language/search/gap/reader.ts`, `planGaps`), with three refinements the owner's Step 4.1 instructions settled:
+
+- **More than two blanks → ordinary search** on the text without its markers, with `gapNote: "too_many_gaps"` on that ordinary response (the table above said a gap answer with a note).
+- **Underscores win:** when a query has any underscore blank, every ellipsis in it is punctuation, so "Well... Governments should ___ more money" reads one blank.
+- **Blanks and no words** ("__**", "**_ ___") → ordinary search, which has nothing to search: no answer (`null`), as for a punctuation-only query.
+
+An ellipsis between words counts as a blank only when a verb frame answers it (the only analyser in 4.1); otherwise ordinary search. Underscore blanks stay gap queries (the pinned `Governments should ___ to public transport`). Response fields as built: `gaps: { index, at, marker, type }[]` on gap answers (`type` is `verb_frame` or `unknown`) and `gapNote` on the ordinary fallback.
+
 ## 12. Multiple gaps
 
 - At most **two** blanks (CG-D4). Three or more → the message in §11; no analysis.

@@ -47,6 +47,22 @@ export type TermResolution = {
   region?: "gb" | "us";
 };
 
+/**
+ * What a blank was read as (Phase 4 Step 4). Step 4.1 knows only the Phase 3 verb frames;
+ * `unknown` means the blank was read but nothing in Lexora answers it yet.
+ */
+export type GapType = "verb_frame" | "unknown";
+
+/** One blank of a context-gap query, in order (at most two). */
+export type GapSlot = {
+  index: 0 | 1;
+  /** The blank's position among the words of `normalised` (its `___` token). */
+  at: number;
+  /** What the learner typed: underscores, or an ellipsis between words. */
+  marker: "underscore" | "ellipsis";
+  type: GapType;
+};
+
 /** Context-gap fit: does this verb work in the learner's sentence? */
 export type GapFit = "fits" | "different_preposition" | "unlikely";
 
@@ -98,6 +114,13 @@ export type SearchResponse = {
   didYouMean?: string[];
   /** Context-gap queries: the object and preposition read after the gap. */
   gap?: { object?: string; preposition?: string };
+  /** Context-gap queries: every blank read, in order (`query` is the learner's sentence). */
+  gaps?: GapSlot[];
+  /**
+   * Set on an ordinary answer to a query whose blanks Lexora didn't read: more than two
+   * (Step 4 reads at most two).
+   */
+  gapNote?: "too_many_gaps";
   /** `fallback`: full-text matches only, labelled as such. `none`: nothing matched. */
   outcome: "results" | "fallback" | "none";
   /**

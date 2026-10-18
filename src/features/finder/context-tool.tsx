@@ -7,22 +7,24 @@ import { useState } from "react";
 import { ChoiceOption } from "@/components/lexora/choice-option";
 import { FitBadge } from "@/components/lexora/fit-badge";
 import { GapSentence, type GapPart } from "@/components/lexora/gap-sentence";
+import { planGaps } from "@/language/search/gap/reader";
 import type { SearchResponse, SearchResult } from "@/language/search/types";
 import { cn } from "@/lib/utils";
-
-const GAP_MARKER = /_{2,}|…|\.{3,}/;
 
 /**
  * Splits the learner's sentence around the gap, and around the preposition the engine read after
  * it, so each choice can fill both: "Governments should [allocate] more money [to] …".
- * Display only — which verbs fit, and why, comes from the search engine.
+ * Display only — which verbs fit, and why, comes from the search engine; where the blank is comes
+ * from the engine's own gap reader, so an ellipsis used as punctuation is never taken for it.
  */
 function sentenceParts(sentence: string, preposition: string | undefined): GapPart[] {
-  const match = GAP_MARKER.exec(sentence);
-  if (!match) return [sentence];
-  const before = sentence.slice(0, match.index);
-  const after = sentence.slice(match.index + match[0].length);
-  const word = preposition ? new RegExp(`\\b${preposition}\\b`, "i").exec(after) : null;
+  const plan = planGaps(sentence);
+  const blank = plan.kind === "gap" ? plan.blanks[0] : undefined;
+  if (!blank) return [sentence];
+  const before = sentence.slice(0, blank.start);
+  const after = sentence.slice(blank.end);
+  const escaped = preposition?.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const word = escaped ? new RegExp(`\\b${escaped}\\b`, "i").exec(after) : null;
   if (!word) return [before, { gap: 0 }, after];
   return [
     before,

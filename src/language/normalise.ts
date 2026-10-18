@@ -9,7 +9,8 @@ export const MAX_QUERY_LENGTH = 200;
 /** The single token every gap marker (`___`, `____`, `…`, `...`) becomes in a query. */
 export const GAP_TOKEN = "___";
 
-const GAP_MARKERS = /_{2,}|…|\.{3,}/g;
+/** What the normaliser turns into a gap token: 2+ underscores, `…`, or 3+ dots. */
+export const GAP_MARKERS = /_{2,}|…|\.{3,}/g;
 
 /**
  * Unicode NFKC, lower case, straight quotes; keep letters, digits, apostrophes, hyphens, `+`, `?`
