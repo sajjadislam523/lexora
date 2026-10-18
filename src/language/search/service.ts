@@ -28,6 +28,7 @@ import { RELATION_GROUPS, RELATION_PHRASE } from "../relations";
 import type { DiscourseFunction, RelationType } from "../schema/vocabulary";
 
 import { classify, type Classification } from "./classify";
+import { planGaps, type Blank, type GapPlan } from "./gap/reader";
 import { frameFit, matchIntent, readGap, showsMistake } from "./match";
 import { RELATION_PRIORITY, rank, type Candidate, type MatchTier } from "./rank";
 import type {
@@ -46,6 +47,7 @@ import {
   type BrowseResponse,
   type FitGuide,
   type GapFit,
+  type GapSlot,
   type Modifier,
   type ResultGroup,
   type SearchResponse,
@@ -158,9 +160,25 @@ export class LanguageSearchService {
     } satisfies SearchResponse;
   }
 
+  /**
+   * The engine's answer. The gap reader decides first whether the query asks for a word in a gap
+   * (underscores, or an ellipsis between words, at most two) or is an ordinary search; markers
+   * that aren't blanks are dropped before normalising, so "however..." searches "however".
+   */
   private async answer(input: string): Promise<SearchResponse | null> {
     const query = input.trim().slice(0, MAX_QUERY_LENGTH);
-    const normalised = normaliseQuery(query);
+    const plan = planGaps(query);
+    const response = await this.interpret(query, plan.text, plan);
+    if (response && plan.kind === "ordinary" && plan.note) response.gapNote = plan.note;
+    return response;
+  }
+
+  private async interpret(
+    query: string,
+    text: string,
+    plan: GapPlan,
+  ): Promise<SearchResponse | null> {
+    const normalised = normaliseQuery(text);
     if (!normalised) return null;
 
     const classification = classify(normalised);
@@ -180,8 +198,16 @@ export class LanguageSearchService {
       case "SENTENCE_PATTERN":
       case "CONTEXTUAL_EXPRESSION":
         return this.expressionSearch(base, classification);
-      case "CONTEXT_GAP":
-        return this.gapSearch(base);
+      case "CONTEXT_GAP": {
+        if (plan.kind !== "gap") return this.gapSearch(base, []);
+        const response = await this.gapSearch(base, plan.blanks);
+        // An ellipsis is only a possible blank: without a verb frame for it, search as usual.
+        const onlyEllipses = plan.blanks.every((blank) => blank.marker === "ellipsis");
+        if (onlyEllipses && response.groups.length === 0) {
+          return this.interpret(query, plan.withoutBlanks, { kind: "ordinary", text: "" });
+        }
+        return response;
+      }
       case "LOOKUP":
         return this.lookup(base, normalised, []);
     }
@@ -478,7 +504,10 @@ export class LanguageSearchService {
 
   // ── Context gap ──────────────────────────────────────────────────────────────────────────
 
-  private async gapSearch(base: { query: string; normalised: string }): Promise<SearchResponse> {
+  private async gapSearch(
+    base: { query: string; normalised: string },
+    blanks: Blank[],
+  ): Promise<SearchResponse> {
     const c: Classification = { intent: "CONTEXT_GAP", modifiers: [] };
     const reading = readGap(base.normalised);
     if (!reading.object) {
@@ -486,6 +515,7 @@ export class LanguageSearchService {
         summary: "Find a word for the gap — add the words that come after it",
         groups: [],
         gap: reading,
+        gaps: gapSlots(base.normalised, blanks, false),
       });
     }
 
@@ -537,6 +567,7 @@ export class LanguageSearchService {
       summary: `Verbs for the gap, checked against ${context}`,
       groups,
       gap: reading,
+      gaps: gapSlots(base.normalised, blanks, fitting.length > 0),
       guide:
         groups.length > 0
           ? {
@@ -761,6 +792,7 @@ function respond(
     mistakes?: MistakeHit[];
     outcome?: SearchResponse["outcome"];
     gap?: SearchResponse["gap"];
+    gaps?: GapSlot[];
   },
 ): SearchResponse {
   const groups = parts.groups.filter((group) => group.results.length > 0);
@@ -783,6 +815,7 @@ function respond(
     ...(parts.guide && parts.guide.rows.length > 0 && { guide: parts.guide }),
     mistakes,
     ...(parts.gap && { gap: parts.gap }),
+    ...(parts.gaps && parts.gaps.length > 0 && { gaps: parts.gaps }),
     outcome: groups.length === 0 ? "none" : (parts.outcome ?? "results"),
   };
   MISTAKE_SENSES.set(
@@ -797,6 +830,27 @@ function respond(
  * rather than in it, so the response a visitor receives is unchanged by filters existing.
  */
 const MISTAKE_SENSES = new WeakMap<SearchResponse, string[]>();
+
+/**
+ * The blanks of a gap query as the response reports them: in order, each at its `___` token in
+ * the normalised query. The first blank is a verb frame when a frame fits it (the Phase 3 reading
+ * covers the first blank only); anything else is `unknown` until later Step 4 analysers.
+ */
+function gapSlots(normalised: string, blanks: Blank[], frameFits: boolean): GapSlot[] {
+  const positions = words(normalised).flatMap((word, at) => (word === "___" ? [at] : []));
+  return blanks.slice(0, 2).flatMap((blank, index): GapSlot[] => {
+    const at = positions[index];
+    if (at === undefined) return [];
+    return [
+      {
+        index: index as 0 | 1,
+        at,
+        marker: blank.marker,
+        type: index === 0 && frameFits ? "verb_frame" : "unknown",
+      },
+    ];
+  });
+}
 
 function didYouMean(
   base: { query: string; normalised: string },
