@@ -381,7 +381,11 @@ Implemented on `feat/4-context-coverage`. The five changes follow §6 in order, 
 - **Limitations found while building:**
   - **The ±4-word window** stops "The council allocated a lot of money ___ schools" from reaching the head; it stays `none`.
   - **Function words outside the closed lists** ("between", "last") count as content, so "Prices rise ___ between 2015 and 2020" is _Likely fits_ (`other_side_unchecked`).
-  - **The left side stays unchecked**, as §7 says: "There is ___ a threat" offers _pose_ (Fits).
+  - **Resolved in review (left side):** the build first gave "There is ___ a threat" → _pose_ Fits, the residual risk §7 described. The review blocked it, so the build adds **G3-left**:
+    - **Rule:** when a collocation starts at the blank and the learner's word right before it is a function word (`isFunctionWord`: "is", "the", "to"…), that word combines with the collocation's first word ("is pose") and no authored structure covers the combination. The verdict is at most _Likely fits_, with the same `other_side_unchecked` signal and a reason that names the word ("Lexora can't check “is” before it").
+    - **Still Fits:** a content word before the blank (a subject: "Plastic waste ___ a threat"), or no word at all, leaves nothing to combine with.
+    - **Also caught:** "There is ___ awareness" (_raise_), "It is ___ a key role" (_play_).
+    - **Cost:** a few correct sentences also drop to _Likely fits_ ("There is ___ debate", "aim to ___ awareness", "the ___ skills"). That is the precision-over-recall choice.
 - **Tests:**
   - `test/search-context-coverage.test.ts`: every §13 row; filters × every single filter value; independence; determinism.
   - `test/search-context-coverage.integration.test.ts`: memory = Postgres for 22 queries and under filters.
@@ -403,7 +407,7 @@ Implemented on `feat/4-context-coverage`. The five changes follow §6 in order, 
 - No change to ordinary search, `rank.ts`, filters, the gap reader (4.1) or the Phase 3 `gapSearch`.
 - No joint two-blank reading: candidates are never combined across blanks (OQ-B).
 
-**Residual risks 4.4 does not remove (documented, not hidden).** A collocation fill's **left** side is never checked. So "There is ___ awareness" offers _raise_ (Fits), and after 4.4-4, "There is ___ a threat" would offer _pose_ (Fits). Fixing this needs word roles or part-of-speech data (OQ5), and the copy rules call it a pattern fit, not a grammar check. The same limit exists today for adjacent anchors.
+**Residual risks 4.4 does not remove (documented, not hidden).** _Resolved in Step 4.4 (§6.7, G3-left): a collocation starting at the blank after a function word is now at most Likely fits._ As first written: a collocation fill's **left** side is never checked. So "There is ___ awareness" offers _raise_ (Fits), and after 4.4-4, "There is ___ a threat" would offer _pose_ (Fits). Fixing this needs word roles or part-of-speech data (OQ5), and the copy rules call it a pattern fit, not a grammar check. The same limit exists today for adjacent anchors.
 
 ## 8. Deferred, with reasons
 

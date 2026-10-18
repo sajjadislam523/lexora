@@ -79,6 +79,12 @@ export type GapCandidate = {
    * word it doesn't cover, so that side is unchecked.
    */
   openRight?: boolean;
+  /**
+   * Collocations: the collocation starts with the blank and the learner's word before it is a
+   * function word ("is", "the", "to"…). That word combines with the collocation's first word
+   * ("is pose") and no authored structure covers the combination, so that side is unchecked.
+   */
+  openLeft?: boolean;
   /** Frame prepositions: the learner's verb and object before the blank ("allocated money"). */
   context?: string;
   /** Frame prepositions: whether the learner's object is one of the frame's authored objects. */
@@ -419,6 +425,8 @@ export function collocationCandidates(
       const authoredForm = matches.includes("authored");
       const next = window.after[0];
       const openRight = right.length === 0 && next !== undefined && !isFunctionWord(next);
+      const previous = window.before[0];
+      const openLeft = left.length === 0 && previous !== undefined && isFunctionWord(previous);
       const key = `${template.senseId}|${fill}`;
       const existing = found.get(key);
       // The longest collocation wins, then one matched as written over one matched through an
@@ -446,6 +454,7 @@ export function collocationCandidates(
         ...(inflected && { inflected }),
         ...(authoredForm && { authoredForm }),
         ...(openRight && { openRight }),
+        ...(openLeft && { openLeft }),
       });
     }
   }

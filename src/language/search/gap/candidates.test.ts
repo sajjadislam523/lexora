@@ -457,6 +457,28 @@ describe("Step 4.4: collocation guards, anchor and authored inflections", () => 
     expect(end?.openRight).toBeUndefined();
   });
 
+  it("marks a collocation that starts at the blank after a function word, and only then", () => {
+    const threat = template({
+      id: "form:pose-a-threat:pose a threat",
+      senseId: "pose-a-threat.danger",
+      itemId: "pose-a-threat",
+      normalized: "pose a threat",
+      display: "pose a threat",
+      base: "pose a threat",
+    });
+    const [afterIs] = collocationCandidates(first("There is ___ a threat"), [threat]);
+    expect([afterIs?.fill, afterIs?.openLeft]).toEqual(["pose", true]);
+    const [afterNoun] = collocationCandidates(first("Plastic waste ___ a threat"), [threat]);
+    expect(afterNoun?.openLeft).toBeUndefined();
+    const [atStart] = collocationCandidates(first("___ a threat to wildlife"), [threat]);
+    expect(atStart?.openLeft).toBeUndefined();
+    const [afterComma] = collocationCandidates(first("It is, ___ a threat"), [threat]);
+    expect(afterComma?.openLeft).toBeUndefined();
+    // A collocation word before the blank is covered: nothing is open on that side.
+    const [covered] = collocationCandidates(first("There was a ___ increase"), [template({})]);
+    expect(covered?.openLeft).toBeUndefined();
+  });
+
   it("anchors on any content word of the collocation, not only the one next to the blank", () => {
     const threat = template({
       id: "form:pose-a-threat:pose a threat",
