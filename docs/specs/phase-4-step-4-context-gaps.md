@@ -427,6 +427,16 @@ Each step is one feature PR into the phase branch, with golden cases for what it
 
 The five verdicts and their precedence (§8) are unchanged.
 
+**As built in Step 4.6 (context-tool UI):**
+
+- **What it renders:** the Finder/Explore context tool shows the engine's context-gap answer as it is — groups in the engine's order, every answer with a `VerdictBadge` (Fits · Likely fits · Depends · Unlikely · Not supported, icon and label), its reason, and a link to the language page.
+- **Pairs and numbering:** pairs come first under _Both gaps_ and fill both gaps when chosen. In a two-gap sentence each group names its gap and the blanks are numbered.
+- **Mistakes and labels:** _Mistakes to avoid_ shows the answer's authored mistakes, and a disclosure explains the five labels without scores.
+- **No answer:** an unanswered gap gets an honest empty state ("Lexora couldn’t find a pattern it knows for this gap yet").
+- **More than two gaps:** the ordinary results get a note that Lexora reads up to two gaps.
+- **Contract:** nothing is recomputed in the view (`src/features/finder/context-presentation.ts` only lays out the sentence and headings). No engine, URL or filter change.
+- **Copy rules (§14):** followed throughout — the tool talks about Lexora's patterns, never "correct" or "grammar".
+
 ## 23. Deferred
 
 - The gapless sentence-level check (parent §7.3 item 2; parent D18 still _proposed_).

@@ -8,6 +8,8 @@ type GapSentenceProps = {
   fills?: (string | undefined)[];
   /** `highlight` for chosen language; `danger` marks a wrong attempt. */
   tone?: "highlight" | "danger";
+  /** Number the gaps ("gap 1", "gap 2") when a sentence has more than one. */
+  numbered?: boolean;
   className?: string;
 };
 
@@ -19,6 +21,7 @@ export function GapSentence({
   parts,
   fills = [],
   tone = "highlight",
+  numbered = false,
   className,
 }: GapSentenceProps) {
   return (
@@ -33,7 +36,12 @@ export function GapSentence({
                 aria-hidden
                 className="mx-0.5 inline-block w-16 translate-y-1 border-b-2 border-input sm:w-20"
               />
-              <span className="sr-only">blank</span>
+              {numbered ? (
+                <sup aria-hidden className="type-micro text-subtle-foreground">
+                  {part.gap + 1}
+                </sup>
+              ) : null}
+              <span className="sr-only">{numbered ? `gap ${part.gap + 1}` : "blank"}</span>
             </span>
           );
         }
@@ -47,6 +55,7 @@ export function GapSentence({
                 : "bg-highlight text-highlight-foreground",
             )}
           >
+            {numbered ? <span className="sr-only">gap {part.gap + 1}: </span> : null}
             {fill}
           </mark>
         );
