@@ -100,6 +100,12 @@ export type SearchResult = {
    */
   gapMatch?: {
     gap: 0 | 1;
+    /**
+     * Step 4.5: both blanks, for one authored structure that fills them together (a verb frame or
+     * a preposition pattern on a phrase): `fill.word` goes in the first, `fill.preposition` in the
+     * second. Absent for a candidate that fills one blank.
+     */
+    gaps?: [0, 1];
     type: "verb_frame" | "preposition" | "collocation" | "linker";
     /** The authored structure's id (a verb frame's display text: frames carry no id here). */
     evidence: string;

@@ -144,7 +144,7 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ## Phase 4 — Search Depth 🔜 (approved, in progress)
 
-**Status:** Specification approved by the owner on 17 October 2026 · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.3 and the Step 4.4 specification merged; Step 4.4 (context coverage) in review ([spec](specs/phase-4-step-4-context-coverage.md))
+**Status:** Specification approved by the owner on 17 October 2026 · Integration branch `phase/4-search-depth` · Steps 0–3 and 4.0–4.4 merged (Step 4.4 context coverage complete); Step 4.5 (context-gap extensions) specified and implemented, in review ([spec](specs/phase-4-step-4-5-context-gap-extensions.md), §24 as built)
 **Specification:** [docs/specs/phase-4-search-depth.md](specs/phase-4-search-depth.md) — the reference for every step, with the readiness audit, worked examples and the decision register (§17)
 **Release:** `v0.4.0` when the phase is approved
 

@@ -500,6 +500,17 @@ export class DatabaseLanguageRepository
     };
   }
 
+  async findPairPatterns(rest: string): Promise<PatternHit[]> {
+    // The base ends with the words between the blanks; the engine checks it is exactly one word
+    // more. Patterns on verb-frame senses come with them (their object patterns).
+    return this.patternsWhere(
+      or(
+        sql`${prepositionPatterns.baseNormalized} like ${`% ${escapeLike(rest)}`}`,
+        sql`${prepositionPatterns.senseId} in (select ${frames.senseId} from ${frames})`,
+      )!,
+    );
+  }
+
   async listLinkers(): Promise<LinkerHit[]> {
     const rows = await this.db
       .select({

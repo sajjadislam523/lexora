@@ -9,6 +9,7 @@ import {
   collocationVerdict,
   framePrepositionVerdict,
   frameVerdict,
+  jointVerdict,
   linkerVerdict,
   prepositionVerdict,
   recreatedMistake,
@@ -328,5 +329,135 @@ describe("verdict order", () => {
         .sort((a, b) => a[1] - b[1])
         .map(([v]) => v),
     ).toEqual(["fits", "likely_fits", "depends", "unlikely", "not_supported"]);
+  });
+});
+
+describe("Step 4.5: collocations made of function words", () => {
+  const crucial: GapCandidate = {
+    gap: 0,
+    type: "collocation",
+    senseId: "crucial.essential",
+    fill: "crucial",
+    term: "it is crucial that",
+    evidence: { id: "crucial.essential:that", display: "it is crucial that" },
+    span: 3,
+    functionWordsOnly: true,
+  };
+
+  it("are never better than likely fits, whatever follows", () => {
+    for (const query of ["It is ___ that the government acts", "It is ___ that I like most"]) {
+      expect(collocationVerdict(crucial, window(query), []), query).toMatchObject({
+        verdict: "likely_fits",
+        signals: ["collocation", "function_words_only"],
+      });
+    }
+  });
+
+  it("names the unchecked word after a collocation that ends after the blank (R-2)", () => {
+    const key: GapCandidate = {
+      gap: 0,
+      type: "collocation",
+      senseId: "play-a-crucial-role.main",
+      fill: "key",
+      term: "play a key role",
+      evidence: { id: "play-a-crucial-role.main:key", display: "play a key role" },
+      span: 3,
+      openRight: true,
+      rightWord: "models",
+    };
+    expect(collocationVerdict(key, window("Teachers play a ___ role models"), [])).toEqual({
+      verdict: "likely_fits",
+      signals: ["collocation", "other_side_unchecked"],
+      reason: "Matches the collocation “play a key role”; Lexora can't check “models” after it.",
+    });
+  });
+});
+
+describe("Step 4.5: one structure for both blanks", () => {
+  const windowsOf = (query: string) => {
+    const plan = planGaps(query);
+    if (plan.kind !== "gap") throw new Error(`not a gap query: ${query}`);
+    return gapWindows(normaliseQuery(plan.text), query, plan.blanks);
+  };
+  const pair = (over: Partial<GapCandidate> = {}): GapCandidate => ({
+    gap: 0,
+    type: "joint",
+    structure: "frame",
+    senseId: "invest.money",
+    fill: "invest",
+    preposition: "in",
+    term: "invest … in",
+    complement: "noun_or_ing",
+    evidence: { id: "invest.money:money-in", display: "invest something in / into + noun" },
+    span: 4,
+    ...over,
+  });
+  const judge = (
+    query: string,
+    between: string[],
+    over: Partial<GapCandidate> = {},
+    m: MistakeHit[] = [],
+  ) => {
+    const [first, second] = windowsOf(query);
+    return jointVerdict(pair(over), first!, second!, between, m);
+  };
+
+  it("judges what follows the second blank, with one shared verdict", () => {
+    expect(judge("They should ___ more money ___ the project", ["more", "money"])).toMatchObject({
+      verdict: "fits",
+      signals: ["joint", "frame_object", "noun_phrase_follows"],
+    });
+    expect(judge("They should ___ more money ___ schools", ["more", "money"]).verdict).toBe(
+      "likely_fits",
+    );
+    expect(
+      judge("They should ___ more money ___ improving schools", ["more", "money"]).verdict,
+    ).toBe("fits");
+    expect(judge("They should ___ more money ___", ["more", "money"]).verdict).toBe("depends");
+  });
+
+  it("is at most likely fits when the word before the first blank is unchecked", () => {
+    expect(
+      judge("We need to ___ more money ___ the project", ["more", "money"], { openLeft: true }),
+    ).toMatchObject({
+      verdict: "likely_fits",
+      signals: ["joint", "frame_object", "noun_phrase_follows", "other_side_unchecked"],
+    });
+  });
+
+  it("is unlikely when the sentence with both blanks filled recreates an authored mistake", () => {
+    const mistake: MistakeHit = {
+      id: "allocate.distribute:in",
+      senseId: "allocate.distribute",
+      wrong: "The council allocated money in education.",
+      right: "The council allocated money to education.",
+      explanation: "Allocate money to something.",
+      type: "preposition",
+    };
+    const allocateIn = { senseId: "allocate.distribute", fill: "allocated", preposition: "in" };
+    expect(
+      judge("The council ___ money ___ education", ["money"], allocateIn, [mistake]).verdict,
+    ).toBe("unlikely");
+    expect(
+      judge(
+        "The council ___ money ___ education",
+        ["money"],
+        { ...allocateIn, preposition: "to" },
+        [mistake],
+      ).verdict,
+    ).toBe("likely_fits");
+  });
+
+  it("reads a pattern on a phrase with the pattern as evidence", () => {
+    expect(
+      judge("Plastic waste ___ a threat ___ marine life", ["a", "threat"], {
+        structure: "pattern",
+        senseId: "pose-a-threat.danger",
+        fill: "pose",
+        preposition: "to",
+        complement: "noun",
+        evidence: { id: "pose-a-threat.danger:to", display: "pose a threat to + noun" },
+      }),
+    ).toMatchObject({ verdict: "likely_fits", signals: ["joint", "pattern", "noun_unchecked"] });
   });
 });

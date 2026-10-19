@@ -536,3 +536,10 @@ Order within a group follows 4.3: verdict, then span, relevance, headword and ev
 | OQ-B | Join two blanks that one frame covers (head + preposition)?               | Decide before Step 4.5; it relaxes the independence invariant |
 | OQ-C | Read "people" or capitalised names as persons?                            | No: no authored evidence                                      |
 | OQ-D | Read the linker end position?                                             | Not now                                                       |
+
+**After the Step 4.5 audit** ([phase-4-step-4-5-context-gap-extensions.md](phase-4-step-4-5-context-gap-extensions.md)), proposed and awaiting approval:
+
+- OQ-B: one authored structure may answer both blanks (G5-D1, G5-D2).
+- OQ-A: in scope, capped at _Likely fits_ (G5-D4).
+- OQ-C: deferred (G5-D5).
+- OQ-D: deferred until content (G5-D6).
