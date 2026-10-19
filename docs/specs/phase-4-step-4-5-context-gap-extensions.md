@@ -462,7 +462,7 @@ Round trips are unchanged (4), every gap query took ≤ 41 ms, and there is no c
 **Still deferred:**
 
 - **OQ-C** (persons), **OQ-D** (end-position linkers), collocation-variant pairs, `noun_or_person`, "It's ___ that" and "It is ___ to".
-- **F3** ("A ___ amount of people"): content work for a separate content PR.
+- **F3** ("A ___ amount of people"): content work for a separate content PR. _Update:_ the content PR adds the countability mistake ("a considerable / substantial amount of people") to both senses, so ordinary searches find the correction. The gap answer is unchanged — still _Fits_ — because the mistake's wrong word is the learner's "amount", not the word in the gap, and the conservative mistake rule (CC-D9) only counts a mistake against the word in the gap. Changing that is an engine decision for the Phase 4 final audit.
 
 **New finding while building (recorded, not fixed):**
 

@@ -310,8 +310,10 @@ mistake: a significant amount of people
 
 ## "amount of people"
 LOOKUP · results
-[] significant.notable
+[] considerable.large, significant.notable, substantial.large
+mistake: a considerable amount of people
 mistake: a significant amount of people
+mistake: a substantial amount of people
 
 ## "very important"
 LOOKUP · results · exact → important · guide 4

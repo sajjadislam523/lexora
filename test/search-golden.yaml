@@ -378,10 +378,17 @@
   top: [significant]
   mistakes: [a significant amount of people]
 
+# F3 content (Phase 4): "amount" with people is authored for considerable and substantial too, so
+# the general query finds all three corrections, A–Z.
 - query: amount of people
   intent: LOOKUP
-  top: [significant]
-  mistakes: [a significant amount of people]
+  top: [considerable, significant, substantial]
+  mistakes:
+    [
+      a considerable amount of people,
+      a significant amount of people,
+      a substantial amount of people,
+    ]
 
 # Step 1 fix: "very important" appears in "My family is very important for me." but isn't the error.
 - query: very important
