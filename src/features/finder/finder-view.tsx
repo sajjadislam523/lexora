@@ -9,6 +9,7 @@ import { rememberSearch } from "@/lib/last-search";
 
 import { Callout } from "@/components/lexora/callout";
 import { FilterChip } from "@/components/lexora/filter-chip";
+import { GapSentence } from "@/components/lexora/gap-sentence";
 import { Kbd } from "@/components/lexora/kbd";
 import { MistakeRow } from "@/components/lexora/mistake-row";
 import { PageHeader } from "@/components/lexora/page-header";
@@ -32,6 +33,7 @@ import type { BrowseResponse, SearchResponse } from "@/language/search/types";
 import type { DiscoveryShowcase } from "@/language/showcase";
 
 import { BrowseList } from "./browse-list";
+import { sentenceLayout } from "./context-presentation";
 import { ContextTool } from "./context-tool";
 import { FilterBar, FilterCaption } from "./filter-bar";
 import { FitGuide } from "./fit-guide";
@@ -59,6 +61,20 @@ function ExampleSearches({
         </button>
       ))}
     </div>
+  );
+}
+
+/**
+ * More than two blanks: the engine reads up to two, so it answered with an ordinary search on the
+ * words (Phase 4 Step 4.1). Said above those results, which are shown as usual.
+ */
+function GapLimitNotice({ response }: { response: SearchResponse }) {
+  if (response.gapNote !== "too_many_gaps") return null;
+  return (
+    <Callout tone="info" title="Lexora reads up to two gaps at a time">
+      Showing ordinary results for the words in your sentence instead. Leave just one or two gaps to
+      see what fits them.
+    </Callout>
   );
 }
 
@@ -112,6 +128,7 @@ function Results({ response, onRun }: { response: SearchResponse; onRun: (text: 
               .join(" · ")}
           </p>
         </div>
+        <GapLimitNotice response={response} />
         <TermNotice response={response} />
       </div>
 
@@ -183,6 +200,41 @@ function DidYouMean({
             {option}
           </Button>
         ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A gap the engine read but found nothing for. Honest about why: Lexora suggests words for a gap
+ * only from the patterns in its library — which isn't the same as there being no good answer.
+ */
+function NoGapMatch({
+  response,
+  onRun,
+}: {
+  response: SearchResponse;
+  onRun: (text: string) => void;
+}) {
+  const layout = sentenceLayout(response.query, response);
+  return (
+    <div className="flex flex-col items-center rounded-lg border border-dashed border-border-strong px-6 py-12 text-center">
+      <span className="mb-3 flex size-9 items-center justify-center rounded-md bg-muted text-muted-foreground">
+        <SearchX aria-hidden className="size-4.5" />
+      </span>
+      <h2 className="type-subheading text-foreground">
+        Lexora couldn’t find a pattern it knows for {layout.blanks > 1 ? "these gaps" : "this gap"}{" "}
+        yet
+      </h2>
+      <div className="mt-4 max-w-full rounded-md bg-muted px-4 py-3">
+        <GapSentence parts={layout.parts} numbered={layout.blanks > 1} />
+      </div>
+      <p className="mt-4 max-w-md type-body text-muted-foreground">
+        Lexora suggests words for a gap only from the language patterns in its library. Try adding a
+        few words before or after the blank, or search for the word you have in mind.
+      </p>
+      <div className="mt-5 flex max-w-xl justify-center">
+        <ExampleSearches queries={FEATURED_SEARCHES} onRun={onRun} />
       </div>
     </div>
   );
@@ -345,6 +397,9 @@ function announcement(state: FinderState) {
   }
   const count = response.groups.reduce((total, group) => total + group.results.length, 0);
   if (response.didYouMean) return response.interpretation.summary;
+  if (count === 0 && response.interpretation.intent === "CONTEXT_GAP") {
+    return "Lexora couldn’t find a pattern it knows for this gap yet.";
+  }
   if (count === 0) return `Nothing matches “${response.query}” yet.`;
   return `${response.interpretation.summary}: ${count} ${count === 1 ? "result" : "results"}.`;
 }
@@ -531,8 +586,14 @@ export function FinderView({ basePath, url, state, eyebrow, title, description }
           />
         ) : state.response.didYouMean ? (
           <DidYouMean response={state.response} onRun={run} />
+        ) : state.response.outcome === "none" &&
+          state.response.interpretation.intent === "CONTEXT_GAP" ? (
+          <NoGapMatch response={state.response} onRun={run} />
         ) : state.response.outcome === "none" ? (
-          <NoMatch text={state.response.query} onRun={run} />
+          <div className="space-y-4">
+            <GapLimitNotice response={state.response} />
+            <NoMatch text={state.response.query} onRun={run} />
+          </div>
         ) : (
           <Results response={state.response} onRun={run} />
         )}
