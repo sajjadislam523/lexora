@@ -217,21 +217,21 @@ describe("4.4-4 collocations anchored by any content word", () => {
     expect(verdicts(await service.search("Schools should ___ awareness about pollution"))).toEqual([
       "raise{raise-awareness.inform}=fits",
     ]);
-    expect(verdicts(await service.search("There has been ___ debate about cars"))).toEqual([
-      "considerable{considerable.large}=fits",
+    // "There has been ___ debate" is likely fits since Step 4.5 (R-1): "been" is a form of "be".
+    expect(verdicts(await service.search("Plastic waste ___ a threat to marine life"))).toEqual([
+      "pose{pose-a-threat.danger}=fits",
     ]);
   });
 
-  it.each([
-    "a ___ the",
-    "It is ___ that governments act",
-    "The ___ is high",
-    "There was a ___ decrease",
-  ])("still makes nothing up for %j (N1)", async (query) => {
-    const response = await service.search(query);
-    expect(response?.outcome).toBe("none");
-    expect(response?.gaps?.[0]?.type).toBe("unknown");
-  });
+  // "It is ___ that governments act" answers since Step 4.5 (G5-D4), only ever as likely fits.
+  it.each(["a ___ the", "The ___ is high", "There was a ___ decrease"])(
+    "still makes nothing up for %j (N1)",
+    async (query) => {
+      const response = await service.search(query);
+      expect(response?.outcome).toBe("none");
+      expect(response?.gaps?.[0]?.type).toBe("unknown");
+    },
+  );
 });
 
 describe("4.4-5 first words the content authors as inflections", () => {
@@ -306,8 +306,9 @@ describe("what stays as it was", () => {
         expect(result.gapMatch?.type, golden.query).toBe("verb_frame");
       }
     }
+    // Step 4.5 (G5-D1): one verb frame now fills both blanks as one structure.
     const response = await service.search("Governments should ___ more money ___ public transport");
-    expect(response?.gaps?.map((g) => g.type)).toEqual(["verb_frame", "unknown"]);
+    expect(response?.gaps?.map((g) => g.type)).toEqual(["verb_frame", "verb_frame"]);
   });
 
   it("judges each blank on its own", async () => {

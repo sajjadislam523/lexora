@@ -31,7 +31,7 @@ import type {
 import { STOPWORDS, stem } from "../text";
 
 import type { Blank } from "./reader";
-import { GAP_PREPOSITIONS, isFunctionWord } from "./words";
+import { AUXILIARIES, GAP_PREPOSITIONS, isFunctionWord } from "./words";
 
 /** Words read on each side of a blank. */
 export const WINDOW = 4;
@@ -52,8 +52,12 @@ export type GapWindow = {
   wordsAfter: boolean;
 };
 
-/** `frame_preposition`: the preposition after a verb frame's object (shown as a preposition). */
-export type GapCandidateType = "preposition" | "frame_preposition" | "collocation" | "linker";
+/**
+ * `frame_preposition`: the preposition after a verb frame's object (shown as a preposition).
+ * `joint`: one authored structure that fills both blanks (Step 4.5).
+ */
+export type GapCandidateType =
+  "preposition" | "frame_preposition" | "collocation" | "linker" | "joint";
 
 /** A structure that could fill a blank, and the authored evidence for it. */
 export type GapCandidate = {
@@ -75,18 +79,31 @@ export type GapCandidate = {
   /** Collocations: a learner's first word matched as an authored inflection ("took" / "take"). */
   authoredForm?: boolean;
   /**
-   * Collocations: the collocation ends with the blank and the learner's next word is a content
-   * word it doesn't cover, so that side is unchecked.
+   * Collocations: the learner's next word after the collocation is a content word it doesn't
+   * cover, so that side is unchecked. The collocation ends with the blank, or (Step 4.5, R-2)
+   * on a content word after it ("play a ___ role **models**").
    */
   openRight?: boolean;
+  /** The learner's word after the collocation that `openRight` couldn't check. */
+  rightWord?: string;
   /**
    * Collocations: the collocation starts with the blank and the learner's word before it is a
-   * function word ("is", "the", "to"…). That word combines with the collocation's first word
-   * ("is pose") and no authored structure covers the combination, so that side is unchecked.
+   * function word ("is", "the", "to"…) or a form of "be" or "have" (Step 4.5, R-1). That word
+   * combines with the collocation's first word ("is pose", "was play") and no authored structure
+   * covers the combination, so that side is unchecked.
    */
   openLeft?: boolean;
+  /**
+   * Collocations (Step 4.5): every other word of the collocation is a function word ("it is ___
+   * that"), so the only evidence is function words.
+   */
+  functionWordsOnly?: boolean;
   /** Frame prepositions: the learner's verb and object before the blank ("allocated money"). */
   context?: string;
+  /** Joint: the word for the second blank (`fill` is the first blank's). */
+  preposition?: string;
+  /** Joint: a verb frame (head ▸ object ▸ preposition) or a pattern on a phrase. */
+  structure?: "frame" | "pattern";
   /** Frame prepositions: whether the learner's object is one of the frame's authored objects. */
   objectAuthored?: boolean;
 };
@@ -369,9 +386,26 @@ function lineUp(word: string, learner: string, first: boolean, families: Inflect
   return undefined;
 }
 
-/** The content words around the blank: a collocation must contain one to be considered. */
+/** A collocation with no content word besides the blank needs this many other words (Step 4.5). */
+const FUNCTION_TEMPLATE_WORDS = 3;
+
+/**
+ * The words collocations are looked up by: the content words around the blank, and — when at
+ * least three function words surround it ("it is ___ that", Step 4.5) — those function words too,
+ * so a collocation made of function words can be found.
+ */
 export function anchorWords(window: GapWindow) {
-  return [...new Set([...window.before, ...window.after].filter((w) => !isFunctionWord(w)))];
+  const content = [...window.before, ...window.after].filter((w) => !isFunctionWord(w));
+  const leading = (words: readonly string[]) => {
+    const run: string[] = [];
+    for (const word of words) {
+      if (!isFunctionWord(word)) break;
+      run.push(word);
+    }
+    return run;
+  };
+  const around = [...leading(window.before), ...leading(window.after)];
+  return [...new Set([...content, ...(around.length >= FUNCTION_TEMPLATE_WORDS ? around : [])])];
 }
 
 /** The learner's own word next to the blank, or an inflection of it: never offered (Step 4.4). */
@@ -419,14 +453,32 @@ export function collocationCandidates(
         ...right.map((word, i) => lineUp(word, window.after[i]!, false, families)),
       ];
       if (matches.includes(undefined)) continue;
-      if (![...left, ...right].some((word) => !isFunctionWord(word))) continue;
+      // A content word among the collocation's other words anchors it. Without one, only a
+      // collocation of at least three other words, all matched as written, may align ("it is
+      // ___ that", Step 4.5); its verdict is capped.
+      const functionWordsOnly = ![...left, ...right].some((word) => !isFunctionWord(word));
+      if (
+        functionWordsOnly &&
+        (left.length + right.length < FUNCTION_TEMPLATE_WORDS || matches.some((m) => m !== "exact"))
+      ) {
+        continue;
+      }
       if (repeatsNeighbour(fill, window, families)) continue;
       const inflected = matches.includes("stem");
       const authoredForm = matches.includes("authored");
-      const next = window.after[0];
-      const openRight = right.length === 0 && next !== undefined && !isFunctionWord(next);
+      // The learner's word right after the collocation: unchecked when it is a content word and
+      // the collocation ends at the blank, or on a content word of its own (R-2).
+      const next = window.after[right.length];
+      const lastWord = right.at(-1);
+      const openRight =
+        next !== undefined &&
+        !isFunctionWord(next) &&
+        (lastWord === undefined || !isFunctionWord(lastWord));
       const previous = window.before[0];
-      const openLeft = left.length === 0 && previous !== undefined && isFunctionWord(previous);
+      const openLeft =
+        left.length === 0 &&
+        previous !== undefined &&
+        (isFunctionWord(previous) || AUXILIARIES.has(previous));
       const key = `${template.senseId}|${fill}`;
       const existing = found.get(key);
       // The longest collocation wins, then one matched as written over one matched through an
@@ -453,12 +505,125 @@ export function collocationCandidates(
         span: words.length - 1,
         ...(inflected && { inflected }),
         ...(authoredForm && { authoredForm }),
-        ...(openRight && { openRight }),
+        ...(openRight && { openRight, rightWord: next }),
         ...(openLeft && { openLeft }),
+        ...(functionWordsOnly && { functionWordsOnly }),
       });
     }
   }
   return [...found.values()];
+}
+
+// ── Both blanks: one authored structure (Step 4.5) ─────────────────────────────────────────
+
+/**
+ * The words between two blanks, when one structure could span them: one to four words, and no
+ * punctuation between the blanks. Anything else: no joint reading.
+ */
+export function wordsBetween(
+  normalised: string,
+  query: string,
+  blanks: Blank[],
+): string[] | undefined {
+  if (blanks.length !== 2) return undefined;
+  if (/[,;:.?!]/.test(query.slice(blanks[0]!.end, blanks[1]!.start))) return undefined;
+  const words = normalised.split(" ");
+  const [first, second] = words.flatMap((word, at) => (word === GAP ? [at] : []));
+  if (first === undefined || second === undefined) return undefined;
+  const between = words.slice(first + 1, second);
+  return between.length >= 1 && between.length <= WINDOW ? between : undefined;
+}
+
+/** A function word or a form of "be"/"have" before the first blank leaves that side unchecked. */
+function leftOpen(window: GapWindow) {
+  const previous = window.before[0];
+  return previous !== undefined && (isFunctionWord(previous) || AUXILIARIES.has(previous));
+}
+
+/**
+ * Candidates that fill both blanks from one authored structure, never from two:
+ *
+ * - a verb frame: the words between the blanks are skip words and then one of the frame's
+ *   authored objects ("___ more money ___"); each of the frame's prepositions makes a pair;
+ * - a preposition pattern on a phrase: the words between the blanks are its base without its
+ *   first word ("___ a threat ___" for "pose a threat + to"), and that first word isn't a
+ *   stopword.
+ *
+ * Nothing from one structure is ever paired with another's.
+ */
+export function jointCandidates(
+  between: readonly string[],
+  first: GapWindow,
+  frames: readonly GapFrame[],
+  patterns: readonly PatternHit[],
+): GapCandidate[] {
+  const found: GapCandidate[] = [];
+  const openLeft = leftOpen(first);
+  const object = between.at(-1)!;
+  const objectInPlace =
+    !SKIP.has(object) &&
+    !isFunctionWord(object) &&
+    between.slice(0, -1).every((word) => SKIP.has(word));
+  if (objectInPlace) {
+    for (const frame of [...frames].sort(byId)) {
+      if (!frame.fillers.some((filler) => stem(filler) === stem(object))) continue;
+      for (const preposition of frame.prepositions) {
+        const own = patterns
+          .filter(
+            (p) =>
+              p.senseId === frame.senseId &&
+              !prepositionFollowsBase(p) &&
+              p.preposition.toLowerCase() === preposition,
+          )
+          .sort(byId)[0];
+        const complement = own?.complement ?? frame.next;
+        if (!complement) continue;
+        found.push({
+          gap: 0,
+          type: "joint",
+          structure: "frame",
+          senseId: frame.senseId,
+          fill: frame.head,
+          preposition,
+          term: `${frame.head} … ${preposition}`,
+          complement,
+          evidence: {
+            id: frame.id,
+            display: frame.display,
+            ...(own?.mistakeId && { mistakeId: own.mistakeId }),
+          },
+          span: between.length + 2,
+          ...(openLeft && { openLeft }),
+        });
+      }
+    }
+  }
+  const rest = between.join(" ");
+  for (const pattern of [...patterns].sort(byId)) {
+    const base = pattern.base.toLowerCase().split(" ");
+    const head = base[0]!;
+    if (base.length < 2 || base.slice(1).join(" ") !== rest || STOPWORDS.has(head)) continue;
+    if (!prepositionFollowsBase(pattern)) continue;
+    const preposition = pattern.preposition.toLowerCase();
+    found.push({
+      gap: 0,
+      type: "joint",
+      structure: "pattern",
+      senseId: pattern.senseId,
+      fill: head,
+      preposition,
+      term: `${pattern.base} ${pattern.preposition}`,
+      complement: pattern.complement,
+      evidence: {
+        id: pattern.id,
+        display: pattern.pattern,
+        ...(pattern.mistakeId && { mistakeId: pattern.mistakeId }),
+      },
+      span: between.length + 2,
+      ...(openLeft && { openLeft }),
+    });
+  }
+  return found;
 }
 
 // ── Linkers ──────────────────────────────────────────────────────────────────────────────────

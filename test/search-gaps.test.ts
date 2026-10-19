@@ -37,7 +37,8 @@ describe("gap queries", () => {
     expect(two?.interpretation.intent).toBe("CONTEXT_GAP");
     expect(two?.gaps).toEqual([
       { index: 0, at: 2, marker: "underscore", type: "verb_frame" },
-      { index: 1, at: 5, marker: "underscore", type: "unknown" },
+      // Step 4.5 (G5-D1): the verb frame fills the second blank too, as one structure.
+      { index: 1, at: 5, marker: "underscore", type: "verb_frame" },
     ]);
   });
 

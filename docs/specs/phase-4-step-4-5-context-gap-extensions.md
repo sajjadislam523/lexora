@@ -427,3 +427,44 @@ On the published content, in memory and on Postgres:
 
 - Approve or amend G5-D1–G5-D9. The ones that change the contract are G5-D1/D2 (relaxing independence for single structures) and G5-D4 (OQ-A in scope).
 - Whether F3's content fix should go in a content PR now.
+
+## 24. As built in Step 4.5
+
+Implemented on `feat/4-context-gap-extensions`, following §11 in order (G5-D9). Every row of §21 passes in memory and on Postgres. The audit above is unchanged; where the build differs from it, the difference is described here.
+
+- **R-1:** `AUXILIARIES` in `gap/words.ts` (am, is, are, was, were, be, been, being, have, has, had, having) is used only by the left-side rule. "have" and "has" keep anchoring and inflecting ("Screen time has a ___ effect" still fits).
+  - _Consequence:_ "There has been ___ debate" is now _Likely fits_ ("been"). This is intended and the test is updated.
+- **R-2:** the open-right check now looks at the learner's word right after the collocation's end, wherever that end is. It applies when the collocation ends at the blank, or on a content word after it; the reason names the unchecked word.
+- **4.5-2:** `wordsBetween` and `jointCandidates` in `gap/candidates.ts`; `jointVerdict` in `gap/verdicts.ts`; `findPairPatterns(rest)` in both repositories (one bounded statement); `gapMatch.gaps: [0, 1]` on pairs.
+  - **Frame-pair condition:** frame pairs are computed directly from the words between the blanks (skip words, then an authored object), not from the protected reading. That reading takes its preposition from past blank 2, and the window rule forbids that. The two conditions agree on every authored object, so frames are read for pairs only when the first blank's verb frame fits.
+  - **Mistakes:** they are checked on the sentence with both blanks filled.
+- **4.5-3:** a collocation is looked up by its function words only when at least three of them surround the blank. It aligns only as written and is never better than _Likely fits_ (`function_words_only`). "It's ___ that" and "It is ___ to" stay unanswered.
+
+**Deviations, all minor:**
+
+1. When a pair fills a blank that had no independent answer, `gaps[i].type` becomes the pair's kind for **either** blank, not only blank 2. Example: "The policy ___ rise ___ protests" reports `preposition` for blank 1.
+2. The pair group is labelled `Both gaps · <head> … <preposition>` when it holds exactly one pair, else `Both gaps`. Example: "raise … of / about" is two pairs, so it is labelled `Both gaps`.
+3. Function-word collocations are retrieved through the existing template read, by adding the surrounding function words to the lookup. The audit didn't specify their retrieval.
+
+**Measured** (local Postgres, statements logged by Drizzle):
+
+| Query                                                  | Statements |
+| ------------------------------------------------------ | ---------- |
+| Governments should ___ more money ___ public transport | 16         |
+| Other two-blank queries                                | 15         |
+| The council allocated money ___ education              | 15         |
+| It is ___ that … · It was ___ a key role               | 14         |
+| Protected verb frame                                   | 5          |
+| Ordinary search                                        | 7          |
+
+Round trips are unchanged (4), every gap query took ≤ 41 ms, and there is no caching.
+
+**Still deferred:**
+
+- **OQ-C** (persons), **OQ-D** (end-position linkers), collocation-variant pairs, `noun_or_person`, "It's ___ that" and "It is ___ to".
+- **F3** ("A ___ amount of people"): content work for a separate content PR.
+
+**New finding while building (recorded, not fixed):**
+
+- **F4:** in "___ a result ___ the new policy", the independent reading of gap 2 (unchanged since Step 4.2) reads the noun "result" as the base of "result in / from", and gives _Fits_.
+- **Why it isn't fixed here:** fixing it needs word-role data, so it is deferred. The pair _as … of_ is offered first.

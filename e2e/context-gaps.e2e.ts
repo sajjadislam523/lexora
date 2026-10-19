@@ -6,7 +6,9 @@ import { describe, expect, it } from "vitest";
  * interpreted, URLs are unchanged. Step 4.2: prepositions, collocations and linkers are offered
  * from authored structures, and nothing is made up. Step 4.3: each candidate carries a verdict
  * with its evidence, in the response the page receives (the verdict UI is Step 4.6). Step 4.4:
- * no false fits from the learner's own word, and more of the authored evidence is read.
+ * no false fits from the learner's own word, and more of the authored evidence is read. Step
+ * 4.5: one authored structure fills both blanks, "It is ___ that" is answered only as likely fits,
+ * and forms of be/have or a word after a collocation leave a side unchecked.
  */
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 
@@ -203,5 +205,47 @@ describe("context coverage on Explore (Step 4.4)", () => {
 
   it('still makes nothing up for "It is ___ that"', async () => {
     expect(verdictsIn(await html(explore("It is ___ that governments act")))).toEqual([]);
+  });
+});
+
+describe("context-gap extensions on Explore (Step 4.5)", () => {
+  const verdictsIn = (page: string) =>
+    [...page.matchAll(/verdict\\":\\"(\w+)\\"/g)].map(([, verdict]) => verdict);
+
+  it("sends pairs for both blanks, and keeps the first blank's verb-frame answer", async () => {
+    // The order of groups is pinned by the engine tests; the page's context tool is Step 4.6's.
+    const page = await html(explore("Governments should ___ more money ___ public transport"));
+    expect(page).toContain("Both gaps");
+    expect(page).toContain("Fits this sentence");
+    expect(page).toContain('gaps\\":[0,1]');
+    expect(page).toContain('preposition\\":\\"into');
+  });
+
+  it("keeps the independent groups after a pair", async () => {
+    const page = await html(explore("The policy ___ rise ___ protests"));
+    expect(page).toContain("Both gaps · give … to");
+    expect(page).toContain("Gap 2 · Collocations with these words");
+  });
+
+  it("filters pairs by their sense, after reading", async () => {
+    const page = await html(
+      `${explore("Governments should ___ more money ___ public transport")}&kind=linker`,
+    );
+    expect(page).not.toContain('gaps\\":[0,1]');
+  });
+
+  it('answers "It is ___ that" only as likely fits', async () => {
+    const verdicts = verdictsIn(await html(explore("It is ___ that governments should act")));
+    expect(verdicts.length).toBeGreaterThan(0);
+    expect(new Set(verdicts)).toEqual(new Set(["likely_fits"]));
+  });
+
+  it("never fits a collocation after a form of be or before an unchecked word", async () => {
+    expect(new Set(verdictsIn(await html(explore("It was ___ a key role"))))).toEqual(
+      new Set(["likely_fits"]),
+    );
+    expect(new Set(verdictsIn(await html(explore("Schools ___ awareness campaigns"))))).toEqual(
+      new Set(["likely_fits"]),
+    );
   });
 });

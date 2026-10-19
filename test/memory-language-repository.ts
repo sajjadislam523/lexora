@@ -245,6 +245,11 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
     return { templates: [...fromCollocations, ...fromForms], forms };
   }
 
+  async findPairPatterns(rest: string): Promise<PatternHit[]> {
+    const framed = new Set(this.rows.frames.map((frame) => frame.senseId));
+    return this.patterns((p) => p.baseNormalized.endsWith(` ${rest}`) || framed.has(p.senseId));
+  }
+
   async listLinkers(): Promise<LinkerHit[]> {
     return this.rows.linkers
       .filter((linker) => this.isLiveSense(linker.senseId))

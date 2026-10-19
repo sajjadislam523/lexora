@@ -180,10 +180,13 @@ describe("two blanks", () => {
     ]);
   });
 
-  it("keeps the verb-frame answer for the first blank and reads the second on its own", async () => {
+  it("keeps the verb-frame answer for the first blank, after the pairs that fill both", async () => {
+    // Step 4.5 (G5-D1): the verb frame now also fills the second blank as one structure; the
+    // protected first-blank groups follow, unchanged.
     const response = await service.search("Governments should ___ more money ___ public transport");
-    expect(response?.gaps?.map((g) => g.type)).toEqual(["verb_frame", "unknown"]);
+    expect(response?.gaps?.map((g) => g.type)).toEqual(["verb_frame", "verb_frame"]);
     expect(response?.groups.map((g) => g.label)).toEqual([
+      "Both gaps",
       "Fits this sentence",
       "Doesn't fit this sentence",
     ]);

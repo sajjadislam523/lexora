@@ -205,4 +205,10 @@ export interface LanguageSearchRepository extends Pick<
   findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplates>;
   /** Every published linker sense with its position and connection details. */
   listLinkers(): Promise<LinkerHit[]>;
+  /**
+   * The preposition patterns a structure spanning two blanks can come from (Step 4.5): those whose
+   * base is one word followed by `rest` ("pose" + "a threat" when "a threat" stands between the
+   * blanks), and the object patterns of the senses that have a verb frame.
+   */
+  findPairPatterns(rest: string): Promise<PatternHit[]>;
 }

@@ -50,6 +50,27 @@ export const DETERMINERS = new Set([
   "both",
 ]);
 
+/**
+ * The forms of "be" and "have" (Step 4.5, R-1). Before a collocation's first word they call for
+ * a form the base word in the blank isn't ("It was playing", "Prices have risen"), so that side
+ * is unchecked. Used only by that left-side rule: "have" and "has" stay content words elsewhere,
+ * so they still anchor collocations and keep their authored inflection family.
+ */
+export const AUXILIARIES = new Set([
+  "am",
+  "is",
+  "are",
+  "was",
+  "were",
+  "be",
+  "been",
+  "being",
+  "have",
+  "has",
+  "had",
+  "having",
+]);
+
 const PREPOSITION_SET = new Set<string>(GAP_PREPOSITIONS);
 
 /** A stopword, a preposition or a determiner: a word that can't anchor or be checked as content. */

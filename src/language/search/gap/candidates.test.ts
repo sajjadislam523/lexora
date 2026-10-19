@@ -13,11 +13,13 @@ import {
   gapWindows,
   headCandidates,
   inflectionFamilies,
+  jointCandidates,
   linkerCandidates,
   linkerSlot,
   orderCandidates,
   prepositionCandidates,
   reachesFrameHead,
+  wordsBetween,
   type GapCandidate,
 } from "./candidates";
 import { planGaps } from "./reader";
@@ -491,8 +493,14 @@ describe("Step 4.4: collocation guards, anchor and authored inflections", () => 
     const window = first("Plastic waste ___ a threat to marine life");
     expect(anchorWords(window)).toEqual(["waste", "plastic", "threat", "marine"]);
     expect(collocationCandidates(window, [threat]).map((c) => c.fill)).toEqual(["pose"]);
+    // Step 4.5 (G5-D4): a collocation of function words aligns, flagged for a capped verdict.
     const crucial = template({ normalized: "it is crucial that", display: "it is crucial that" });
-    expect(collocationCandidates(first("It is ___ that we act"), [crucial])).toEqual([]);
+    expect(
+      collocationCandidates(first("It is ___ that we act"), [crucial]).map((c) => [
+        c.fill,
+        c.functionWordsOnly,
+      ]),
+    ).toEqual([["crucial", true]]);
   });
 
   it("matches a first word through an authored inflection as written, and only the first", () => {
@@ -608,5 +616,206 @@ describe("orderCandidates", () => {
       ["addition", "result"],
     );
     expect(ordered.map((c) => c.senseId)).toEqual(["c", "a"]);
+  });
+});
+
+describe("Step 4.5: precision repairs", () => {
+  const playKey = template({
+    id: "play-a-crucial-role.main:key",
+    senseId: "play-a-crucial-role.main",
+    normalized: "play a key role",
+    display: "play a key role",
+  });
+
+  it.each([
+    "It was ___ a key role",
+    "They were ___ a key role",
+    "It has been ___ a key role",
+    "We have ___ a key role",
+    "I am ___ a key role",
+  ])("R-1: a form of be or have before the blank leaves that side unchecked: %j", (query) => {
+    const [found] = collocationCandidates(first(query), [playKey]);
+    expect([found?.fill, found?.openLeft]).toEqual(["play", true]);
+  });
+
+  it("R-1: a modal, a noun or nothing before the blank leaves it checked", () => {
+    for (const query of ["This will ___ a key role", "Teachers ___ a key role", "___ a key role"]) {
+      expect(collocationCandidates(first(query), [playKey])[0]?.openLeft, query).toBeUndefined();
+    }
+  });
+
+  it("R-2: a content word after a collocation that ends on a content word is unchecked", () => {
+    const [models] = collocationCandidates(first("Teachers play a ___ role models"), [playKey]);
+    expect([models?.fill, models?.openRight, models?.rightWord]).toEqual(["key", true, "models"]);
+    const [inShaping] = collocationCandidates(first("Teachers play a ___ role in shaping"), [
+      playKey,
+    ]);
+    expect(inShaping?.openRight).toBeUndefined();
+    const [atEnd] = collocationCandidates(first("Teachers play a ___ role"), [playKey]);
+    expect(atEnd?.openRight).toBeUndefined();
+  });
+
+  it("R-2: a collocation that ends with a function word expects what follows", () => {
+    const negative = template({
+      id: "have-a-detrimental-effect-on.harm:negative",
+      senseId: "have-a-detrimental-effect-on.harm",
+      normalized: "have a negative effect on",
+      display: "have a negative effect on",
+    });
+    const [found] = collocationCandidates(first("Screens can ___ a negative effect on sleep"), [
+      negative,
+    ]);
+    expect([found?.fill, found?.openRight]).toEqual(["have", undefined]);
+  });
+});
+
+describe("Step 4.5: collocations made of function words", () => {
+  const crucial = template({
+    id: "crucial.essential:that",
+    senseId: "crucial.essential",
+    normalized: "it is crucial that",
+    display: "it is crucial that",
+  });
+
+  it("looks them up only with at least three function words around the blank", () => {
+    expect(anchorWords(first("It is ___ that governments act"))).toEqual(
+      expect.arrayContaining(["governments", "act", "is", "it", "that"]),
+    );
+    expect(anchorWords(first("a ___ the"))).toEqual([]);
+  });
+
+  it("aligns them only as written, flagged for a capped verdict", () => {
+    expect(
+      collocationCandidates(first("It is ___ that governments act"), [crucial]).map((c) => [
+        c.fill,
+        c.functionWordsOnly,
+      ]),
+    ).toEqual([["crucial", true]]);
+    expect(collocationCandidates(first("It's ___ that governments act"), [crucial])).toEqual([]);
+    expect(collocationCandidates(first("It is ___ to consider the costs"), [crucial])).toEqual([]);
+    expect(
+      collocationCandidates(first("a ___ the"), [
+        template({ normalized: "a few the", display: "x" }),
+      ]),
+    ).toEqual([]);
+  });
+});
+
+describe("Step 4.5: one structure for both blanks", () => {
+  const windows = (query: string) => {
+    const plan = planGaps(query);
+    if (plan.kind !== "gap") throw new Error(`not a gap query: ${query}`);
+    const normalised = normaliseQuery(plan.text);
+    return {
+      between: wordsBetween(normalised, query, plan.blanks),
+      windows: gapWindows(normalised, query, plan.blanks),
+    };
+  };
+  const invest: GapFrame = {
+    id: "invest.money:money-in",
+    senseId: "invest.money",
+    head: "invest",
+    fillers: ["money", "funds", "time"],
+    prepositions: ["in", "into"],
+    next: "noun",
+    display: "invest something in / into + noun",
+  };
+  const allocate: GapFrame = {
+    id: "allocate.distribute:money-to",
+    senseId: "allocate.distribute",
+    head: "allocate",
+    fillers: ["money", "funds", "land-not-here"],
+    prepositions: ["to", "for"],
+    next: "noun",
+    display: "allocate something to / for + noun",
+  };
+  const investIn = pattern({
+    id: "invest.money:in",
+    senseId: "invest.money",
+    base: "invest",
+    preposition: "in",
+    pattern: "invest + money / time + in + noun / -ing",
+    complement: "noun_or_ing",
+    mistakeId: "invest.money:on",
+  });
+  const poseTo = pattern({
+    id: "pose-a-threat.danger:to",
+    senseId: "pose-a-threat.danger",
+    base: "pose a threat",
+    preposition: "to",
+    pattern: "pose a threat to + noun",
+    complement: "noun",
+  });
+
+  const pairs = (query: string, frames: GapFrame[], patterns: PatternHit[]) => {
+    const {
+      between,
+      windows: [first],
+    } = windows(query);
+    return between ? jointCandidates(between, first!, frames, patterns) : [];
+  };
+
+  it("reads the words between two blanks: one to four, with no punctuation", () => {
+    expect(windows("Governments should ___ more money ___ public transport").between).toEqual([
+      "more",
+      "money",
+    ]);
+    expect(windows("Governments should ___ more money, ___ transport").between).toBeUndefined();
+    expect(windows("They ___ money every single year again ___ schools").between).toBeUndefined();
+    expect(windows("They ___ ___ schools").between).toBeUndefined();
+    expect(windows("They ___ money for schools").between).toBeUndefined();
+  });
+
+  it("pairs each frame's head with its own prepositions, never another frame's", () => {
+    const found = pairs(
+      "Governments should ___ more money ___ public transport",
+      [invest, allocate],
+      [investIn],
+    );
+    expect(found.map((c) => `${c.fill} … ${c.preposition}:${c.complement}`)).toEqual([
+      "allocate … to:noun",
+      "allocate … for:noun",
+      "invest … in:noun_or_ing",
+      "invest … into:noun",
+    ]);
+    expect(found.find((c) => c.preposition === "in")?.evidence).toEqual({
+      id: "invest.money:money-in",
+      display: "invest something in / into + noun",
+      mistakeId: "invest.money:on",
+    });
+  });
+
+  it("needs an object the frame authors, right before the second blank", () => {
+    expect(pairs("The council ___ land ___ housing", [invest], [])).toEqual([]);
+    expect(pairs("They ___ money each year ___ schools", [invest], [])).toEqual([]);
+    expect(pairs("They ___ it ___ schools", [invest], [])).toEqual([]);
+  });
+
+  it("pairs a pattern on a phrase when the words between are its base after the first word", () => {
+    expect(
+      pairs("Plastic waste ___ a threat ___ marine life", [], [poseTo]).map(
+        (c) => `${c.structure}:${c.fill} … ${c.preposition}`,
+      ),
+    ).toEqual(["pattern:pose … to"]);
+    expect(pairs("Plastic waste ___ a serious threat ___ marine life", [], [poseTo])).toEqual([]);
+    expect(pairs("Plastic waste ___ threat ___ marine life", [], [poseTo])).toEqual([]);
+  });
+
+  it("never offers a stopword for the first blank", () => {
+    const inContrast = pattern({
+      id: "in-contrast.difference:to",
+      senseId: "in-contrast.difference",
+      base: "in contrast",
+      preposition: "to",
+      pattern: "in contrast to + noun",
+      complement: "noun",
+    });
+    expect(pairs("___ contrast ___ their parents", [], [inContrast])).toEqual([]);
+  });
+
+  it("marks the first blank's left side unchecked after a function word or a form of be/have", () => {
+    expect(pairs("We need to ___ more money ___ schools", [invest], [])[0]?.openLeft).toBe(true);
+    expect(pairs("They have ___ money ___ schools", [invest], [])[0]?.openLeft).toBe(true);
+    expect(pairs("Governments ___ money ___ schools", [invest], [])[0]?.openLeft).toBeUndefined();
   });
 });

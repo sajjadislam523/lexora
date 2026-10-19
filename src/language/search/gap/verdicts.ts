@@ -256,11 +256,63 @@ export function framePrepositionVerdict(
 }
 
 /**
+ * One structure filling both blanks (Step 4.5): one shared verdict, by the same precedence. A
+ * mistake recreated with both blanks filled; else what follows the second blank, against what the
+ * structure says follows; and at most Likely fits when the word before the first blank is a
+ * function word or a form of "be"/"have" (that side is unchecked). Only authored objects make a
+ * frame pair, so a pair is never Not supported.
+ */
+export function jointVerdict(
+  candidate: GapCandidate,
+  first: GapWindow,
+  second: GapWindow,
+  between: readonly string[],
+  mistakes: readonly MistakeHit[],
+): Verdict {
+  const preposition = candidate.preposition!;
+  const mistake =
+    recreatedMistake(
+      { ...first, after: [...between, preposition, ...second.after] },
+      candidate.fill,
+      mistakes,
+    ) ??
+    recreatedMistake(
+      { ...second, before: [...[...between].reverse(), candidate.fill, ...first.before] },
+      preposition,
+      mistakes,
+    );
+  if (mistake) return mistakeVerdict(mistake);
+  const structure = quote(candidate.evidence.display);
+  const judged =
+    candidate.structure === "frame"
+      ? complementVerdict(
+          candidate.complement ?? "noun",
+          second.after[0],
+          `Matches the frame ${structure} with ${quote(between.at(-1)!)} as its object`,
+          "frame_object",
+        )
+      : complementVerdict(
+          candidate.complement ?? "noun",
+          second.after[0],
+          `Matches the pattern ${structure}`,
+          "pattern",
+        );
+  const verdict: Verdict = { ...judged, signals: ["joint", ...judged.signals] };
+  if (!candidate.openLeft) return verdict;
+  const unchecked = `Lexora can't check ${quote(first.before[0]!)} before the first gap`;
+  return {
+    verdict: verdict.verdict === "fits" ? "likely_fits" : verdict.verdict,
+    signals: [...verdict.signals, "other_side_unchecked"],
+    reason: `${verdict.reason.replace(/\.$/, "")}; ${unchecked}.`,
+  };
+}
+
+/**
  * A collocation candidate: a recreated mistake; else the learner's words as written (an authored
  * inflection of the first word counts as written) or only through the stemmer. At most Likely
- * fits when a side of the blank the collocation doesn't cover can't be checked: it ends at the
- * blank before a content word it doesn't cover, or starts at the blank after a function word that
- * combines with its first word ("There is ___ a threat").
+ * fits when a side the collocation doesn't cover can't be checked: a content word after it, or a
+ * function word or a form of "be"/"have" before it when it starts at the blank; and when its only
+ * evidence is function words ("it is ___ that", Step 4.5).
  */
 export function collocationVerdict(
   candidate: GapCandidate,
@@ -272,24 +324,28 @@ export function collocationVerdict(
   const collocation = quote(candidate.evidence.display);
   const openSide = candidate.openRight || candidate.openLeft;
   const open = openSide ? ["other_side_unchecked"] : [];
+  const functionWords = candidate.functionWordsOnly ? ["function_words_only"] : [];
   const unchecked = candidate.openRight
-    ? `; Lexora can't check ${quote(window.after[0]!)} after it`
+    ? `; Lexora can't check ${quote(candidate.rightWord ?? window.after[0]!)} after it`
     : candidate.openLeft
       ? `; Lexora can't check ${quote(window.before[0]!)} before it`
       : "";
+  const onlyFunctionWords = candidate.functionWordsOnly
+    ? "; only small function words around the gap match it, so Lexora can't confirm the sentence uses it this way"
+    : "";
   if (candidate.inflected) {
     return {
       verdict: "likely_fits",
-      signals: ["collocation", "inflected", ...open],
-      reason: `Matches the collocation ${collocation} in another form of its words${unchecked}.`,
+      signals: ["collocation", "inflected", ...open, ...functionWords],
+      reason: `Matches the collocation ${collocation} in another form of its words${unchecked}${onlyFunctionWords}.`,
     };
   }
   const authored = candidate.authoredForm ? ["authored_form"] : [];
-  return openSide
+  return openSide || candidate.functionWordsOnly
     ? {
         verdict: "likely_fits",
-        signals: ["collocation", ...authored, ...open],
-        reason: `Matches the collocation ${collocation}${unchecked}.`,
+        signals: ["collocation", ...authored, ...open, ...functionWords],
+        reason: `Matches the collocation ${collocation}${unchecked}${onlyFunctionWords}.`,
       }
     : {
         verdict: "fits",
