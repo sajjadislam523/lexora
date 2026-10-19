@@ -203,8 +203,8 @@ describe("context coverage on Explore (Step 4.4)", () => {
     ]);
   });
 
-  it('still makes nothing up for "It is ___ that"', async () => {
-    expect(verdictsIn(await html(explore("It is ___ that governments act")))).toEqual([]);
+  it('never fits "It is ___ that" (answered only as likely fits since Step 4.5)', async () => {
+    expect(verdictsIn(await html(explore("It is ___ that governments act")))).not.toContain("fits");
   });
 });
 
