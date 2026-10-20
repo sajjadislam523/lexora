@@ -5,6 +5,7 @@ import type { CollocationTemplate, GapFrame, LinkerHit, PatternHit } from "../re
 
 import {
   anchorWords,
+  authoredContinuation,
   baseCandidates,
   collocationCandidates,
   differsInFirstWordOnly,
@@ -817,5 +818,58 @@ describe("Step 4.5: one structure for both blanks", () => {
     expect(pairs("We need to ___ more money ___ schools", [invest], [])[0]?.openLeft).toBe(true);
     expect(pairs("They have ___ money ___ schools", [invest], [])[0]?.openLeft).toBe(true);
     expect(pairs("Governments ___ money ___ schools", [invest], [])[0]?.openLeft).toBeUndefined();
+  });
+});
+
+describe("Phase 4 closure: the collocation's authored continuation (R-3)", () => {
+  const evidence = template({
+    id: "substantial.large:evidence",
+    senseId: "substantial.large",
+    normalized: "substantial evidence",
+    display: "substantial evidence",
+    pattern: "substantial evidence that + clause",
+  });
+  const impact = template({
+    id: "significant.notable:impact",
+    normalized: "a significant impact",
+    display: "a significant impact",
+    pattern: "have a significant impact on + noun",
+  });
+
+  it("reads the word the pattern puts right after the collocation", () => {
+    expect(authoredContinuation(evidence)).toBe("that");
+    expect(authoredContinuation(impact)).toBe("on");
+    // A slot, no pattern, or a pattern without the collocation's words: nothing to check.
+    expect(
+      authoredContinuation(
+        template({ normalized: "take measures to", pattern: "take measures to + verb" }),
+      ),
+    ).toBeUndefined();
+    expect(authoredContinuation(template({}))).toBeUndefined();
+    expect(
+      authoredContinuation(
+        template({ normalized: "a big rise", pattern: "a sharp rise in + noun" }),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("flags a different function word after the collocation, and only then", () => {
+    const [to] = collocationCandidates(first("A substantial ___ to the budget"), [evidence]);
+    expect([to?.fill, to?.continuation, to?.rightWord]).toEqual(["evidence", "that", "to"]);
+    const [that] = collocationCandidates(first("There is substantial ___ that it works"), [
+      evidence,
+    ]);
+    expect(that?.continuation).toBeUndefined();
+    const [end] = collocationCandidates(first("We found substantial ___"), [evidence]);
+    expect(end?.continuation).toBeUndefined();
+    const [on] = collocationCandidates(first("It had a significant ___ on health"), [impact]);
+    expect(on?.continuation).toBeUndefined();
+    const [inHealth] = collocationCandidates(first("It had a significant ___ in health"), [impact]);
+    expect(inHealth?.continuation).toBe("on");
+  });
+
+  it("leaves a content word after the collocation to the open-right rule", () => {
+    const [open] = collocationCandidates(first("A substantial ___ budget"), [evidence]);
+    expect([open?.openRight, open?.continuation]).toEqual([true, undefined]);
   });
 });

@@ -297,3 +297,23 @@ After the owner's choice:
 2. then either the remaining Phase 4 steps, or the re-scope decision and the phase PR to `main`.
 
 **Content is the main next lever:** most remaining context-gap limits (FN-2, FP-2, topics, functions) are content and content-model gaps, not engine gaps. Wave 2 and authored word roles would raise usefulness more than further engine heuristics. Phase 5 (Personal Learning) can start once Phase 4 is on `main`.
+
+## 19. After the audit: re-scope and closure fixes
+
+_Added 21 October 2026. The findings above are unchanged._
+
+**Owner decision: option (b).** Phase 4 is re-scoped around the completed Search Depth feature. The unbuilt items in §16's "Fix before Phase 4 closes" point 3 move to later work, recorded in ROADMAP → Phase 4 → _Deferred from Phase 4_ (they aren't marked as done). Step 9 is closed as audited, with no ordinary-search failures.
+
+**Closure fixes**, branch `fix/4-final-audit-closures`:
+
+- **UI-1 (context tool only).**
+  - **Rule:** a Phase 3 verb-frame group keeps the engine's label only when every row in it is _Fits_ ("Fits this sentence" over _Fits_ rows). Otherwise the tool shows "Verbs for this gap" for the first such group and "Other verbs Lexora checked" for later ones (`groupHeadings` in `src/features/finder/context-presentation.ts`).
+  - **Unchanged:** the engine's labels, the golden suite and the snapshot.
+  - **Not done:** UI-2 (sense labels on same-word rows) was optional and stays open.
+- **R-3 (FP-1).**
+  - **Data:** the collocation template read now carries the authored `pattern` (an existing column; no schema change).
+  - **Rule:** `authoredContinuation` reads the word the pattern puts right after the collocation's words ("that" in "substantial evidence that + clause"). When the learner's next word is a different function word, the verdict is at most _Likely fits_, with signal `continuation_differs` and a reason naming both words. When the next word is a content word, R-2 already covers it.
+  - **Effect:** it only ever lowers a verdict. "A substantial ___ to the budget" → _evidence_ _Likely fits_. "There was a significant ___ on cycling" → _impact_ stays _Fits_ (authored "on"); the others are hedged.
+  - **Unchanged:** the matching continuations, F3, the pairs, "It is ___ that", ordinary search, the golden suite and the snapshot.
+
+With these fixes and the re-scope, **Phase 4 is ready for its phase PR to `main`** once the owner approves. The production rollout (OPS-2) comes first: migration 0004 against Neon, then the reviewed import.

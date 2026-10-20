@@ -461,3 +461,36 @@ describe("Step 4.5: one structure for both blanks", () => {
     ).toMatchObject({ verdict: "likely_fits", signals: ["joint", "pattern", "noun_unchecked"] });
   });
 });
+
+describe("Phase 4 closure: the collocation's authored continuation (R-3)", () => {
+  const evidence: GapCandidate = {
+    gap: 0,
+    type: "collocation",
+    senseId: "substantial.large",
+    fill: "evidence",
+    term: "substantial evidence",
+    evidence: { id: "substantial.large:evidence", display: "substantial evidence" },
+    span: 1,
+    continuation: "that",
+    rightWord: "to",
+  };
+
+  it("is at most likely fits, naming what the pattern authors", () => {
+    expect(collocationVerdict(evidence, window("A substantial ___ to the budget"), [])).toEqual({
+      verdict: "likely_fits",
+      signals: ["collocation", "continuation_differs"],
+      reason:
+        "Matches the collocation “substantial evidence”; Lexora’s pattern continues it with “that”, not “to”.",
+    });
+  });
+
+  it("never raises a verdict: an inflected match stays likely fits, with both reasons", () => {
+    expect(
+      collocationVerdict(
+        { ...evidence, inflected: true },
+        window("A substantial ___ to the budget"),
+        [],
+      ).signals,
+    ).toEqual(["collocation", "inflected", "continuation_differs"]);
+  });
+});

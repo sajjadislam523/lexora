@@ -11,12 +11,11 @@ import type { ResultGroup, SearchResponse, SearchResult } from "@/language/searc
 import { cn } from "@/lib/utils";
 
 import {
-  groupHeading,
+  groupHeadings,
   isPair,
   sentenceFills,
   sentenceLayout,
   toolHeading,
-  type SentenceLayout,
 } from "./context-presentation";
 
 /** The word(s) a result puts in the gaps: "allocate … to" for a pair, "allocate" otherwise. */
@@ -89,12 +88,12 @@ function ContextCandidate({
 
 function ContextGroup({
   group,
-  layout,
+  heading,
   selectedKey,
   onSelect,
 }: {
   group: ResultGroup;
-  layout: SentenceLayout;
+  heading: string;
   selectedKey: string | null;
   onSelect: (key: string) => void;
 }) {
@@ -103,7 +102,7 @@ function ContextGroup({
   return (
     <section aria-labelledby={id} className="space-y-2">
       <h3 id={id} className="type-subheading text-foreground">
-        {groupHeading(group, layout.blanks)}
+        {heading}
       </h3>
       {pairs ? (
         <p className="type-caption text-subtle-foreground">
@@ -173,6 +172,7 @@ export function ContextTool({
   const selected = results.find((result) => result.key === selectedKey);
   const hasPairs = results.some(isPair);
   const firstSingle = response.groups.findIndex((group) => !group.results.every(isPair));
+  const headings = groupHeadings(response.groups, layout.blanks);
 
   return (
     <section
@@ -208,7 +208,7 @@ export function ContextTool({
             ) : null}
             <ContextGroup
               group={group}
-              layout={layout}
+              heading={headings[index]!}
               selectedKey={selectedKey}
               onSelect={setSelectedKey}
             />

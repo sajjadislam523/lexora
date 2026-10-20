@@ -440,9 +440,11 @@ export class DatabaseLanguageRepository
         item_id: string | null;
         normalized: string;
         display: string;
+        pattern: string | null;
       }>(sql`
         with ${family}
-        select c.id, c.sense_id, c.item_id, c.normalized, c.phrase as display from collocations c
+        select c.id, c.sense_id, c.item_id, c.normalized, c.phrase as display, c.pattern
+          from collocations c
           join senses s on s.id = c.sense_id and s.status = 'published'
           join language_items i on i.id = s.item_id and i.status = 'published'
           where ${wanted(sql`c.normalized`)}
@@ -478,6 +480,7 @@ export class DatabaseLanguageRepository
           ...(row.item_id && { itemId: row.item_id }),
           normalized: row.normalized,
           display: row.display,
+          ...(row.pattern && { pattern: row.pattern }),
         })),
         ...fromForms.flatMap((row) =>
           row.template && row.sense_id

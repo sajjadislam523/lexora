@@ -98,6 +98,12 @@ export type GapCandidate = {
    * that"), so the only evidence is function words.
    */
   functionWordsOnly?: boolean;
+  /**
+   * Collocations (Phase 4 closure, R-3): the word the collocation's authored pattern puts after it
+   * ("that" in "substantial evidence that + clause"), when the learner's next word is a different
+   * one. That continuation isn't what the content authors, so that side is unchecked.
+   */
+  continuation?: string;
   /** Frame prepositions: the learner's verb and object before the blank ("allocated money"). */
   context?: string;
   /** Joint: the word for the second blank (`fill` is the first blank's). */
@@ -408,6 +414,29 @@ export function anchorWords(window: GapWindow) {
   return [...new Set([...content, ...(around.length >= FUNCTION_TEMPLATE_WORDS ? around : [])])];
 }
 
+/**
+ * The word a collocation's authored pattern puts right after its own words: "that" for
+ * "substantial evidence" ("substantial evidence that + clause"), "on" for "a significant impact"
+ * ("have a significant impact on + noun"). None when the pattern continues with a slot ("+ noun")
+ * or doesn't contain the collocation's words.
+ */
+export function authoredContinuation(template: CollocationTemplate): string | undefined {
+  if (!template.pattern) return undefined;
+  const words = template.normalized.split(" ");
+  const tokens = template.pattern
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}'+ ]+/gu, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  for (let at = 0; at + words.length <= tokens.length; at++) {
+    if (words.every((word, i) => tokens[at + i] === word)) {
+      const after = tokens[at + words.length];
+      return after === undefined || after === "+" ? undefined : after;
+    }
+  }
+  return undefined;
+}
+
 /** The learner's own word next to the blank, or an inflection of it: never offered (Step 4.4). */
 function repeatsNeighbour(fill: string, window: GapWindow, families: InflectionFamilies) {
   return [window.before[0], window.after[0]].some(
@@ -479,6 +508,12 @@ export function collocationCandidates(
         left.length === 0 &&
         previous !== undefined &&
         (isFunctionWord(previous) || AUXILIARIES.has(previous));
+      // R-3: a function word after the collocation that isn't the one its pattern authors.
+      const authoredNext = openRight ? undefined : authoredContinuation(template);
+      const continuation =
+        authoredNext !== undefined && next !== undefined && next !== authoredNext
+          ? authoredNext
+          : undefined;
       const key = `${template.senseId}|${fill}`;
       const existing = found.get(key);
       // The longest collocation wins, then one matched as written over one matched through an
@@ -508,6 +543,7 @@ export function collocationCandidates(
         ...(openRight && { openRight, rightWord: next }),
         ...(openLeft && { openLeft }),
         ...(functionWordsOnly && { functionWordsOnly }),
+        ...(continuation && { continuation, rightWord: next }),
       });
     }
   }

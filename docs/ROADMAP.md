@@ -142,17 +142,51 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ---
 
-## Phase 4 — Search Depth 🔜 (approved, in progress)
+## Phase 4 — Search Depth 🔜 (re-scoped; closure in review)
 
-**Status:** Specification approved by the owner on 17 October 2026 · Integration branch `phase/4-search-depth` · Steps 0–3 and 4.0–4.4 merged (Step 4.4 context coverage complete); Steps 4.0–4.6 (context-gap engine and context-tool UI) and the F3 content correction merged ([spec](specs/phase-4-step-4-5-context-gap-extensions.md)); final audit in review ([audit](specs/phase-4-final-audit.md)); Steps 6–9, the sentence-level check and Wave 2 not started
+**Status:** Specification approved by the owner on 17 October 2026; **re-scoped by the owner on 21 October 2026** after the [final audit](specs/phase-4-final-audit.md) · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.6 and the F3 content correction merged; the two audit closure fixes in review; the items below under _Deferred from Phase 4_ were never built and move to later work
 **Specification:** [docs/specs/phase-4-search-depth.md](specs/phase-4-search-depth.md) — the reference for every step, with the readiness audit, worked examples and the decision register (§17)
 **Release:** `v0.4.0` when the phase is approved
+
+### Re-scope (owner decision, 21 October 2026)
+
+Phase 4 closes around the **Search Depth** feature that was built, audited and found coherent: deterministic, explained, isolated from ordinary search and honest about what it can't decide. The rest of the originally approved scope was **not built**. It is deferred, not done, and isn't part of an unfinished Phase 4.
+
+**Completed in Phase 4:**
+
+- Regression baseline: a 71-case golden suite and a ranking snapshot (Step 1).
+- The topics and functions content model (Step 2).
+- Search filters and browse, on Explore and the Finder (Steps 3a/3b).
+- The context-gap reader with an honest fallback (4.1); candidates (4.2); context-fit verdicts (4.3); context coverage (4.4); two-gap structures and "It is ___ that" (4.5); the context-tool UI (4.6).
+- The F3 countability content correction.
+- The two final-audit closure fixes:
+  - verb-group headings in the context tool that never contradict their verdicts;
+  - a collocation hedged when the learner's next word differs from its authored continuation.
+- **Ranking review:** audited, with no ordinary-search failures found (the parent spec's Step 9); nothing needed changing.
+
+**Deferred from Phase 4, never built:**
+
+- **Infrastructure and observability:**
+  - search rate limiting (Step 6);
+  - privacy-first logging of searches that find nothing (Step 7);
+  - latency measured against the p95 budget on a deployed environment (Step 8; Previews are off, so where to measure is an open decision).
+- **Content expansion:**
+  - Wave 2 language items (at least 140 published; there are 40);
+  - topic tagging (no sense has a topic yet);
+  - linkers for comparison and cause, and more concession, example and result;
+  - more verb patterns ("pay attention to", infinitive and -ing frames).
+- **Future engine and model work:**
+  - the whole-sentence check;
+  - word roles (noun vs verb use of a pattern's base, F4);
+  - noun-or-person complements and names;
+  - mistakes in the learner's surrounding text (F3's remaining limit);
+  - sentence-final linkers.
 
 Phase 4 deepens Lexora's retrieval system rather than introducing new learning surfaces: helping learners **browse, filter, contextualise and discover language**, learning which searches the content doesn't satisfy, and protecting search, while keeping every result deterministic and explained.
 
 Phase 4 remains **AI-free**.
 
-### Scope (approved)
+### Scope (approved 17 October 2026; re-scoped above)
 
 #### 1. Browse and filters
 
@@ -256,6 +290,12 @@ Phase 4 is complete when (measurable details in the specification, §16):
 13. Unit/integration, golden-search, build and E2E checks pass.
 14. Architecture, design and content documentation describe what was built.
 15. Product review is complete and the owner approves the phase for merge to `main`.
+
+**After the re-scope (21 October 2026):**
+
+- **Met:** criteria 1–4, 9 (the topic model), and 11–14; the [final audit](specs/phase-4-final-audit.md) records the evidence.
+- **Moved with the deferred work:** criteria 5 (sentence-level check), 6 (unmatched queries), 7 (latency on a deployment), 8 (rate limiting) and 10 (Wave 2).
+- **Still open:** criterion 15 is the owner's approval of the phase PR.
 
 ---
 
