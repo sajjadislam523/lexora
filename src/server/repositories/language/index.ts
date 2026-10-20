@@ -4,16 +4,28 @@ import { and, asc, desc, eq, inArray, or, sql, type SQL } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { LanguageContentRepository } from "@/language/engine";
+import {
+  FILTER_DIMENSIONS,
+  type FilterDimension,
+  type IeltsUse,
+  type SearchFilters,
+} from "@/language/filters";
 import { toGapFrame } from "@/language/search/match";
+import { stem } from "@/language/search/text";
 import type {
   CollocationHit,
+  CollocationTemplates,
+  FilterCounts,
   FormMatch,
+  GapPatternHit,
   GapFrame,
   IntentDefinition,
   LanguageSearchRepository,
+  LinkerHit,
   MistakeHit,
   PatternHit,
   RelationHit,
+  SenseFacets,
   SenseRef,
 } from "@/language/search/repository";
 import type { DiscourseFunction, ItemKind, RelationType } from "@/language/schema/vocabulary";
@@ -327,7 +339,7 @@ export class DatabaseLanguageRepository
       .where(and(eq(senses.status, "published"), published(languageItems)))
       .orderBy(asc(frames.id));
     return rows.flatMap(({ frame }) => {
-      const gap = toGapFrame(frame.senseId, frame.display, frame.parts as FramePart[]);
+      const gap = toGapFrame(frame.id, frame.senseId, frame.display, frame.parts as FramePart[]);
       return gap ? [gap] : [];
     });
   }
@@ -341,6 +353,268 @@ export class DatabaseLanguageRepository
         limit 10
     `);
     return rows.map((row) => row.id);
+  }
+
+  // ── Context gaps (Phase 4 Step 4.2) ──────────────────────────────────────────────────────
+
+  async findGapPatterns(
+    bases: readonly string[],
+    forms: readonly string[],
+  ): Promise<GapPatternHit[]> {
+    const [byBase, byForm] = await Promise.all([
+      bases.length > 0
+        ? this.patternsWhere(inArray(prepositionPatterns.baseNormalized, [...bases]))
+        : Promise.resolve([]),
+      forms.length > 0
+        ? this.db
+            .select({ pattern: prepositionPatterns, form: itemForms.normalized })
+            .from(prepositionPatterns)
+            .innerJoin(senses, eq(senses.id, prepositionPatterns.senseId))
+            .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+            .innerJoin(itemForms, eq(itemForms.itemId, languageItems.id))
+            .where(
+              and(
+                inArray(itemForms.normalized, [...forms]),
+                eq(senses.status, "published"),
+                published(languageItems),
+              ),
+            )
+            .orderBy(
+              asc(languageItems.headword),
+              asc(senses.position),
+              asc(prepositionPatterns.position),
+              asc(itemForms.normalized),
+            )
+        : Promise.resolve([]),
+    ]);
+    return [
+      ...byBase.map((pattern) => ({ pattern })),
+      ...byForm.map(({ pattern, form }) => ({
+        pattern: {
+          id: pattern.id,
+          senseId: pattern.senseId,
+          base: pattern.base,
+          preposition: pattern.preposition,
+          pattern: pattern.pattern,
+          complement: pattern.complement,
+          ...(pattern.note && { note: pattern.note }),
+          ...(pattern.mistakeId && { mistakeId: pattern.mistakeId }),
+          position: pattern.position,
+        },
+        viaForm: form,
+      })),
+    ];
+  }
+
+  async findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplates> {
+    if (words.length === 0) return { templates: [], forms: [] };
+    // A word or its stem as a whole-word prefix; the exact alignment happens in the engine.
+    const likes = [
+      ...new Set(words.flatMap((w) => [`% ${escapeLike(w)} %`, `% ${escapeLike(stem(w))}%`])),
+    ];
+    const list = (values: readonly string[]) =>
+      sql`array[${sql.join(
+        values.map((value) => sql`${value}`),
+        sql`, `,
+      )}]::text[]`;
+    // Items with a form starting with one of the words ("took measures"), and every first word of
+    // their forms ("take", "takes"…): templates starting with one of those count too (Step 4.4).
+    const family = sql`
+      family as (
+        select distinct f.item_id from item_forms f
+          join language_items i on i.id = f.item_id and i.status = 'published'
+          where f.normalized = any(${list(words)})
+            or f.normalized like any(${list(words.map((w) => `${escapeLike(w)} %`))})
+      ),
+      heads as (
+        select distinct split_part(f.normalized, ' ', 1) as word from item_forms f
+          where f.item_id in (select item_id from family)
+      )`;
+    const wanted = (column: SQL) => sql`
+      ((' ' || ${column} || ' ') like any(${list(likes)})
+        or split_part(${column}, ' ', 1) in (select word from heads))`;
+    const [fromCollocations, fromForms] = await Promise.all([
+      this.db.execute<{
+        id: string;
+        sense_id: string;
+        item_id: string | null;
+        normalized: string;
+        display: string;
+        pattern: string | null;
+      }>(sql`
+        with ${family}
+        select c.id, c.sense_id, c.item_id, c.normalized, c.phrase as display, c.pattern
+          from collocations c
+          join senses s on s.id = c.sense_id and s.status = 'published'
+          join language_items i on i.id = s.item_id and i.status = 'published'
+          where ${wanted(sql`c.normalized`)}
+          order by c.id
+      `),
+      this.db.execute<{
+        item_id: string;
+        sense_id: string | null;
+        normalized: string;
+        display: string;
+        base: string;
+        template: boolean;
+        in_family: boolean;
+      }>(sql`
+        with ${family}
+        select f.item_id, f.normalized, f.form as display, i.normalized as base,
+            (i.kind in ('collocation', 'phrase') and ${wanted(sql`f.normalized`)}) as template,
+            (f.item_id in (select item_id from family)) as in_family,
+            (select s.id from senses s where s.item_id = i.id and s.status = 'published'
+              order by s.position limit 1) as sense_id
+          from item_forms f
+          join language_items i on i.id = f.item_id and i.status = 'published'
+          where (i.kind in ('collocation', 'phrase') and ${wanted(sql`f.normalized`)})
+            or f.item_id in (select item_id from family)
+          order by f.item_id, f.normalized
+      `),
+    ]);
+    return {
+      templates: [
+        ...fromCollocations.map((row) => ({
+          id: row.id,
+          senseId: row.sense_id,
+          ...(row.item_id && { itemId: row.item_id }),
+          normalized: row.normalized,
+          display: row.display,
+          ...(row.pattern && { pattern: row.pattern }),
+        })),
+        ...fromForms.flatMap((row) =>
+          row.template && row.sense_id
+            ? [
+                {
+                  id: `form:${row.item_id}:${row.normalized}`,
+                  senseId: row.sense_id,
+                  itemId: row.item_id,
+                  normalized: row.normalized,
+                  display: row.display,
+                  base: row.base,
+                },
+              ]
+            : [],
+        ),
+      ],
+      forms: fromForms
+        .filter((row) => row.in_family)
+        .map((row) => ({ itemId: row.item_id, normalized: row.normalized })),
+    };
+  }
+
+  async findPairPatterns(rest: string): Promise<PatternHit[]> {
+    // The base ends with the words between the blanks; the engine checks it is exactly one word
+    // more. Patterns on verb-frame senses come with them (their object patterns).
+    return this.patternsWhere(
+      or(
+        sql`${prepositionPatterns.baseNormalized} like ${`% ${escapeLike(rest)}`}`,
+        sql`${prepositionPatterns.senseId} in (select ${frames.senseId} from ${frames})`,
+      )!,
+    );
+  }
+
+  async listLinkers(): Promise<LinkerHit[]> {
+    const rows = await this.db
+      .select({
+        senseId: linkerDetails.senseId,
+        headword: languageItems.headword,
+        positions: linkerDetails.positions,
+        connects: linkerDetails.connects,
+        functions: senses.functions,
+      })
+      .from(linkerDetails)
+      .innerJoin(senses, eq(senses.id, linkerDetails.senseId))
+      .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+      .where(and(eq(senses.status, "published"), published(languageItems)))
+      .orderBy(asc(linkerDetails.senseId));
+    return rows;
+  }
+
+  // ── Filters and browse (Phase 4) ─────────────────────────────────────────────────────────
+
+  async senseFacets(senseIds: readonly string[]): Promise<SenseFacets[]> {
+    if (senseIds.length === 0) return [];
+    const rows = await this.db
+      .select({
+        senseId: senses.id,
+        kind: languageItems.kind,
+        functions: senses.functions,
+        topics: senses.topics,
+        skills: senses.skills,
+        ieltsTasks: senses.ieltsTasks,
+      })
+      .from(senses)
+      .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+      .where(
+        and(
+          inArray(senses.id, [...new Set(senseIds)]),
+          eq(senses.status, "published"),
+          published(languageItems),
+        ),
+      );
+    return rows;
+  }
+
+  async browseSenses(
+    filters: SearchFilters,
+    page: { limit: number; offset: number },
+  ): Promise<{ senseIds: string[]; total: number }> {
+    const where = and(livePublished(), ...filterConditions(filters));
+    const [rows, [count]] = await Promise.all([
+      this.db
+        .select({ id: senses.id })
+        .from(senses)
+        .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+        .where(where)
+        .orderBy(
+          asc(senses.ieltsRelevance),
+          sql`${languageItems.normalized} collate "C"`,
+          asc(senses.position),
+          asc(senses.id),
+        )
+        .limit(page.limit)
+        .offset(page.offset),
+      this.db
+        .select({ total: sql<number>`count(*)::int` })
+        .from(senses)
+        .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+        .where(where),
+    ]);
+    return { senseIds: rows.map((row) => row.id), total: count?.total ?? 0 };
+  }
+
+  async filterCounts(filters: SearchFilters): Promise<FilterCounts> {
+    // One statement: per dimension, the values of the senses that match the other filters.
+    const others = (dimension: FilterDimension) =>
+      and(livePublished(), ...filterConditions({ ...filters, [dimension]: undefined }));
+    const rows = await this.db.execute<{
+      dimension: FilterDimension;
+      value: string;
+      n: number;
+    }>(sql`
+      select 'kind' as dimension, language_items.kind::text as value, count(*)::int as n
+        from senses join language_items on language_items.id = senses.item_id
+        where ${others("kind")} group by 2
+      union all
+      select 'function', f::text, count(*)::int
+        from senses join language_items on language_items.id = senses.item_id,
+          unnest(senses.functions) f
+        where ${others("function")} group by 2
+      union all
+      select 'use', u, count(*)::int
+        from senses join language_items on language_items.id = senses.item_id,
+          unnest(senses.skills::text[] || senses.ielts_tasks::text[]) u
+        where ${others("use")} group by 2
+      union all
+      select 'topic', t::text, count(*)::int
+        from senses join language_items on language_items.id = senses.item_id,
+          unnest(senses.topics) t
+        where ${others("topic")} group by 2
+    `);
+    const counts: FilterCounts = { kind: {}, function: {}, use: {}, topic: {} };
+    for (const row of rows) counts[row.dimension][row.value] = row.n;
+    return counts;
   }
 
   private async patternsWhere(condition: SQL): Promise<PatternHit[]> {
@@ -650,6 +924,34 @@ export class DatabaseLanguageRepository
 
 function published(table: typeof languageItems) {
   return eq(table.status, "published");
+}
+
+/** Published senses of published items: the rows browsing and counting start from. */
+function livePublished() {
+  return and(eq(senses.status, "published"), published(languageItems));
+}
+
+/**
+ * SQL conditions for validated filters (src/language/filters.ts). Values are bound parameters;
+ * the column a value is compared with is fixed by its dimension.
+ */
+function filterConditions(filters: SearchFilters): SQL[] {
+  const conditions: SQL[] = [];
+  for (const dimension of FILTER_DIMENSIONS) {
+    const value = filters[dimension];
+    if (value === undefined) continue;
+    if (dimension === "kind") conditions.push(sql`${languageItems.kind} = ${value}`);
+    if (dimension === "function") conditions.push(sql`${value} = any(${senses.functions})`);
+    if (dimension === "topic") conditions.push(sql`${value} = any(${senses.topics})`);
+    if (dimension === "use") conditions.push(ieltsUseCondition(value as IeltsUse));
+  }
+  return conditions;
+}
+
+function ieltsUseCondition(use: IeltsUse): SQL {
+  return use === "writing" || use === "speaking"
+    ? sql`${use} = any(${senses.skills})`
+    : sql`${use} = any(${senses.ieltsTasks})`;
 }
 
 function escapeLike(text: string) {

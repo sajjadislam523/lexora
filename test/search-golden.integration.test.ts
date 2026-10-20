@@ -1,8 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { EXAMPLE_SEARCHES } from "@/language/examples";
 import type { LanguageSearchService } from "@/language/search/service";
 
-import { checkGolden, GOLDEN_CASES } from "./golden";
+import { checkGolden, GOLDEN_CASES, rankingSnapshot, snapshotQueries } from "./golden";
 import { loadPublishedContent } from "./published-content";
 import { createTempDatabase } from "./temp-database";
 
@@ -36,6 +37,32 @@ describe.skipIf(!hasDatabase)("golden search suite (PostgreSQL)", () => {
       await checkGolden(service, golden);
     },
   );
+
+  // Phase 4 Step 1 re-check of the audit's "noisy fallback": on PostgreSQL the full-text
+  // fallback (plainto_tsquery, every word required, ts_rank) is precise. The noise came from the
+  // in-memory repository, which matches any one word and only approximates it, so these
+  // expectations hold for PostgreSQL only.
+  it.each([
+    ["climate change", ["pose a threat"]],
+    ["describe a graph", ["rise sharply"]],
+    ["words about the environment", ["have a detrimental effect on"]],
+  ])("keeps the full-text fallback precise for %j", async (query, expected) => {
+    const response = await service.search(query);
+    expect(response?.outcome).toBe("fallback");
+    expect(response?.groups.flatMap((g) => g.results.map((r) => r.term))).toEqual(expected);
+  });
+
+  it("finds nothing rather than loosely related language", async () => {
+    expect((await service.search("writing task 1 language"))?.outcome).toBe("none");
+  });
+
+  // The same file as the in-memory run: both repositories must rank identically.
+  it("matches the ranking snapshot", async () => {
+    const queries = snapshotQueries(EXAMPLE_SEARCHES.map((example) => example.text));
+    await expect(await rankingSnapshot(service, queries)).toMatchFileSnapshot(
+      "./search-snapshot.txt",
+    );
+  });
 
   it("answers the golden queries quickly (p95 under 50 ms)", async () => {
     const timings: number[] = [];

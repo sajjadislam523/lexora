@@ -4,8 +4,9 @@ on:
   push:
     branches: [main, "phase/**"]
   pull_request:
-    # `labeled` lets the owner's approval label start the merge checkpoint (see the merge job).
-    types: [opened, synchronize, reopened, labeled]
+    # `labeled` lets the owner's approval label start the merge checkpoint (see the merge job);
+    # `ready_for_review` lets a draft feature PR merge once it is marked ready (see merge-feature).
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
 
 concurrency:
   # Label events get their own group, so adding an unrelated label can't cancel a running check.
@@ -42,11 +43,12 @@ jobs:
       EMAIL_TRANSPORT: outbox
 
     steps:
-      - uses: actions/checkout@v4
+      # Majors that run on Node 24; GitHub is retiring Node 20 for actions.
+      - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -78,7 +80,11 @@ jobs:
       - run: pnpm build
       - name: End-to-end route checks against the production build
         run: |
-          pnpm start > next.log 2>&1 &
+          # Own process group, so the whole server tree (pnpm → sh → next-server) stops with the step
+          # instead of being left for the runner to clean up as orphans.
+          setsid pnpm start > next.log 2>&1 &
+          server=$!
+          trap 'kill -TERM -- "-$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
           for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/ && break; sleep 1; done
           pnpm test:e2e || (cat next.log; exit 1)
 
@@ -124,3 +130,34 @@ jobs:
             -f object="$merge_sha" -f type=commit --jq .sha)
           gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$tag" -f sha="$tag_sha" > /dev/null
           echo "Merged PR #$PR and tagged $tag"
+
+  # Feature auto-merge (docs/WORKFLOW.md → Feature auto-merge): a feat/fix/docs/chore PR into a
+  # phase branch is merged into it with a merge commit as soon as the full suite passes on its
+  # latest commit. Drafts are held until marked ready. No label, no tag: a phase is released, and
+  # reaches main, only through the owner's checkpoint above.
+  merge-feature:
+    needs: verify
+    if: >-
+      github.event_name == 'pull_request' &&
+      contains(fromJSON('["opened", "synchronize", "reopened", "ready_for_review"]'), github.event.action) &&
+      !github.event.pull_request.draft &&
+      github.event.pull_request.user.login == github.repository_owner &&
+      startsWith(github.event.pull_request.base.ref, 'phase/') &&
+      (startsWith(github.event.pull_request.head.ref, 'feat/') ||
+       startsWith(github.event.pull_request.head.ref, 'fix/') ||
+       startsWith(github.event.pull_request.head.ref, 'docs/') ||
+       startsWith(github.event.pull_request.head.ref, 'chore/')) &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Merge the verified commit into the phase branch
+        # --match-head-commit refuses to merge if anything was pushed after this run started;
+        # the newer push starts its own run, which cancels this one (see concurrency).
+        run: gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --match-head-commit "$HEAD_SHA"

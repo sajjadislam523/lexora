@@ -19,6 +19,7 @@ import {
   ITEM_KINDS,
   LINKER_CONNECTS,
   LINKER_POSITIONS,
+  MAX_TOPICS,
   MISTAKE_TYPES,
   PARTS_OF_SPEECH,
   REGIONS,
@@ -28,6 +29,7 @@ import {
   SLOT_TYPES,
   SOURCE_KINDS,
   SOURCE_USES,
+  TOPICS,
 } from "./vocabulary";
 
 /** Item, intent and source IDs, and local keys: lower-case kebab-case (`responsible-for`, `ex1`). */
@@ -180,6 +182,16 @@ const senseSchema = z.strictObject({
   /** 1 (plain) to 3 (strongest), for words with stronger and weaker alternatives. */
   strength: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
   functions: uniqueList(z.enum(DISCOURSE_FUNCTIONS)).optional(),
+  /**
+   * IELTS topics this meaning is commonly used for: one to three, each once. Omit the field for
+   * general language that works for every topic; an empty list is an error, not a second spelling.
+   */
+  topics: z
+    .array(z.enum(TOPICS))
+    .min(1, "omit topics for general language instead of an empty list")
+    .max(MAX_TOPICS, `at most ${MAX_TOPICS} topics per meaning`)
+    .refine((list) => new Set(list).size === list.length, "must not repeat a topic")
+    .optional(),
   best_when: text,
   avoid_when: text.optional(),
   /** How the writing and speaking use differ. */

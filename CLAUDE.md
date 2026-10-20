@@ -6,7 +6,7 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 
 ## Read before any significant change
 
-1. [docs/ROADMAP.md](docs/ROADMAP.md): which phase we are in and what is in or out of scope.
+1. [docs/ROADMAP.md](docs/ROADMAP.md): which phase we are in and what is in or out of scope. The current phase's approved specification is in [docs/specs/](docs/specs/) (Phase 4: [phase-4-search-depth.md](docs/specs/phase-4-search-depth.md)).
 2. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): boundaries, folder layout, data and intelligence layers.
 3. [docs/DESIGN.md](docs/DESIGN.md): the visual source of truth (tokens, components, states).
 4. [docs/UX_PRINCIPLES.md](docs/UX_PRINCIPLES.md): how the product should feel and behave.
@@ -53,14 +53,15 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 | Database schema / migrations                 | `src/server/db/schema/` → `pnpm db:generate` → `drizzle/` (commit the SQL)                  |
 | Language engine (repository, search)         | `src/language/` — read language only through it (`index.ts` server-only)                    |
 | Public discovery frame / save flow           | `src/components/site/`, `src/components/language/`                                          |
-| Prototype content                            | `src/demo/` (behind `PrototypeLanguageRepository`; replaced in Phase 3)                     |
+| Prototype sample data (not language)         | `src/demo/` (sample learner data for the prototype dashboard and practice screens)          |
 | Future: domain logic, curated content        | See ARCHITECTURE.md → Target structure                                                      |
 
 ## Git workflow
 
 - Never commit to `main`. Each phase has an integration branch `phase/<n>-<slug>` cut from `main`.
-- Do the work on `feat/<n>-<slug>`, `fix/…`, `docs/…`, or `chore/…` branches cut from the phase branch, and merge them back with a merge commit.
-- A phase reaches `main` only through a PR that the owner approves. The owner approves by adding the `owner-approved` label, which makes CI re-run every check, merge and tag (docs/WORKFLOW.md → Merge checkpoint). **Never add, remove or simulate that label, and never merge into `main` yourself.**
+- Do the work on `feat/<n>-<slug>`, `fix/…`, `docs/…`, or `chore/…` branches cut from the phase branch, and open a PR into the phase branch. CI merges it with a merge commit once every check passes (docs/WORKFLOW.md → Feature auto-merge); never merge it yourself. Open it as a draft when the owner should review it before it merges.
+- A phase reaches `main` only through a PR that the owner approves. The owner approves by adding the `owner-approved` label, which makes CI re-run every check, merge and tag (docs/WORKFLOW.md → Merge checkpoint). **Never add, remove or simulate that label, and never merge into a phase branch or `main` yourself.**
+- Vercel deploys from `main` only (`vercel.json` → `git.deploymentEnabled`); other branches get no Preview deployments.
 - Use Conventional Commits (`feat(finder): …`).
 - Full details are in [docs/WORKFLOW.md](docs/WORKFLOW.md).
 

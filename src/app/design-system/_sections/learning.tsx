@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ChoiceOption, type ChoiceState } from "@/components/lexora/choice-option";
 import { FitBadge } from "@/components/lexora/fit-badge";
+import { VerdictBadge } from "@/components/lexora/verdict-badge";
 import { GapSentence } from "@/components/lexora/gap-sentence";
 import { HighlightedText } from "@/components/lexora/highlighted-text";
 import { LanguageRow } from "@/components/lexora/language-row";
@@ -58,6 +59,18 @@ export function LearningSection() {
                 tone="danger"
               />
             </div>
+            <div className="rounded-md bg-muted px-4 py-4">
+              <GapSentence
+                parts={[
+                  "Governments should ",
+                  { gap: 0 },
+                  " more money ",
+                  { gap: 1 },
+                  " transport.",
+                ]}
+                numbered
+              />
+            </div>
             <button
               type="button"
               onClick={() => setFilled((v) => !v)}
@@ -97,6 +110,13 @@ export function LearningSection() {
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <Specimen title="Fit, strength & progress">
           <div className="space-y-6">
+            <div className="flex flex-wrap gap-2">
+              <VerdictBadge verdict="fits" />
+              <VerdictBadge verdict="likely_fits" />
+              <VerdictBadge verdict="depends" />
+              <VerdictBadge verdict="unlikely" />
+              <VerdictBadge verdict="not_supported" />
+            </div>
             <div className="flex flex-wrap gap-2">
               <FitBadge fit="fits" />
               <FitBadge fit="different_preposition" />

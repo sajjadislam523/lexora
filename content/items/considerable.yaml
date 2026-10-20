@@ -62,6 +62,11 @@ senses:
         right: A considerable number of people use public transport.
         type: grammar
         explanation: Considerable describes an amount or degree. Before a plural noun, use "a considerable number of".
+      - id: amount-people
+        wrong: a considerable amount of people
+        right: a considerable number of people
+        type: countability
+        explanation: Use "number" with countable nouns such as people and cars, and "amount" with uncountable nouns such as money and time.
     relations:
       - type: synonym
         to: substantial.large

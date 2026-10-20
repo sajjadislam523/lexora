@@ -39,6 +39,7 @@ import {
   SKILLS,
   SOURCE_KINDS,
   SOURCE_USES,
+  TOPICS,
 } from "@/language/schema/vocabulary";
 
 /**
@@ -71,6 +72,7 @@ export const mistakeType = pgEnum("mistake_type", MISTAKE_TYPES);
 export const relationType = pgEnum("relation_type", RELATION_TYPES);
 export const sourceKind = pgEnum("source_kind", SOURCE_KINDS);
 export const sourceUse = pgEnum("source_use", SOURCE_USES);
+export const topic = pgEnum("topic", TOPICS);
 
 const tsvector = customType<{ data: string }>({ dataType: () => "tsvector" });
 
@@ -195,6 +197,11 @@ export const senses = pgTable(
       .array()
       .notNull()
       .default(sql`'{}'`),
+    /** IELTS topics of this meaning (0–3, distinct; validated in content). Empty = general. */
+    topics: topic()
+      .array()
+      .notNull()
+      .default(sql`'{}'`),
     bestWhen: text().notNull(),
     avoidWhen: text(),
     skillNote: text(),
@@ -209,6 +216,7 @@ export const senses = pgTable(
       "senses_strength_range",
       sql`${table.strength} is null or ${table.strength} between 1 and 3`,
     ),
+    check("senses_topics_max", sql`cardinality(${table.topics}) <= 3`),
   ],
 );
 

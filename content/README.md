@@ -63,7 +63,8 @@ senses: [] # see below
   skills: [writing, speaking]
   ielts: { relevance: core, tasks: [writing-1, writing-2] } # core · high · useful; writing-1/2, speaking-1/2/3
   strength: 2 # 1–3, for words with stronger and weaker alternatives
-  functions: [importance, increase] # addition · cause · concession · contrast · emphasis · example · importance · increase · problem · result
+  functions: [importance, increase] # addition · cause · comparison · concession · contrast · decrease · emphasis · example · hedging · importance · increase · opinion · problem · result
+  topics: [environment, transport] # optional, 1–3: education · environment · health · technology · work · economy · government · cities · transport · society
   best_when: … # when this is the right choice
   avoid_when: … # when it isn't
   skill_note: … # how writing and speaking use differ
@@ -76,6 +77,15 @@ senses: [] # see below
   mistakes: []
   relations: []
 ```
+
+### Topics
+
+`topics` names the IELTS topics a meaning is commonly used for, so learners can browse language by topic. It belongs to the **sense**, not the item: a word's general sense and its topical sense can differ.
+
+- Optional, one to three, each at most once. More than three says nothing useful.
+- **Omit it for general language** that works for every topic (_however_, _significant_, _responsible for_). Untagged means general, not unfinished.
+- Tag only what is true: _carbon emissions_ → `[environment, transport]`; _however_ → no topics.
+- The list is closed: `education`, `environment`, `health`, `technology`, `work`, `economy`, `government`, `cities`, `transport`, `society`. Adding one is a content-model change (vocabulary, migration, documentation).
 
 ### Examples
 
@@ -206,6 +216,7 @@ items/significant.yaml:41 senses[0].relations[2].to: unknown sense "considerable
 Checked automatically, for drafts as well as published content (drafts only skip the review requirement):
 
 - required fields, valid values, kebab-case IDs; IDs, slugs, sense keys and local IDs unique; file name = ID
+- topics: one to three per sense, each from the list and only once; general language omits the field (an empty list is an error)
 - definitions at most 25 words and without the headword
 - published senses: at least 2 examples, a speaking example when used in speaking
 - highlights occur in their example; example, pattern and mistake references resolve

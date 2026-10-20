@@ -2,8 +2,12 @@
  * The search contract: what LanguageSearchService returns for a query. Content only — the same
  * query gives every visitor the same response; saved state is added in the browser.
  */
+import type { SearchFilters } from "../filters";
+import type { GapVerdict } from "./gap/verdicts";
 import type { SenseSummary, Span } from "../model";
 import type { ItemKind, Register, Skill } from "../schema/vocabulary";
+
+import type { FilterCounts } from "./repository";
 
 /** The shape of a question, recognised by the ordered patterns in classify.ts. */
 export const QUERY_INTENTS = [
@@ -44,6 +48,23 @@ export type TermResolution = {
   region?: "gb" | "us";
 };
 
+/**
+ * What a blank was read as (Phase 4 Step 4): the first kind of structure that answered it, in the
+ * order verb frame, preposition pattern, collocation, linker. `unknown`: read, but nothing in
+ * Lexora answers it.
+ */
+export type GapType = "verb_frame" | "preposition" | "collocation" | "linker" | "unknown";
+
+/** One blank of a context-gap query, in order (at most two). */
+export type GapSlot = {
+  index: 0 | 1;
+  /** The blank's position among the words of `normalised` (its `___` token). */
+  at: number;
+  /** What the learner typed: underscores, or an ellipsis between words. */
+  marker: "underscore" | "ellipsis";
+  type: GapType;
+};
+
 /** Context-gap fit: does this verb work in the learner's sentence? */
 export type GapFit = "fits" | "different_preposition" | "unlikely";
 
@@ -72,6 +93,27 @@ export type SearchResult = {
   fit?: GapFit;
   /** Context-gap results: the word for the gap and the preposition it takes here. */
   fill?: { word: string; preposition?: string };
+  /**
+   * Context-gap candidates (Steps 4.2–4.3): which blank, what kind of structure, the authored
+   * structure, and the context-fit verdict with its evidence. Verb-frame results also keep their
+   * Phase 3 `fit`.
+   */
+  gapMatch?: {
+    gap: 0 | 1;
+    /**
+     * Step 4.5: both blanks, for one authored structure that fills them together (a verb frame or
+     * a preposition pattern on a phrase): `fill.word` goes in the first, `fill.preposition` in the
+     * second. Absent for a candidate that fills one blank.
+     */
+    gaps?: [0, 1];
+    type: "verb_frame" | "preposition" | "collocation" | "linker";
+    /** The authored structure's id (a verb frame's display text: frames carry no id here). */
+    evidence: string;
+    /** Step 4.3: how well it fits this sentence, from authored evidence (never a score). */
+    verdict: GapVerdict;
+    /** The evidence behind the verdict, as stable codes ("pattern", "authored_mistake"…). */
+    signals: string[];
+  };
 };
 
 export type ResultGroup = { label?: string; results: SearchResult[] };
@@ -95,8 +137,35 @@ export type SearchResponse = {
   didYouMean?: string[];
   /** Context-gap queries: the object and preposition read after the gap. */
   gap?: { object?: string; preposition?: string };
+  /** Context-gap queries: every blank read, in order (`query` is the learner's sentence). */
+  gaps?: GapSlot[];
+  /**
+   * Set on an ordinary answer to a query whose blanks Lexora didn't read: more than two
+   * (Step 4 reads at most two).
+   */
+  gapNote?: "too_many_gaps";
   /** `fallback`: full-text matches only, labelled as such. `none`: nothing matched. */
   outcome: "results" | "fallback" | "none";
+  /**
+   * Only when filters were applied: the filters, and how many results the search found before
+   * and after them. `before > 0` with `after === 0` means the filters hid every result.
+   */
+  filters?: { applied: SearchFilters; before: number; after: number };
+};
+
+/** Browsing by filters, without a query (`LanguageSearchService.browse`). */
+export type BrowseResponse = {
+  filters: SearchFilters;
+  page: number;
+  pageSize: number;
+  /** Matching senses in total, across pages. */
+  total: number;
+  /** At least 1. */
+  pages: number;
+  /** This page's senses, in browse order. Empty when `page` is past the last page. */
+  items: SenseSummary[];
+  /** Matches per value of each dimension, with the other dimensions' filters applied. */
+  counts: FilterCounts;
 };
 
 /** Builds a result from a sense summary, with the reason it appears. */

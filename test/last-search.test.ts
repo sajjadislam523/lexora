@@ -23,6 +23,8 @@ describe("last search", () => {
     expect(readLastSearch()).toBe("/explore?q=important");
     rememberSearch("/finder?q=preposition%20after%20responsible");
     expect(readLastSearch()).toBe("/finder?q=preposition%20after%20responsible");
+    rememberSearch("/explore?kind=linker&use=speaking&page=2");
+    expect(readLastSearch()).toBe("/explore?kind=linker&use=speaking&page=2");
   });
 
   it.each([
@@ -30,6 +32,8 @@ describe("last search", () => {
     "//evil.example/explore?q=x",
     "/explore",
     "/language/significant",
+    "/explore?page=2",
+    "/explore?next=/settings",
     "javascript:alert(1)",
   ])("ignores %s", (value) => {
     withStorage({ getItem: () => value });

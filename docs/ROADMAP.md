@@ -2,7 +2,7 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current release: `v0.3.0` — Phase 3, Language Engine (complete)** · Next: Phase 4 — Search Depth (scoped, awaiting owner approval) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1`
+**Current release: `v0.3.0` — Phase 3, Language Engine (complete)** · In progress: Phase 4 — Search Depth (specification approved 17 October 2026, branch `phase/4-search-depth`) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1`
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
@@ -142,174 +142,160 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ---
 
-## Phase 4 — Search Depth 🔜
+## Phase 4 — Search Depth 🔜 (re-scoped; release in review)
 
-**Status:** Scoped, awaiting owner approval
-**Release:** TBD
+**Status:** Specification approved by the owner on 17 October 2026; **re-scoped by the owner on 21 October 2026** after the [final audit](specs/phase-4-final-audit.md) · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.6, the F3 content correction and the two audit closure fixes merged; the phase PR to `main` is in review; the items below under _Deferred from Phase 4_ were never built and move to later work
+**Specification:** [docs/specs/phase-4-search-depth.md](specs/phase-4-search-depth.md) — the reference for every step, with the readiness audit, worked examples and the decision register (§17)
+**Release:** `v0.4.0` when the phase is approved
 
-Phase 4 deepens Lexora's retrieval system rather than introducing new learning surfaces.
+### Re-scope (owner decision, 21 October 2026)
 
-The goal is to make Lexora better at helping learners **browse, filter, contextualise and discover language**, while improving search performance and learning which searches the current content does not satisfy.
+Phase 4 closes around the **Search Depth** feature that was built, audited and found coherent: deterministic, explained, isolated from ordinary search and honest about what it can't decide. The rest of the originally approved scope was **not built**. It is deferred, not done, and isn't part of an unfinished Phase 4.
+
+**Completed in Phase 4:**
+
+- Regression baseline: a 71-case golden suite and a ranking snapshot (Step 1).
+- The topics and functions content model (Step 2).
+- Search filters and browse, on Explore and the Finder (Steps 3a/3b).
+- The context-gap reader with an honest fallback (4.1); candidates (4.2); context-fit verdicts (4.3); context coverage (4.4); two-gap structures and "It is ___ that" (4.5); the context-tool UI (4.6).
+- The F3 countability content correction.
+- The two final-audit closure fixes:
+  - verb-group headings in the context tool that never contradict their verdicts;
+  - a collocation hedged when the learner's next word differs from its authored continuation.
+- **Ranking review:** audited, with no ordinary-search failures found (the parent spec's Step 9); nothing needed changing.
+
+**Deferred from Phase 4, never built:**
+
+- **Infrastructure and observability:**
+  - search rate limiting (Step 6);
+  - privacy-first logging of searches that find nothing (Step 7);
+  - latency measured against the p95 budget on a deployed environment (Step 8; Previews are off, so where to measure is an open decision).
+- **Content expansion:**
+  - Wave 2 language items (at least 140 published; there are 40);
+  - topic tagging (no sense has a topic yet);
+  - linkers for comparison and cause, and more concession, example and result;
+  - more verb patterns ("pay attention to", infinitive and -ing frames).
+- **Future engine and model work:**
+  - the whole-sentence check;
+  - word roles (noun vs verb use of a pattern's base, F4);
+  - noun-or-person complements and names;
+  - mistakes in the learner's surrounding text (F3's remaining limit);
+  - sentence-final linkers.
+
+Phase 4 deepens Lexora's retrieval system rather than introducing new learning surfaces: helping learners **browse, filter, contextualise and discover language**, learning which searches the content doesn't satisfy, and protecting search, while keeping every result deterministic and explained.
 
 Phase 4 remains **AI-free**.
 
-### Scope
+### Scope (approved 17 October 2026; re-scoped above)
 
 #### 1. Browse and filters
 
-Add structured browsing and filtering across the language catalogue.
-
-Filters will support:
-
-- Language kind
-  - word
-  - collocation
-  - linker
-  - preposition
-  - sentence pattern
-  - other approved language kinds
-- Function
-  - contrast
-  - cause
-  - result
-  - comparison
-  - emphasis
-  - other approved functions
-- IELTS task
-- Skill
-
-Filters will be represented in URL state so filtered views are shareable and browser-navigation friendly.
+- Four dimensions: **kind** (the seven item kinds), **function** (the discourse functions), **IELTS use** (writing, Writing Task 1/2, speaking, Speaking Part 1/2/3 — skill and task in one control) and **topic**.
+- One value per dimension initially; dimensions combine with AND.
+- With a query, filters restrict the results without changing their ranking. Without a query, matching language is listed in a fixed order (IELTS relevance, then A–Z).
+- Filters are dropdowns, not another row of chips.
+- State lives in query parameters on `/explore` and `/finder` in one canonical order; non-canonical forms redirect to it.
+- Filtered and paginated views are `noindex, follow` with a self-referencing canonical and stay out of the sitemap. Indexable topic or kind pages are deferred.
 
 #### 2. Richer context-gap analysis
 
-Expand contextual sentence-gap analysis beyond the Phase 3 verb-gap implementation.
+Deterministic matching against authored structures only (patterns, collocations, frames, linker details) — no parser, tagger or model:
 
-Supported gap types will include:
-
-- noun gaps
-- adjective gaps
 - preposition gaps
-- verb gaps
-- multiple gaps within one sentence
-- whole-sentence fit
-
-The search engine must explain why a candidate fits the supplied context.
+- collocation gaps: adjective, noun and verb
+- verb-frame gaps (the Phase 3 behaviour, kept)
+- linker gaps
+- at most two gaps in one sentence
+- an honest message when a gap can't be read
+- a sentence-level check for sentences without a gap, labelled as **not a grammar check**
 
 #### 3. Unmatched-query feedback
 
-Introduce privacy-conscious recording of searches for which the language engine finds no useful result.
+Searches that find nothing (or only a full-text fallback) are counted to plan content, without tracking anyone:
 
-If approved, the system will record:
+- stored: the cleaned query (at most 80 characters), the outcome, the ISO week and a count
+- never stored: IP address, user, session, user agent or which surface it came from
+- not recorded at all: long sentences, gap queries, digit runs, `@` and URLs
+- retention: 13 weeks
+- a report command for the owner; no admin screen
 
-- normalised query text
-- occurrence count
+#### 4. Search performance
 
-It will not associate unmatched queries with a learner account.
+Caching is **deferred**. Search is measured first, against a target of **p95 ≤ 150 ms on a warm Preview deployment**. Any cache needs a separate owner decision.
 
-Retention will be time-limited.
+#### 5. Search rate limiting
 
-A developer/owner report command will expose the data for content planning. No learner-facing admin screen is planned.
+A light limit on public search, proposed at **120 requests per minute per IP** with a Vercel Firewall rule. Firewall availability on the project's plan is verified first. If it isn't available, the step stops and reports the constraint; no alternative is built without a new owner decision.
 
-#### 4. Search performance and protection
+#### 6. Ranking review
 
-Improve public-search performance and resilience through:
+- The golden suite is expanded first (from 23 to about 65–70 cases) and a ranking snapshot is added, before any search behaviour changes.
+- Ranking changes only to fix demonstrated failures.
+- No popularity, click or personal signals.
 
-- caching repeated searches
-- cache invalidation after content import
-- light search rate limiting
+#### 7. Topics and Wave 2 content
 
-Search must remain responsive without weakening the deterministic ranking guarantees established in Phase 3.
-
-#### 5. Ranking review
-
-Review ranking using:
-
-- the existing 23 golden cases
-- an expanded golden suite
-- observed aggregate search behaviour when meaningful traffic exists
-
-Early ranking changes should primarily be validated against the expanded deterministic suite because Lexora may not yet have enough real-world usage data for reliable usage-driven tuning.
-
-#### 6. Topics and Wave 2 content
-
-Introduce a topic taxonomy such as:
-
-- environment
-- education
-- technology
-- society
-- health
-- economy
-- other approved IELTS-relevant topics
-
-The topic model must land before Wave 2 content begins so that topics are part of the authored content format rather than retrofitted later.
-
-Wave 2 will grow the catalogue toward approximately 150 items.
-
-Content will continue to be reviewed in owner-approved batches of approximately 20–25 items per content PR.
+- Topics: **1–3 optional topics per meaning**, from a closed initial list of 10 (education, environment, health, technology, work, economy, government, cities, transport, society). General language has no topic. The topic model lands before Wave 2.
+- Wave 2: about **110 more items** in **five batches of roughly 20–25**, one owner-reviewed content PR each, separate from feature work. The exit criterion is coverage (every topic, function, IELTS task and kind adequately covered), with **at least 140 published items**.
 
 ### Explicitly deferred
 
 Phase 4 does **not** include:
 
-- AI integration
-- Language Bank screen
-- Practice engine
-- Writing analysis
-- Speaking analysis
+- AI integration, AI semantic search or AI generation
 - AI-generated explanations
-- AI semantic search
+- the Language Bank screen
+- the Practice engine
+- Writing Lab analysis
+- Speaking Lab analysis
+- result caching (unless the measured budget fails and the owner approves one)
+- indexable topic or kind pages, multi-select filters
 
-These remain assigned to later phases.
+### Phase 4 sequence (approved)
 
-### Proposed Phase 4 sequence
+| Step | Work                                                                                      |
+| ---- | ----------------------------------------------------------------------------------------- |
+| 0    | Approved specification, roadmap and architecture documentation brought up to date         |
+| 1    | Regression baseline: expanded golden suite, ranking snapshot, the false-mistake-match fix |
+| 2    | Content model: topics (and any newly approved discourse functions), validation, migration |
+| 3    | Browse and filter queries in the language engine                                          |
+| 4    | Filters and browse UI on Explore and the Finder                                           |
+| 5a   | Context gaps I: preposition and collocation gaps                                          |
+| 5b   | Context gaps II: linker gaps, two gaps, the sentence-level check                          |
+| 6    | Search rate limiting (verify Vercel Firewall first)                                       |
+| 7    | Privacy-first unmatched-query feedback                                                    |
+| 8    | Performance measurement against the budget                                                |
+| 9    | Ranking corrections for demonstrated failures                                             |
+| 10   | Responsive, accessibility and product QA                                                  |
+| 11   | Phase review and PR to `main`                                                             |
 
-| Step | Work                                                        |
-| ---- | ----------------------------------------------------------- |
-| 0    | Prerequisites, preview isolation and approved specification |
-| 1    | Topics: content format, validation, migration and import    |
-| 2    | Browse/filter queries in the language engine                |
-| 3    | Filters and browse UI on Explore and Finder                 |
-| 4    | Context-gap depth                                           |
-| 5    | Privacy-first unmatched-query feedback                      |
-| 6    | Search caching and rate limiting                            |
-| 7    | Ranking review against expanded golden suite                |
-| 8    | Wave 2 content in reviewed batches                          |
-| 9    | Responsive/accessibility audit and product review           |
-
-Wave 2 content may begin after Step 1 and proceed alongside subsequent implementation work.
+Wave 2 content runs in parallel from Step 2, in its own content PRs. Each step is built, reviewed and merged into the phase branch on its own; decisions the specification marks as _proposed_ are confirmed by the owner at the step that needs them.
 
 ### Phase 4 exit criteria
 
-Phase 4 is complete when:
+Phase 4 is complete when (measurable details in the specification, §16):
 
-1. Browse and filtering work across the relevant search surfaces.
-2. Filter state is shareable through URLs and works correctly with browser navigation.
-3. Context-gap analysis supports more than verbs and handles whole-sentence fit.
-4. Multiple gaps are supported where specified by the final Phase 4 specification.
-5. Unmatched searches are recorded only if the owner approves the privacy model.
-6. Recorded unmatched queries follow the approved retention policy.
-7. Repeated searches are cached.
-8. Search traffic is protected by the approved rate limit.
-9. Cache invalidation occurs correctly after content import.
-10. Ranking passes the expanded golden suite.
-11. Topics exist in the authored content format and database.
-12. Wave 2 content is owner-reviewed and imported.
-13. Responsive and accessibility checks pass.
-14. Unit/integration, golden-search, build and E2E checks pass.
-15. Product review is complete.
-16. The Phase 4 branch is approved for merge to `main`.
+1. The 23 Phase 3 golden cases pass unchanged, and the expanded suite (at least 65 cases, none left pending) passes in memory and on PostgreSQL.
+2. A ranking snapshot exists and every change to it since Step 1 is explained in its PR.
+3. Browse and filters work across Explore and the Finder; filter state is shareable through canonical URLs and works with browser navigation; filtered pages are `noindex, follow`, self-canonical and outside the sitemap.
+4. Context-gap analysis handles preposition, collocation, verb-frame and linker gaps and up to two gaps, explains every verdict, and says honestly when it can't read a gap.
+5. The sentence-level check is labelled as not a grammar check.
+6. Unmatched queries are recorded only as approved (no identifying data; exclusions applied) and are deleted after 13 weeks; the report command works.
+7. Search latency is measured and meets p95 ≤ 150 ms on a warm Preview deployment, with no result cache unless the owner approved one.
+8. Search traffic is protected by the approved rate limit, or the owner has decided how to proceed if the Firewall isn't available.
+9. Topics exist in the authored content format and the database.
+10. Wave 2 content is owner-reviewed and imported: at least 140 published items, meeting the specification's coverage targets.
+11. Responsive (390–1440 px) and accessibility checks pass.
+12. Preview stays isolated from Production, and production changes are expand-only migrations plus a reviewed import.
+13. Unit/integration, golden-search, build and E2E checks pass.
+14. Architecture, design and content documentation describe what was built.
+15. Product review is complete and the owner approves the phase for merge to `main`.
 
-### Phase 4 approval gate
+**After the re-scope (21 October 2026):**
 
-Phase 4 is **not implementation-approved** by this roadmap update.
-
-Before implementation begins:
-
-1. The preview environment must be isolated from Production.
-2. The Phase 4 specification must be reviewed and approved.
-3. The owner must explicitly approve the Phase 4 scope.
-4. Only then may Phase 4 implementation begin.
+- **Met:** criteria 1–4, 9 (the topic model), and 11–14; the [final audit](specs/phase-4-final-audit.md) records the evidence.
+- **Moved with the deferred work:** criteria 5 (sentence-level check), 6 (unmatched queries), 7 (latency on a deployment), 8 (rate limiting) and 10 (Wave 2).
+- **Still open:** criterion 15 is the owner's approval of the phase PR.
 
 ---
 
@@ -405,8 +391,13 @@ Before implementation begins:
 | Email provider                | Phase 3                       | ✅ Resend, behind an `EmailSender` abstraction                                                            |
 | Google OAuth                  | When wanted                   | Configure `socialProviders.google`; no schema change                                                      |
 | Vercel preview deployments    | Before Phase 4 implementation | ✅ Separate Neon `preview` branch and auth secret; sign-in uses Vercel's preview addresses (`app-url.ts`) |
-| Unmatched-query privacy model | Phase 4 specification         | Proposed: normalised query and count only, no account link, time-limited retention                        |
-| Topic taxonomy                | Phase 4 step 1                | Proposed IELTS topics (environment, education, technology, society, health, economy, …)                   |
+| Unmatched-query privacy model | Phase 4 specification         | ✅ Cleaned query, outcome, week, count; nothing identifying; 13 weeks (Phase 4 spec D1)                   |
+| Topic taxonomy                | Phase 4 step 2                | ✅ 1–3 optional topics per meaning, closed list of 10 (Phase 4 spec D4, §6)                               |
+| Browse URLs and indexing      | Phase 4 step 4                | ✅ Canonical params; filtered views noindex, self-canonical, not in sitemap (D2)                          |
+| Search caching                | Phase 4 step 8                | ✅ Deferred; measure first, p95 ≤ 150 ms on warm Preview (D6)                                             |
+| Search rate limiting          | Phase 4 step 6                | Approved: 120 req/min/IP via Vercel Firewall, if available; else stop and report (D7)                     |
+| Ranking changes               | Phase 4 step 1                | ✅ Golden suite and snapshot first; fix demonstrated failures only (D8)                                   |
+| New discourse functions       | Phase 4 step 2                | ✅ comparison, decrease, opinion, hedging (owner, 17 October 2026; D11)                                   |
 | Content sourcing & licensing  | Phase 3                       | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept                                   |
 | SRS algorithm                 | Phase 5                       | FSRS (proposed) / SM-2                                                                                    |
 | Dark mode timing              | Any                           | Phase 10 (current plan)                                                                                   |

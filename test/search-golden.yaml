@@ -136,3 +136,299 @@
 - query: xyzzy
   intent: LOOKUP
   outcome: none
+
+# ── Phase 4 regression baseline (Step 1) ────────────────────────────────────────────────
+# Behaviour the Phase 3 engine already gets right, pinned before Phase 4 changes search.
+# Every case below passes unchanged on the in-memory and the PostgreSQL repository.
+# Imperfect current behaviour is documented in
+# docs/audits/2026-10-17-search-regression-baseline.md, not pinned here.
+
+# Normalisation and exact terms
+
+# Case, padding and a trailing comma are normalised away before matching.
+- query: "  HOWEVER,  "
+  intent: LOOKUP
+  term: { via: exact, resolved: however }
+  top: [however]
+  groups: [Alternatives, More formal]
+
+# A curly apostrophe matches the straight one stored in forms.
+- query: What’s more
+  intent: LOOKUP
+  term: { via: exact, resolved: what's more }
+  top: [what's more]
+
+# The authored apostrophe-less spelling is a variant, not a typo.
+- query: whats more
+  intent: LOOKUP
+  term: { via: variant, resolved: what's more }
+  top: [what's more]
+
+# A sentence pattern is found by its opening words, without the trailing slot.
+- query: It is worth noting that
+  intent: LOOKUP
+  only: [It is worth noting that …]
+
+# An inflected form resolves to its item.
+- query: contributed to
+  intent: LOOKUP
+  term: { via: exact, resolved: contribute to }
+  only: [contribute to]
+
+# A past tense resolves to the verb, and its related verbs follow.
+- query: allocated
+  intent: LOOKUP
+  term: { via: exact, resolved: allocate }
+  top: [allocate]
+  includes: [invest, devote]
+
+# A collocation item with its relations, including a confusable item.
+- query: raise awareness
+  intent: LOOKUP
+  term: { via: exact, resolved: raise awareness }
+  top: [raise awareness]
+  groups: [Often confused, Related]
+  includes: [rise sharply, take measures]
+
+# Spelling variants
+
+# British double-s spelling of an inflection.
+- query: focussing on
+  intent: LOOKUP
+  term: { via: variant, resolved: focus on }
+  top: [focus on]
+
+# A US inflection still finds the British headword.
+- query: analyzes
+  intent: LOOKUP
+  top: [analyse]
+
+# Typo correction (one clear candidate only)
+
+# One missing letter at the end.
+- query: nevertheles
+  intent: LOOKUP
+  term: { via: typo, resolved: nevertheless }
+  top: [nevertheless]
+
+# Shortest correctable length band (6 letters, one edit).
+- query: crucal
+  intent: LOOKUP
+  term: { via: typo, resolved: crucial }
+  top: [crucial]
+
+# A typo inside a multi-word preposition pattern.
+- query: contibute to
+  intent: LOOKUP
+  term: { via: typo, resolved: contribute to }
+  top: [contribute to]
+
+# A misspelt pattern base shows every pattern and the known mistake.
+- query: responsable
+  intent: LOOKUP
+  term: { via: typo, resolved: responsible }
+  only: [responsible for, responsible to]
+  mistakes: [responsible of]
+
+# Relations
+
+- query: synonyms for considerable
+  intent: SYNONYM
+  only: [significant, substantial]
+
+- query: stronger word for significant
+  intent: STRONGER_ALTERNATIVE
+  only: [crucial]
+
+# Weaker is the inverse the importer writes for "stronger".
+- query: weaker word for crucial
+  intent: WEAKER_ALTERNATIVE
+  only: [important, significant]
+
+- query: alternative to moreover
+  intent: ALTERNATIVE
+  only: [furthermore, what's more]
+
+# "instead of" never returns the term itself.
+- query: instead of however
+  intent: SYNONYM
+  only: [in contrast, on the other hand, whereas, nevertheless]
+
+# A skill modifier keeps only language used in that skill.
+- query: speaking alternative to moreover
+  intent: ALTERNATIVE
+  only: [what's more]
+
+- query: replace furthermore
+  intent: ALTERNATIVE
+  includes: [on top of that, moreover, what's more]
+  excludes: [furthermore]
+
+# Prepositions
+
+- query: preposition after interested
+  intent: PREPOSITION
+  only: [interested in]
+  mistakes: [I'm interested about history.]
+
+# The "+ ?" shorthand.
+- query: contribute + ?
+  intent: PREPOSITION
+  only: [contribute to]
+
+# The "X with or to" shape names the pattern without the mistaken preposition.
+- query: associated with or to
+  intent: PREPOSITION
+  only: [associated with]
+  mistakes: [Smoking is associated to lung disease.]
+
+# One base, two patterns with different meanings.
+- query: prepositions for result
+  intent: PREPOSITION
+  only: [result in, result from]
+
+# Typo correction inside a preposition question.
+- query: preposition after responsable
+  intent: PREPOSITION
+  term: { via: typo, resolved: responsible }
+  only: [responsible for, responsible to]
+
+# Collocations
+
+- query: collocations with crucial
+  intent: COLLOCATION
+  top: [play a crucial role, a crucial factor, it is crucial that]
+
+- query: words that go with considerable
+  intent: COLLOCATION
+  top: [a considerable amount, a considerable number, to a considerable extent, considerable debate]
+
+# Linkers, phrases and "I want to …"
+
+- query: linkers for addition
+  intent: LINKER
+  groups: [In writing, In speaking]
+  only: [furthermore, moreover, on top of that, what's more]
+
+- query: linking words to show result
+  intent: LINKER
+  groups: [Starting a new sentence, Inside one sentence]
+  top: [as a result]
+
+# Sentence-pattern questions put the group with a sentence pattern first.
+- query: sentence starters for a problem
+  intent: SENTENCE_PATTERN
+  top: [There is growing concern about …]
+  includes: [pose a threat, have a detrimental effect on]
+
+- query: how do I give an example
+  intent: CONTEXTUAL_EXPRESSION
+  only: [for instance, such as, a case in point]
+
+- query: I want to say something is important
+  intent: CONTEXTUAL_EXPRESSION
+  groups: [General, Stronger, As a phrase]
+  top: [important, significant]
+
+# Context gaps (verb frames, the Phase 3 behaviour)
+
+# Two verbs fit the object and preposition; the third takes another preposition.
+- query: We need to ___ more resources to healthcare
+  intent: CONTEXT_GAP
+  top: [allocate, devote]
+  fits: { allocate: fits, devote: fits, invest: different_preposition }
+
+# "into" is accepted after invest; the other verbs don't take "billions".
+- query: Companies ___ billions into research
+  intent: CONTEXT_GAP
+  top: [invest]
+  fits: { invest: fits, allocate: unlikely, devote: unlikely }
+
+- query: The city should ___ more funds in cycle lanes
+  intent: CONTEXT_GAP
+  top: [invest]
+  fits: { invest: fits, allocate: different_preposition, devote: unlikely }
+
+# No object after the gap: an honest prompt, no guessed verbs.
+- query: Governments should ___ to public transport
+  intent: CONTEXT_GAP
+  outcome: none
+
+# Common mistakes
+
+- query: make measures
+  intent: LOOKUP
+  only: [take measures]
+  mistakes: [The government should make measures to reduce crime.]
+
+- query: worth to note
+  intent: LOOKUP
+  only: [It is worth noting that …]
+  mistakes: [It is worth to note that prices fell.]
+
+# Step 1 fix: a correct phrase inside a longer mistake is not that mistake.
+- query: a significant
+  intent: LOOKUP
+  includes: [significant]
+  mistakes: []
+
+# Step 1 fix: the mistake itself ("amount" with people) is still found.
+- query: a significant amount
+  intent: LOOKUP
+  top: [significant]
+  mistakes: [a significant amount of people]
+
+# F3 content (Phase 4): "amount" with people is authored for considerable and substantial too, so
+# the general query finds all three corrections, A–Z.
+- query: amount of people
+  intent: LOOKUP
+  top: [considerable, significant, substantial]
+  mistakes:
+    [
+      a considerable amount of people,
+      a significant amount of people,
+      a substantial amount of people,
+    ]
+
+# Step 1 fix: "very important" appears in "My family is very important for me." but isn't the error.
+- query: very important
+  intent: LOOKUP
+  term: { via: exact, resolved: important }
+  top: [important]
+  mistakes: []
+
+# Step 1 fix: a punctuation mistake is shown only for the whole sentence.
+- query: such as tennis
+  intent: LOOKUP
+  top: [such as]
+  mistakes: []
+
+# Terms inside longer queries, and no-match behaviour
+
+- query: depend on public transport
+  intent: LOOKUP
+  term: { via: exact, resolved: depend on }
+  top: [depend on]
+
+- query: we should raise awareness
+  intent: LOOKUP
+  term: { via: exact, resolved: raise awareness }
+  top: [raise awareness]
+
+# A stopword alone matches nothing.
+- query: the
+  intent: LOOKUP
+  outcome: none
+
+# Full-text fallback, labelled as such (same first result on both repositories).
+- query: environment
+  intent: LOOKUP
+  outcome: fallback
+  top: [have a detrimental effect on]
+
+# Step 1 fix: "public transport" appears in a mistake sentence but isn't the error.
+- query: public transport
+  intent: LOOKUP
+  outcome: fallback
+  top: [invest]
+  mistakes: []
