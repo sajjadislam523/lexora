@@ -48,3 +48,9 @@ senses:
         phrase: a substantial increase
         pattern: a substantial increase in + noun
         note: a large, lasting rise
+    mistakes:
+      - id: amount-people
+        wrong: a substantial amount of people
+        right: a substantial number of people
+        type: countability
+        explanation: Use "number" with countable nouns such as people and cars, and "amount" with uncountable nouns such as money and time.
