@@ -142,9 +142,9 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ---
 
-## Phase 4 — Search Depth 🔜 (re-scoped; closure in review)
+## Phase 4 — Search Depth 🔜 (re-scoped; release in review)
 
-**Status:** Specification approved by the owner on 17 October 2026; **re-scoped by the owner on 21 October 2026** after the [final audit](specs/phase-4-final-audit.md) · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.6 and the F3 content correction merged; the two audit closure fixes in review; the items below under _Deferred from Phase 4_ were never built and move to later work
+**Status:** Specification approved by the owner on 17 October 2026; **re-scoped by the owner on 21 October 2026** after the [final audit](specs/phase-4-final-audit.md) · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.6, the F3 content correction and the two audit closure fixes merged; the phase PR to `main` is in review; the items below under _Deferred from Phase 4_ were never built and move to later work
 **Specification:** [docs/specs/phase-4-search-depth.md](specs/phase-4-search-depth.md) — the reference for every step, with the readiness audit, worked examples and the decision register (§17)
 **Release:** `v0.4.0` when the phase is approved
 
