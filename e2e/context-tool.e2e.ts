@@ -100,8 +100,9 @@ describe("two gaps", () => {
     expect(page).toContain("What fits these gaps?");
     expect(headings(page)).toEqual([
       "Both gaps",
-      "Gap 1 · Fits this sentence",
-      "Gap 1 · Doesn't fit this sentence",
+      // Phase 4 closure (UI-1): a verb group's heading never contradicts its rows' verdicts.
+      "Gap 1 · Verbs for this gap",
+      "Gap 1 · Other verbs Lexora checked",
     ]);
     expect(page).toContain("Each answer fills both gaps together, as one pattern.");
     expect(page).toContain("The answers below are for one gap each. Lexora doesn’t combine them.");
@@ -175,4 +176,26 @@ describe("ordinary search", () => {
       expect(page).not.toContain("Lexora reads up to two gaps");
     },
   );
+});
+
+describe("Phase 4 closure fixes", () => {
+  it("never heads an unlikely verb with “Fits this sentence”", async () => {
+    const page = await rendered(
+      explore("Governments should ____ more money into public transportation"),
+    );
+    expect(headings(page)).toEqual(["Verbs for this gap", "Other verbs Lexora checked"]);
+    expect(verdicts(page)).toEqual(["fits", "unlikely", "not_supported"]);
+  });
+
+  it("keeps “Fits this sentence” over a group where every verb fits", async () => {
+    const page = await rendered(explore("Companies ___ billions into research"));
+    expect(headings(page)[0]).toBe("Fits this sentence");
+    expect(verdicts(page)[0]).toBe("fits");
+  });
+
+  it("hedges a collocation before a different continuation than its pattern authors", async () => {
+    const page = await rendered(explore("A substantial ___ to the budget"));
+    expect(page).toContain("Lexora’s pattern continues it with “that”, not “to”.");
+    expect(verdicts(page)).not.toContain("fits");
+  });
 });

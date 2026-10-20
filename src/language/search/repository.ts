@@ -108,6 +108,8 @@ export type CollocationTemplate = {
   display: string;
   /** Item forms only: the item's base form (its normalised headword), "take measures". */
   base?: string;
+  /** Collocations only: the authored pattern, which says what follows ("a significant increase in + noun"). */
+  pattern?: string;
 };
 
 /** An authored item form (normalised), for reading which first words inflect one another. */

@@ -89,14 +89,32 @@ export function groupScope(group: ResultGroup, blanks: number): string | undefin
   return isPair(first) ? "Both gaps" : `Gap ${(first.gapMatch?.gap ?? 0) + 1}`;
 }
 
+/** A group of Phase 3 verb-frame answers for one blank (not pairs). */
+const isVerbFrameGroup = (group: ResultGroup) =>
+  group.results.length > 0 &&
+  group.results.every((result) => result.gapMatch?.type === "verb_frame" && !isPair(result));
+
 /**
- * The group's heading: the engine's label, led by its scope in a two-blank sentence when the
- * label doesn't already say it ("Gap 1 · Fits this sentence").
+ * Each group's heading, in order: the engine's label, led by its scope in a two-blank sentence
+ * when the label doesn't already say it ("Gap 1 · Prepositions after “responsible”").
+ *
+ * The Phase 3 verb-frame groups keep the engine's label only when every answer in them fits
+ * ("Fits this sentence" over _Fits_ rows). Otherwise the label would contradict a row's verdict —
+ * "Fits this sentence" over an _Unlikely_ verb — so the tool says what the group is instead:
+ * "Verbs for this gap", then "Other verbs Lexora checked". The engine's labels are unchanged.
  */
-export function groupHeading(group: ResultGroup, blanks: number) {
-  const label = group.label ?? "Language for the gap";
-  const scope = groupScope(group, blanks);
-  return scope && !label.startsWith(scope) ? `${scope} · ${label}` : label;
+export function groupHeadings(groups: readonly ResultGroup[], blanks: number) {
+  let verbGroups = 0;
+  return groups.map((group) => {
+    let label = group.label ?? "Language for the gap";
+    if (isVerbFrameGroup(group)) {
+      const allFit = group.results.every((result) => result.gapMatch?.verdict === "fits");
+      if (!allFit) label = verbGroups === 0 ? "Verbs for this gap" : "Other verbs Lexora checked";
+      verbGroups++;
+    }
+    const scope = groupScope(group, blanks);
+    return scope && !label.startsWith(scope) ? `${scope} · ${label}` : label;
+  });
 }
 
 /** The tool's title and lead, from what the engine answered. */

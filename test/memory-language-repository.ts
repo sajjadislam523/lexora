@@ -209,6 +209,7 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
         ...(c.itemId && { itemId: c.itemId }),
         normalized: c.normalized,
         display: c.phrase,
+        ...(c.pattern && { pattern: c.pattern }),
       }));
     const fromForms = this.rows.forms.flatMap((form) => {
       const item = this.items.find((i) => i.id === form.itemId);

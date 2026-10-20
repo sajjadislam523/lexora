@@ -322,14 +322,22 @@ export function collocationVerdict(
   const mistake = recreatedMistake(window, candidate.fill, mistakes);
   if (mistake) return mistakeVerdict(mistake);
   const collocation = quote(candidate.evidence.display);
-  const openSide = candidate.openRight || candidate.openLeft;
-  const open = openSide ? ["other_side_unchecked"] : [];
+  const openSide = candidate.openRight || candidate.openLeft || Boolean(candidate.continuation);
+  const open = [
+    ...(candidate.openRight || candidate.openLeft ? ["other_side_unchecked"] : []),
+    ...(candidate.continuation ? ["continuation_differs"] : []),
+  ];
   const functionWords = candidate.functionWordsOnly ? ["function_words_only"] : [];
-  const unchecked = candidate.openRight
-    ? `; Lexora can't check ${quote(candidate.rightWord ?? window.after[0]!)} after it`
-    : candidate.openLeft
-      ? `; Lexora can't check ${quote(window.before[0]!)} before it`
-      : "";
+  const unchecked = [
+    candidate.openRight
+      ? `; Lexora can't check ${quote(candidate.rightWord ?? window.after[0]!)} after it`
+      : candidate.openLeft
+        ? `; Lexora can't check ${quote(window.before[0]!)} before it`
+        : "",
+    candidate.continuation
+      ? `; Lexora’s pattern continues it with ${quote(candidate.continuation)}, not ${quote(candidate.rightWord!)}`
+      : "",
+  ].join("");
   const onlyFunctionWords = candidate.functionWordsOnly
     ? "; only small function words around the gap match it, so Lexora can't confirm the sentence uses it this way"
     : "";

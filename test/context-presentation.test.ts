@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import {
-  groupHeading,
+  groupHeadings,
   groupScope,
   isPair,
   isVerbFrameAnswer,
@@ -106,16 +106,16 @@ describe("what a chosen answer fills", () => {
 describe("groups", () => {
   it("name their scope in a two-gap sentence, pairs first, as the engine ordered them", async () => {
     const response = await search("Governments should ___ more money ___ public transport");
-    expect(response.groups.map((group) => groupHeading(group, 2))).toEqual([
+    expect(groupHeadings(response.groups, 2)).toEqual([
       "Both gaps",
-      "Gap 1 · Fits this sentence",
-      "Gap 1 · Doesn't fit this sentence",
+      "Gap 1 · Verbs for this gap",
+      "Gap 1 · Other verbs Lexora checked",
     ]);
   });
 
   it("keep the engine's label when it already names the gap", async () => {
     const response = await search("The policy ___ rise ___ protests");
-    expect(response.groups.map((group) => groupHeading(group, 2))).toEqual([
+    expect(groupHeadings(response.groups, 2)).toEqual([
       "Both gaps · give … to",
       "Gap 2 · Collocations with these words",
     ]);
@@ -124,7 +124,44 @@ describe("groups", () => {
   it("have no scope in a one-gap sentence", async () => {
     const response = await search("responsible ___ the project");
     expect(groupScope(response.groups[0]!, 1)).toBeUndefined();
-    expect(groupHeading(response.groups[0]!, 1)).toBe("Prepositions after “responsible”");
+    expect(groupHeadings(response.groups, 1)).toEqual(["Prepositions after “responsible”"]);
+  });
+});
+
+describe("verb-frame group headings (Phase 4 closure, UI-1)", () => {
+  const verdicts = (response: SearchResponse, index: number) =>
+    response.groups[index]!.results.map((result) => result.gapMatch?.verdict);
+
+  it("keep the engine's positive label over a group where every verb fits", async () => {
+    const response = await search("Companies ___ billions into research");
+    expect(verdicts(response, 0)).toEqual(["fits"]);
+    expect(groupHeadings(response.groups, 1)).toEqual([
+      "Fits this sentence",
+      "Other verbs Lexora checked",
+    ]);
+  });
+
+  it("never say “Fits this sentence” over an unlikely verb", async () => {
+    const response = await search("Governments should ____ more money into public transportation");
+    expect(verdicts(response, 0)).toEqual(["fits", "unlikely"]);
+    expect(groupHeadings(response.groups, 1)).toEqual([
+      "Verbs for this gap",
+      "Other verbs Lexora checked",
+    ]);
+  });
+
+  it("give a neutral heading to mixed or uncertain verdicts", async () => {
+    const response = await search("Governments should ___ more money ___ public transport");
+    expect(verdicts(response, 1)).toEqual(["likely_fits", "likely_fits"]);
+    expect(groupHeadings(response.groups, 2)[1]).toBe("Gap 1 · Verbs for this gap");
+  });
+
+  it("leave the engine's own labels as they were", async () => {
+    const response = await search("Governments should ____ more money into public transportation");
+    expect(response.groups.map((group) => group.label)).toEqual([
+      "Fits this sentence",
+      "Doesn't fit this sentence",
+    ]);
   });
 });
 

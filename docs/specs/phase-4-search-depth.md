@@ -6,6 +6,8 @@ This is the approved Phase 4 specification and the readiness audit it was based 
 
 Sections 3–4 describe the code as it stood at `026d9a5`, before any Phase 4 work.
 
+> **Re-scoped on 21 October 2026 (owner decision, after the [final audit](phase-4-final-audit.md)).** Phase 4 closes around the Search Depth work that was built: Steps 0–4 of the plan in §15 (filters and browse; context gaps, delivered as Steps 4.1–4.6), the F3 content correction, and the two audit closure fixes. The ranking review (Step 9) was audited and found no ordinary-search failures. **Not built, and deferred to later work:** rate limiting (Step 6), unmatched-query feedback (Step 7), performance measured on a deployment (Step 8), the sentence-level check (Step 5b), and Wave 2 content with topic tagging. The sections below are the original approved specification, unchanged; [ROADMAP.md](../ROADMAP.md) lists the deferred items.
+
 ---
 
 ## 1. Sources read
