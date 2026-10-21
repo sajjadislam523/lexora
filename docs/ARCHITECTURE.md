@@ -1,6 +1,6 @@
 # Lexora Architecture
 
-> Technical architecture, boundaries, and decisions. Status: **Phase 3 — Language Engine released (`v0.3.0`); Phase 4 — Search Depth in progress** ([approved specification](specs/phase-4-search-depth.md)). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
+> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop specification proposed, awaiting owner approval** ([proposed specification](specs/phase-5-retrieval-loop.md); nothing in it is built). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
 
 ---
 
@@ -198,17 +198,18 @@ Authorisation is ownership: product data belongs to one user. Server actions tak
 
 ```text
 users ─┬─ learner_profiles (1:1)          Phase 2 ✅
-       ├─ preferences (1:1)               daily goal, register, reminders        Phase 5
+       ├─ preferences (1:1)               daily goal, register, reminders        Later
        ├─ saved_senses (1:n) ─── senses                                         Phase 3 ✅
-       ├─ item_mastery (1:n, per item)    SRS state (FSRS fields), last review   Phase 5
-       │    └─ review_log (1:n)           every rating, for scheduling + history Phase 5
-       ├─ mistakes (1:n)                  wrong form, right form, source         Phase 5–7
-       ├─ practice_sessions (1:n) ─ practice_answers (1:n)                       Phase 6
+       │    └─ review_cards (1:1 per save) Leitner box, due at (cascade)        Phase 5 (proposed)
+       ├─ review_log (1:n)                every answer; kept when a save is removed  Phase 5 (proposed)
+       ├─ request_limits (1:n)            per-user write limits                  Phase 5 (proposed)
+       ├─ mistakes (1:n)                  personal mistakes: derived from review_log in Phase 5; a table only if Writing Lab needs one  Phase 7
+       ├─ practice_sessions (1:n) ─ practice_answers (1:n)                       Phase 6 (if needed)
        ├─ writing_submissions (1:n) ─ audit_findings (1:n)                       Phase 7
        └─ speaking_sessions (1:n) ─ speaking_attempts (1:n)                      Phase 8
 ```
 
-Language content (§6) is **global**, not per user. Phase 4 added `senses.topics` (Step 2); it will add one table of unmatched-search counts that holds no user data (specification §8).
+Language content (§6) is **global**, not per user. Phase 4 added `senses.topics` (Step 2). The unmatched-search counts table (Phase 4 specification §8) was deferred with the re-scope and doesn't exist. Phase 5 proposes three optional practice columns on `examples` (authored accept lists; [Phase 5 spec §13](specs/phase-5-retrieval-loop.md)).
 
 ### 4.6 Environment
 
@@ -381,7 +382,7 @@ Correctness is pinned by the golden search suite (`test/search-golden.yaml`, run
 
 **Gap reader (Phase 4, Step 4.1).** Before normalising, `planGaps` (`search/gap/reader.ts`) decides from the raw query whether it asks for a word in a gap: underscores always mark a blank; an ellipsis does only between words (and only when a verb frame answers it); at most two blanks. Anything else is an ordinary search on the text without its markers, so "however..." finds _however_. Gap answers report their blanks in `gaps`; the Phase 3 verb-frame path is unchanged. Step 4.2 adds candidates from authored structures for blanks no verb frame answers: preposition patterns, collocations and linkers (`search/gap/candidates.ts`, three bounded reads), one blank at a time, each with its sense and evidence id (`gapMatch`). Step 4.3 adds a categorical verdict to every gap candidate, verb frames included (`gapMatch.verdict`: fits, likely fits, depends, unlikely, not supported, with evidence codes in `signals`; `search/gap/verdicts.ts`), computed from rows already read before filters apply; authored mistakes recreated by the filled-in words make a candidate unlikely. Step 4.4 reads more of the same evidence and removes false fits: never the learner's own neighbouring word as a collocation fill; the preposition after an inflected multiword base ("poses a threat ___") and after a verb frame's object ("allocated money ___", frames read only then); collocations anchored by any of their content words; first words the content's item forms inflect ("took" / "take") count as written. Step 4.5 lets one authored structure fill both blanks — a verb frame, or a preposition pattern on a phrase, read with `findPairPatterns` — with one shared verdict and `gapMatch.gaps: [0, 1]`; independent candidates are never combined. A form of _be_ or _have_ before a collocation, or a content word after it, leaves that side unchecked, and "It is ___ that" is answered only as _Likely fits_. The final-audit closure fixes add R-3: a collocation's authored `pattern` says what follows it, and when the learner's next word is a different function word the verdict is at most _Likely fits_ (it only lowers). In the context tool, a verb-frame group's heading is the engine's label only when every row in it fits. See [phase-4-step-4-context-gaps.md](specs/phase-4-step-4-context-gaps.md) and [phase-4-step-4-context-coverage.md](specs/phase-4-step-4-context-coverage.md).
 
-**Planned (Phase 4, approved):** the filter and browse UI, richer context-gap analysis, privacy-first unmatched-query feedback, measured performance, light rate limiting and a ranking review against an expanded golden suite — see the [specification](specs/phase-4-search-depth.md).
+**Deferred from Phase 4 (never built):** privacy-first unmatched-query feedback, latency measured on a deployment, search rate limiting and the sentence-level check (ROADMAP → Phase 4 → _Deferred from Phase 4_). The filter and browse UI and the context-gap analysis above were built. The Phase 5 specification proposes two narrow search fixes in its Step 0: exact authored-trigger matching for bare intent phrasings, and no mistake match on an extra-words span alone ("for example").
 
 ---
 
@@ -419,8 +420,16 @@ interface ExplanationProvider {
 
 ## 9. Learning engine (Phase 5–6)
 
+_Proposed for Phase 5 in the [Retrieval Loop specification](specs/phase-5-retrieval-loop.md) (not built, not yet approved). It supersedes the notes below where they differ:_
+
+- a pure, five-box **Leitner** scheduler in `src/learning/` (FSRS and SM-2 considered and not chosen, D1);
+- three exercise types generated at request time from authored examples, preposition patterns and mistakes;
+- authored `accept` lists on examples, never derived synonyms;
+- `review_cards` and `review_log`;
+- per-user write limits.
+
 - **Mastery** is derived from review history (recall success over spaced intervals), never from views.
-- **Scheduler:** FSRS (modern, open-source, `ts-fsrs`) is the leading option over SM-2. It's a pure function: `(card state, rating, now) → next state`.
+- **Scheduler (earlier note):** FSRS (`ts-fsrs`) was the leading option over SM-2. Either way it's a pure function: `(card state, rating, now) → next state`.
 - **Practice generation** is deterministic from language data: fill-in-the-blank from examples (`highlight_span`), multiple choice from relations (distractors drawn from same-category items and known `mistake.wrong_form`), preposition drills from `preposition_link`, and so on.
 
 ## 10. Writing & Speaking labs (Phase 7–8)

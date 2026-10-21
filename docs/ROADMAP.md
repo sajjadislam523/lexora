@@ -2,7 +2,7 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current release: `v0.3.0` — Phase 3, Language Engine (complete)** · In progress: Phase 4 — Search Depth (specification approved 17 October 2026, branch `phase/4-search-depth`) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1`
+**Current release: `v0.4.0` — Phase 4, Search Depth (complete)** · Next: Phase 5 — Retrieval Loop (specification proposed, awaiting owner approval; branch `phase/5-retrieval-loop`) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1` · Phase 3 `v0.3.0`
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
@@ -10,36 +10,21 @@ Legend: ✅ done · 🔜 next · ⬜ not started
 
 ## Current release
 
-**v0.3.0 — Phase 3: Language Engine**
+**v0.4.0 — Phase 4: Search Depth**
 
-Phase 3 is complete and released to `main`.
+Phase 4 is complete, approved (PR #38) and released to `main` on 21 October 2026.
 
 Delivered:
 
-- Structured language content with one YAML file per language item
-- Zod validation and deterministic content import
-- 40 published language items, 42 senses
-- Sense-level saving
-- PostgreSQL language repository
-- AI-free language search
-- Query classification and search-as modes
-- Full-text and trigram matching
-- Conservative typo correction
-- Deterministic ranking with explained results
-- Explore, Finder, landing-page search and command palette integration
-- Database-backed language pages
-- Related language links by sense
-- Email verification and password reset
-- Local development email outbox
-- Responsive and accessibility pass
-- 346 unit/integration tests
-- 117 production-build E2E checks
+- a 71-case golden suite and a ranking snapshot;
+- the topics and functions content model;
+- browse and filters on Explore and the Finder;
+- context-gap analysis: preposition, collocation, verb-frame and linker gaps; two-gap pairs; "It is ___ that"; five explained verdicts; an honest fallback;
+- the F3 countability correction and the two final-audit closure fixes.
 
-Production release:
+The re-scoped items listed under Phase 4 → _Deferred from Phase 4_ were not built.
 
-`v0.3.0`
-
-Phase 3 is closed.
+Phase 4 is closed.
 
 ---
 
@@ -142,11 +127,11 @@ Follow-up: the auth response hardening (session tokens removed from every auth J
 
 ---
 
-## Phase 4 — Search Depth 🔜 (re-scoped; release in review)
+## Phase 4 — Search Depth ✅ (approved, PR #38, `v0.4.0`)
 
-**Status:** Specification approved by the owner on 17 October 2026; **re-scoped by the owner on 21 October 2026** after the [final audit](specs/phase-4-final-audit.md) · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.6, the F3 content correction and the two audit closure fixes merged; the phase PR to `main` is in review; the items below under _Deferred from Phase 4_ were never built and move to later work
+**Status:** Specification approved by the owner on 17 October 2026; **re-scoped by the owner on 21 October 2026** after the [final audit](specs/phase-4-final-audit.md) · Integration branch `phase/4-search-depth` · Steps 0–3, 4.0–4.6, the F3 content correction and the two audit closure fixes merged; the phase PR (#38) was approved and released as `v0.4.0` on 21 October 2026; the items below under _Deferred from Phase 4_ were never built and move to later work
 **Specification:** [docs/specs/phase-4-search-depth.md](specs/phase-4-search-depth.md) — the reference for every step, with the readiness audit, worked examples and the decision register (§17)
-**Release:** `v0.4.0` when the phase is approved
+**Release:** `v0.4.0` (21 October 2026)
 
 ### Re-scope (owner decision, 21 October 2026)
 
@@ -295,27 +280,57 @@ Phase 4 is complete when (measurable details in the specification, §16):
 
 - **Met:** criteria 1–4, 9 (the topic model), and 11–14; the [final audit](specs/phase-4-final-audit.md) records the evidence.
 - **Moved with the deferred work:** criteria 5 (sentence-level check), 6 (unmatched queries), 7 (latency on a deployment), 8 (rate limiting) and 10 (Wave 2).
-- **Still open:** criterion 15 is the owner's approval of the phase PR.
+- **Met (21 October 2026):** criterion 15. The owner approved the phase PR (#38).
 
 ---
 
-## Phase 5 — Personal Learning ⬜
+## Phase 5 — Retrieval Loop 🔜 (specification proposed)
 
-**Goal:** Lexora remembers what matters to each learner.
+**Status:** Specification **proposed, awaiting owner approval**: [docs/specs/phase-5-retrieval-loop.md](specs/phase-5-retrieval-loop.md) · Integration branch `phase/5-retrieval-loop` · Nothing is built. Implementation starts only after approval, one step at a time (spec §38).
 
-- Save to language bank (with personal notes)
-- Mistakes log (from practice and audits)
-- Spaced repetition scheduler (FSRS vs SM-2 decided here)
-- Mastery model derived from review evidence
-- Progress view: due items, mastery by category, weak areas
+**Goal:** saved language comes back at the right time. This replaces the earlier "Personal Learning" outline, and takes from Phase 6 only the three exercise types a review loop needs.
 
-**Exit criteria:** saved items are scheduled and reviewed, and mastery changes reflect real recall.
+**Scope (proposed):**
+
+- Step 0 hardening:
+  - the "for example" false mistake;
+  - bare intent phrasings such as "express contrast";
+  - per-user write limits;
+  - Firewall and email status checks;
+  - stale docs.
+- A real **language bank**: saved meanings with New / Due / Learning / Known status and the next review.
+- **Review sessions** of 5, built only from authored content:
+  - complete the sentence;
+  - type the preposition;
+  - which is correct?
+
+  Optional authored `accept` lists cover blanks with more than one right answer.
+
+- A pure **Leitner scheduler**: boxes 1 / 3 / 7 / 14 / 30 days; correct → up one box, wrong → back to box 1 (tomorrow).
+- **Personal mistake evidence:** the same wrong answer on the same meaning, twice in 30 days.
+- An **honest Home:** no sample data.
+- **Save-flow copy** that tells the truth about what happens next.
+
+**Not in Phase 5:**
+
+- AI;
+- "Which expression fits?";
+- notes;
+- decks;
+- reminders;
+- streaks;
+- charts;
+- a Progress screen;
+- Writing and Speaking;
+- Wave 2 content in feature PRs. Wave 2 is a parallel content stream, not an exit criterion.
+
+**Exit criteria:** the definition of done in spec §39.
 
 ---
 
 ## Phase 6 — Practice ⬜
 
-**Goal:** deterministic exercises generated from the language data.
+**Goal:** deterministic exercises generated from the language data. The three Phase 5 review exercises (sentence completion, typed preposition, authored mistake choice) come first. Phase 6 adds the rest of this list, plus the items Phase 5 defers (spec §40).
 
 - Fill-in-the-blank, multiple choice, sentence correction
 - Collocation and preposition drills
@@ -399,5 +414,5 @@ Phase 4 is complete when (measurable details in the specification, §16):
 | Ranking changes               | Phase 4 step 1                | ✅ Golden suite and snapshot first; fix demonstrated failures only (D8)                                   |
 | New discourse functions       | Phase 4 step 2                | ✅ comparison, decrease, opinion, hedging (owner, 17 October 2026; D11)                                   |
 | Content sourcing & licensing  | Phase 3                       | ✅ Mixed: Lexora's curated data is the source of truth; provenance kept                                   |
-| SRS algorithm                 | Phase 5                       | FSRS (proposed) / SM-2                                                                                    |
+| SRS algorithm                 | Phase 5                       | Leitner, five boxes (proposed in the Phase 5 spec, D1); FSRS and SM-2 considered and not chosen           |
 | Dark mode timing              | Any                           | Phase 10 (current plan)                                                                                   |
