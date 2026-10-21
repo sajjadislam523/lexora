@@ -1021,11 +1021,11 @@ Measured locally with Drizzle's statement log, as in the Phase 4 audit. Session 
 
 ## 36. Open questions (owner)
 
-| #   | Question                                                                                                                                     | Default if unanswered                                         |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| O1  | Is Vercel Firewall rate limiting available on the project's plan? If not, may Phase 5 release without a public search limit?                 | Stop and report (D7)                                          |
-| O2  | Production `EMAIL_FROM`: verified domain or test sender?                                                                                     | Record "unresolved" in the final audit; Phase 5 isn't blocked |
-| O3  | Should the two Step 0 search fixes ship early as a hotfix to `main` (WORKFLOW → Hotfixes; the owner merges it), or with the Phase 5 release? | With the Phase 5 release                                      |
+| #   | Question                                                                                                                                                                                                                                                                                                            | Default if unanswered                                         |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| O1  | Vercel Firewall rate limiting is an available product capability, not an architectural unknown. The remaining question is operational: confirm the Lexora project's current Vercel plan and configure the rate-limit rule it offers for public search (Step 0c). Phase 5 requires a public search rate limit (D17). | Confirm the plan and configure the rule in Step 0c            |
+| O2  | Production `EMAIL_FROM`: verified domain or test sender?                                                                                                                                                                                                                                                            | Record "unresolved" in the final audit; Phase 5 isn't blocked |
+| O3  | Should the two Step 0 search fixes ship early as a hotfix to `main` (WORKFLOW → Hotfixes; the owner merges it), or with the Phase 5 release?                                                                                                                                                                        | With the Phase 5 release                                      |
 
 Everything else is decided in §37 (proposed).
 
@@ -1166,8 +1166,9 @@ All **proposed**. They're approved with this specification.
 ### D17. Rate limiting
 
 - **Decision:**
-  - public search: Vercel Firewall (D7, verified first);
-  - authenticated writes: a per-user fixed window in Postgres (`request_limits`) at 60 / min (bank) and 30 / min (review).
+  - **Phase 5 requires a public search rate limit.** Vercel Firewall rate limiting, an available Vercel capability, provides it at the edge, configured with what the project's current plan offers (target 120 / min / IP, D7);
+  - authenticated state-changing operations (saves, removals and review submissions) stay protected by application/database-level per-user limits: a per-user fixed window in Postgres (`request_limits`) at 60 / min (bank) and 30 / min (review);
+  - this is an architectural decision. The exact Vercel configuration (confirming the plan, then creating and verifying the rule) is a **Step 0 operational task** (Step 0c, O1).
 - **Why:**
   - search is a page render; edge enforcement needs no IP storage and no per-request write;
   - authenticated limits keyed by user are testable in CI and need no dependency.
