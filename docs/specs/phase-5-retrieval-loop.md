@@ -700,7 +700,7 @@ It works across serverless instances (the reason Better Auth uses database stora
 **Public search.**
 
 - **Why the edge:** search is a page render, not an API; a 429 from an RSC page isn't idiomatic; and an app-level IP limiter would write to Postgres on every anonymous search.
-- **If the Firewall isn't available:** D7 holds. Stop and report, and the owner decides. Phase 5 then needs an explicit owner decision to release without a public search limit (§36 O1).
+- **Required for Phase 5 (D17):** a public search rate limit. Vercel Firewall provides it at the edge (target 120 / min / IP). Step 0c confirms the project's current Vercel plan and configures the rule it offers (§36 O1).
 - **Verification:** the Vercel connector can't read the team's Firewall settings (403 for scope `sajjadul-islams-projects`), and the Vercel CLI isn't installed, so this is an owner check.
 
 **Tests:**
@@ -1007,17 +1007,17 @@ Measured locally with Drizzle's statement log, as in the Phase 4 audit. Session 
 
 ## 35. Risks
 
-| Risk                                                  | Impact                    | Mitigation                                                                                                                 |
-| ----------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| A correct learner answer is marked wrong (open blank) | Lost trust                | Authored accept lists (Step 3b); `exclude`; honest `unrecognised` copy; the owner reviews every completion blank once      |
-| The bank fills fast with 42 senses                    | A thin loop               | The Wave 2 stream; the loop scales with no code change                                                                     |
-| Recognition exercises (a 50% guess) inflate boxes     | Overstated "Known"        | One of three types; rotation interleaves typed recall; "Known" means box ≥ 4, which needs four consecutive correct answers |
-| Leitner is less optimal than FSRS                     | Slightly more reviews     | Explainability is a product requirement; it can be swapped behind the same pure interface later                            |
-| Scope drift into an LMS / dashboard                   | Phase sprawl              | §7 classification; Home limited to persisted numbers                                                                       |
-| The Firewall isn't on the plan                        | No public search limit    | D7: stop and report; owner decision O1                                                                                     |
-| A Phase 4 regression from the Step 0 fixes            | Search damage             | Exact-equality trigger routing only; a narrow mistake rule; the golden suite and snapshot unchanged; stop and report       |
-| The deploy-gap saves without cards                    | Inconsistent bank         | The left-join model (§9.4): a missing card is _New_                                                                        |
-| Email not deliverable                                 | Lost accounts and history | Step 0c owner action                                                                                                       |
+| Risk                                                          | Impact                    | Mitigation                                                                                                                 |
+| ------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| A correct learner answer is marked wrong (open blank)         | Lost trust                | Authored accept lists (Step 3b); `exclude`; honest `unrecognised` copy; the owner reviews every completion blank once      |
+| The bank fills fast with 42 senses                            | A thin loop               | The Wave 2 stream; the loop scales with no code change                                                                     |
+| Recognition exercises (a 50% guess) inflate boxes             | Overstated "Known"        | One of three types; rotation interleaves typed recall; "Known" means box ≥ 4, which needs four consecutive correct answers |
+| Leitner is less optimal than FSRS                             | Slightly more reviews     | Explainability is a product requirement; it can be swapped behind the same pure interface later                            |
+| Scope drift into an LMS / dashboard                           | Phase sprawl              | §7 classification; Home limited to persisted numbers                                                                       |
+| The Firewall rule isn't configured or verified before release | No public search limit    | Step 0c confirms the current Vercel plan and configures the rule (D17, O1); the release smoke test checks for a 429        |
+| A Phase 4 regression from the Step 0 fixes                    | Search damage             | Exact-equality trigger routing only; a narrow mistake rule; the golden suite and snapshot unchanged; stop and report       |
+| The deploy-gap saves without cards                            | Inconsistent bank         | The left-join model (§9.4): a missing card is _New_                                                                        |
+| Email not deliverable                                         | Lost accounts and history | Step 0c owner action                                                                                                       |
 
 ## 36. Open questions (owner)
 
@@ -1359,7 +1359,7 @@ Phase 5 is complete only when all of these hold:
 11. The save flow communicates the real next step, and the landing and save-gate copy is true.
 12. Unauthenticated users can't read or write review data.
 13. No learner can read or answer another learner's cards.
-14. Rate limiting is in place where §21 requires it (or the owner has decided O1).
+14. Rate limiting is in place where §21 requires it: the Vercel Firewall public search limit, configured in Step 0c (D17), and the per-user limits on saves, removals and review submissions.
 15. The production email status is resolved or recorded (O2).
 16. Phase 4 search behaviour is unchanged: the golden suite and snapshot pass byte-for-byte except Step 0's added cases.
 17. Unit, integration, E2E and accessibility tests pass; format, lint, typecheck, content check and build pass.
