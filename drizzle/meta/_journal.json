@@ -50,6 +50,13 @@
       "when": 1792648611250,
       "tag": "0006_review_cards_and_log",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792654408285,
+      "tag": "0007_example_practice",
+      "breakpoints": true
     }
   ]
 }

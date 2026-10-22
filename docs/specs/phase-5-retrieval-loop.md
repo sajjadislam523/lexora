@@ -1286,6 +1286,17 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Dependencies:** Step 1.
 - **Risks:** the generator rules hiding a bad blank. Mitigation: the report, then 3b.
 - **Must not change:** search queries or results; existing content.
+- **As built (22 October 2026):**
+  - **Exact inventory:** 42 senses, 77 complete the sentence, 45 type the preposition, 56 which is correct, 178 in total, as audited.
+    - Every sense has at least two exercises; by type, 3 senses have one type, 25 have two and 14 have three.
+    - Six examples make no blank:
+      - completion: the forms are split ("pose a serious threat", "raise public awareness", "take urgent measures") or not present ("a sharp rise");
+      - preposition: the highlight runs past the preposition ("contribute to keeping", "important to me").
+  - **Ambiguity, as the owner confirmed:** every safely located blank is generated (§12.1). Near-synonyms are accepted only through the Step 3b `practice.accept` review, which comes before any learner sees an exercise (Step 5).
+  - **Normalisation is narrower than §12 states:** case, apostrophes, spaces and end punctuation only (`normaliseAnswer`), not `normaliseTerm`, so punctuation inside words is kept.
+  - **"Which is correct?"** skips a mistake only when both versions read the same as written. §12.3's normalised comparison would have dropped the 4 punctuation-only mistakes, whose difference is the point of the exercise.
+  - **Validation:** `content:check` also rejects `accept` on an excluded blank. `content:check --practice` lists every exercise for the 3b review.
+  - **The database read:** `loadPracticeMaterial` (`src/server/repositories/language/practice.ts`) is asserted equal to the content-built material. `IMPORTER_VERSION` is 2, so the next import writes the new columns.
 
 ### Step 3b — The accept-list content pass (a content PR, owner-reviewed, draft)
 

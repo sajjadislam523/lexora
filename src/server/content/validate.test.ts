@@ -455,4 +455,70 @@ describe("validateContent", () => {
       ).toEqual([expect.stringMatching(/crucial\.yaml:\d+ senses\[0\]\.functions\[0\]:/)]);
     });
   });
+  describe("practice data for review exercises (Phase 5)", () => {
+    type Examples = Record<string, unknown>[];
+    const examples = (c: FixtureContent) => sense(c, "important").examples as Examples;
+
+    it("accepts practice data that matches what the example makes", () => {
+      expect(
+        issuesAfter((c) => {
+          examples(c)[0]!.practice = { accept: ["vital", "Essential"] };
+          examples(c)[1]!.practice = { exclude: ["term"] };
+        }),
+      ).toEqual([]);
+    });
+
+    it.each([
+      [
+        "accept repeats the expected answer",
+        (c: FixtureContent) => {
+          examples(c)[0]!.practice = { accept: ["Important"] };
+        },
+        'examples[0].practice.accept[0]: "Important" is already the expected answer',
+      ],
+      [
+        "accept_preposition is given where the example makes no preposition blank",
+        (c: FixtureContent) => {
+          // The highlight runs past the preposition ("important to me").
+          examples(c)[1]!.practice = { accept_preposition: ["for"] };
+        },
+        "examples[1].practice.accept_preposition: this example makes no preposition blank",
+      ],
+      [
+        "accept_preposition names the authored wrong preposition",
+        (c: FixtureContent) => {
+          examples(c)[1]!.highlight = "important to";
+          examples(c)[1]!.practice = { accept_preposition: ["for"] };
+        },
+        'examples[1].practice.accept_preposition[0]: "for" is an authored mistake for this blank',
+      ],
+      [
+        "accept is given for a blank that is excluded",
+        (c: FixtureContent) => {
+          examples(c)[0]!.practice = { accept: ["vital"], exclude: ["term"] };
+        },
+        "examples[0].practice.accept: has no effect: the term blank is excluded",
+      ],
+      [
+        "exclude names a blank the example doesn't make",
+        (c: FixtureContent) => {
+          examples(c)[0]!.practice = { exclude: ["preposition"] };
+        },
+        "examples[0].practice.exclude[0]: this example makes no preposition blank",
+      ],
+    ])("reports when %s", (_, mutate, message) => {
+      expect(issuesAfter(mutate)).toEqual([expect.stringContaining(message)]);
+    });
+
+    it("rejects unknown fields and repeated values in the schema", () => {
+      expect(
+        issuesAfter((c) => {
+          examples(c)[0]!.practice = { accept: ["vital", "vital"], synonyms: true };
+        }),
+      ).toEqual([
+        expect.stringContaining("practice"),
+        expect.stringContaining("practice.accept: must not repeat a value"),
+      ]);
+    });
+  });
 });
