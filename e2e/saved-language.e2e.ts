@@ -128,6 +128,21 @@ describe("saving language", () => {
     expect(await html("/home", alice.cookie)).toContain("0 meanings saved");
   });
 
+  it("gives a saved sense a review card, and removes it with the save", async () => {
+    const [aliceRow] = await sql`select id from users where email = ${alice.email}`;
+    const id = aliceRow!.id as string;
+    const card = async () =>
+      sql`select box, reviews, due_at <= now() as due from review_cards where user_id = ${id} and sense_id = ${STATISTICAL}`;
+
+    expect((await change("PUT", STATISTICAL, alice.cookie)).status).toBe(200);
+    expect(await card()).toEqual([{ box: 0, reviews: 0, due: true }]);
+    await change("PUT", STATISTICAL, alice.cookie);
+    expect(await card()).toHaveLength(1);
+
+    expect((await change("DELETE", STATISTICAL, alice.cookie)).status).toBe(200);
+    expect(await card()).toEqual([]);
+  });
+
   it("limits saves and removals to 60 a minute per learner (429 after that)", async () => {
     const [bobRow] = await sql`select id from users where email = ${bob.email}`;
     const id = bobRow!.id as string;

@@ -1,6 +1,6 @@
 # Phase 5 — Retrieval Loop: specification
 
-Written: 21 October 2026 · Baseline: `main` at `d0b8c09` (`v0.4.0`, Phase 4 complete) · Integration branch: `phase/5-retrieval-loop` · Status: **proposed, awaiting owner approval**. Nothing here is built.
+Written: 21 October 2026 · Baseline: `main` at `d0b8c09` (`v0.4.0`, Phase 4 complete) · Integration branch: `phase/5-retrieval-loop` · Status: **approved** (PR #39); built step by step (§38), with each step's _As built_ notes there.
 
 > Saved language should come back at the right time.
 
@@ -1266,6 +1266,12 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Dependencies:** Step 1.
 - **Risks:** the composite FK to `saved_senses`. Mitigation: a migration test on a database with existing saves.
 - **Must not change:** existing save semantics or status codes.
+- **As built (22 October 2026, with Step 1 as one PR):**
+  - **Combined:** the owner combined spec Steps 1 and 2 into one step. It contains `src/learning/scheduler.ts` and `status.ts` with their lint boundary, migration `0006_review_cards_and_log`, `src/server/repositories/review-cards.ts`, and the card created inside `saveSense`'s transaction.
+  - **Confirmed by the owner:** the scheduler starts new cards in box 0 (§10, D3/D4), against a proposed box-1 start. Idempotency is `unique (card_id, review_number)` plus `expectedReviews` (D11), without a client-generated submission id.
+  - **The answer primitive:** `recordAnswer` (`src/server/learning/review.ts`) implements §15 steps 4.2–4.5 and 4.7. Regenerating and evaluating the exercise (4.6) and the HTTP endpoint stay in Step 5.
+  - **Deferred to Step 8:** the `PUT` response's `review: "ready"` field, where the save notice first uses it, so the save API is unchanged in this step.
+  - **Extra checks** beyond §9: `review_cards` counts are non-negative, `review_number ≥ 1`, `box_after` is 1–5, and `answer` is at most 80 characters.
 
 ### Step 3a — Exercise generator and content model
 

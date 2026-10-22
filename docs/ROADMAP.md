@@ -2,7 +2,7 @@
 
 > Incremental phases. **Each phase ends with a review and explicit approval from the product owner before the next begins.** Claude Code must not start a later phase on its own.
 
-**Current release: `v0.4.0` — Phase 4, Search Depth (complete)** · Next: Phase 5 — Retrieval Loop (specification proposed, awaiting owner approval; branch `phase/5-retrieval-loop`) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1` · Phase 3 `v0.3.0`
+**Current release: `v0.4.0` — Phase 4, Search Depth (complete)** · In progress: Phase 5 — Retrieval Loop (specification approved; branch `phase/5-retrieval-loop`) · Phase 0 `v0.0.0` · Phase 1 `v0.1.0` · Phase 2 `v0.2.0` · Phase 2.1 `v0.2.1` · Phase 3 `v0.3.0`
 
 Legend: ✅ done · 🔜 next · ⬜ not started
 
@@ -284,9 +284,9 @@ Phase 4 is complete when (measurable details in the specification, §16):
 
 ---
 
-## Phase 5 — Retrieval Loop 🔜 (specification proposed)
+## Phase 5 — Retrieval Loop 🔜 (in progress)
 
-**Status:** Specification **proposed, awaiting owner approval**: [docs/specs/phase-5-retrieval-loop.md](specs/phase-5-retrieval-loop.md) · Integration branch `phase/5-retrieval-loop` · Nothing is built. Implementation starts only after approval, one step at a time (spec §38).
+**Status:** Specification **approved** (PR #39): [docs/specs/phase-5-retrieval-loop.md](specs/phase-5-retrieval-loop.md) · Integration branch `phase/5-retrieval-loop` · Built one step at a time (spec §38): Step 0 (hardening, PR #40) merged; Step 1 (the scheduler and the review data model, spec Steps 1–2) in review.
 
 **Goal:** saved language comes back at the right time. This replaces the earlier "Personal Learning" outline, and takes from Phase 6 only the three exercise types a review loop needs.
 

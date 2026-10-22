@@ -1,6 +1,6 @@
 # Lexora Architecture
 
-> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop specification proposed, awaiting owner approval** ([proposed specification](specs/phase-5-retrieval-loop.md); nothing in it is built). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
+> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); Steps 0–1 built: hardening, the scheduler and the review data model). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
 
 ---
 
@@ -194,6 +194,8 @@ Authorisation is ownership: product data belongs to one user. Server actions tak
 | `learner_profiles` | Lexora      | One per user: target band (4.0–9.0, step 0.5, DB-checked), test date, focus skill → `users` (cascade) |
 | `saved_senses`     | Lexora      | A learner's saved meanings: user → sense, saved at; `users` cascade, `senses` restrict (Phase 3)      |
 | `request_limits`   | Lexora      | Per-learner write limits: one row per user and action, its current minute and count; `users` cascade  |
+| `review_cards`     | Lexora      | One per saved sense: Leitner box (0 new, 1–5), due at, reviews, lapses; cascades with the save        |
+| `review_log`       | Lexora      | One row per answer, unique per card and review number; kept when a save is removed; `users` cascade   |
 | Language tables    | Lexora      | Global, imported language content with no user columns (§6)                                           |
 
 **Future tables** (designed for, not created): every one references `users.id` with `on delete cascade`, so deleting an account removes its data.
@@ -202,9 +204,9 @@ Authorisation is ownership: product data belongs to one user. Server actions tak
 users ─┬─ learner_profiles (1:1)          Phase 2 ✅
        ├─ preferences (1:1)               daily goal, register, reminders        Later
        ├─ saved_senses (1:n) ─── senses                                         Phase 3 ✅
-       │    └─ review_cards (1:1 per save) Leitner box, due at (cascade)        Phase 5 (proposed)
-       ├─ review_log (1:n)                every answer; kept when a save is removed  Phase 5 (proposed)
-       ├─ request_limits (1:n)            per-user write limits                  Phase 5 (proposed)
+       │    └─ review_cards (1:1 per save) Leitner box, due at (cascade)        Phase 5 ✅
+       ├─ review_log (1:n)                every answer; kept when a save is removed  Phase 5 ✅
+       ├─ request_limits (1:n)            per-user write limits                  Phase 5 ✅
        ├─ mistakes (1:n)                  personal mistakes: derived from review_log in Phase 5; a table only if Writing Lab needs one  Phase 7
        ├─ practice_sessions (1:n) ─ practice_answers (1:n)                       Phase 6 (if needed)
        ├─ writing_submissions (1:n) ─ audit_findings (1:n)                       Phase 7
@@ -331,6 +333,7 @@ app → features → domain
 - `features/*` may import `domain`, `server` (server-side only), and components. Features don't import each other. Shared needs move down into `domain` or `components/lexora`.
 - `content/` is data, imported only by seed scripts and tests.
 
+- `learning/` (the scheduler and review status) is pure TypeScript: no UI, server, app or prototype imports.
 - `language/` (the shared engine) imports no UI, server or app code. `language/index.ts` is server-only; client components import only the client-safe `language/examples` and types.
 - Public routes (`app/(public)`) and public features (`discovery`, `finder`, `language`) never import `server`; public routes never import `demo`.
 
@@ -423,13 +426,12 @@ interface ExplanationProvider {
 
 ## 9. Learning engine (Phase 5–6)
 
-_Proposed for Phase 5 in the [Retrieval Loop specification](specs/phase-5-retrieval-loop.md) (not built, not yet approved). It supersedes the notes below where they differ:_
+_As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loop.md)); it supersedes the notes below where they differ:_
 
-- a pure, five-box **Leitner** scheduler in `src/learning/` (FSRS and SM-2 considered and not chosen, D1);
-- three exercise types generated at request time from authored examples, preposition patterns and mistakes;
-- authored `accept` lists on examples, never derived synonyms;
-- `review_cards` and `review_log`;
-- per-user write limits.
+- **Scheduler** (`src/learning/scheduler.ts`, pure, lint-isolated): five Leitner boxes. Box 0 is new and due when saved; a correct answer moves up one box (at most 5) and a wrong one goes back to box 1. The next review is the answer time plus 1, 3, 7, 14 or 30 days, as fixed 24-hour multiples. `now` is always passed in. Statuses (new, due, learning, known, retired, no exercise yet) are derived in `src/learning/status.ts`, never stored. FSRS and SM-2 were considered and not chosen (D1).
+- **Cards** (`review_cards`): one per saved sense, created with the save in one transaction and deleted with it (composite FK, cascade). Saves made before Phase 5 have no card: reads left-join and treat them as new, due since saved, and the first answer creates the card. Nothing is backfilled.
+- **Answers** (`review_log`): `recordAnswer` (`src/server/learning/review.ts`) locks the card, then records an answer only for review number `reviews + 1`, backed by `unique (card_id, review_number)`. A retry returns the stored answer; anything else for a used number is stale; answers before the due time are refused. The log outlives the card.
+- **Still to come in Phase 5:** exercises generated from authored examples, preposition patterns and mistakes, with authored `accept` lists (Step 3); the bank (Step 4); the review endpoint and session (Step 5).
 
 - **Mastery** is derived from review history (recall success over spaced intervals), never from views.
 - **Scheduler (earlier note):** FSRS (`ts-fsrs`) was the leading option over SM-2. Either way it's a pure function: `(card state, rating, now) → next state`.
@@ -537,3 +539,6 @@ _Proposed for Phase 5 in the [Retrieval Loop specification](specs/phase-5-retrie
 | 74  | 2026-10-22 | Per-learner write limits in PostgreSQL (`request_limits`, migration 0005): a fixed one-minute window, one atomic upsert per request, counted after authentication and validation; saves and removals 60/min, review answers 30/min (Step 5)                                                                                 | Phase 5 D17. Works across serverless instances, needs no new service and is testable in CI; one row per learner per action                                                                        |
 | 75  | 2026-10-22 | Public search rate limit: a Vercel Firewall rule, 120/min/IP on `/explore` and `/finder` with `q`, set in the Vercel project rather than the repository                                                                                                                                                                     | Phase 5 D17. `vercel.json`'s `mitigate` supports only deny and challenge; the README has the dashboard, CLI and verification steps                                                                |
 | 76  | 2026-10-22 | Search: an exact authored intent trigger is answered as its intent; an extra-words mistake is shown only with a neighbouring word                                                                                                                                                                                           | Phase 5 Step 0 fixes for “express contrast” and “for example”, with every golden case and the ranking snapshot unchanged                                                                          |
+| 77  | 2026-10-22 | Review scheduler: five Leitner boxes as a pure module (`src/learning`), box 0 for new cards due when saved, intervals of 1/3/7/14/30 days as fixed 24-hour multiples from the answer time; statuses derived, never stored                                                                                                   | Phase 5 D1–D4, confirmed by the owner over a box-1 start. Explainable, auditable, testable with a fixed clock, and free of timezone arithmetic                                                    |
+| 78  | 2026-10-22 | `review_cards` cascade with `saved_senses` (composite FK); the card is created with the save in one transaction; saves without a card read as new, with no backfill                                                                                                                                                         | Phase 5 §9.4. One owner of what a learner saved; old saves need no data migration, and the migrate-then-deploy gap is safe                                                                        |
+| 79  | 2026-10-22 | Once-only answers: `unique (card_id, review_number)` under a row lock, keyed by the card's `reviews` when the exercise was shown; no client-generated submission id                                                                                                                                                         | Phase 5 D11, confirmed by the owner. A retry or second tab can't schedule twice, and the stored answer is returned to it                                                                          |
