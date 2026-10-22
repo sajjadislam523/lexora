@@ -358,6 +358,10 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
       .sort((a, b) => b.weight - a.weight);
   }
 
+  async hasIntentTrigger(normalised: string): Promise<boolean> {
+    return this.rows.intentTriggers.some((t) => t.normalized === normalised);
+  }
+
   async listIntents(): Promise<IntentDefinition[]> {
     return [...this.rows.intents]
       .sort((a, b) => a.id.localeCompare(b.id))

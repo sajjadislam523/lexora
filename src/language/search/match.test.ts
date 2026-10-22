@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { showsMistake } from "./match";
+import { mistakeWrongPart, showsMistake } from "./match";
 
 const amount = { wrong: "a significant amount of people", right: "a significant number of people" };
 const depend = {
@@ -71,5 +71,43 @@ describe("showsMistake", () => {
   it("matches whole words only", () => {
     expect(showsMistake("amoun of", amount)).toBe(false);
     expect(showsMistake("significant amount", amount)).toBe(true);
+  });
+
+  it("needs a neighbouring word when the mistake is extra words", () => {
+    // The extra words are only wrong where they stand: alone, they are correct language.
+    const redundant = {
+      wrong: "Some countries, such as for example Japan, have ageing populations.",
+      right: "Some countries, such as Japan, have ageing populations.",
+    };
+    expect(showsMistake("for example", redundant)).toBe(false);
+    expect(showsMistake("as for example", redundant)).toBe(true);
+    expect(showsMistake("for example japan", redundant)).toBe(true);
+    expect(showsMistake("such as for example", redundant)).toBe(true);
+    expect(
+      showsMistake("some countries such as for example japan have ageing populations", redundant),
+    ).toBe(true);
+
+    const very = { wrong: "play a very crucial role", right: "play a crucial role" };
+    expect(showsMistake("a very", very)).toBe(true);
+    expect(showsMistake("very crucial", very)).toBe(true);
+    expect(showsMistake("play a very crucial role", very)).toBe(true);
+  });
+});
+
+describe("mistakeWrongPart", () => {
+  it("marks extra words, and only extra words", () => {
+    expect(
+      mistakeWrongPart({ wrong: "such as for example Japan", right: "such as Japan" }),
+    ).toEqual({ wrong: ["such", "as", "for", "example", "japan"], span: [2, 3], extra: true });
+    // A different word in place of the right one is not extra.
+    expect(mistakeWrongPart({ wrong: "responsible of", right: "responsible for" })).toEqual({
+      wrong: ["responsible", "of"],
+      span: [1, 1],
+    });
+    // A missing word keeps its own shape.
+    expect(mistakeWrongPart({ wrong: "As result", right: "As a result" })).toMatchObject({
+      span: [0, 1],
+      missing: true,
+    });
   });
 });

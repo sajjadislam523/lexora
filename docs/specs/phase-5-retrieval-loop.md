@@ -1237,6 +1237,11 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** both queries are fixed in memory and on Postgres; nothing protected changes; a 61st save in a minute → 429; O1 and O2 answered or recorded.
 - **Risks:** trigger routing capturing a lookup. Mitigation: exact equality, and the protected-query check from §5.G.
 - **Must not change:** ranking, classification of any non-trigger query, verdicts.
+- **As built (22 October 2026):**
+  - **Added by the owner after a database incident:** a local-database guard (`scripts/database-target.ts`) in drizzle-kit, `content:import`, the test suite and the E2E teardown. Only local hosts are allowed. A remote run needs `LEXORA_ALLOW_REMOTE_DB` set to the exact hostname in the shell. It's read before env files load, and `CI` grants nothing (README → Local-database guard).
+  - **Test placement:** the Step 0 search cases live in `test/step-0-cases.ts` (run in memory and on Postgres), not in `test/search-golden.yaml`. The ranking snapshot covers every golden query, so adding golden cases would have added snapshot blocks. This way the golden file and the snapshot both stay byte for byte unchanged.
+  - **Limiter clock:** the limiter takes the window from the application clock (whole UTC minutes), not the database's `now()`, so tests can pin it. The window, limits and 429 response are as §21 specifies.
+  - **Firewall rule:** it can't live in `vercel.json` (`mitigate` supports only deny and challenge). The README → Search rate limit gives the dashboard and CLI configuration and the production check.
 
 ### Step 1 — Scheduler (pure)
 

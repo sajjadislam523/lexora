@@ -127,4 +127,34 @@ describe("saving language", () => {
     await change("DELETE", "important.main", alice.cookie);
     expect(await html("/home", alice.cookie)).toContain("0 meanings saved");
   });
+
+  it("limits saves and removals to 60 a minute per learner (429 after that)", async () => {
+    const [bobRow] = await sql`select id from users where email = ${bob.email}`;
+    const id = bobRow!.id as string;
+    // Earlier tests count against this minute too: start from an empty window.
+    await sql`delete from request_limits where user_id = ${id}`;
+    try {
+      // A burst can cross into the next minute, so allow up to two windows: the first 429 must
+      // come after at least 60 successful requests.
+      const statuses: number[] = [];
+      for (let i = 0; i < 125 && !statuses.includes(429); i++) {
+        statuses.push((await change(i % 2 === 0 ? "PUT" : "DELETE", NOTABLE, bob.cookie)).status);
+      }
+      const first = statuses.indexOf(429);
+      expect(first).toBeGreaterThanOrEqual(60);
+      expect(statuses.slice(0, first).every((status) => status === 200)).toBe(true);
+
+      const limited = await change("PUT", NOTABLE, bob.cookie);
+      expect(limited.status).toBe(429);
+      expect(await limited.json()).toEqual({ error: "rate_limited" });
+      expect(Number(limited.headers.get("retry-after"))).toBeGreaterThan(0);
+      // Alice's allowance is her own.
+      expect((await change("PUT", NOTABLE, alice.cookie)).status).toBe(200);
+      await change("DELETE", NOTABLE, alice.cookie);
+    } finally {
+      // Give Bob his allowance back, and leave nothing saved.
+      await sql`delete from request_limits where user_id = ${id}`;
+      await sql`delete from saved_senses where user_id = ${id}`;
+    }
+  });
 });
