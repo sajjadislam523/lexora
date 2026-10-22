@@ -68,16 +68,16 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 3. **Migrations:** apply them to Neon before the new code goes live:
 
    ```bash
-   DATABASE_URL_UNPOOLED="<neon direct url>" DATABASE_URL="<neon pooled url>" pnpm db:migrate
+   LEXORA_ALLOW_REMOTE_DB="<neon direct host>" DATABASE_URL_UNPOOLED="<neon direct url>" DATABASE_URL="<neon pooled url>" pnpm db:migrate
    ```
 
-   Keep migrations backwards-compatible with the running version (add first, remove later).
+   Keep migrations backwards-compatible with the running version (add first, remove later). `LEXORA_ALLOW_REMOTE_DB` must name the direct URL's host exactly (see [Local-database guard](#local-database-guard)); type it in the shell for this one command, never in `.env.local`.
 
 4. **Content:** import the language content into Neon after migrating and before the new code goes live. Run it from the commit being deployed, with a clean `content/` folder:
 
    ```bash
    git checkout main && git pull && git status --short content   # must print nothing
-   DATABASE_URL_UNPOOLED="<neon direct url>" DATABASE_URL="<neon pooled url>" pnpm content:import
+   LEXORA_ALLOW_REMOTE_DB="<neon direct host>" DATABASE_URL_UNPOOLED="<neon direct url>" DATABASE_URL="<neon pooled url>" pnpm content:import
    ```
 
    - The import validates first and writes everything in one transaction: it either succeeds completely or changes nothing.
@@ -86,6 +86,47 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
    - To roll content back, check out the earlier commit and import again. IDs never change, so saved language survives in both directions.
 
 5. **Deploy:** merge to `main` after the phase PR is approved. Vercel builds with `pnpm build`.
+
+### Local-database guard
+
+`pnpm db:migrate` (and the other drizzle-kit commands), `pnpm content:import`, `pnpm test` and `pnpm test:e2e` refuse to run unless the database they would use is local: `localhost`, `127.0.0.1`, `::1` or a Unix socket, such as the Docker database (`postgres://lexora@localhost:5432/lexora`) or CI's service container (`scripts/database-target.ts`). They check before opening any connection, and the message names only the host.
+
+To target a remote database on purpose (the production steps above), set `LEXORA_ALLOW_REMOTE_DB` to that database's exact hostname in the shell, for that one command. The commands print a warning naming the host. The override is read before `.env.local` is loaded, so it can't be left in an env file, and `CI` doesn't bypass the guard. Keep `DATABASE_URL` in `.env.local` pointing at Docker.
+
+### Search rate limit (Vercel Firewall)
+
+Public search is limited at the edge to **120 requests per minute per IP** (Phase 5 decision D17). Search is server-rendered on `GET /explore?q=…` and `GET /finder?q=…`, so one Vercel Firewall rate-limit rule covers it. `vercel.json` can't express rate limits (its `mitigate` supports only `deny` and `challenge`), so the rule lives in the Vercel project. WAF rate limiting is available on every plan; Hobby allows one rate-limit rule per project with a fixed window keyed by IP.
+
+- **Dashboard:** Project → Firewall → Configure → New Rule:
+  - If **Request Path** _is any of_ `/explore`, `/finder`, **and** **Query** `q` _exists_;
+  - Then **Rate Limit**: Fixed Window, 60 s, 120 requests, key **IP**, action **Default (429)**;
+  - Save, Review Changes, **Publish**.
+- **CLI equivalent** (Vercel CLI, logged in and linked to the project):
+
+  ```bash
+  vercel firewall rules add "Public search rate limit" \
+    --condition '{"type":"path","op":"inc","value":["/explore","/finder"]}' \
+    --condition '{"type":"query","op":"ex","key":"q"}' \
+    --action rate_limit --rate-limit-window 60 --rate-limit-requests 120 \
+    --rate-limit-keys ip --rate-limit-action rate_limit \
+    --description "Phase 5 D17: public search, 120/min/IP" --yes
+  vercel firewall diff
+  vercel firewall publish --yes
+  ```
+
+- **Verify on production** (from one IP; it uses that IP's allowance for a minute): `vercel firewall rules inspect "Public search rate limit"`, then
+
+  ```bash
+  for i in $(seq 1 130); do curl -s -o /dev/null -w "%{http_code}\n" "https://<production host>/explore?q=important"; done | sort | uniq -c
+  ```
+
+  expects about 120 × `200` and the rest `429`. Explore without `?q=`, language pages and the landing page aren't limited.
+
+Signed-in writes are limited in the app, per learner, in PostgreSQL (`request_limits`): 60 saves and removals a minute (429 with `Retry-After`). The review-answer limit (30 a minute) applies when that endpoint is built in Phase 5 Step 5.
+
+### Account email check
+
+Production sends verification and password-reset email through Resend and refuses to start without `RESEND_API_KEY` and `EMAIL_FROM` (`src/server/env.ts`). `EMAIL_FROM` is the sender address (`Lexora <account@your-domain>`), consumed by the Resend sender (`src/server/email`). It must be on a domain verified in Resend: the test sender `onboarding@resend.dev` delivers only to the Resend account owner, so other learners would receive nothing. To check: Vercel → Project → Settings → Environment Variables → Production → `EMAIL_FROM`, and Resend → Domains for that domain's status. Then request a password reset for an inbox that isn't the Resend owner's and confirm it arrives.
 
 ### Environments
 

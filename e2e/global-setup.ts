@@ -4,6 +4,8 @@ import { existsSync } from "node:fs";
 import postgres from "postgres";
 import type { TestProject } from "vitest/node";
 
+import { ALLOW_REMOTE_DB, guardDatabaseTarget } from "../scripts/database-target";
+
 /**
  * Two throwaway learners for the whole E2E run, signed up once over HTTP (sign-up is rate limited
  * to three a minute) and deleted afterwards. Tests read them with `inject("learners")`.
@@ -16,8 +18,13 @@ declare module "vitest" {
   }
 }
 
+// Read the remote override from the shell before .env.local can supply it.
+const allowRemote = process.env[ALLOW_REMOTE_DB];
+
 // Locally the database comes from .env.local (as in test/setup.ts); in CI from the workflow.
 if (!process.env.DATABASE_URL && existsSync(".env.local")) process.loadEnvFile(".env.local");
+// The teardown deletes the E2E learners from DATABASE_URL: local databases only.
+guardDatabaseTarget(process.env.DATABASE_URL, "the E2E suite", allowRemote);
 
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 

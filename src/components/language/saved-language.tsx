@@ -181,6 +181,7 @@ export function SavedLanguageProvider({ children }: { children: React.ReactNode 
           mark([[target.senseId, previous ?? false]]);
           if (status === 401) openGate(target);
           else if (status === 404) setNotice(`“${target.label}” can no longer be saved.`);
+          else if (status === 429) setNotice("You’re going a little fast. Try again in a moment.");
           else setNotice(`Couldn’t update “${target.label}”. Please try again.`);
         })
         .catch(() => {

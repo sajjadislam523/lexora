@@ -16,6 +16,8 @@ import { importContent, UnsafeImportError } from "@/server/content/import";
 import { formatIssue, validateContent, type ValidatedContent } from "@/server/content/validate";
 import { connect } from "@/server/db/connect";
 
+import { ALLOW_REMOTE_DB, guardDatabaseTarget, RemoteDatabaseError } from "./database-target";
+
 async function validate(): Promise<ValidatedContent | undefined> {
   const result = validateContent(await readContentDir());
   if (!result.ok) {
@@ -40,11 +42,21 @@ async function importCommand() {
   const content = await validate();
   if (!content) return 1;
 
+  // Read the remote override from the shell before any env file can supply it.
+  const allowRemote = process.env[ALLOW_REMOTE_DB];
   nextEnv.loadEnvConfig(process.cwd());
   // Like migrations, imports use the direct (non-pooled) connection when one is configured.
   const url = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
   if (!url) {
     console.error("DATABASE_URL is not set. Copy .env.example to .env.local.");
+    return 1;
+  }
+  // Local databases only, unless the shell names the remote host (scripts/database-target.ts).
+  try {
+    guardDatabaseTarget(url, "the content import", allowRemote);
+  } catch (error) {
+    if (!(error instanceof RemoteDatabaseError)) throw error;
+    console.error(`✗ ${error.message}\n\nNothing was imported.`);
     return 1;
   }
 

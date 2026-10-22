@@ -1,4 +1,5 @@
 import { getRequestSession } from "@/server/auth/session";
+import { enforceRateLimit } from "@/server/http/rate-limit";
 import { isSameOrigin } from "@/server/http/same-origin";
 import { removeSavedSense, saveSense } from "@/server/repositories/saved-senses";
 
@@ -11,6 +12,8 @@ import { guarded, json, senseIdSchema, unauthenticated } from "../http";
  * any body is ignored, so one learner can never act for another. Cross-site requests are refused
  * (route handlers don't get Next's server-action CSRF protection). Only published senses of
  * published items can be newly saved; removing works for any sense, and both are idempotent.
+ * Saves and removals together are limited to 60 a minute per learner (429 after that), counted
+ * only once a request is authenticated and well formed.
  */
 type Context = RouteContext<"/api/bank/saved/[senseId]">;
 
@@ -22,6 +25,8 @@ async function authorise(request: Request, { params }: Context): Promise<Authori
   if (!session) return { response: await unauthenticated() };
   const parsed = senseIdSchema.safeParse((await params).senseId);
   if (!parsed.success) return { response: json({ error: "invalid_sense" }, 400) };
+  const limited = await enforceRateLimit(session.user.id, "bank_write");
+  if (limited) return { response: limited };
   return { userId: session.user.id, senseId: parsed.data };
 }
 
