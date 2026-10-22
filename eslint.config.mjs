@@ -54,6 +54,16 @@ const boundaries = [
     ]),
   },
   {
+    // The learning engine (scheduler, review status): pure TypeScript, no UI, server or app code.
+    files: ["src/learning/**"],
+    rules: restrict([
+      pattern(
+        ["@/features/*", "@/components/*", "@/app/*", "@/server/*", "@/demo/*"],
+        "The learning engine is pure: it must not depend on UI, server or prototype code.",
+      ),
+    ]),
+  },
+  {
     // Its composition root wires in the database repository, and nothing else from the server.
     files: ["src/language/index.ts"],
     rules: restrict([
