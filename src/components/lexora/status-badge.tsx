@@ -8,6 +8,18 @@ const STATUSES = {
     className: "bg-primary text-primary-foreground",
     dot: "bg-primary-foreground",
   },
+  known: { label: "Known", className: "bg-success-soft text-success", dot: "bg-success" },
+  retired: {
+    label: "No longer reviewed",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-subtle-foreground",
+  },
+  no_exercise: {
+    label: "No exercise yet",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-subtle-foreground",
+  },
+  /** Prototype only (sample learner data on Home); Phase 5 calls it "Known". */
   mastered: { label: "Mastered", className: "bg-success-soft text-success", dot: "bg-success" },
 } as const;
 

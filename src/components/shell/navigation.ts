@@ -52,18 +52,8 @@ export const PRIMARY_NAV: NavEntry[] = [
     href: "/bank",
     label: "Language bank",
     icon: BookMarked,
-    description: "Everything you have saved, with notes and review status.",
-    status:
-      "Planned for Phase 5 — Personal learning. The meanings you save are already kept for this screen.",
-    plans: [
-      "Everything you save from the Finder, grouped by kind of language",
-      "Your own notes and example sentences beside each item",
-      "Review status and the next time each item comes back",
-    ],
-    seeAlso: [
-      { label: "Find language to save", href: "/finder" },
-      { label: "Save a meaning from a language page", href: "/language/significant" },
-    ],
+    description: "Everything you’ve saved, and when it comes back.",
+    status: "Available.",
   },
   {
     id: "practice",

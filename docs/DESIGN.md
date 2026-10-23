@@ -359,7 +359,7 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 | ----------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
 | `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                    |
 | `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                            |
-| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                          |
+| `lexora/status-badge`   | Pill               | New (ink), Learning (warning), Due (charcoal), Known (success); retired, no exercise (muted)                |
 | `lexora/fit-badge`      | Pill               | The Phase 3 verb-frame fit: Fits (success), Different preposition (warning), Doesn’t fit (neutral)          |
 | `lexora/verdict-badge`  | Pill               | Context-fit verdict: Fits · Likely fits · Depends · Unlikely · Not supported. Icon and label, never a score |
 | `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                    |
@@ -515,6 +515,29 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
   - **Error:** a danger callout ("Search isn’t available right now") with _Try again_.
   - A visually hidden status line announces the result summary after each search.
 - **Saving:** the card's bookmark. Visitors get the save gate (§10.7).
+
+### 10.2a Language bank (`/bank`)
+
+The learner's saved meanings and when each comes back (Phase 5 Step 4).
+
+- **Header:** `PageHeader`: "Language bank", "Everything you've saved, and when it comes back."
+- **Summary:** one text line, not tiles: "12 meanings · 3 due now · 2 new · 5 learning · 2 known".
+- **Sections:** in order, each an `h2` and one bordered list (`rounded-lg border bg-card p-1`, rows divided by `border-subtle`):
+  - _Ready to review_: Due, then New;
+  - _Coming up_: Learning, Known, and senses with no exercise yet, by when they come back;
+  - _No longer reviewed_: retired senses, with "Replaced by …" when they have a replacement.
+- **Row:**
+  - the term (`type-term-sm`, the link to its language page), the kind dot and the sense label;
+  - the definition (`type-body`, muted), the first authored pattern (`type-mono` chip), and the first authored example (`type-example`, highlighted);
+  - a `StatusBadge` and the next review in caption: "Due now", "Next review in 3 days" (whole days, no timezones);
+  - a ghost icon button that removes it, named "Remove “term (label)” from your language bank", 44px on touch.
+- **Removing:** it goes through the shared save flow (the same endpoint and notices as the Finder). The list refreshes only once the server confirms. On failure, including the rate limit, the row stays and the notice says why.
+- **States:**
+  - **Empty:** `EmptyState`: "Your language bank is empty", with _Find language_.
+  - **Loading:** a skeleton of the list inside the page.
+  - **Error:** a danger `Callout` with _Try again_.
+- **Pagination:** 50 per page with _Previous_ · "Page n of m" · _Next_, as in browse.
+- **Not here:** filters, sorting controls, search, notes, or a review button. The review starts in Practice (Step 5).
 
 ### 10.3 Practice (`/practice`)
 

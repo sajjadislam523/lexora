@@ -1,4 +1,4 @@
-import { isDue, type CardState } from "./scheduler";
+import { DAY_MS, isDue, type CardState } from "./scheduler";
 
 /**
  * A card's status for the learner (specification §10.3), derived — never stored — from the
@@ -23,4 +23,15 @@ export function reviewStatus(
   if (card.reviews === 0) return "new";
   if (isDue(card, now)) return "due";
   return card.box >= 4 ? "known" : "learning";
+}
+
+/**
+ * When a card comes back (specification §10.4), without timezones: due now, or in whole days
+ * rounded up — a card due 30 hours from now is "in 2 days". The caller words it.
+ */
+export type NextReview = { due: true } | { due: false; days: number };
+
+export function nextReview(card: CardState, now: Date): NextReview {
+  if (isDue(card, now)) return { due: true };
+  return { due: false, days: Math.ceil((card.dueAt.getTime() - now.getTime()) / DAY_MS) };
 }

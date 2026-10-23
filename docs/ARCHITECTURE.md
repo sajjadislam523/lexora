@@ -1,6 +1,6 @@
 # Lexora Architecture
 
-> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); built so far: hardening, the scheduler and review data model, and the exercise generator). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
+> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); built so far: hardening, the scheduler and review data model, the exercise generator with its accept lists, and the language bank). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
 
 ---
 
@@ -442,7 +442,12 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 
   An answer is correct only as the expected answer, another authored form of the item, or an authored `practice.accept` value. Normalisation covers only case, apostrophes, spaces and end punctuation: no fuzzy matching, stemming or synonyms. Material comes from the content rows (`src/server/content/practice.ts`) or PostgreSQL (`loadPracticeMaterial`, four statements), which are asserted equal. Generating never touches cards, logs or schedules.
 
-- **Still to come in Phase 5:** the authored `accept` lists (Step 3b content review), the bank (Step 4), and the review endpoint and session (Step 5).
+- **Bank** (`/bank`; `src/server/learning/bank.ts`, `listBank` / `bankCounts` in `review-cards.ts`):
+  - saved senses left-joined to their cards (a save without one reads as new), ordered in SQL as §14 and §17 describe;
+  - statuses from `reviewStatus`, next reviews from `nextReview`; whether a sense has an exercise comes from its practice material;
+  - one statement for the counts, one for a page of 50 rows, four for the page's practice material;
+  - removing goes through the existing save flow; nothing in the bank schedules or writes.
+- **Still to come in Phase 5:** the review endpoint and session (Step 5), mistake evidence (Step 6), an honest Home (Step 7), and the save-flow copy (Step 8).
 
 - **Mastery** is derived from review history (recall success over spaced intervals), never from views.
 - **Scheduler (earlier note):** FSRS (`ts-fsrs`) was the leading option over SM-2. Either way it's a pure function: `(card state, rating, now) → next state`.
@@ -556,3 +561,4 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 | 80  | 2026-10-22 | Review exercises are generated at request time by a pure function from authored rows (not stored), with stable IDs from authored IDs and a fixed order (types in turn; the card's `reviews` picks the next)                                                                                                                 | Phase 5 D9–D10. One source of truth, no drift, no randomness; the same material is asserted equal from YAML and PostgreSQL                                                                        |
 | 81  | 2026-10-22 | Answers accept only the expected form, the item's other authored forms and authored `practice.accept` lists on examples; relations never imply acceptance; normalisation is case, apostrophes, spaces and end punctuation only                                                                                              | Phase 5 D5, D8. Correctness comes from content; owner confirmed generating every safely located blank, with the Step 3b accept-list review before any learner sees one                            |
 | 82  | 2026-10-22 | “Which is correct?” keeps punctuation-only mistakes; it skips a mistake only when both versions read the same as written                                                                                                                                                                                                    | The choice shows the authored sentences, where a missing comma is visible; spec §12.3 compared normalised text, which would have hidden 4 mistakes                                                |
+| 83  | 2026-10-23 | Language bank: sections and SQL order from spec §14/§17, no filters, 50 per page, counts read before streaming so a page past the end redirects; no review button until Practice is real (Step 5); next review in whole days                                                                                                | Spec §17. One truthful view of saved language from existing state; a review button now would lead to the labelled prototype                                                                       |

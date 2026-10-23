@@ -1,6 +1,7 @@
 import "server-only";
 
-import { and, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 
 import type { Box, CardState } from "@/learning/scheduler";
 import { newCard } from "@/learning/scheduler";
@@ -158,4 +159,142 @@ export async function findAnswer(
 export async function insertAnswer(tx: Transaction, row: NewAnswerRow): Promise<AnswerRow> {
   const [inserted] = await tx.insert(reviewLog).values(row).returning();
   return inserted!;
+}
+
+// ── The language bank (specification §17) ───────────────────────────────────────────────────
+
+const replacementSense = alias(senses, "replacement_sense");
+const replacementItem = alias(languageItems, "replacement_item");
+
+/** The bank's scheduling predicates, shared by the counts and the row order. */
+function bankTerms(now: Date) {
+  const retired = sql`(${senses.status} <> 'published' or ${languageItems.status} <> 'published')`;
+  const reviewed = sql`coalesce(${reviewCards.reviews}, 0) > 0`;
+  // A save without a card reads as new, due since it was saved.
+  const dueAt = sql`coalesce(${reviewCards.dueAt}, ${savedSenses.savedAt})`;
+  // A raw Date isn't serialised inside a hand-written fragment; pass it as an ISO timestamp.
+  const due = sql`${dueAt} <= ${now.toISOString()}::timestamptz`;
+  return { retired, reviewed, dueAt, due };
+}
+
+export type BankCounts = {
+  total: number;
+  due: number;
+  new: number;
+  learning: number;
+  known: number;
+  retired: number;
+};
+
+/** How many saved senses the learner has in each scheduling state. One statement. */
+export async function bankCounts(userId: string, now: Date): Promise<BankCounts> {
+  const { retired, reviewed, due } = bankTerms(now);
+  const [row] = await db
+    .select({
+      total: sql<number>`count(*)::int`,
+      due: sql<number>`count(*) filter (where not ${retired} and ${reviewed} and ${due})::int`,
+      new: sql<number>`count(*) filter (where not ${retired} and not ${reviewed})::int`,
+      learning: sql<number>`count(*) filter (where not ${retired} and ${reviewed} and not ${due} and ${reviewCards.box} between 1 and 3)::int`,
+      known: sql<number>`count(*) filter (where not ${retired} and ${reviewed} and not ${due} and ${reviewCards.box} >= 4)::int`,
+      retired: sql<number>`count(*) filter (where ${retired})::int`,
+    })
+    .from(savedSenses)
+    .innerJoin(senses, eq(senses.id, savedSenses.senseId))
+    .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+    .leftJoin(
+      reviewCards,
+      and(eq(reviewCards.userId, savedSenses.userId), eq(reviewCards.senseId, savedSenses.senseId)),
+    )
+    .where(eq(savedSenses.userId, userId));
+  return row!;
+}
+
+export type BankEntry = ReviewState & {
+  senseId: string;
+  slug: string;
+  headword: string;
+  kind: (typeof languageItems.$inferSelect)["kind"];
+  senseLabel: string | null;
+  definition: string;
+  /** The item is published, so its language page exists (even if this sense is retired). */
+  itemPublished: boolean;
+  /** For a retired sense whose replacement is published. */
+  replacement: {
+    senseId: string;
+    slug: string;
+    headword: string;
+    senseLabel: string | null;
+  } | null;
+};
+
+/**
+ * One page of the learner's saved senses in bank order (specification §14, §17): reviewed cards
+ * that are due (oldest due first), then new ones (oldest save first), then the rest by when they
+ * come back, then retired ones; ties by sense ID. Saves without a card are included, as new.
+ * One statement.
+ */
+export async function listBank(
+  userId: string,
+  now: Date,
+  page: { limit: number; offset: number },
+): Promise<BankEntry[]> {
+  const { retired, reviewed, dueAt, due } = bankTerms(now);
+  const rank = sql`case when ${retired} then 3 when not ${reviewed} then 1 when ${due} then 0 else 2 end`;
+  const rows = await db
+    .select({
+      ...cardColumns,
+      senseId: savedSenses.senseId,
+      slug: languageItems.slug,
+      headword: languageItems.headword,
+      kind: languageItems.kind,
+      senseLabel: senses.label,
+      definition: senses.definition,
+      replacementId: replacementSense.id,
+      replacementSlug: replacementItem.slug,
+      replacementHeadword: replacementItem.headword,
+      replacementLabel: replacementSense.label,
+    })
+    .from(savedSenses)
+    .innerJoin(senses, eq(senses.id, savedSenses.senseId))
+    .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+    .leftJoin(
+      reviewCards,
+      and(eq(reviewCards.userId, savedSenses.userId), eq(reviewCards.senseId, savedSenses.senseId)),
+    )
+    .leftJoin(
+      replacementSense,
+      and(eq(replacementSense.id, senses.replacedBy), eq(replacementSense.status, "published")),
+    )
+    .leftJoin(
+      replacementItem,
+      and(eq(replacementItem.id, replacementSense.itemId), eq(replacementItem.status, "published")),
+    )
+    .where(eq(savedSenses.userId, userId))
+    .orderBy(
+      rank,
+      sql`case when ${rank} in (1, 3) then ${savedSenses.savedAt} else ${dueAt} end`,
+      asc(savedSenses.senseId),
+    )
+    .limit(page.limit)
+    .offset(page.offset);
+
+  return rows.map((row) => ({
+    ...toState(row),
+    senseId: row.senseId,
+    slug: row.slug,
+    headword: row.headword,
+    kind: row.kind,
+    senseLabel: row.senseLabel,
+    definition: row.definition,
+    itemPublished: row.itemStatus === "published",
+    replacement:
+      row.replacementId && row.replacementSlug && row.replacementHeadword
+        ? {
+            senseId: row.replacementId,
+            slug: row.replacementSlug,
+            headword: row.replacementHeadword,
+            senseLabel: row.replacementLabel,
+          }
+        : null,
+  }));
 }
