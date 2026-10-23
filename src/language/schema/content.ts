@@ -22,6 +22,7 @@ import {
   MAX_TOPICS,
   MISTAKE_TYPES,
   PARTS_OF_SPEECH,
+  PRACTICE_BLANKS,
   REGIONS,
   REGISTERS,
   REVIEW_LEVELS,
@@ -89,6 +90,19 @@ const exampleSchema = z.strictObject({
   /** Local ID of a collocation or preposition pattern of the same sense that this example shows. */
   collocation: key.optional(),
   pattern: key.optional(),
+  /**
+   * Review exercises (Phase 5, specification §13). Optional; most examples need none.
+   * `accept`: other answers that are also correct in the term blank; `accept_preposition`: the
+   * same for the preposition blank; `exclude`: blanks not to make from this example. Acceptance
+   * is always authored here, never derived from relations.
+   */
+  practice: z
+    .strictObject({
+      accept: uniqueList(text).optional(),
+      accept_preposition: uniqueList(text).optional(),
+      exclude: uniqueList(z.enum(PRACTICE_BLANKS)).optional(),
+    })
+    .optional(),
   /** Defaults to the item's source. */
   source: key.optional(),
 });

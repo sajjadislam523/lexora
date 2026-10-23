@@ -2,6 +2,7 @@
  * Content CLI (content/README.md):
  *
  *   pnpm content:check            validate content/ — no database needed (CI runs this)
+ *   pnpm content:check --practice also list every review exercise, for the content review
  *   pnpm content:import           validate, then import into DATABASE_URL in one transaction
  *   pnpm content:import --force   import even if the content is unchanged since the last release
  *
@@ -11,8 +12,11 @@ import { execFileSync } from "node:child_process";
 
 import nextEnv from "@next/env";
 
+import { generateExercises } from "@/learning/exercises";
+import { buildRows } from "@/server/content/build";
 import { readContentDir } from "@/server/content/files";
 import { importContent, UnsafeImportError } from "@/server/content/import";
+import { practiceInventory, practiceMaterialFromContent } from "@/server/content/practice";
 import { formatIssue, validateContent, type ValidatedContent } from "@/server/content/validate";
 import { connect } from "@/server/db/connect";
 
@@ -34,8 +38,46 @@ async function validate(): Promise<ValidatedContent | undefined> {
   return result.content;
 }
 
+/**
+ * What the content supports as review exercises (Phase 5): a summary line, a warning for any
+ * sense with no exercise, and with `--practice` every exercise and the answers it accepts.
+ */
+function reportPractice(content: ValidatedContent) {
+  const materials = practiceMaterialFromContent(buildRows(content));
+  const inventory = practiceInventory(materials);
+  console.log(
+    `✓ review exercises: ${inventory.total} (${inventory.term} complete the sentence, ` +
+      `${inventory.preposition} type the preposition, ${inventory.mistake} which is correct) ` +
+      `for ${inventory.senses} senses`,
+  );
+  for (const senseId of inventory.withoutExercises) {
+    console.warn(`  ⚠ ${senseId}: no review exercise (it reads as "no exercise yet")`);
+  }
+  if (!process.argv.includes("--practice")) return;
+  for (const material of materials) {
+    for (const { prompt, key } of generateExercises(material)) {
+      const shown = prompt.sentence
+        ? prompt.sentence.map((part) => (typeof part === "string" ? part : "___")).join("")
+        : prompt.options!.map((option) => option.text).join("  |  ");
+      const answers =
+        key.kind === "typed"
+          ? [
+              `expected "${key.expected}"`,
+              key.forms.length ? `forms ${key.forms.join(", ")}` : "",
+              key.accepted.length ? `accepted ${key.accepted.join(", ")}` : "",
+              key.mistakes.length ? `mistakes ${key.mistakes.map((m) => m.answer).join(", ")}` : "",
+            ]
+          : [`correct "${key.expected}"`];
+      console.log(`\n${prompt.id}\n  ${shown}\n  ${answers.filter(Boolean).join(" · ")}`);
+    }
+  }
+}
+
 async function check() {
-  return (await validate()) ? 0 : 1;
+  const content = await validate();
+  if (!content) return 1;
+  reportPractice(content);
+  return 0;
 }
 
 async function importCommand() {

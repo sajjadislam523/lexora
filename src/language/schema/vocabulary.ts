@@ -135,6 +135,13 @@ export const MISTAKE_TYPES = [
 ] as const;
 export type MistakeType = (typeof MISTAKE_TYPES)[number];
 
+/**
+ * The blanks a review exercise can make in an example (Phase 5, specification §13): the item's
+ * own form (`term`) or its pattern's preposition. An example's `practice.exclude` names them.
+ */
+export const PRACTICE_BLANKS = ["term", "preposition"] as const;
+export type PracticeBlank = (typeof PRACTICE_BLANKS)[number];
+
 /** Slots in a frame: `invest` [object] `in` [noun]. */
 export const SLOT_TYPES = ["object", "noun", "ing", "clause", "adjective", "person"] as const;
 export type SlotType = (typeof SLOT_TYPES)[number];

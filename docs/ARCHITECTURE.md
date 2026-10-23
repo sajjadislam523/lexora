@@ -1,6 +1,6 @@
 # Lexora Architecture
 
-> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); Steps 0–1 built: hardening, the scheduler and the review data model). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
+> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); built so far: hardening, the scheduler and review data model, and the exercise generator). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
 
 ---
 
@@ -361,6 +361,8 @@ The goal is `idea → language → context → pattern → practice`, so the mod
 
 IDs are authored and permanent; published content is retired, never deleted (decision #40).
 
+**Practice (Phase 5, Step 3):** examples carry optional authored `practice` data — `practice_accept`, `practice_accept_preposition` and `practice_exclude` (arrays, empty by default; migration 0007) — for review exercises; search never reads them.
+
 **Topics (Phase 4, Step 2):** `senses.topics`, an array of the `topic` enum (10 values, `TOPICS` in the vocabulary): 1–3 distinct values per sense, or none for general language. Validated in content; the database checks the limit of three (`senses_topics_max`). Not yet used by search. **User data (Phase 5 onward):** see §4.5.
 
 **Content pipeline:** `content/*.yaml` → Zod and cross-file validation (`pnpm content:check`, in CI) → `pnpm content:import` into PostgreSQL in one transaction. The app never reads YAML at runtime. External lexical sources may only inform the choice of items, after a recorded licence check.
@@ -431,7 +433,16 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 - **Scheduler** (`src/learning/scheduler.ts`, pure, lint-isolated): five Leitner boxes. Box 0 is new and due when saved; a correct answer moves up one box (at most 5) and a wrong one goes back to box 1. The next review is the answer time plus 1, 3, 7, 14 or 30 days, as fixed 24-hour multiples. `now` is always passed in. Statuses (new, due, learning, known, retired, no exercise yet) are derived in `src/learning/status.ts`, never stored. FSRS and SM-2 were considered and not chosen (D1).
 - **Cards** (`review_cards`): one per saved sense, created with the save in one transaction and deleted with it (composite FK, cascade). Saves made before Phase 5 have no card: reads left-join and treat them as new, due since saved, and the first answer creates the card. Nothing is backfilled.
 - **Answers** (`review_log`): `recordAnswer` (`src/server/learning/review.ts`) locks the card, then records an answer only for review number `reviews + 1`, backed by `unique (card_id, review_number)`. A retry returns the stored answer; anything else for a used number is stale; answers before the due time are refused. The log outlives the card.
-- **Still to come in Phase 5:** exercises generated from authored examples, preposition patterns and mistakes, with authored `accept` lists (Step 3); the bank (Step 4); the review endpoint and session (Step 5).
+- **Exercises** (`src/learning/exercises.ts`, `answers.ts`, pure): generated at request time from authored content. Three types:
+  - complete the sentence: the item's own form blanked in an example;
+  - type the preposition: an example's pattern preposition blanked;
+  - which is correct: an authored mistake's two versions.
+
+  IDs are stable (`term:` or `preposition:<example id>`, `mistake:<mistake id>`). A sense's exercises take the types in turn, and the card's `reviews` picks the next one and the option order. There's no randomness. Each exercise has a client-safe prompt and a server-only key.
+
+  An answer is correct only as the expected answer, another authored form of the item, or an authored `practice.accept` value. Normalisation covers only case, apostrophes, spaces and end punctuation: no fuzzy matching, stemming or synonyms. Material comes from the content rows (`src/server/content/practice.ts`) or PostgreSQL (`loadPracticeMaterial`, four statements), which are asserted equal. Generating never touches cards, logs or schedules.
+
+- **Still to come in Phase 5:** the authored `accept` lists (Step 3b content review), the bank (Step 4), and the review endpoint and session (Step 5).
 
 - **Mastery** is derived from review history (recall success over spaced intervals), never from views.
 - **Scheduler (earlier note):** FSRS (`ts-fsrs`) was the leading option over SM-2. Either way it's a pure function: `(card state, rating, now) → next state`.
@@ -542,3 +553,6 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 | 77  | 2026-10-22 | Review scheduler: five Leitner boxes as a pure module (`src/learning`), box 0 for new cards due when saved, intervals of 1/3/7/14/30 days as fixed 24-hour multiples from the answer time; statuses derived, never stored                                                                                                   | Phase 5 D1–D4, confirmed by the owner over a box-1 start. Explainable, auditable, testable with a fixed clock, and free of timezone arithmetic                                                    |
 | 78  | 2026-10-22 | `review_cards` cascade with `saved_senses` (composite FK); the card is created with the save in one transaction; saves without a card read as new, with no backfill                                                                                                                                                         | Phase 5 §9.4. One owner of what a learner saved; old saves need no data migration, and the migrate-then-deploy gap is safe                                                                        |
 | 79  | 2026-10-22 | Once-only answers: `unique (card_id, review_number)` under a row lock, keyed by the card's `reviews` when the exercise was shown; no client-generated submission id                                                                                                                                                         | Phase 5 D11, confirmed by the owner. A retry or second tab can't schedule twice, and the stored answer is returned to it                                                                          |
+| 80  | 2026-10-22 | Review exercises are generated at request time by a pure function from authored rows (not stored), with stable IDs from authored IDs and a fixed order (types in turn; the card's `reviews` picks the next)                                                                                                                 | Phase 5 D9–D10. One source of truth, no drift, no randomness; the same material is asserted equal from YAML and PostgreSQL                                                                        |
+| 81  | 2026-10-22 | Answers accept only the expected form, the item's other authored forms and authored `practice.accept` lists on examples; relations never imply acceptance; normalisation is case, apostrophes, spaces and end punctuation only                                                                                              | Phase 5 D5, D8. Correctness comes from content; owner confirmed generating every safely located blank, with the Step 3b accept-list review before any learner sees one                            |
+| 82  | 2026-10-22 | “Which is correct?” keeps punctuation-only mistakes; it skips a mistake only when both versions read the same as written                                                                                                                                                                                                    | The choice shows the authored sentences, where a missing comma is visible; spec §12.3 compared normalised text, which would have hidden 4 mistakes                                                |

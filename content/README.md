@@ -102,6 +102,29 @@ senses: [] # see below
 
 `highlight` is a phrase (or a list of phrases) that occurs in `text`. `collocation` or `pattern` links the example to the collocation or preposition pattern it shows. Published senses need at least two examples, and a speaking example when `skills` includes speaking.
 
+### Review exercises (`practice`)
+
+Learners review what they save with exercises built only from this content (Phase 5):
+
+- **Complete the sentence:** an example with the item's own form blanked. The blank is the longest form in `forms` that appears as whole words inside a highlight. There's none for preposition-pattern items, for a form split by another word ("take **urgent** measures"), or for a form that appears twice.
+- **Type the preposition:** an example linked to a `pattern` whose highlight ends with that pattern's preposition, with the preposition blanked.
+- **Which is correct?:** each mistake's `wrong` and `right`, side by side.
+
+An answer is correct only if it's the expected answer, another of the item's `forms`, or an answer listed here. Nothing is derived from relations, so where another answer is genuinely right in a sentence, say so:
+
+```yaml
+- id: ex1
+  text: There was a significant increase in the number of cyclists between 2010 and 2020.
+  highlight: significant increase
+  skill: writing
+  practice: # optional; most examples need none
+    accept: [considerable, substantial] # also correct in the completion blank
+    # accept_preposition: [into]        # also correct in the preposition blank
+    # exclude: [term]                   # don't make this blank: term | preposition
+```
+
+`pnpm content:check` checks that `practice` describes a blank the example makes, doesn't repeat the expected answer, doesn't accept an authored wrong answer, and isn't accepted for an excluded blank. It also prints how many exercises the content supports. `pnpm content:check --practice` lists every exercise with its expected and accepted answers, for review. A content change that changes those numbers updates `test/exercise-inventory.test.ts` and says why.
+
 ### Collocations and preposition patterns
 
 ```yaml
