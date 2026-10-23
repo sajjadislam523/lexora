@@ -9,7 +9,7 @@ import {
   type Box,
   type CardState,
 } from "./scheduler";
-import { reviewStatus } from "./status";
+import { nextReview, reviewStatus } from "./status";
 
 /** The Leitner scheduler (specification §10), with a fixed clock. */
 const SAVED = new Date("2026-10-22T09:00:00.000Z");
@@ -165,5 +165,24 @@ describe("reviewStatus", () => {
   it("puts retired first, then senses with no exercise", () => {
     expect(status(card(2), { retired: true, hasExercise: false })).toBe("retired");
     expect(status(newCard(SAVED), { hasExercise: false })).toBe("no_exercise");
+  });
+});
+
+describe("nextReview", () => {
+  it("is due once the due time has come, for new and answered cards alike", () => {
+    expect(nextReview(newCard(SAVED), NOW)).toEqual({ due: true });
+    expect(nextReview(card(3, { dueAt: NOW }), NOW)).toEqual({ due: true });
+  });
+
+  it("counts whole days, rounded up, never zero", () => {
+    expect(nextReview(card(1, { dueAt: new Date(NOW.getTime() + 1) }), NOW)).toEqual({
+      due: false,
+      days: 1,
+    });
+    expect(nextReview(card(1, { dueAt: days(NOW, 1) }), NOW)).toEqual({ due: false, days: 1 });
+    expect(
+      nextReview(card(2, { dueAt: new Date(NOW.getTime() + 30 * 60 * 60 * 1000) }), NOW),
+    ).toEqual({ due: false, days: 2 });
+    expect(nextReview(schedule(card(4), "correct", NOW), NOW)).toEqual({ due: false, days: 30 });
   });
 });

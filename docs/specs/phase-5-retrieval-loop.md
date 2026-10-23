@@ -1323,6 +1323,16 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** §17 states render; removal keeps history.
 - **Dependencies:** Steps 2 and 3a.
 - **Must not change:** public pages; the save endpoint contract.
+- **As built (23 October 2026):**
+  - **Rows show more than §17 listed:** the definition, the first authored pattern and the first authored example, as the owner asked. They come from the practice material, which also says whether the sense has an exercise, so senses with none show _No exercise yet_ under _Coming up_.
+  - **The summary line counts scheduling states.** A sense with no exercise is counted by its schedule; none exist today.
+  - **No _Start review_ button:** `/practice` is still the labelled prototype until Step 5, so the button would lead to sample questions. Step 5 adds it.
+  - **The next review is "Due now" or "Next review in n days"** (whole days, rounded up), including "in 1 day" rather than "Back tomorrow". The bank has no timezone, so "tomorrow" could be wrong.
+  - **No "Missed n times" note:** it's mistake evidence, which is Step 6.
+  - **The removal notice is the save flow's current one.** Its "review history is kept" copy is Step 8.
+  - **The page reads the counts before streaming the rows,** so a page past the end is a real redirect.
+  - **The status badge gains Known, No longer reviewed and No exercise yet.** Mastered stays for the prototype Home until Step 7.
+  - **No migration.**
 
 ### Step 5 — Review session
 

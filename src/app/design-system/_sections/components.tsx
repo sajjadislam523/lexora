@@ -343,7 +343,9 @@ export function ComponentsSection() {
               <StatusBadge status="new" />
               <StatusBadge status="learning" />
               <StatusBadge status="due" />
-              <StatusBadge status="mastered" />
+              <StatusBadge status="known" />
+              <StatusBadge status="retired" />
+              <StatusBadge status="no_exercise" />
             </div>
           </div>
         </div>
