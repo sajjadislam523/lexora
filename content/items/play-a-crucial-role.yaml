@@ -28,18 +28,24 @@ senses:
         skill: writing
         task: writing-2
         pattern: in
+        practice:
+          accept: [play a vital role]
       - id: ex2
         text: Public transport plays a crucial role in reducing congestion.
         highlight: plays a crucial role in
         skill: writing
         task: writing-2
         pattern: in
+        practice:
+          accept: [plays a vital role]
       - id: ex3
         text: My grandmother played a crucial role in bringing me up.
         highlight: played a crucial role in
         skill: speaking
         task: speaking-2
         pattern: in
+        practice:
+          accept: [played a vital role]
     preposition_patterns:
       - id: in
         base: play a crucial role

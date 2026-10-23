@@ -26,6 +26,8 @@ senses:
         skill: writing
         task: writing-2
         pattern: of
+        practice:
+          accept_preposition: [about]
       - id: ex2
         text: Campaigns to raise public awareness about recycling have been very successful.
         highlight: raise public awareness about
@@ -38,6 +40,8 @@ senses:
         skill: speaking
         task: speaking-3
         pattern: of
+        practice:
+          accept_preposition: [about]
     preposition_patterns:
       - id: of
         base: raise awareness

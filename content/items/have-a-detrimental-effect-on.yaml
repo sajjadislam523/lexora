@@ -28,12 +28,16 @@ senses:
         skill: writing
         task: writing-2
         pattern: on
+        practice:
+          accept: [be detrimental to]
       - id: ex2
         text: Noise from the airport has had a detrimental effect on residents' health.
         highlight: had a detrimental effect on
         skill: writing
         task: writing-2
         pattern: on
+        practice:
+          accept: [been detrimental to]
     preposition_patterns:
       - id: on
         base: have a detrimental effect

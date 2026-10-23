@@ -28,11 +28,15 @@ senses:
         highlight: Moreover,
         skill: writing
         task: writing-2
+        practice:
+          accept: [furthermore]
       - id: ex2
         text: The new law is unfair. Moreover, it would be almost impossible to enforce.
         highlight: Moreover,
         skill: writing
         task: writing-2
+        practice:
+          accept: [furthermore]
     mistakes:
       - id: also
         wrong: Moreover, also it is cheaper.

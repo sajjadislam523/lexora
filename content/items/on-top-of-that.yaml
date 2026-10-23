@@ -28,11 +28,15 @@ senses:
         highlight: on top of that
         skill: speaking
         task: speaking-2
+        practice:
+          accept: [what's more, what is more]
       - id: ex2
         text: My job is well paid. On top of that, I get to travel a lot.
         highlight: On top of that,
         skill: speaking
         task: speaking-1
+        practice:
+          accept: [what's more, what is more]
     relations:
       - type: more_formal
         to: furthermore.addition

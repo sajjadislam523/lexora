@@ -37,6 +37,8 @@ senses:
         skill: writing
         task: writing-2
         collocation: role
+        practice:
+          accept: [vital]
     preposition_patterns:
       - id: to
         base: crucial

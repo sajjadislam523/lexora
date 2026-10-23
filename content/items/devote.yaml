@@ -26,6 +26,8 @@ senses:
         skill: writing
         task: writing-2
         pattern: to
+        practice:
+          accept: [allocate]
       - id: ex2
         text: I devote most of my weekends to playing football.
         highlight: devote most of my weekends to

@@ -25,6 +25,8 @@ senses:
         skill: writing
         task: writing-2
         collocation: amount
+        practice:
+          accept: [substantial]
       - id: ex2
         text: There has been considerable debate about banning cars from city centres.
         highlight: considerable debate

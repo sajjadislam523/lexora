@@ -26,6 +26,8 @@ senses:
         skill: writing
         task: writing-2
         pattern: in
+        practice:
+          accept_preposition: [into]
       - id: ex2
         text: The city has invested heavily in new cycle lanes.
         highlight: invested heavily in

@@ -53,11 +53,43 @@ describe("exercise inventory (published content)", () => {
     });
   });
 
-  it("has no authored accept lists yet: they arrive in the Step 3b content review", () => {
-    const withPractice = materials.flatMap((m) =>
-      m.examples.filter((e) => e.accept.length || e.acceptPreposition.length || e.exclude.length),
-    );
-    expect(withPractice).toEqual([]);
+  it("has the accept lists authored in the Step 3b content review", () => {
+    const examples = materials.flatMap((m) => m.examples);
+    expect({
+      withAccept: examples.filter((e) => e.accept.length).length,
+      accepted: examples.reduce((n, e) => n + e.accept.length, 0),
+      withAcceptPreposition: examples.filter((e) => e.acceptPreposition.length).length,
+      acceptedPrepositions: examples.reduce((n, e) => n + e.acceptPreposition.length, 0),
+      withExclude: examples.filter((e) => e.exclude.length).length,
+    }).toEqual({
+      withAccept: 26,
+      accepted: 28,
+      withAcceptPreposition: 5,
+      acceptedPrepositions: 5,
+      withExclude: 0,
+    });
+  });
+
+  it("accepts every authored answer, and none repeats a form, the expected answer or a mistake", async () => {
+    const { generateExercises } = await import("@/learning/exercises");
+    const { evaluateAnswer, normaliseAnswer } = await import("@/learning/answers");
+    for (const material of materials) {
+      for (const { prompt, key } of generateExercises(material)) {
+        if (key.kind !== "typed") continue;
+        for (const accepted of key.accepted) {
+          expect(evaluateAnswer(key, accepted), `${prompt.id}: ${accepted}`).toMatchObject({
+            outcome: "correct",
+            match: "accepted",
+          });
+          expect(key.forms, prompt.id).not.toContain(accepted);
+          expect(accepted, prompt.id).not.toBe(normaliseAnswer(key.expected));
+          expect(
+            key.mistakes.map((m) => m.answer),
+            prompt.id,
+          ).not.toContain(accepted);
+        }
+      }
+    }
   });
 
   it("blanks the authored sentence exactly, and never shows the answer elsewhere", async () => {
