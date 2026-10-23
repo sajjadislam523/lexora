@@ -529,7 +529,8 @@ The learner's saved meanings and when each comes back (Phase 5 Step 4).
 - **Row:**
   - the term (`type-term-sm`, the link to its language page), the kind dot and the sense label;
   - the definition (`type-body`, muted), the first authored pattern (`type-mono` chip), and the first authored example (`type-example`, highlighted);
-  - a `StatusBadge` and the next review in caption: "Due now", "Next review in 3 days" (whole days, no timezones);
+  - a `StatusBadge` and the next review in caption: "Due now", "Next review in 3 days" (whole days, no timezones), and "Missed n times" once a card has two wrong answers;
+  - each recurring mistake (§16 of the Phase 5 spec) as a `MistakeRow` in a `bg-muted` well: "Your mistake", the wrong → right versions, the authored explanation and "You've made this mistake 2 times in the last 30 days" (or "You typed “at” 2 times…");
   - a ghost icon button that removes it, named "Remove “term (label)” from your language bank", 44px on touch.
 - **Removing:** it goes through the shared save flow (the same endpoint and notices as the Finder). The list refreshes only once the server confirms. On failure, including the rate limit, the row stays and the notice says why.
 - **States:**
@@ -550,6 +551,7 @@ The learner's review session (Phase 5 Step 5): up to five due meanings, one exer
 - **Complete the sentence / Type the preposition:** the cue (the definition, with the meaning label when the item has several; or the pattern with its preposition hidden, as `type-mono`), the sentence in a `bg-muted` well as a `GapSentence`, and one input with _Check_. The input's label carries the sentence ("Missing word in: There was a … increase…"), and "2 words" is shown under it when the blank holds more than one. The headword isn't shown before answering: it would be the answer.
 - **Which is correct?:** the term (serif) and meaning label, then the two authored versions as `ChoiceOption`s in the language voice.
 - **Feedback** comes only from the server's answer, in a `Callout` (`role="status"`): _Correct_ (success) or _Not quite_ (danger), each with an icon and text. It says what Lexora was looking for, the authored explanation (the matched mistake's, the pattern's note, or the sense's best-when), "Also accepted here: …" when the content accepts other answers, the next review ("Next review in 3 days"), and _How to use “term”_ to its language page. Answered options lock, and focus moves to _Continue_.
+- **Recurring mistake:** when a wrong answer makes the same mistake twice in 30 days, the feedback adds one emphasised line: "You've made this mistake 2 times in the last 30 days" (or "You typed “at” 2 times…"). Nothing else changes: no penalty, no extra review.
 - **Refusals:** an item already reviewed, no longer due, changed or retired shows an info `Callout` and is skipped, uncounted. A failed request, the rate limit ("You're going a little fast. Try again in a moment.") or an ended session keeps the answer and nothing advances.
 - **Focus and keyboard:** a typed exercise focuses its input (its label reads the sentence); a choice focuses the heading. Enter checks, then continues; 1–2 choose. There are no time limits.
 - **Summary:** "You reviewed n · m correct", built from the server's answers: each item with its verdict and next review, linked to its language page. _Review 5 more_ when more is due, and _Open language bank_.

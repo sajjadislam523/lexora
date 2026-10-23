@@ -9,7 +9,7 @@ import {
   type Box,
   type CardState,
 } from "./scheduler";
-import { nextReview, reviewStatus } from "./status";
+import { evidenceText, nextReview, nextReviewText, reviewStatus } from "./status";
 
 /** The Leitner scheduler (specification §10), with a fixed clock. */
 const SAVED = new Date("2026-10-22T09:00:00.000Z");
@@ -184,5 +184,22 @@ describe("nextReview", () => {
       nextReview(card(2, { dueAt: new Date(NOW.getTime() + 30 * 60 * 60 * 1000) }), NOW),
     ).toEqual({ due: false, days: 2 });
     expect(nextReview(schedule(card(4), "correct", NOW), NOW)).toEqual({ due: false, days: 30 });
+  });
+});
+
+describe("review wording", () => {
+  it("says when a card comes back, in whole days", () => {
+    expect(nextReviewText({ due: true })).toBe("Due now");
+    expect(nextReviewText({ due: false, days: 1 })).toBe("Next review in 1 day");
+    expect(nextReviewText({ due: false, days: 3 })).toBe("Next review in 3 days");
+  });
+
+  it("says how often a mistake recurred, quoting a typed answer", () => {
+    expect(evidenceText({ kind: "authored", wrong: "We realy on data.", times: 2 })).toBe(
+      "You’ve made this mistake 2 times in the last 30 days.",
+    );
+    expect(evidenceText({ kind: "typed", wrong: "at", times: 3 })).toBe(
+      "You typed “at” 3 times in the last 30 days.",
+    );
   });
 });

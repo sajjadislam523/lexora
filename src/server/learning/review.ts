@@ -9,12 +9,14 @@ import { nextReview, type NextReview } from "@/learning/status";
 import { languageHref } from "@/language/links";
 import { db } from "@/server/db/client";
 import { senseIdSchema } from "@/server/http/responses";
+import { describeEvidence, sameResponse, type MistakeEvidence } from "@/server/learning/evidence";
 import { loadPracticeMaterial, loadSenseNotes } from "@/server/repositories/language/practice";
 import {
   ensureCard,
   findAnswer,
   insertAnswer,
   lockCard,
+  recurringMistakes,
   reviewQueue,
   updateCard,
   type AnswerRow,
@@ -248,6 +250,8 @@ export type ReviewFeedback = {
   /** The language page, at this meaning. */
   href: string | null;
   nextReview: NextReview;
+  /** Set when this wrong answer makes a recurring mistake (§16): the same one twice in 30 days. */
+  evidence: MistakeEvidence | null;
 };
 
 /**
@@ -326,6 +330,13 @@ export async function answerReview(
   if (!("answer" in result)) return result;
 
   const { answer } = result;
+  // Evidence as of the answer itself, so a retry gets the same feedback as the first request.
+  const evidence =
+    answer.outcome === "incorrect"
+      ? ((await recurringMistakes(db, userId, [input.senseId], answer.reviewedAt))
+          .filter((recurring) => sameResponse(recurring, answer))
+          .map((recurring) => describeEvidence(recurring, material))[0] ?? null)
+      : null;
   // The exercise only if it's still the one answered (content can change between retries).
   const shown = exercise?.prompt.id === answer.exerciseId ? exercise : null;
   const pattern =
@@ -350,6 +361,7 @@ export async function answerReview(
         ? languageHref(notes.slug, { id: input.senseId, label: notes.label ?? undefined })
         : null,
       nextReview: nextReview({ dueAt: answer.dueAfter }, now),
+      evidence,
     },
   };
 }

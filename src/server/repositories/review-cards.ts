@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { Box, CardState } from "@/learning/scheduler";
@@ -343,4 +343,95 @@ export async function reviewQueue(
     .orderBy(...order, asc(savedSenses.senseId))
     .limit(options.limit);
   return rows.map((row) => ({ ...toState(row), senseId: row.senseId }));
+}
+
+// ── Personal mistake evidence (specification §16, D14) ───────────────────────────────────────
+
+/** How far back a wrong answer counts: 30 days of 24 hours, before `now` (exclusive). */
+export const EVIDENCE_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+/** How many times the same wrong answer must recur in the window. */
+export const EVIDENCE_THRESHOLD = 2;
+
+export type RecurringMistake = {
+  senseId: string;
+  /** The authored mistake the answers matched; null for a repeated unrecognised typed answer. */
+  mistakeId: string | null;
+  /** The repeated typed answer (normalised); null when every occurrence was a choice. */
+  answer: string | null;
+  /** The answer Lexora was looking for, as last shown. */
+  expected: string;
+  times: number;
+  lastAt: Date;
+};
+
+/**
+ * The learner's recurring mistakes on these senses at `now`: the same wrong response (the
+ * authored mistake it matched, otherwise the exact normalised typed answer) on the same sense
+ * at least twice in the 30 days before `now`, unless resolved — the sense's two latest answers
+ * both correct and both after the latest occurrence. Read from `review_log` only, so it counts
+ * only answers that were recorded (never a refused, duplicate or rate-limited request), and it
+ * outlives a removed save, as the log does. One statement.
+ */
+export async function recurringMistakes(
+  executor: Executor,
+  userId: string,
+  senseIds: readonly string[],
+  now: Date,
+): Promise<RecurringMistake[]> {
+  if (senseIds.length === 0) return [];
+  const until = now.toISOString();
+  const since = new Date(now.getTime() - EVIDENCE_WINDOW_MS).toISOString();
+  const rows = await executor.execute<{
+    sense_id: string;
+    mistake_id: string | null;
+    answer: string | null;
+    expected: string;
+    times: number;
+    last_at: string | Date;
+  }>(sql`
+    with wrong as (
+      select ${reviewLog.senseId} as sense_id,
+             coalesce(${reviewLog.mistakeId}, 'answer:' || ${reviewLog.answer}) as response,
+             ${reviewLog.mistakeId} as mistake_id, ${reviewLog.answer} as answer,
+             ${reviewLog.expected} as expected, ${reviewLog.reviewedAt} as reviewed_at
+      from ${reviewLog}
+      where ${reviewLog.userId} = ${userId}
+        and ${inArray(reviewLog.senseId, [...new Set(senseIds)])}
+        and ${reviewLog.outcome} = 'incorrect'
+        and (${reviewLog.mistakeId} is not null or ${reviewLog.answer} is not null)
+        and ${reviewLog.reviewedAt} > ${since}::timestamptz
+        and ${reviewLog.reviewedAt} <= ${until}::timestamptz
+    ), recurring as (
+      select sense_id, response, count(*)::int as times, max(reviewed_at) as last_at,
+             (array_agg(mistake_id order by reviewed_at desc))[1] as mistake_id,
+             (array_agg(answer order by reviewed_at desc) filter (where answer is not null))[1] as answer,
+             (array_agg(expected order by reviewed_at desc))[1] as expected
+      from wrong
+      group by sense_id, response
+      having count(*) >= ${EVIDENCE_THRESHOLD}
+    )
+    select sense_id, mistake_id, answer, expected, times, last_at
+    from recurring r
+    where (
+      select count(*) from (
+        select l.${sql.identifier("outcome")} as outcome, l.${sql.identifier("reviewed_at")} as reviewed_at
+        from ${reviewLog} l
+        where l.${sql.identifier("user_id")} = ${userId}
+          and l.${sql.identifier("sense_id")} = r.sense_id
+          and l.${sql.identifier("reviewed_at")} <= ${until}::timestamptz
+        order by l.${sql.identifier("reviewed_at")} desc, l.${sql.identifier("review_number")} desc
+        limit 2
+      ) latest
+      where latest.outcome = 'correct' and latest.reviewed_at > r.last_at
+    ) < 2
+    order by last_at desc, sense_id, response
+  `);
+  return rows.map((row) => ({
+    senseId: row.sense_id,
+    mistakeId: row.mistake_id,
+    answer: row.answer,
+    expected: row.expected,
+    times: Number(row.times),
+    lastAt: new Date(row.last_at),
+  }));
 }

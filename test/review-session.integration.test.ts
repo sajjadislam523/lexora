@@ -4,6 +4,7 @@ import { and, count, eq, inArray } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import type { AnswerInput } from "@/server/learning/review";
+import type { RecurringMistake } from "@/server/repositories/review-cards";
 
 /**
  * Review sessions and answers against PostgreSQL (Phase 5 Step 5; specification §14, §15): which
@@ -22,6 +23,8 @@ describe.skipIf(!hasDatabase)("review sessions and answers (PostgreSQL)", () => 
     db: typeof import("@/server/db/client").db;
     schema: typeof import("@/server/db/schema");
     review: typeof import("@/server/learning/review");
+    cards: typeof import("@/server/repositories/review-cards");
+    bank: typeof import("@/server/learning/bank");
   };
   const run = randomUUID().slice(0, 8);
   const sourceId = `it-source-${run}`;
@@ -76,9 +79,14 @@ describe.skipIf(!hasDatabase)("review sessions and answers (PostgreSQL)", () => 
       db: (await import("@/server/db/client")).db,
       schema: await import("@/server/db/schema"),
       review: await import("@/server/learning/review"),
+      cards: await import("@/server/repositories/review-cards"),
+      bank: await import("@/server/learning/bank"),
     };
     const { db, schema } = mod;
-    for (const key of ["empty", "order", "limit", "a", "b", "c", "d", "e", "f", "g", "h", "i"]) {
+    for (const key of [
+      ...["empty", "order", "limit", "a", "b", "c", "d", "e", "f", "g", "h", "i"],
+      ...["ev1", "ev2", "ev3", "ev4", "ev5", "ev6", "ev7", "flow"],
+    ]) {
       user(key);
     }
     await db
@@ -315,6 +323,7 @@ describe.skipIf(!hasDatabase)("review sessions and answers (PostgreSQL)", () => 
           senseLabel: "need",
           href: `/language/${itemId}#sense-main`,
           nextReview: { due: false, days: 1 },
+          evidence: null,
         },
       });
       expect(await cardOf(learner)).toMatchObject({ box: 1, reviews: 1, lapses: 0 });
@@ -469,6 +478,173 @@ describe.skipIf(!hasDatabase)("review sessions and answers (PostgreSQL)", () => 
       expect(first!.outcome).toBe(second!.outcome);
       expect(await logs(learner)).toBe(1);
       expect(await cardOf(learner)).toMatchObject({ reviews: 1 });
+    });
+  });
+
+  describe("personal mistake evidence", () => {
+    const OF = `${sense("main")}:of`;
+    const SPELLING = `${sense("main")}:spelling`;
+    let number = 0;
+    /** One recorded answer, written straight to the log at a known time. */
+    async function logged(
+      userId: string,
+      reviewedAt: Date,
+      answer: {
+        outcome?: "correct" | "incorrect";
+        mistakeId?: string | null;
+        typed?: string | null;
+      },
+      key = "main",
+    ) {
+      const outcome = answer.outcome ?? "incorrect";
+      await mod.db.insert(mod.schema.reviewLog).values({
+        userId,
+        cardId: "00000000-0000-4000-8000-000000000000",
+        senseId: sense(key),
+        reviewNumber: ++number,
+        exerciseId: TERM,
+        exerciseType: answer.typed === null ? "mistake" : "term",
+        outcome,
+        answerMatch:
+          outcome === "correct" ? "expected" : answer.mistakeId ? "mistake" : "unrecognised",
+        answer: answer.typed === undefined ? "realy" : answer.typed,
+        expected: "rely",
+        mistakeId: answer.mistakeId ?? null,
+        boxBefore: 1,
+        boxAfter: outcome === "correct" ? 2 : 1,
+        dueAfter: reviewedAt,
+        reviewedAt,
+      });
+    }
+    const recurring = (userId: string, now = NOW, keys = ["main"]) =>
+      mod.cards.recurringMistakes(mod.db, userId, keys.map(sense), now);
+    const summary = (rows: RecurringMistake[]) =>
+      rows.map((r) => [r.mistakeId, r.answer, r.times, r.lastAt.toISOString()]);
+
+    it("needs the same mistake twice in 30 days, and keeps one record as it recurs", async () => {
+      const learner = user("ev1");
+      await logged(learner, at(-10), { mistakeId: SPELLING });
+      expect(await recurring(learner)).toEqual([]); // once is not evidence
+
+      await logged(learner, at(-3), { mistakeId: SPELLING });
+      expect(summary(await recurring(learner))).toEqual([
+        [SPELLING, "realy", 2, at(-3).toISOString()],
+      ]);
+
+      await logged(learner, at(-1), { mistakeId: SPELLING });
+      expect(summary(await recurring(learner))).toEqual([
+        [SPELLING, "realy", 3, at(-1).toISOString()],
+      ]);
+    });
+
+    it("counts only the 30 days before now, by timestamp", async () => {
+      const learner = user("ev2");
+      await logged(learner, at(-30), { mistakeId: OF, typed: null }); // exactly 30 days: out
+      await logged(learner, at(-1), { mistakeId: OF, typed: null });
+      await logged(learner, at(1), { mistakeId: OF, typed: null }); // after now: not yet
+      expect(await recurring(learner)).toEqual([]);
+      // A millisecond later, the oldest one is inside the window.
+      const nearly = new Date(NOW.getTime() - 1);
+      expect(summary(await recurring(learner, nearly))).toEqual([
+        [OF, null, 2, at(-1).toISOString()],
+      ]);
+    });
+
+    it("keys a mistake by the authored mistake, or by the exact typed answer", async () => {
+      const learner = user("ev3");
+      // Typing the authored mistake and choosing it are the same mistake.
+      await logged(learner, at(-5), { mistakeId: SPELLING });
+      await logged(learner, at(-4), { mistakeId: SPELLING, typed: null });
+      // Two different unrecognised answers are two mistakes, neither repeated.
+      await logged(learner, at(-3), { typed: "trust" });
+      await logged(learner, at(-2), { typed: "count" });
+      // The same unrecognised answer twice is.
+      await logged(learner, at(-2), { typed: "lean" });
+      await logged(learner, at(-1), { typed: "lean" });
+      // Correct answers never count.
+      await logged(learner, at(-6), { outcome: "correct", typed: "rely" });
+      await logged(learner, at(-6), { outcome: "correct", typed: "rely" });
+      expect(summary(await recurring(learner))).toEqual([
+        [null, "lean", 2, at(-1).toISOString()],
+        [SPELLING, "realy", 2, at(-4).toISOString()],
+      ]);
+    });
+
+    it("is resolved by the sense's two latest answers being correct, after it", async () => {
+      const learner = user("ev4");
+      await logged(learner, at(-5), { mistakeId: OF, typed: null });
+      await logged(learner, at(-4), { mistakeId: OF, typed: null });
+      await logged(learner, at(-3), { outcome: "correct", typed: "rely" });
+      expect(await recurring(learner)).toHaveLength(1); // one correct answer isn't enough
+      await logged(learner, at(-2), { outcome: "correct", typed: "rely" });
+      expect(await recurring(learner)).toEqual([]);
+      // Made again, it is back: its latest occurrence is after the correct answers.
+      await logged(learner, at(-1), { mistakeId: OF, typed: null });
+      expect(summary(await recurring(learner))).toEqual([[OF, null, 3, at(-1).toISOString()]]);
+    });
+
+    it("belongs to one learner and one sense", async () => {
+      const [first, second] = [user("ev5"), user("ev6")];
+      await logged(first, at(-2), { typed: "lean" });
+      await logged(first, at(-1), { typed: "lean" });
+      await logged(second, at(-3), { typed: "lean" });
+      await logged(first, at(-2), { typed: "lean" }, "b1");
+      expect(await recurring(second)).toEqual([]);
+      expect(await recurring(first, NOW, ["b1"])).toEqual([]);
+      expect((await recurring(first, NOW, ["main", "b1"])).map((r) => r.senseId)).toEqual([
+        sense("main"),
+      ]);
+      await logged(second, at(-1), { typed: "lean" });
+      expect((await recurring(second)).map((r) => r.times)).toEqual([2]);
+    });
+
+    it("appears in feedback on the answer that makes it recur, and in the bank, until resolved", async () => {
+      const learner = user("flow");
+      await save(learner, "main");
+      const answer = (overrides: Partial<AnswerInput>, now: Date) =>
+        mod.review.answerReview(learner, input(overrides), now);
+
+      // Review 1: the authored spelling mistake, typed. Once is not evidence.
+      const first = await answer({ answer: "realy" }, NOW);
+      expect(first).toMatchObject({
+        status: "recorded",
+        feedback: { match: "mistake", evidence: null },
+      });
+      // Reviews 2 and 3 are correct; review 4 is "which is correct?" on the same mistake (b is wrong).
+      await answer({ exerciseId: PREPOSITION, expectedReviews: 1, answer: "on" }, at(1));
+      await answer({ exerciseId: MISTAKE_OF, expectedReviews: 2, answer: "a" }, at(4));
+      const again = { exerciseId: `mistake:${SPELLING}`, expectedReviews: 3, answer: "b" };
+      const evidence = {
+        kind: "authored",
+        wrong: "We realy on data.",
+        right: "We rely on data.",
+        why: "Rely is spelled with one l and no a.",
+        times: 2,
+      };
+      expect(await answer(again, at(11))).toMatchObject({
+        status: "recorded",
+        feedback: { outcome: "incorrect", evidence },
+      });
+      // A retry is the same answer: the same evidence, not a third time.
+      expect(await answer(again, at(11, 1))).toMatchObject({
+        status: "duplicate",
+        feedback: { evidence },
+      });
+      expect(await logs(learner)).toBe(4);
+
+      const bankRow = async (now: Date) =>
+        (await mod.bank.loadBankPage(learner, 1, now)).rows.find(
+          (r) => r.senseId === sense("main"),
+        );
+      expect(await bankRow(at(11))).toMatchObject({ missed: 2, mistakes: [evidence] });
+
+      // Two correct answers after it resolve it; the wrong answers still count as missed.
+      expect((await answer({ expectedReviews: 4 }, at(12))).status).toBe("recorded");
+      expect((await bankRow(at(12)))!.mistakes).toHaveLength(1);
+      // Box 2 now: due three days later.
+      const resolving = { exerciseId: PREPOSITION, expectedReviews: 5, answer: "on" };
+      expect((await answer(resolving, at(15))).status).toBe("recorded");
+      expect(await bankRow(at(15))).toMatchObject({ missed: 2, mistakes: [] });
     });
   });
 });

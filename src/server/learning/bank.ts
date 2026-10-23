@@ -6,7 +6,13 @@ import { languageHref } from "@/language/links";
 import type { ItemKind } from "@/language/schema/vocabulary";
 import { db } from "@/server/db/client";
 import { loadPracticeMaterial } from "@/server/repositories/language/practice";
-import { bankCounts, listBank, type BankCounts } from "@/server/repositories/review-cards";
+import { describeEvidence, type MistakeEvidence } from "@/server/learning/evidence";
+import {
+  bankCounts,
+  listBank,
+  recurringMistakes,
+  type BankCounts,
+} from "@/server/repositories/review-cards";
 
 /**
  * The language bank (specification §17): the learner's saved senses, a page at a time, each
@@ -31,6 +37,10 @@ export type BankRow = {
   /** Null for a retired sense: it isn't reviewed any more. */
   nextReview: NextReview | null;
   replacement: { term: string; senseLabel: string | null; href: string } | null;
+  /** Wrong answers on this card, when there have been at least two ("Missed 2 times"). */
+  missed: number | null;
+  /** Recurring mistakes on this sense (§16), most recent first. */
+  mistakes: MistakeEvidence[];
 };
 
 export type BankPage = {
@@ -52,10 +62,13 @@ export async function loadBankCounts(userId: string, now: Date) {
   return { counts, pages: Math.max(1, Math.ceil(counts.total / BANK_PAGE_SIZE)) };
 }
 
+/** A card with this many wrong answers needs more review: the bank says "Missed n times" (§16). */
+const MISSED_FROM = 2;
+
 /**
- * One page of the bank at `now`: the counts (unless given), one page of rows, and the practice
+ * One page of the bank at `now`: the counts (unless given), one page of rows, the practice
  * material of the page's published senses (four statements) for examples, patterns and whether
- * any exercise exists.
+ * any exercise exists, and their recurring mistakes (one statement).
  */
 export async function loadBankPage(
   userId: string,
@@ -72,9 +85,11 @@ export async function loadBankPage(
           offset: (Math.min(page, pages) - 1) * BANK_PAGE_SIZE,
         });
   const live = entries.filter((entry) => !entry.retired).map((entry) => entry.senseId);
-  const materials = new Map<string, PracticeMaterial>(
-    (await loadPracticeMaterial(db, live)).map((material) => [material.senseId, material]),
-  );
+  const [materialRows, recurring] = await Promise.all([
+    loadPracticeMaterial(db, live),
+    recurringMistakes(db, userId, live, now),
+  ]);
+  const materials = new Map<string, PracticeMaterial>(materialRows.map((m) => [m.senseId, m]));
 
   const rows = entries.map((entry): BankRow => {
     const material = materials.get(entry.senseId);
@@ -109,6 +124,10 @@ export async function loadBankPage(
             }),
           }
         : null,
+      missed: entry.card.lapses >= MISSED_FROM ? entry.card.lapses : null,
+      mistakes: recurring
+        .filter((r) => r.senseId === entry.senseId)
+        .flatMap((r) => describeEvidence(r, materials.get(entry.senseId)) ?? []),
     };
   });
 

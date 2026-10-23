@@ -6,10 +6,11 @@ import { Callout } from "@/components/lexora/callout";
 import { CategoryBadge } from "@/components/lexora/category-badge";
 import { EmptyState } from "@/components/lexora/empty-state";
 import { HighlightedText } from "@/components/lexora/highlighted-text";
+import { MistakeRow } from "@/components/lexora/mistake-row";
 import { StatusBadge } from "@/components/lexora/status-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { nextReviewText } from "@/learning/status";
+import { evidenceText, nextReviewText } from "@/learning/status";
 import { cn } from "@/lib/utils";
 import { bankSection, type BankPage, type BankRow } from "@/server/learning/bank";
 
@@ -76,6 +77,9 @@ function Row({ row }: { row: BankRow }) {
               {nextReviewText(row.nextReview)}
             </span>
           ) : null}
+          {row.missed ? (
+            <span className="type-caption text-muted-foreground">Missed {row.missed} times</span>
+          ) : null}
           {row.replacement ? (
             <span className="type-caption text-muted-foreground">
               Replaced by{" "}
@@ -90,6 +94,23 @@ function Row({ row }: { row: BankRow }) {
             </span>
           ) : null}
         </div>
+        {row.mistakes.length > 0 ? (
+          <ul
+            aria-label={`Your recurring mistakes with “${name}”`}
+            className="mt-2.5 rounded-md bg-muted"
+          >
+            {row.mistakes.map((mistake) => (
+              <li key={`${mistake.kind}:${mistake.wrong}`}>
+                <MistakeRow
+                  wrong={mistake.wrong}
+                  right={mistake.right}
+                  type="Your mistake"
+                  why={[mistake.why, evidenceText(mistake)].filter(Boolean).join(" ")}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       <RemoveButton senseId={row.senseId} label={name} />
     </li>
