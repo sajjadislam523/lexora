@@ -70,3 +70,32 @@ export async function loadPracticeMaterial(
     senseIds,
   );
 }
+
+export type SenseNotes = { senseId: string; slug: string; label: string | null; bestWhen: string };
+
+/**
+ * What review feedback adds to the practice material: the item's slug (for the language page
+ * link) and the sense's authored best-when. Published senses only; one statement.
+ */
+export async function loadSenseNotes(
+  db: Database,
+  senseIds: readonly string[],
+): Promise<SenseNotes[]> {
+  if (senseIds.length === 0) return [];
+  return db
+    .select({
+      senseId: senses.id,
+      slug: languageItems.slug,
+      label: senses.label,
+      bestWhen: senses.bestWhen,
+    })
+    .from(senses)
+    .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+    .where(
+      and(
+        inArray(senses.id, [...new Set(senseIds)]),
+        eq(senses.status, "published"),
+        eq(languageItems.status, "published"),
+      ),
+    );
+}

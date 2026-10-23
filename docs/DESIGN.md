@@ -521,7 +521,7 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 The learner's saved meanings and when each comes back (Phase 5 Step 4).
 
 - **Header:** `PageHeader`: "Language bank", "Everything you've saved, and when it comes back."
-- **Summary:** one text line, not tiles: "12 meanings · 3 due now · 2 new · 5 learning · 2 known".
+- **Summary:** one text line, not tiles: "12 meanings · 3 due now · 2 new · 5 learning · 2 known". Beside it, a primary _Start review_ with "n due" (due plus new) links to Practice, only when something is.
 - **Sections:** in order, each an `h2` and one bordered list (`rounded-lg border bg-card p-1`, rows divided by `border-subtle`):
   - _Ready to review_: Due, then New;
   - _Coming up_: Learning, Known, and senses with no exercise yet, by when they come back;
@@ -537,20 +537,24 @@ The learner's saved meanings and when each comes back (Phase 5 Step 4).
   - **Loading:** a skeleton of the list inside the page.
   - **Error:** a danger `Callout` with _Try again_.
 - **Pagination:** 50 per page with _Previous_ · "Page n of m" · _Next_, as in browse.
-- **Not here:** filters, sorting controls, search, notes, or a review button. The review starts in Practice (Step 5).
+- **Not here:** filters, sorting controls, search or notes.
 
 ### 10.3 Practice (`/practice`)
 
-- **Intro:** the five modes as numbered rows, each with a one-line purpose. Choosing a row jumps straight to that mode.
+The learner's review session (Phase 5 Step 5): up to five due meanings, one exercise each, checked and recorded by the server.
+
 - **Session:**
-  - one task at a time at `max-w-reading`
-  - "Question n of 5 · mode" with a `ProgressTrack` above, _End session_ on the right
-  - the prompt as the card heading, which receives focus on each new question
-- **Retrieval first:** prepositions are **typed**, not chosen. Multi-select is used for collocations.
-- **Feedback:** immediate, in a `Callout` (Correct · Also natural · Not quite). It explains why, reveals the best answer and links to the item. Answered options lock, and focus moves to _Continue_.
-- **Keyboard:** number keys choose, Enter checks or continues.
-- **Summary:** "You retrieved n of 5", a calm per-mode list, and _Worth revisiting_ as `LanguageRow`s.
-- **No XP, streaks, hearts or confetti.**
+  - one exercise at a time at `max-w-reading`, no intro screen;
+  - "Review n of 5 · mode" with a `ProgressTrack` above, _End session_ on the right;
+  - the mode as the card heading (`h1`): _Complete the sentence_, _Type the preposition_, _Which is correct?_
+- **Complete the sentence / Type the preposition:** the cue (the definition, with the meaning label when the item has several; or the pattern with its preposition hidden, as `type-mono`), the sentence in a `bg-muted` well as a `GapSentence`, and one input with _Check_. The input's label carries the sentence ("Missing word in: There was a … increase…"), and "2 words" is shown under it when the blank holds more than one. The headword isn't shown before answering: it would be the answer.
+- **Which is correct?:** the term (serif) and meaning label, then the two authored versions as `ChoiceOption`s in the language voice.
+- **Feedback** comes only from the server's answer, in a `Callout` (`role="status"`): _Correct_ (success) or _Not quite_ (danger), each with an icon and text. It says what Lexora was looking for, the authored explanation (the matched mistake's, the pattern's note, or the sense's best-when), "Also accepted here: …" when the content accepts other answers, the next review ("Next review in 3 days"), and _How to use “term”_ to its language page. Answered options lock, and focus moves to _Continue_.
+- **Refusals:** an item already reviewed, no longer due, changed or retired shows an info `Callout` and is skipped, uncounted. A failed request, the rate limit ("You're going a little fast. Try again in a moment.") or an ended session keeps the answer and nothing advances.
+- **Focus and keyboard:** a typed exercise focuses its input (its label reads the sentence); a choice focuses the heading. Enter checks, then continues; 1–2 choose. There are no time limits.
+- **Summary:** "You reviewed n · m correct", built from the server's answers: each item with its verdict and next review, linked to its language page. _Review 5 more_ when more is due, and _Open language bank_.
+- **States:** nothing saved → `EmptyState` "Nothing to review yet" with _Find language_; nothing due → "Nothing is due right now", with the next review when there is one, _Open language bank_ and _Find language_; unavailable → a danger `Callout` with _Try again_.
+- **No XP, streaks, hearts, points or confetti.**
 
 ### 10.4 Language detail (`/language/[slug]`)
 

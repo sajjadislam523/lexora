@@ -1342,6 +1342,17 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** an answer persists, reschedules and logs exactly once; feedback is authored; no demo questions remain.
 - **Dependencies:** Steps 3a and 4.
 - **Must not change:** the golden suite; other routes.
+- **As built (23 October 2026):**
+  - **The answer is checked inside the locked transaction.** `recordAnswer` takes a pending answer whose check runs after the lock, the duplicate check and the due check, against the exercise regenerated for `expectedReviews` (§15 step 4.6). So a retired sense is `retired` and a retry is `duplicate`, never `exercise_changed`. An answer that isn't one (`!!!`, or `c` for a choice) is 400 `invalid_answer` and records nothing.
+  - **Typed prompts leave out the headword.** For a completion it is the answer, and for a pattern item it holds the preposition. A "which is correct?" keeps it, since both options contain it. Sense and exercise ids are authored ids and do name the item; they're needed to answer and grant nothing.
+  - **The feedback response** is `{ duplicate, outcome, match, expected, accepted, explanation, pattern, term, senseLabel, href, nextReview }`, with `nextReview` as the bank shows it ("Next review in 3 days"). Copy follows §12; the full sentence is the prompt's, filled by the client.
+  - **No intro screen.** The first exercise shows at once. A typed exercise focuses its input, whose label carries the sentence; a choice focuses the heading (§25 says the heading for both).
+  - **Practice renders in one pass, without a Suspense skeleton.** The exercise is then in the HTML that `e2e/accessibility.e2e.ts` checks.
+  - **"Review 5 more"** appears when the session's read found more than five due exercises. It reloads, and the server reselects.
+  - **The bank gets _Start review_** ("n due", counting due and new), as §17 describes.
+  - **Small widenings:** `isDue` and `nextReview` take any `{ dueAt }`, a type-only change; `nextReviewText` moved into `status.ts` so the bank and practice share one wording; `guarded` logs the error class, not its message.
+  - **Prototype links left alone:** the prototype Home and the design-system showcase still link to `/practice?step=n`. The parameter is now ignored, and Step 7 replaces Home.
+  - **No migration.**
 
 ### Step 6 — Personal mistake evidence
 

@@ -1,9 +1,8 @@
 import { getRequestSession } from "@/server/auth/session";
 import { enforceRateLimit } from "@/server/http/rate-limit";
+import { guarded, json, senseIdSchema, unauthenticated } from "@/server/http/responses";
 import { isSameOrigin } from "@/server/http/same-origin";
 import { removeSavedSense, saveSense } from "@/server/repositories/saved-senses";
-
-import { guarded, json, senseIdSchema, unauthenticated } from "../http";
 
 /**
  * Save (PUT) or remove (DELETE) one sense in the signed-in learner's language bank.

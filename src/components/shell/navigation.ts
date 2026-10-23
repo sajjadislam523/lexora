@@ -60,9 +60,8 @@ export const PRIMARY_NAV: NavEntry[] = [
     href: "/practice",
     label: "Practice",
     icon: Dumbbell,
-    description: "Short exercises built from your language bank.",
-    status: "Prototype session. Real exercises are generated in Phase 6.",
-    prototype: "Sample session — answers aren’t saved",
+    description: "Short reviews of the language you’ve saved, when each one is due.",
+    status: "Available.",
   },
   {
     id: "writing",

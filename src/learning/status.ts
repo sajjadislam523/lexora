@@ -31,7 +31,13 @@ export function reviewStatus(
  */
 export type NextReview = { due: true } | { due: false; days: number };
 
-export function nextReview(card: CardState, now: Date): NextReview {
+export function nextReview(card: Pick<CardState, "dueAt">, now: Date): NextReview {
   if (isDue(card, now)) return { due: true };
   return { due: false, days: Math.ceil((card.dueAt.getTime() - now.getTime()) / DAY_MS) };
+}
+
+/** "Due now", "Next review in 1 day", "Next review in 3 days" — whole days, no timezones. */
+export function nextReviewText(next: NextReview) {
+  if (next.due) return "Due now";
+  return `Next review in ${next.days} ${next.days === 1 ? "day" : "days"}`;
 }

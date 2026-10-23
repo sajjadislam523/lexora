@@ -9,7 +9,7 @@ import { HighlightedText } from "@/components/lexora/highlighted-text";
 import { StatusBadge } from "@/components/lexora/status-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { NextReview } from "@/learning/status";
+import { nextReviewText } from "@/learning/status";
 import { cn } from "@/lib/utils";
 import { bankSection, type BankPage, type BankRow } from "@/server/learning/bank";
 
@@ -20,12 +20,6 @@ const SECTIONS = [
   { id: "coming", title: "Coming up" },
   { id: "retired", title: "No longer reviewed" },
 ] as const;
-
-/** "Due now", "Next review in 1 day", "Next review in 3 days" — whole days, no timezones. */
-export function nextReviewText(next: NextReview) {
-  if (next.due) return "Due now";
-  return `Next review in ${next.days} ${next.days === 1 ? "day" : "days"}`;
-}
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
@@ -165,9 +159,21 @@ export function BankView({ bank }: { bank: BankPage }) {
       />
     );
   }
+  // Ready to review: due cards and new saves (§17). Practice picks the ones with an exercise.
+  const ready = bank.counts.due + bank.counts.new;
   return (
     <div className="space-y-8">
-      <p className="type-body text-muted-foreground">{summary(bank.counts)}</p>
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <p className="type-body text-muted-foreground">{summary(bank.counts)}</p>
+        {ready > 0 ? (
+          <Button asChild>
+            <Link href="/practice">
+              Start review
+              <span className="type-caption opacity-80">{ready} due</span>
+            </Link>
+          </Button>
+        ) : null}
+      </div>
       {SECTIONS.map((section) => {
         const rows = bank.rows.filter((row) => bankSection(row.status) === section.id);
         if (rows.length === 0) return null;

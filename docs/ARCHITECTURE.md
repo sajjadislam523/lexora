@@ -1,6 +1,6 @@
 # Lexora Architecture
 
-> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); built so far: hardening, the scheduler and review data model, the exercise generator with its accept lists, and the language bank). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
+> Technical architecture, boundaries, and decisions. Status: **Phase 4 — Search Depth released (`v0.4.0`); Phase 5 — Retrieval Loop in progress** ([approved specification](specs/phase-5-retrieval-loop.md); built so far: hardening, the scheduler and review data model, the exercise generator with its accept lists, the language bank and the review session). Real accounts and sessions, curated language content in PostgreSQL, a deterministic search engine and sense-level saving exist. Anything marked _Target_ or _Planned_ is agreed direction, not built code.
 
 ---
 
@@ -87,7 +87,7 @@ lexora/
     │   ├── search/               #   classify, match, rank, service: the deterministic search pipeline
     │   ├── examples.ts           #   Client-safe search modes and example searches
     │   └── index.ts              #   Server-only composition root (repository + search service)
-    ├── demo/                     # Sample learner data for the prototype dashboard and practice screens (NOT language content)
+    ├── demo/                     # Sample learner data for the prototype dashboard (NOT language content)
     ├── server/                   # Server-only (import "server-only")
     │   ├── env.ts · site-url.ts · app-url.ts  # Zod-validated environment; public origin; app URL per environment
     │   ├── auth/                 #   Better Auth config, session helpers, account-email links
@@ -446,8 +446,15 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
   - saved senses left-joined to their cards (a save without one reads as new), ordered in SQL as §14 and §17 describe;
   - statuses from `reviewStatus`, next reviews from `nextReview`; whether a sense has an exercise comes from its practice material;
   - one statement for the counts, one for a page of 50 rows, four for the page's practice material;
-  - removing goes through the existing save flow; nothing in the bank schedules or writes.
-- **Still to come in Phase 5:** the review endpoint and session (Step 5), mistake evidence (Step 6), an honest Home (Step 7), and the save-flow copy (Step 8).
+  - removing goes through the existing save flow; nothing in the bank schedules or writes;
+  - _Start review_ (with the number ready) links to `/practice` when something is due or new.
+- **Review session** (`/practice`; `loadReviewSession` / `answerReview` in `src/server/learning/review.ts`, `reviewQueue` in `review-cards.ts`):
+  - a session is up to five due senses that have an exercise, in §14 order (reviewed and due by due time, then new by save time, ties by sense ID), from one ten-row read plus four statements of practice material. Reading creates no card; the first answer does;
+  - the browser gets prompts only: no keys, no card ids, and no headword on a typed exercise, where it would be the answer. Sense and exercise ids are authored ids, so they do name the item;
+  - `POST /api/review/answers` (route handler, D21): same origin → session → `review_answer` limit (30 a minute) → a strict Zod body of `senseId`, `exerciseId`, `expectedReviews` and `answer` (≤ 2 KB) → `answerReview`. Inside `recordAnswer`'s transaction, with the card locked, the exercise is regenerated for `expectedReviews` and the answer checked (`exercise_changed` and `invalid_answer` record nothing), then scheduled and logged once. Responses: 200 (with `duplicate: true` for a retry), 400, 401, 403, 404 `not_saved`, 409 `retired` / `stale` / `not_due` / `exercise_changed`, 429, 503;
+  - feedback is built from the recorded answer and authored content only (the matched mistake's explanation, the pattern's note, or the sense's best-when); the UI never decides correctness;
+  - `json`, `guarded` and `unauthenticated` now live in `src/server/http/responses.ts`, shared by both handlers. The demo session (`src/demo/practice.ts`, `?step=`) is gone (D19).
+- **Still to come in Phase 5:** mistake evidence (Step 6), an honest Home (Step 7), and the save-flow copy (Step 8).
 
 - **Mastery** is derived from review history (recall success over spaced intervals), never from views.
 - **Scheduler (earlier note):** FSRS (`ts-fsrs`) was the leading option over SM-2. Either way it's a pure function: `(card state, rating, now) → next state`.
@@ -562,3 +569,4 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 | 81  | 2026-10-22 | Answers accept only the expected form, the item's other authored forms and authored `practice.accept` lists on examples; relations never imply acceptance; normalisation is case, apostrophes, spaces and end punctuation only                                                                                              | Phase 5 D5, D8. Correctness comes from content; owner confirmed generating every safely located blank, with the Step 3b accept-list review before any learner sees one                            |
 | 82  | 2026-10-22 | “Which is correct?” keeps punctuation-only mistakes; it skips a mistake only when both versions read the same as written                                                                                                                                                                                                    | The choice shows the authored sentences, where a missing comma is visible; spec §12.3 compared normalised text, which would have hidden 4 mistakes                                                |
 | 83  | 2026-10-23 | Language bank: sections and SQL order from spec §14/§17, no filters, 50 per page, counts read before streaming so a page past the end redirects; no review button until Practice is real (Step 5); next review in whole days                                                                                                | Spec §17. One truthful view of saved language from existing state; a review button now would lead to the labelled prototype                                                                       |
+| 84  | 2026-10-23 | Review session: `/practice` replaced by up to five due exercises from authored content; answers through `POST /api/review/answers`, checked inside the locked transaction against the exercise regenerated for `expectedReviews`; typed prompts omit the headword; practice renders without a Suspense boundary             | Spec §14, §15, D11, D19, D21. Server-authoritative and once-only; rendering in one pass keeps the exercise in the HTML the accessibility suite checks                                             |
