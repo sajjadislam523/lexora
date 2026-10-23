@@ -375,8 +375,8 @@ export function ComponentsSection() {
           <Tile
             tone="highlight"
             icon={Sparkles}
-            title="Today’s focus"
-            description="12 prepositions are due"
+            title="Ready to review"
+            description="3 meanings are ready"
             href="#components"
           />
           <Tile

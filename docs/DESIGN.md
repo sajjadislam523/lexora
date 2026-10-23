@@ -464,17 +464,22 @@ Components for language and practice. They are presentational and take data as p
 
 ## 10. Screen patterns
 
-The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and the components above. Every prototype screen says what is sample data and what isn't stored.
+The core screens. They reuse the shell, `PageContainer`, `PageHeader` and the components above. Any prototype screen must say what is sample data and what isn't stored; none remains.
 
-### 10.1 Dashboard (`/home`)
+### 10.1 Home (`/home`)
 
-- **Header:** a sample-data badge, "Welcome back", this week's focus, then _Find language_ (outline) and _Start today's practice_ (primary).
+The learner's starting point (Phase 5 Step 7): only what is true for this learner, each line changing what they do next.
+
+- **Header:** "Welcome back, {first name}" and one line: "3 meanings are ready to review." or "Nothing is due right now. Your next review is in 2 days." Actions: _Find language_ (outline) and, when something is ready, _Start review_ (primary).
 - **Verification reminder:** only while the email is unverified, an info `Callout` under the header: "Verify your email when it suits you", the address the link went to, "Everything in Lexora works in the meantime", and a link to Settings for a new one. It never blocks anything and disappears once the address is verified.
-- **Today's focus:** the single **highlighter panel** on the page. It holds the review count and time, a `ProgressTrack`, _Continue review_, and up to three "needs attention" rows (category dot + reason) on `bg-card/70`.
-- **Continue learning:** `LanguageRow`s with a usage line, not definitions.
-- **Recent mistakes:** `MistakeRow`s, each with a next step (practise, or find alternatives).
-- **Quick actions:** a compact link list in the side column from `lg`.
-- **No metric tiles, charts or streaks.**
+- **Ready to review:** the single **highlighter panel**: "n meanings ready now" with _Start review_, or "Nothing is due right now" with the next review and _Open language bank_. "Ready" is due plus new, as the bank counts it.
+- **Your language bank:** one text line, no tiles and no zeros: "12 saved · 5 learning · 2 known", with _Open language bank_.
+- **Recurring mistakes:** up to three `MistakeRow`s, the most recent first: the wrong → right versions, the authored explanation, "You've made this mistake 2 times in the last 30 days", and _Open “term”_. Hidden when there are none.
+- **Recently saved:** up to four `LanguageRow`s (term, kind, best-when line, status), newest first. Hidden for an empty bank.
+- **Quick actions:** _Find language_ and _Open language bank_ ("n meanings saved"), a compact list in the side column from `lg`.
+- **Empty bank:** "Welcome to Lexora", "Save language from the Finder to start reviewing it.", _Find language_, and one highlighter panel saying what the bank does. No counts.
+- **Unavailable:** a danger `Callout` with _Try again_; never stand-in data.
+- **Not here:** weekly focus, weak areas, minutes, "reviewed today", percentages, progress bars, charts or streaks.
 
 ### 10.2 Language Finder (`/finder`) and Explore (`/explore`)
 

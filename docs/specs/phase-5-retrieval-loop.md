@@ -1378,6 +1378,14 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** no sample data anywhere in the app.
 - **Dependencies:** Steps 5 and 6.
 - **Must not change:** the verification reminder; settings.
+- **As built (23 October 2026):**
+  - **Routes unchanged, as the owner chose over the Step 7 prompt:** Home stays `/home`, the public landing stays `/`, the Finder `/finder`. The primary navigation is Home, Language Finder, Language bank, Practice, Writing Lab and Speaking Lab. Progress moved to `HIDDEN_NAV` (out of the sidebar and command palette, D20), and `/progress` stays a placeholder whose status now says "a later phase".
+  - **Data:** `loadHome` (`src/server/learning/home.ts`) reads `bankCounts`, the soonest upcoming review (`reviewQueue`), the four latest saves (`recentlySaved`) and the recurring mistakes over all the learner's senses (`recurringMistakes(…, null, …)`) in parallel. Then it loads the practice material and slugs of the senses those name (five batched statements), nine in all. The ≤ 3 target counted neither each row's real status (which needs practice material, as in the bank) nor the mistake text read from content.
+  - **"Ready" is due plus new by schedule,** as in the bank. The next review is given only when nothing is ready.
+  - **First use:** "Welcome to Lexora", the §18 header line, _Find language_ and one panel on what the bank does. A returning learner sees "Welcome back". A failed read shows a danger `Callout`, never stand-in data.
+  - **Recurring mistakes and Recently saved are hidden when empty,** as §18 says: no empty-state message.
+  - **Removed:** `src/demo/` (only the prototype dashboard used it), its ESLint patterns, the `Mastered` badge (the fixture now says Known), and the showcase's `/practice?step=3` link.
+  - **No migration, content, scheduler, selection or evidence change.**
 
 ### Step 8 — Save and review UX copy
 

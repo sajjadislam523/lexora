@@ -23,17 +23,13 @@ const noServerInPublic = pattern(
   ["@/server/*"],
   "Public discovery code must not import server code. Account actions authenticate in their own endpoint.",
 );
-const noDemoInPublic = pattern(
-  ["@/demo/*"],
-  "Read language through @/language, not the prototype content behind it.",
-);
 
 // ESLint replaces (doesn't merge) rule options when several blocks match a file, so each file
 // group gets exactly one block with all of its patterns.
 const boundaries = [
   {
-    // Shared UI, utilities and prototype content never reach into server code or features.
-    files: ["src/components/**", "src/lib/**", "src/demo/**"],
+    // Shared UI and utilities never reach into server code or features.
+    files: ["src/components/**", "src/lib/**"],
     rules: restrict([
       pattern(
         ["@/server/*"],
@@ -58,8 +54,8 @@ const boundaries = [
     files: ["src/learning/**"],
     rules: restrict([
       pattern(
-        ["@/features/*", "@/components/*", "@/app/*", "@/server/*", "@/demo/*"],
-        "The learning engine is pure: it must not depend on UI, server or prototype code.",
+        ["@/features/*", "@/components/*", "@/app/*", "@/server/*"],
+        "The learning engine is pure: it must not depend on UI or server code.",
       ),
     ]),
   },
@@ -89,10 +85,7 @@ const boundaries = [
     // Language data access never reaches auth or learner data: the same results serve everyone.
     files: ["src/server/repositories/language/**"],
     rules: restrict([
-      pattern(
-        ["@/features/*", "@/components/*", "@/app/*", "@/demo/*"],
-        "Server code must not import UI or prototype content.",
-      ),
+      pattern(["@/features/*", "@/components/*", "@/app/*"], "Server code must not import UI."),
       pattern(
         ["@/server/auth/*", "@/server/repositories/*", "!@/server/repositories/language"],
         "The language repository must not read auth or user data.",
@@ -101,20 +94,16 @@ const boundaries = [
   },
   {
     // Public routes (docs/ARCHITECTURE.md → Route boundary) render the same for everyone. They
-    // never import server code, so they cannot load user data or call authenticated code, and
-    // they read language through @/language rather than the prototype content behind it.
+    // never import server code, so they cannot load user data or call authenticated code.
     files: ["src/app/(public)/**"],
-    rules: restrict([noServerInPublic, noDemoInPublic]),
+    rules: restrict([noServerInPublic]),
   },
   {
     // Server code is the bottom layer for data; it never imports UI.
     files: ["src/server/**"],
     ignores: ["src/server/repositories/language/**"],
     rules: restrict([
-      pattern(
-        ["@/features/*", "@/components/*", "@/app/*", "@/demo/*"],
-        "Server code must not import UI or prototype content.",
-      ),
+      pattern(["@/features/*", "@/components/*", "@/app/*"], "Server code must not import UI."),
     ]),
   },
   // Features don't import each other; shared needs move down into components/lexora, lib or server.
@@ -126,7 +115,6 @@ const boundaries = [
         "Features don't import each other. Move shared code into components/lexora, lib or server.",
       ),
       ...(publicFeatures.has(feature) ? [noServerInPublic] : []),
-      ...(feature === "discovery" ? [noDemoInPublic] : []),
     ]),
   })),
 ];

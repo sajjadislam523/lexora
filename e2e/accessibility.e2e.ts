@@ -158,11 +158,11 @@ describe("accessibility of the HTML every page sends", () => {
     expect(landing).toMatch(/aria-haspopup="dialog"/);
   });
 
-  it("marks only the screens that show sample data as a prototype", async () => {
+  it("marks no screen as a prototype: none shows sample data", async () => {
     const badge = /data-slot="badge"[^>]*>Prototype</;
-    expect(await html("/home", learner.cookie)).toMatch(badge);
-    for (const path of ["/finder", "/settings", "/bank", "/practice"])
+    for (const path of ["/home", "/finder", "/settings", "/bank", "/practice"])
       expect(await html(path, learner.cookie), path).not.toMatch(badge);
+    expect(await html("/home", learner.cookie)).not.toContain("Sample learner data");
     expect(await html("/finder", learner.cookie)).not.toContain("nothing is saved");
   });
 

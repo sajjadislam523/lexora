@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { Box, CardState } from "@/learning/scheduler";
@@ -365,7 +365,7 @@ export type RecurringMistake = {
 };
 
 /**
- * The learner's recurring mistakes on these senses at `now`: the same wrong response (the
+ * The learner's recurring mistakes on these senses (or on any, with `null`) at `now`: the same wrong response (the
  * authored mistake it matched, otherwise the exact normalised typed answer) on the same sense
  * at least twice in the 30 days before `now`, unless resolved — the sense's two latest answers
  * both correct and both after the latest occurrence. Read from `review_log` only, so it counts
@@ -375,10 +375,10 @@ export type RecurringMistake = {
 export async function recurringMistakes(
   executor: Executor,
   userId: string,
-  senseIds: readonly string[],
+  senseIds: readonly string[] | null,
   now: Date,
 ): Promise<RecurringMistake[]> {
-  if (senseIds.length === 0) return [];
+  if (senseIds?.length === 0) return [];
   const until = now.toISOString();
   const since = new Date(now.getTime() - EVIDENCE_WINDOW_MS).toISOString();
   const rows = await executor.execute<{
@@ -396,7 +396,7 @@ export async function recurringMistakes(
              ${reviewLog.expected} as expected, ${reviewLog.reviewedAt} as reviewed_at
       from ${reviewLog}
       where ${reviewLog.userId} = ${userId}
-        and ${inArray(reviewLog.senseId, [...new Set(senseIds)])}
+        and ${senseIds ? inArray(reviewLog.senseId, [...new Set(senseIds)]) : sql`true`}
         and ${reviewLog.outcome} = 'incorrect'
         and (${reviewLog.mistakeId} is not null or ${reviewLog.answer} is not null)
         and ${reviewLog.reviewedAt} > ${since}::timestamptz
@@ -433,5 +433,54 @@ export async function recurringMistakes(
     expected: row.expected,
     times: Number(row.times),
     lastAt: new Date(row.last_at),
+  }));
+}
+
+// ── Home (specification §18) ─────────────────────────────────────────────────────────────────
+
+export type RecentEntry = QueueEntry & {
+  slug: string;
+  headword: string;
+  kind: (typeof languageItems.$inferSelect)["kind"];
+  senseLabel: string | null;
+  bestWhen: string;
+};
+
+/** The learner's latest saves of published senses, newest first (ties by sense ID). One statement. */
+export async function recentlySaved(userId: string, limit: number): Promise<RecentEntry[]> {
+  const rows = await db
+    .select({
+      ...cardColumns,
+      senseId: savedSenses.senseId,
+      slug: languageItems.slug,
+      headword: languageItems.headword,
+      kind: languageItems.kind,
+      senseLabel: senses.label,
+      bestWhen: senses.bestWhen,
+    })
+    .from(savedSenses)
+    .innerJoin(senses, eq(senses.id, savedSenses.senseId))
+    .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+    .leftJoin(
+      reviewCards,
+      and(eq(reviewCards.userId, savedSenses.userId), eq(reviewCards.senseId, savedSenses.senseId)),
+    )
+    .where(
+      and(
+        eq(savedSenses.userId, userId),
+        eq(senses.status, "published"),
+        eq(languageItems.status, "published"),
+      ),
+    )
+    .orderBy(desc(savedSenses.savedAt), asc(savedSenses.senseId))
+    .limit(limit);
+  return rows.map((row) => ({
+    ...toState(row),
+    senseId: row.senseId,
+    slug: row.slug,
+    headword: row.headword,
+    kind: row.kind,
+    senseLabel: row.senseLabel,
+    bestWhen: row.bestWhen,
   }));
 }
