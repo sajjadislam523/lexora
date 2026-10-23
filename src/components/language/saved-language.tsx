@@ -14,6 +14,7 @@
  * returns them to the same page and completes the save they started. That one intent is kept in
  * sessionStorage across the sign-in round trip; it is never treated as saved state.
  */
+import Link from "next/link";
 import { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { authClient } from "@/lib/auth-client";
@@ -63,12 +64,25 @@ function writePendingSave(target: SaveTarget) {
   }
 }
 
+/** The status, and for a save whether the meaning is ready to review now. */
 async function requestSave(senseId: string, saved: boolean) {
   const response = await fetch(`/api/bank/saved/${encodeURIComponent(senseId)}`, {
     method: saved ? "PUT" : "DELETE",
     credentials: "same-origin",
   });
-  return response.status;
+  const body = response.ok
+    ? ((await response.json().catch(() => ({}))) as { review?: string })
+    : {};
+  return { status: response.status, ready: body.review === "ready" };
+}
+
+/** A notice; `bank` adds the Open language bank link. */
+type Notice = { text: string; bank?: boolean };
+
+/** The signed-in save notice (spec §19). It promises review only when the server says so. */
+function savedNotice(label: string, ready: boolean): Notice {
+  const next = ready ? " It’s ready to review." : "";
+  return { text: `Saved “${label}” to your language bank.${next}`, bank: true };
 }
 
 async function requestSavedAmong(senseIds: string[]) {
@@ -93,7 +107,7 @@ export function SavedLanguageProvider({ children }: { children: React.ReactNode 
   const [known, setKnown] = useState<ReadonlyMap<string, boolean>>(() => new Map());
   const [pending, setPending] = useState<ReadonlySet<string>>(() => new Set());
   const [gate, setGate] = useState<SaveGateRequest | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
   const [watched, setWatched] = useState<ReadonlyMap<string, number>>(() => new Map());
   const requested = useRef(new Set<string>());
   const previousViewer = useRef<Viewer>("unknown");
@@ -169,24 +183,27 @@ export function SavedLanguageProvider({ children }: { children: React.ReactNode 
       mark([[target.senseId, value]]); // optimistic; corrected by the server's answer
       setInFlight(target.senseId, true);
       requestSave(target.senseId, value)
-        .then((status) => {
+        .then(({ status, ready }) => {
           if (status >= 200 && status < 300) {
             setNotice(
               value
-                ? `Saved “${target.label}” to your language bank.`
-                : `Removed “${target.label}” from your language bank.`,
+                ? savedNotice(target.label, ready)
+                : {
+                    text: `Removed “${target.label}” from your language bank. Its review history is kept.`,
+                  },
             );
             return;
           }
           mark([[target.senseId, previous ?? false]]);
           if (status === 401) openGate(target);
-          else if (status === 404) setNotice(`“${target.label}” can no longer be saved.`);
-          else if (status === 429) setNotice("You’re going a little fast. Try again in a moment.");
-          else setNotice(`Couldn’t update “${target.label}”. Please try again.`);
+          else if (status === 404) setNotice({ text: `“${target.label}” can no longer be saved.` });
+          else if (status === 429)
+            setNotice({ text: "You’re going a little fast. Try again in a moment." });
+          else setNotice({ text: `Couldn’t update “${target.label}”. Please try again.` });
         })
         .catch(() => {
           mark([[target.senseId, previous ?? false]]);
-          setNotice("You seem to be offline. Please try again.");
+          setNotice({ text: "You seem to be offline. Please try again." });
         })
         .finally(() => setInFlight(target.senseId, false));
     },
@@ -206,10 +223,10 @@ export function SavedLanguageProvider({ children }: { children: React.ReactNode 
     const started = readPendingSave();
     if (!started) return;
     requestSave(started.senseId, true)
-      .then((status) => {
+      .then(({ status, ready }) => {
         if (status < 200 || status >= 300) return;
         mark([[started.senseId, true]]);
-        setNotice(`Saved “${started.label}” to your language bank.`);
+        setNotice(savedNotice(started.label, ready));
       })
       .catch(() => undefined);
   }, [viewer, mark]);
@@ -246,7 +263,18 @@ export function SavedLanguageProvider({ children }: { children: React.ReactNode 
       >
         {notice ? (
           <p className="pointer-events-auto max-w-md rounded-md border border-border bg-popover px-4 py-3 type-body text-popover-foreground shadow-md">
-            {notice}
+            {notice.text}
+            {notice.bank ? (
+              <>
+                {" "}
+                <Link
+                  href="/bank"
+                  className="rounded-xs font-medium text-ink underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  Open language bank
+                </Link>
+              </>
+            ) : null}
           </p>
         ) : null}
       </div>

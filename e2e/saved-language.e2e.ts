@@ -50,7 +50,7 @@ afterAll(async () => {
 describe("saving language", () => {
   it("A: a saved sense is still saved on a fresh request", async () => {
     const response = await change("PUT", NOTABLE, alice.cookie);
-    expect(await response.json()).toEqual({ senseId: NOTABLE, saved: true });
+    expect(await response.json()).toEqual({ senseId: NOTABLE, saved: true, review: "ready" });
     expect(await savedNow(alice.cookie)).toEqual([NOTABLE]);
     expect(await savedNow(alice.cookie)).toEqual([NOTABLE]);
   });
@@ -119,6 +119,24 @@ describe("saving language", () => {
     expect(await savedNow(bob.cookie, ["crucial.essential"])).toEqual(["crucial.essential"]);
     expect(await savedNow(alice.cookie, ["crucial.essential"])).toEqual([]);
     await change("DELETE", "crucial.essential", bob.cookie);
+  });
+
+  it("promises visitors only what saving does: a bank and review when it's due", async () => {
+    const landing = await html("/");
+    expect(landing).toContain(
+      "A free account saves language to your own bank and brings it back for review when it’s due.",
+    );
+    expect(landing).not.toContain("recall is growing");
+  });
+
+  it("answers a save with whether it is ready to review", async () => {
+    const response = await change("PUT", "crucial.essential", alice.cookie);
+    expect(await response.json()).toEqual({
+      senseId: "crucial.essential",
+      saved: true,
+      review: "ready",
+    });
+    await change("DELETE", "crucial.essential", alice.cookie);
   });
 
   it("shows the learner's real saved count on the dashboard", async () => {
