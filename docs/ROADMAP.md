@@ -286,7 +286,7 @@ Phase 4 is complete when (measurable details in the specification, §16):
 
 ## Phase 5 — Retrieval Loop 🔜 (in progress)
 
-**Status:** Specification **approved** (PR #39): [docs/specs/phase-5-retrieval-loop.md](specs/phase-5-retrieval-loop.md) · Integration branch `phase/5-retrieval-loop` · Built one step at a time (spec §38): Step 0 (hardening, PR #40) and Step 1 (the scheduler and review data model, spec Steps 1–2, PR #41) merged; Step 3 (the exercise generator, spec Step 3a, PR #42) merged; Step 3b (the authored accept lists, PR #43) merged; Step 4 (the language bank, PR #44) merged; Step 5 (the review session, PR #45) merged; Step 6 (personal mistake evidence) in review.
+**Status:** Specification **approved** (PR #39): [docs/specs/phase-5-retrieval-loop.md](specs/phase-5-retrieval-loop.md) · Integration branch `phase/5-retrieval-loop` · Built one step at a time (spec §38): Step 0 (hardening, PR #40) and Step 1 (the scheduler and review data model, spec Steps 1–2, PR #41) merged; Step 3 (the exercise generator, spec Step 3a, PR #42) merged; Step 3b (the authored accept lists, PR #43) merged; Step 4 (the language bank, PR #44) merged; Step 5 (the review session, PR #45) merged; Step 6 (personal mistake evidence, PR #46) merged; Step 7 (an honest Home) in review.
 
 **Goal:** saved language comes back at the right time. This replaces the earlier "Personal Learning" outline, and takes from Phase 6 only the three exercise types a review loop needs.
 

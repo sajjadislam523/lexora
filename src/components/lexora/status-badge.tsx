@@ -19,8 +19,6 @@ const STATUSES = {
     className: "bg-muted text-muted-foreground",
     dot: "bg-subtle-foreground",
   },
-  /** Prototype only (sample learner data on Home); Phase 5 calls it "Known". */
-  mastered: { label: "Mastered", className: "bg-success-soft text-success", dot: "bg-success" },
 } as const;
 
 export type LearningStatus = keyof typeof STATUSES;

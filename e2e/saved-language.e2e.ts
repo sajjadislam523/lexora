@@ -125,7 +125,10 @@ describe("saving language", () => {
     await change("PUT", "important.main", alice.cookie);
     expect(await html("/home", alice.cookie)).toContain("1 meaning saved");
     await change("DELETE", "important.main", alice.cookie);
-    expect(await html("/home", alice.cookie)).toContain("0 meanings saved");
+    // An empty bank shows where to start, not a zero.
+    const empty = await html("/home", alice.cookie);
+    expect(empty).toContain("Start your language bank");
+    expect(empty).not.toContain("0 meanings saved");
   });
 
   it("gives a saved sense a review card, and removes it with the save", async () => {
