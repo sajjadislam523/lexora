@@ -50,8 +50,7 @@ export function SaveGateDialog({
             Save this to your Language Bank
           </DialogTitle>
           <DialogDescription className="type-body text-muted-foreground">
-            Create a free Lexora account to save language, practise it later, and track your
-            progress.
+            Create a free Lexora account to save language and review it when it’s due.
           </DialogDescription>
         </DialogHeader>
         {term ? (

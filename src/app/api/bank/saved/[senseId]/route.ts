@@ -1,7 +1,9 @@
+import { isDue } from "@/learning/scheduler";
 import { getRequestSession } from "@/server/auth/session";
 import { enforceRateLimit } from "@/server/http/rate-limit";
 import { guarded, json, senseIdSchema, unauthenticated } from "@/server/http/responses";
 import { isSameOrigin } from "@/server/http/same-origin";
+import { reviewStateOf } from "@/server/repositories/review-cards";
 import { removeSavedSense, saveSense } from "@/server/repositories/saved-senses";
 
 /**
@@ -12,7 +14,8 @@ import { removeSavedSense, saveSense } from "@/server/repositories/saved-senses"
  * (route handlers don't get Next's server-action CSRF protection). Only published senses of
  * published items can be newly saved; removing works for any sense, and both are idempotent.
  * Saves and removals together are limited to 60 a minute per learner (429 after that), counted
- * only once a request is authenticated and well formed.
+ * only once a request is authenticated and well formed. A save answers whether the meaning is
+ * ready to review now (`review: "ready"`) or already scheduled for later (`"scheduled"`).
  */
 type Context = RouteContext<"/api/bank/saved/[senseId]">;
 
@@ -35,7 +38,10 @@ export function PUT(request: Request, context: Context) {
     if ("response" in auth) return auth.response;
     const outcome = await saveSense(auth.userId, auth.senseId);
     if (outcome === "not_found") return json({ error: "not_found" }, 404);
-    return json({ senseId: auth.senseId, saved: true }, 200);
+    // A new save is due at once (D3); saving one again leaves its schedule as it was.
+    const state = await reviewStateOf(auth.userId, auth.senseId);
+    const review = state && isDue(state.card, new Date()) ? "ready" : "scheduled";
+    return json({ senseId: auth.senseId, saved: true, review }, 200);
   });
 }
 

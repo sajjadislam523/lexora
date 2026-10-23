@@ -169,7 +169,11 @@ describe.skipIf(!local)("account email", () => {
         headers: { origin: ORIGIN, cookie: learner.cookie },
       });
       expect(response.status).toBe(200);
-      expect(await response.json()).toEqual({ senseId: "significant.notable", saved: true });
+      expect(await response.json()).toEqual({
+        senseId: "significant.notable",
+        saved: true,
+        review: "ready",
+      });
     });
 
     it("reminds, without blocking, until the address is verified", async () => {

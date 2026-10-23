@@ -197,9 +197,34 @@ describe.skipIf(!hasDatabase)("saved language API", () => {
       for (let i = 0; i < 2; i++) {
         const response = await call("PUT", "significant.notable", { cookie: alice });
         expect(response.status).toBe(200);
-        expect(await response.json()).toEqual({ senseId: "significant.notable", saved: true });
+        expect(await response.json()).toEqual({
+          senseId: "significant.notable",
+          saved: true,
+          review: "ready",
+        });
       }
       expect(await rowsFor(learners[0]!)).toEqual([{ senseId: "significant.notable" }]);
+    });
+
+    it("says a save is ready to review only while it is due", async () => {
+      // Answered and scheduled for later: saving it again doesn't make it ready.
+      const { reviewCards, users } = mod.schema;
+      const { and, eq } = await import("drizzle-orm");
+      const [owner] = await mod.db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.email, learners[0]!));
+      const where = and(
+        eq(reviewCards.userId, owner!.id),
+        eq(reviewCards.senseId, "significant.notable"),
+      );
+      await mod.db
+        .update(reviewCards)
+        .set({ box: 2, reviews: 2, dueAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) })
+        .where(where);
+      const response = await call("PUT", "significant.notable", { cookie: alice });
+      expect(await response.json()).toMatchObject({ review: "scheduled" });
+      await mod.db.update(reviewCards).set({ box: 0, reviews: 0, dueAt: new Date() }).where(where);
     });
 
     it("saves each meaning of a word separately", async () => {

@@ -1395,6 +1395,13 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** every promise in the copy is true.
 - **Dependencies:** Step 7.
 - **Must not change:** save behaviour; public rendering or SEO.
+- **As built (24 October 2026):**
+  - **`review` on the `PUT` response is `"ready"` or `"scheduled"`.** A new save is due at once (D3), but `PUT` is idempotent: saving a meaning again leaves its schedule alone. So the handler reads the card after saving and says `"ready"` only when it's due. The notice adds "It's ready to review." only then. This costs one more statement per save, and nothing about saving changed.
+  - **The notice carries the _Open language bank_ link** for every successful save, including a save completed after signing in from the gate.
+  - **The removal notice** is the same everywhere, the bank included: "…Its review history is kept."
+  - **The save gate and landing copy** are exactly §19's. The landing's "practise it until it comes naturally" stays: review now makes it true.
+  - "Ready to review" relies on every published sense having an exercise, which `test/exercise-inventory.test.ts` pins (42 of 42).
+  - **No change** to public rendering, route boundaries, migrations or content.
 
 ### Step 9 — Final audit and release
 

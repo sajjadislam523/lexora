@@ -636,10 +636,14 @@ The first thing a visitor sees is the product working, not a sign-up form (UX pr
   2. **Showcase:** a real result — the fit guide plus two saveable result cards for "better word for important".
   3. **How it works** (`#how-it-works`, `bg-sidebar`): three numbered cards — describe, see how it's used, save and practise.
   4. **Context tool:** "Choose the word that fits the sentence", the interactive gap sentence.
-  5. **Closing call to action:** _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
+  5. **Closing call to action:** "Keep the language you find", "A free account saves language to your own bank and brings it back for review when it's due.", then _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
      Sections are separated by hairlines with `py-14 sm:py-20` rhythm, content at `max-w-page`; the hero sits at `max-w-3xl`.
-- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`, primary on the right from `sm`, and the primary first in keyboard order. Closing it changes nothing.
-- **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and a calm notice ("Saved “term” to your language bank.") appears at the bottom of the viewport for five seconds (`role="status"`).
+- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("Create a free Lexora account to save language and review it when it's due."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`, primary on the right from `sm`, and the primary first in keyboard order. Closing it changes nothing.
+- **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and the save notice below appears.
+- **Save and remove notices** (everywhere a meaning is saved or removed, the bank included): a calm notice at the bottom of the viewport for five seconds (`role="status"`).
+  - Saved: "Saved “term” to your language bank. It's ready to review." and an _Open language bank_ link. The second sentence appears only when the server says the meaning is due now (`review: "ready"`); saving one already scheduled says only that it was saved. No reminder is promised.
+  - Removed: "Removed “term” from your language bank. Its review history is kept."
+  - Failures keep their wording: the rate limit, "can no longer be saved", "Couldn't update…", offline.
 
 ### 10.8 Account email
 
