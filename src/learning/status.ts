@@ -41,3 +41,17 @@ export function nextReviewText(next: NextReview) {
   if (next.due) return "Due now";
   return `Next review in ${next.days} ${next.days === 1 ? "day" : "days"}`;
 }
+
+/**
+ * The line under a recurring mistake (specification §16): "You've made this mistake 2 times in
+ * the last 30 days", or for an exact typed answer Lexora doesn't list, "You typed “at” 2 times…".
+ */
+export function evidenceText(evidence: {
+  kind: "authored" | "typed";
+  wrong: string;
+  times: number;
+}) {
+  const what =
+    evidence.kind === "typed" ? `You typed “${evidence.wrong}”` : "You’ve made this mistake";
+  return `${what} ${evidence.times} times in the last 30 days.`;
+}

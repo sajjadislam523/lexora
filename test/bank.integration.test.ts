@@ -209,6 +209,8 @@ describe.skipIf(!hasDatabase)("language bank (PostgreSQL)", () => {
       status: "learning",
       nextReview: { due: false, days: 2 },
       replacement: null,
+      missed: null,
+      mistakes: [],
     });
     expect(page.rows.find((row) => row.status === "retired")?.replacement).toEqual({
       term: `term-${run}`,

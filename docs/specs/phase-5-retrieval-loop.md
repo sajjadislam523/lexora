@@ -1361,6 +1361,14 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** two identical wrong answers produce a recurring mistake; two later correct answers resolve it.
 - **Dependencies:** Step 5.
 - **Must not change:** scheduling (evidence doesn't alter intervals).
+- **As built (23 October 2026):**
+  - **Derived from `review_log`, no table and no migration (D14, confirmed by the owner).** `recurringMistakes` in `review-cards.ts` is the §16 query, one statement for any number of senses: it uses the existing `(user_id, reviewed_at)` and `(user_id, sense_id, reviewed_at)` indexes and reads only the 30-day window. Because the log row is the evidence, it is atomic with the answer by construction, and a refused, duplicate or rate-limited request (which logs nothing) can never count.
+  - **The window is the 30 days of 24 hours before `now`, exclusive:** an answer exactly 30 days earlier is out, one a millisecond later is in, and answers after `now` don't count.
+  - **The response key is §16's,** including exact repeated typed answers Lexora doesn't list (`answer:<normalised answer>`), as the owner confirmed. Typing an authored mistake and choosing it share its mistake id, so they count together. Resolved (the sense's two latest answers correct, both after the latest occurrence) is derived, not stored.
+  - **Feedback** gains `evidence` when the wrong answer just recorded makes a recurring mistake: computed as of that answer, so a retry gets the same result. Copy: "You've made this mistake 2 times in the last 30 days", or "You typed “at” 2 times in the last 30 days".
+  - **Bank rows** show "Missed n times" when the card has at least two lapses, and each unresolved recurring mistake as a `MistakeRow` ("Your mistake": the authored wrong → right and explanation, read from content). One more statement per page.
+  - **Evidence follows the log's retention:** it outlives a removed save, so it shows again if the sense is saved again within the window. Retired senses show none.
+  - **No change** to the scheduler, selection, exercises, answers or content. Home's recurring mistakes are Step 7.
 
 ### Step 7 — Honest Home
 

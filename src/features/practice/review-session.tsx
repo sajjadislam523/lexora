@@ -13,7 +13,7 @@ import { ProgressTrack } from "@/components/lexora/progress-track";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ExerciseType } from "@/learning/exercises";
-import { nextReviewText } from "@/learning/status";
+import { evidenceText, nextReviewText } from "@/learning/status";
 import type { ReviewFeedback, ReviewItem, ReviewPrompt } from "@/server/learning/review";
 
 const MODE: Record<ExerciseType, string> = {
@@ -117,6 +117,9 @@ function Feedback({ feedback, prompt }: { feedback: ReviewFeedback; prompt: Revi
         ) : null}
         {feedback.pattern ? <p className="type-mono">{feedback.pattern}</p> : null}
         {feedback.explanation ? <p>{feedback.explanation}</p> : null}
+        {feedback.evidence ? (
+          <p className="font-semibold">{evidenceText(feedback.evidence)}</p>
+        ) : null}
         {feedback.match === "unrecognised" ? (
           <p className="text-muted-foreground">
             Lexora checks answers only against the language it has written down.
