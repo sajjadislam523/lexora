@@ -53,7 +53,7 @@ Lexora is an IELTS Academic language-retrieval SaaS. Promise: **Find the right E
 | Database schema / migrations                 | `src/server/db/schema/` → `pnpm db:generate` → `drizzle/` (commit the SQL)                  |
 | Language engine (repository, search)         | `src/language/` — read language only through it (`index.ts` server-only)                    |
 | Public discovery frame / save flow           | `src/components/site/`, `src/components/language/`                                          |
-| Prototype sample data                        | `src/demo/` (sample learner data and prototype language for Home and Practice)              |
+| Prototype sample data                        | `src/demo/` (sample learner data and prototype language for Home)                           |
 | Future: domain logic, curated content        | See ARCHITECTURE.md → Target structure                                                      |
 
 ## Git workflow

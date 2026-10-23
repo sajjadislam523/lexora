@@ -65,6 +65,6 @@ export function schedule(card: CardState, outcome: Outcome, now: Date): CardStat
 }
 
 /** Whether the card can be answered at `now`: its next review time has come (`dueAt ≤ now`). */
-export function isDue(card: CardState, now: Date) {
+export function isDue(card: Pick<CardState, "dueAt">, now: Date) {
   return card.dueAt.getTime() <= now.getTime();
 }

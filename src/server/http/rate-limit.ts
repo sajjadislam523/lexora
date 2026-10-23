@@ -12,7 +12,7 @@ import { countRequest, type LimitedAction } from "@/server/repositories/request-
 export const RATE_LIMITS: Record<LimitedAction, number> = {
   // PUT / DELETE /api/bank/saved/[senseId]: saves and removals together.
   bank_write: 60,
-  // The Phase 5 Step 5 review-answer endpoint, when it exists. Not wired to anything yet.
+  // POST /api/review/answers.
   review_answer: 30,
 };
 

@@ -298,3 +298,49 @@ export async function listBank(
         : null,
   }));
 }
+
+// ── Review selection (specification §14) ─────────────────────────────────────────────────────
+
+export type QueueEntry = ReviewState & { senseId: string };
+
+/**
+ * The learner's saved senses that can be reviewed (published sense and item), in review order.
+ * `due`: what is due at `now` — reviewed cards first, most overdue first, then new ones, oldest
+ * save first. `upcoming`: what isn't due yet, soonest first. Ties by sense ID; no randomness.
+ * Saves without a card are included, as new. One statement; `limit` leaves room for senses
+ * that turn out to have no exercise.
+ */
+export async function reviewQueue(
+  userId: string,
+  now: Date,
+  options: { when: "due" | "upcoming"; limit: number },
+): Promise<QueueEntry[]> {
+  const { reviewed, dueAt, due } = bankTerms(now);
+  const order =
+    options.when === "due"
+      ? [
+          sql`case when ${reviewed} then 0 else 1 end`,
+          sql`case when ${reviewed} then ${dueAt} else ${savedSenses.savedAt} end`,
+        ]
+      : [dueAt];
+  const rows = await db
+    .select({ ...cardColumns, senseId: savedSenses.senseId })
+    .from(savedSenses)
+    .innerJoin(senses, eq(senses.id, savedSenses.senseId))
+    .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+    .leftJoin(
+      reviewCards,
+      and(eq(reviewCards.userId, savedSenses.userId), eq(reviewCards.senseId, savedSenses.senseId)),
+    )
+    .where(
+      and(
+        eq(savedSenses.userId, userId),
+        eq(senses.status, "published"),
+        eq(languageItems.status, "published"),
+        options.when === "due" ? due : sql`not ${due}`,
+      ),
+    )
+    .orderBy(...order, asc(savedSenses.senseId))
+    .limit(options.limit);
+  return rows.map((row) => ({ ...toState(row), senseId: row.senseId }));
+}
