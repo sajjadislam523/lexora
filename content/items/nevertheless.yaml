@@ -28,11 +28,15 @@ senses:
         highlight: Nevertheless,
         skill: writing
         task: writing-2
+        practice:
+          accept: [however]
       - id: ex2
         text: The scheme was expensive. It was, nevertheless, a great success.
         highlight: nevertheless,
         skill: writing
         task: writing-2
+        practice:
+          accept: [however]
     mistakes:
       - id: noun
         wrong: Nevertheless the cost, the project went ahead.

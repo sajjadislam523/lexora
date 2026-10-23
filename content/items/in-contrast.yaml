@@ -28,12 +28,16 @@ senses:
         highlight: In contrast,
         skill: writing
         task: writing-1
+        practice:
+          accept: [however]
       - id: ex2
         text: In contrast to their parents, many young people prefer renting to buying.
         highlight: In contrast to
         skill: writing
         task: writing-2
         pattern: to
+        practice:
+          accept_preposition: [with]
     preposition_patterns:
       - id: to
         base: in contrast

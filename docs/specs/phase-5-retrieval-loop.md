@@ -1306,6 +1306,14 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
 - **Acceptance:** the owner has reviewed every completion blank.
 - **Dependencies:** 3a.
 - **Must not change:** example text, highlights or IDs; any other content field.
+- **As built (23 October 2026, branch `fix/5-step-3b-accept-lists`):**
+  - **Reviewed:** all 178 exercises. The rule: an answer is accepted only where the content already establishes that it fits the exact construction (a collocation, pattern, frame, authored note, or a linker's authored role) and it keeps the meaning, register and strength.
+  - **Added:** 31 `practice` entries on existing examples.
+    - 26 completion blanks gained 28 accepted answers.
+    - 5 preposition blanks gained 1 each.
+    - No `exclude`.
+  - **Unchanged:** the inventory (77 / 45 / 56 = 178) and every exercise ID.
+  - **Not done here:** no generator, validator, schema or migration change. Questionable mistakes are reported for owner review, not edited.
 
 ### Step 4 — Language bank
 

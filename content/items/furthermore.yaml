@@ -28,11 +28,15 @@ senses:
         highlight: Furthermore,
         skill: writing
         task: writing-2
+        practice:
+          accept: [moreover]
       - id: ex2
         text: The plan is expensive. Furthermore, there is little evidence that it would work.
         highlight: Furthermore,
         skill: writing
         task: writing-2
+        practice:
+          accept: [moreover]
     mistakes:
       - id: more
         wrong: Further more, it saves money.

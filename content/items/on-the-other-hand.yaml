@@ -28,11 +28,15 @@ senses:
         highlight: On the other hand,
         skill: writing
         task: writing-2
+        practice:
+          accept: [however]
       - id: ex2
         text: I love the energy of big cities. On the other hand, I find them quite tiring.
         highlight: On the other hand,
         skill: speaking
         task: speaking-3
+        practice:
+          accept: [however]
     mistakes:
       - id: side
         wrong: On the other side, tourism damages the environment.

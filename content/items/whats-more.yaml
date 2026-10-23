@@ -30,11 +30,15 @@ senses:
         highlight: what's more
         skill: speaking
         task: speaking-2
+        practice:
+          accept: [on top of that]
       - id: ex2
         text: Electric cars are cheap to run. What's more, they are quiet.
         highlight: What's more,
         skill: writing
         task: writing-2
+        practice:
+          accept: [on top of that]
     relations:
       - type: more_formal
         to: furthermore.addition
