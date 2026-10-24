@@ -617,13 +617,13 @@ Authentication should be calm and quick, and should look like Lexora rather than
 
 ### 10.6 Settings (`/settings`)
 
-A narrow page (`max-w-4xl`) of three sections, divided by hairlines. On `lg` each section has a title and one-line description in a left column and the form in the right two columns:
+One column, at most `max-w-3xl` (768px), inside the standard page frame and left-aligned with other pages' headers. `PageHeader` "Settings", "Manage your profile, learning goals and account.", then three sections divided by `border` hairlines (`py-10`). Each section stacks its `type-heading` title and one muted line directly above its controls; there's no side column.
 
-1. **Profile:** the name.
-2. **Learning profile:** target band (`NativeSelect`), test date (`Input type="date"`), and focus (a segmented radio group: Writing / Speaking / Both / Not set).
-3. **Account:** email, member since, and _Sign out_. Under the email is its verification status: _Verified_ (success text with a check icon, so not colour alone), or "Not verified yet. Lexora works fully either way…" with an outline _Send verification email_ button. Its result appears in a polite status line beside the button: sent (with the address and the 24-hour validity), already verified, rate limited, or not sent.
+1. **Profile:** the name (`max-w-md`), with an outline _Save name_ on the same row at the input's 40px height. A hint says where the name appears.
+2. **Learning goals:** the one panel on the page (`ui/card`), so it reads as the main section. Target band (`NativeSelect`, the empty option "Choose your target band") and test date (`Input type="date"`, hinted "Optional…") side by side from `sm`. Focus (a segmented radio group: Writing / Speaking / Both / Not set) has its own row: one row from `sm`, a 2 × 2 grid of 44px segments on phones. The card footer holds the status line and the page's one primary button, _Save goals_. The description says truthfully that nothing uses these values yet.
+3. **Account:** a definition list between `border-subtle` hairlines: email with a verification pill (_Verified_: success with a check; _Not verified_: muted with a dot — text, never colour alone), and member since. While unverified, an info `Callout` follows: "Your email isn’t verified yet", "Verify it to help keep your account secure. Lexora works fully either way.", an outline _Send verification email_ and a polite status line: sent (with the address and the 24-hour validity), already verified, rate limited, or not sent. Then _Sign out_.
 
-Each form saves on its own. _Save_ shows a spinner and "Saving…" while pending, then a polite "… saved." status beside the button. Values stay as saved (no form reset), and server validation errors appear inline.
+Each form saves on its own. Its button shows a spinner and "Saving…" while pending, then a polite success line with a check ("Name updated.", "Learning goals saved."). Values stay as saved (no form reset), server validation errors appear inline and take focus, and a failed save shows a danger `Callout` (`role="alert"`) in that section. Prompts and empty options are never stored: empty saves as "not set". The Account heading keeps `id="account-title"` (Home links to it) and clears the sticky top bar with `scroll-mt-20`.
 
 ### 10.7 Public discovery (`/`, site frame, save gate)
 
