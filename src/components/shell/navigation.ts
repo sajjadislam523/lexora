@@ -35,9 +35,8 @@ export const PRIMARY_NAV: NavEntry[] = [
     href: "/home",
     label: "Home",
     icon: Home,
-    description: "What to review today, weak areas and recent searches.",
-    status: "Prototype with sample learner data.",
-    prototype: "Sample learner data — only your saved meanings count is real",
+    description: "What's ready to review, your language bank and your recurring mistakes.",
+    status: "Available.",
   },
   {
     id: "finder",
@@ -52,27 +51,16 @@ export const PRIMARY_NAV: NavEntry[] = [
     href: "/bank",
     label: "Language bank",
     icon: BookMarked,
-    description: "Everything you have saved, with notes and review status.",
-    status:
-      "Planned for Phase 5 — Personal learning. The meanings you save are already kept for this screen.",
-    plans: [
-      "Everything you save from the Finder, grouped by kind of language",
-      "Your own notes and example sentences beside each item",
-      "Review status and the next time each item comes back",
-    ],
-    seeAlso: [
-      { label: "Find language to save", href: "/finder" },
-      { label: "Save a meaning from a language page", href: "/language/significant" },
-    ],
+    description: "Everything you’ve saved, and when it comes back.",
+    status: "Available.",
   },
   {
     id: "practice",
     href: "/practice",
     label: "Practice",
     icon: Dumbbell,
-    description: "Short exercises built from your language bank.",
-    status: "Prototype session. Real exercises are generated in Phase 6.",
-    prototype: "Sample session — answers aren’t saved",
+    description: "Short reviews of the language you’ve saved, when each one is due.",
+    status: "Available.",
   },
   {
     id: "writing",
@@ -107,19 +95,26 @@ export const PRIMARY_NAV: NavEntry[] = [
       },
     ],
   },
+];
+
+/**
+ * Planned screens with an honest placeholder route but no place in the sidebar or the command
+ * palette (Phase 5 D20): reachable by URL, with their own title and status.
+ */
+export const HIDDEN_NAV: NavEntry[] = [
   {
     id: "progress",
     href: "/progress",
     label: "Progress",
     icon: BarChart3,
     description: "Mastery by category and how your recall is developing.",
-    status: "Planned for Phase 5 — Personal learning.",
+    status: "Planned for a later phase, once there is enough review history to show.",
     plans: [
       "Mastery by kind of language, based on what you actually recall",
       "Weak areas and recurring mistakes over time",
       "No streaks or points — just an honest picture of your progress",
     ],
-    seeAlso: [{ label: "See today’s focus", href: "/home" }],
+    seeAlso: [{ label: "Go to Home", href: "/home" }],
   },
 ];
 
@@ -143,7 +138,7 @@ export const SECONDARY_NAV: NavEntry[] = [
   },
 ];
 
-export const ALL_NAV = [...PRIMARY_NAV, ...SECONDARY_NAV];
+export const ALL_NAV = [...PRIMARY_NAV, ...SECONDARY_NAV, ...HIDDEN_NAV];
 
 export function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);

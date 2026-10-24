@@ -851,6 +851,17 @@ export class LanguageSearchService {
     const mistakes = (await this.repo.findMistakes(text)).filter((m) => showsMistake(text, m));
     if (mistakes.length > 0) return this.mistakeLookup(base, c, mistakes);
 
+    // An authored intent trigger on its own ("express contrast") asks for that intent, as
+    // "I want to express contrast" does. Exact triggers only: nothing is inferred from other words.
+    const trigger = text.replace(/\?+$/, "").trim();
+    if (await this.repo.hasIntentTrigger(trigger)) {
+      return this.expressionSearch(base, {
+        intent: "CONTEXTUAL_EXPRESSION",
+        phrase: trigger,
+        modifiers,
+      });
+    }
+
     const outcome = chooseCorrection(text, await this.repo.findTermCandidates(text));
     if (outcome.kind === "ambiguous") return didYouMean(base, c, outcome.options);
     if (outcome.kind === "corrected") {

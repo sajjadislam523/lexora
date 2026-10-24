@@ -179,6 +179,8 @@ export interface LanguageSearchRepository extends Pick<
   collocationsOf(senseIds: readonly string[]): Promise<CollocationHit[]>;
   mistakesOf(senseIds: readonly string[]): Promise<MistakeHit[]>;
   listIntents(): Promise<IntentDefinition[]>;
+  /** Whether `normalised` is exactly one of the authored intent triggers ("express contrast"). */
+  hasIntentTrigger(normalised: string): Promise<boolean>;
   sensesWithFunction(fn: DiscourseFunction, kinds?: readonly ItemKind[]): Promise<string[]>;
   listGapFrames(): Promise<GapFrame[]>;
   /** Senses whose definition, notes or examples match the words (labelled fallback). */

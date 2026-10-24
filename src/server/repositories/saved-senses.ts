@@ -4,6 +4,7 @@ import { and, count, desc, eq, inArray } from "drizzle-orm";
 
 import { db } from "@/server/db/client";
 import { languageItems, savedSenses, senses } from "@/server/db/schema";
+import { ensureCard } from "@/server/repositories/review-cards";
 
 /**
  * Saved language. Every function takes the user ID explicitly; callers pass the ID from the
@@ -43,7 +44,8 @@ export async function countSavedSenses(userId: string): Promise<number> {
 
 /**
  * Saves a sense. Only published senses of published items can be newly saved; saving one that
- * is already saved changes nothing (and keeps its original date).
+ * is already saved changes nothing (and keeps its original date). The save and its review card
+ * (box 0, due when saved) are written in one transaction; a save that had no card gets one.
  */
 export async function saveSense(userId: string, senseId: string): Promise<"saved" | "not_found"> {
   const [sense] = await db
@@ -60,11 +62,17 @@ export async function saveSense(userId: string, senseId: string): Promise<"saved
     .limit(1);
   if (!sense) return "not_found";
 
-  await db.insert(savedSenses).values({ userId, senseId }).onConflictDoNothing();
+  await db.transaction(async (tx) => {
+    await tx.insert(savedSenses).values({ userId, senseId }).onConflictDoNothing();
+    await ensureCard(tx, userId, senseId);
+  });
   return "saved";
 }
 
-/** Removes a save. Removing one that isn't saved changes nothing. */
+/**
+ * Removes a save. Its review card goes with it (cascade); the review log is kept as the learner's
+ * history. Removing one that isn't saved changes nothing.
+ */
 export async function removeSavedSense(userId: string, senseId: string) {
   await db
     .delete(savedSenses)

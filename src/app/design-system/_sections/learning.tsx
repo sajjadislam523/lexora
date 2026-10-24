@@ -175,7 +175,7 @@ export function LearningSection() {
             wrong="depend of"
             right="depend on"
             why="Depend always takes on."
-            action={{ label: "Practise", href: "/practice?step=3" }}
+            action={{ label: "Practise", href: "/practice" }}
           />
         </Specimen>
       </div>

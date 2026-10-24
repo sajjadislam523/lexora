@@ -19,7 +19,13 @@ import {
   type SourceUse,
 } from "@/language/schema/vocabulary";
 
+import { generateExercises, type PracticeMaterial } from "@/learning/exercises";
+import { normaliseAnswer } from "@/learning/answers";
+import type { PracticeBlank } from "@/language/schema/vocabulary";
+
+import { buildRows } from "./build";
 import type { ContentFile } from "./files";
+import { practiceMaterialFromContent } from "./practice";
 
 /**
  * Validates authored content in two stages (content/README.md → Validation):
@@ -173,6 +179,16 @@ export function validateContent(files: readonly ContentFile[]): ValidationResult
     issues,
   );
 
+  if (issues.list.length > 0) {
+    return { ok: false, issues: sortIssues(issues.list) };
+  }
+
+  // Stage 3: review-exercise data (`practice` on examples) agrees with what the examples make.
+  checkPractice(
+    sources.flatMap((entry) => entry.data),
+    items,
+    issues,
+  );
   if (issues.list.length > 0) {
     return { ok: false, issues: sortIssues(issues.list) };
   }
@@ -604,4 +620,65 @@ function checkIntents(
 /** Whole-word containment of normalised text: "responsible for" contains "for", not "or". */
 function containsPhrase(haystack: string, needle: string) {
   return needle.length > 0 && ` ${haystack} `.includes(` ${needle} `);
+}
+
+/**
+ * `practice` on an example must describe a blank the example makes, and mustn't contradict the
+ * content (specification §13): `accept` and `accept_preposition` only where that blank exists,
+ * never repeating its expected answer or an authored wrong answer; `exclude` only for a blank the
+ * example would otherwise make. Checked with the generator itself, on published senses.
+ */
+function checkPractice(sources: SourceFile[], items: Entry<ItemFile>[], issues: Issues) {
+  for (const { data: item, map } of items) {
+    if (!item.senses.some((sense) => sense.examples.some((example) => example.practice))) continue;
+    const materials = practiceMaterialFromContent(
+      buildRows({ sources, items: [item], intents: [] }),
+    );
+    for (const [s, sense] of item.senses.entries()) {
+      const material = materials.find((m) => m.senseId === `${item.id}.${sense.key}`);
+      for (const [e, example] of sense.examples.entries()) {
+        const practice = example.practice;
+        if (!practice || !material) continue;
+        const at = (...path: Path): Path => ["senses", s, "examples", e, "practice", ...path];
+        const id = `${material.senseId}:${example.id}`;
+        // What the example makes with no practice data of its own.
+        const plain: PracticeMaterial = {
+          ...material,
+          examples: material.examples
+            .filter((x) => x.id === id)
+            .map((x) => ({ ...x, accept: [], acceptPreposition: [], exclude: [] })),
+        };
+        const made = generateExercises(plain);
+        const blank = (type: PracticeBlank) => made.find((x) => x.prompt.type === type)?.key;
+
+        for (const [field, type, values] of [
+          ["accept", "term", practice.accept],
+          ["accept_preposition", "preposition", practice.accept_preposition],
+        ] as const) {
+          if (!values) continue;
+          const key = blank(type);
+          if (!key || key.kind !== "typed") {
+            issues.add(map, at(field), `this example makes no ${type} blank`);
+            continue;
+          }
+          if (practice.exclude?.includes(type)) {
+            issues.add(map, at(field), `has no effect: the ${type} blank is excluded`);
+            continue;
+          }
+          for (const [i, value] of values.entries()) {
+            const answer = normaliseAnswer(value);
+            if (answer === normaliseAnswer(key.expected)) {
+              issues.add(map, at(field, i), `"${value}" is already the expected answer`);
+            } else if (key.mistakes.some((m) => m.answer === answer)) {
+              issues.add(map, at(field, i), `"${value}" is an authored mistake for this blank`);
+            }
+          }
+        }
+        for (const [i, type] of (practice.exclude ?? []).entries()) {
+          if (!blank(type))
+            issues.add(map, at("exclude", i), `this example makes no ${type} blank`);
+        }
+      }
+    }
+  }
 }

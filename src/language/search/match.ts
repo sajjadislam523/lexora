@@ -183,6 +183,10 @@ export function toGapFrame(
  * words left after the start and end the wrong form shares with its correction. So "a
  * significant" doesn't show "a significant amount of people" (the wrong part is "amount"), and a
  * mistake whose wrong form differs only in punctuation is shown only by the whole sentence.
+ *
+ * When the mistake is extra words ("such as for example Japan" → "such as Japan"), those words
+ * are only wrong where they stand, so the query must also include a word next to them: "as for
+ * example" shows the mistake, "for example" alone doesn't.
  */
 export function showsMistake(normalised: string, mistake: { wrong: string; right: string }) {
   const query = words(normalised);
@@ -194,7 +198,9 @@ export function showsMistake(normalised: string, mistake: { wrong: string; right
 
   for (let at = 0; at + query.length <= wrong.length; at++) {
     const here = query.every((word, offset) => wrong[at + offset] === word);
-    if (here && at <= from && at + query.length - 1 >= to) return true;
+    const last = at + query.length - 1;
+    const covers = at <= from && last >= to;
+    if (here && covers && (!part.extra || at < from || last > to)) return true;
   }
   return false;
 }
@@ -209,6 +215,8 @@ export function mistakeWrongPart(mistake: { wrong: string; right: string }): {
   span?: [number, number];
   /** True when a word is missing (the span is the two words around the gap). */
   missing?: boolean;
+  /** True when the span is extra words: the correction has nothing in their place. */
+  extra?: boolean;
 } {
   const wrong = words(normaliseTerm(mistake.wrong));
   const right = words(normaliseTerm(mistake.right));
@@ -227,7 +235,13 @@ export function mistakeWrongPart(mistake: { wrong: string; right: string }): {
   // Punctuation only: normalised, the wrong form and its correction are the same words.
   if (start === wrong.length && wrong.length === right.length) return { wrong };
   // The wrong part, or for a missing word ("as result") the two words around the gap.
-  return start < end
-    ? { wrong, span: [start, end - 1] }
-    : { wrong, span: [Math.max(start - 1, 0), Math.min(start, wrong.length - 1)], missing: true };
+  if (start < end) {
+    const extra = right.length - shared === start;
+    return { wrong, span: [start, end - 1], ...(extra && { extra }) };
+  }
+  return {
+    wrong,
+    span: [Math.max(start - 1, 0), Math.min(start, wrong.length - 1)],
+    missing: true,
+  };
 }

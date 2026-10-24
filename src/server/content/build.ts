@@ -16,7 +16,7 @@ import type { ValidatedContent } from "./validate";
  */
 
 /** Bump when the row-building rules change, so the next import runs even if content didn't. */
-export const IMPORTER_VERSION = 1;
+export const IMPORTER_VERSION = 2; // 2: examples carry `practice` (Phase 5 Step 3)
 
 type Insert<T extends { $inferInsert: unknown }> = T["$inferInsert"];
 
@@ -235,6 +235,9 @@ function buildSense(rows: ContentRows, item: ItemFile, sense: SenseFile, positio
       prepositionPatternId: example.pattern ? child(example.pattern) : null,
       position: index,
       sourceId: example.source ?? item.source,
+      practiceAccept: example.practice?.accept ?? [],
+      practiceAcceptPreposition: example.practice?.accept_preposition ?? [],
+      practiceExclude: example.practice?.exclude ?? [],
     }),
   );
 

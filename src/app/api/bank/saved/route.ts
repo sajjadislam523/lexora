@@ -1,9 +1,8 @@
 import { z } from "zod";
 
 import { getRequestSession } from "@/server/auth/session";
+import { guarded, json, senseIdSchema, unauthenticated } from "@/server/http/responses";
 import { savedAmong } from "@/server/repositories/saved-senses";
-
-import { guarded, json, senseIdSchema, unauthenticated } from "./http";
 
 /** At most this many senses per request: a page's worth, never the whole collection. */
 const MAX_SENSES = 60;

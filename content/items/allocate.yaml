@@ -33,6 +33,8 @@ senses:
         skill: writing
         task: writing-1
         pattern: to
+        practice:
+          accept_preposition: [for]
     preposition_patterns:
       - id: to
         base: allocate

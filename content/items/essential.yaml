@@ -32,6 +32,8 @@ senses:
         skill: writing
         task: writing-2
         collocation: that
+        practice:
+          accept: [crucial]
       - id: ex3
         text: For me, a good breakfast is essential before a long day at work.
         highlight: essential

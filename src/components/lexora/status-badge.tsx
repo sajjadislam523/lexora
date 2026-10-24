@@ -8,7 +8,17 @@ const STATUSES = {
     className: "bg-primary text-primary-foreground",
     dot: "bg-primary-foreground",
   },
-  mastered: { label: "Mastered", className: "bg-success-soft text-success", dot: "bg-success" },
+  known: { label: "Known", className: "bg-success-soft text-success", dot: "bg-success" },
+  retired: {
+    label: "No longer reviewed",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-subtle-foreground",
+  },
+  no_exercise: {
+    label: "No exercise yet",
+    className: "bg-muted text-muted-foreground",
+    dot: "bg-subtle-foreground",
+  },
 } as const;
 
 export type LearningStatus = keyof typeof STATUSES;

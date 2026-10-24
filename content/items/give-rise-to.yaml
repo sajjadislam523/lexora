@@ -29,12 +29,16 @@ senses:
         skill: writing
         task: writing-2
         pattern: to
+        practice:
+          accept: [resulted in]
       - id: ex2
         text: Rapid urbanisation can give rise to serious housing shortages.
         highlight: give rise to
         skill: writing
         task: writing-2
         pattern: to
+        practice:
+          accept: [result in]
     preposition_patterns:
       - id: to
         base: give rise

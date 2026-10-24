@@ -50,7 +50,7 @@ afterAll(async () => {
 describe("saving language", () => {
   it("A: a saved sense is still saved on a fresh request", async () => {
     const response = await change("PUT", NOTABLE, alice.cookie);
-    expect(await response.json()).toEqual({ senseId: NOTABLE, saved: true });
+    expect(await response.json()).toEqual({ senseId: NOTABLE, saved: true, review: "ready" });
     expect(await savedNow(alice.cookie)).toEqual([NOTABLE]);
     expect(await savedNow(alice.cookie)).toEqual([NOTABLE]);
   });
@@ -121,10 +121,76 @@ describe("saving language", () => {
     await change("DELETE", "crucial.essential", bob.cookie);
   });
 
+  it("promises visitors only what saving does: a bank and review when it's due", async () => {
+    const landing = await html("/");
+    expect(landing).toContain(
+      "A free account saves language to your own bank and brings it back for review when it’s due.",
+    );
+    expect(landing).not.toContain("recall is growing");
+  });
+
+  it("answers a save with whether it is ready to review", async () => {
+    const response = await change("PUT", "crucial.essential", alice.cookie);
+    expect(await response.json()).toEqual({
+      senseId: "crucial.essential",
+      saved: true,
+      review: "ready",
+    });
+    await change("DELETE", "crucial.essential", alice.cookie);
+  });
+
   it("shows the learner's real saved count on the dashboard", async () => {
     await change("PUT", "important.main", alice.cookie);
     expect(await html("/home", alice.cookie)).toContain("1 meaning saved");
     await change("DELETE", "important.main", alice.cookie);
-    expect(await html("/home", alice.cookie)).toContain("0 meanings saved");
+    // An empty bank shows where to start, not a zero.
+    const empty = await html("/home", alice.cookie);
+    expect(empty).toContain("Start your language bank");
+    expect(empty).not.toContain("0 meanings saved");
+  });
+
+  it("gives a saved sense a review card, and removes it with the save", async () => {
+    const [aliceRow] = await sql`select id from users where email = ${alice.email}`;
+    const id = aliceRow!.id as string;
+    const card = async () =>
+      sql`select box, reviews, due_at <= now() as due from review_cards where user_id = ${id} and sense_id = ${STATISTICAL}`;
+
+    expect((await change("PUT", STATISTICAL, alice.cookie)).status).toBe(200);
+    expect(await card()).toEqual([{ box: 0, reviews: 0, due: true }]);
+    await change("PUT", STATISTICAL, alice.cookie);
+    expect(await card()).toHaveLength(1);
+
+    expect((await change("DELETE", STATISTICAL, alice.cookie)).status).toBe(200);
+    expect(await card()).toEqual([]);
+  });
+
+  it("limits saves and removals to 60 a minute per learner (429 after that)", async () => {
+    const [bobRow] = await sql`select id from users where email = ${bob.email}`;
+    const id = bobRow!.id as string;
+    // Earlier tests count against this minute too: start from an empty window.
+    await sql`delete from request_limits where user_id = ${id}`;
+    try {
+      // A burst can cross into the next minute, so allow up to two windows: the first 429 must
+      // come after at least 60 successful requests.
+      const statuses: number[] = [];
+      for (let i = 0; i < 125 && !statuses.includes(429); i++) {
+        statuses.push((await change(i % 2 === 0 ? "PUT" : "DELETE", NOTABLE, bob.cookie)).status);
+      }
+      const first = statuses.indexOf(429);
+      expect(first).toBeGreaterThanOrEqual(60);
+      expect(statuses.slice(0, first).every((status) => status === 200)).toBe(true);
+
+      const limited = await change("PUT", NOTABLE, bob.cookie);
+      expect(limited.status).toBe(429);
+      expect(await limited.json()).toEqual({ error: "rate_limited" });
+      expect(Number(limited.headers.get("retry-after"))).toBeGreaterThan(0);
+      // Alice's allowance is her own.
+      expect((await change("PUT", NOTABLE, alice.cookie)).status).toBe(200);
+      await change("DELETE", NOTABLE, alice.cookie);
+    } finally {
+      // Give Bob his allowance back, and leave nothing saved.
+      await sql`delete from request_limits where user_id = ${id}`;
+      await sql`delete from saved_senses where user_id = ${id}`;
+    }
   });
 });

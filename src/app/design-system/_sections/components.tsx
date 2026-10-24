@@ -343,7 +343,9 @@ export function ComponentsSection() {
               <StatusBadge status="new" />
               <StatusBadge status="learning" />
               <StatusBadge status="due" />
-              <StatusBadge status="mastered" />
+              <StatusBadge status="known" />
+              <StatusBadge status="retired" />
+              <StatusBadge status="no_exercise" />
             </div>
           </div>
         </div>
@@ -373,8 +375,8 @@ export function ComponentsSection() {
           <Tile
             tone="highlight"
             icon={Sparkles}
-            title="Today’s focus"
-            description="12 prepositions are due"
+            title="Ready to review"
+            description="3 meanings are ready"
             href="#components"
           />
           <Tile

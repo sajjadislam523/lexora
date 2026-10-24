@@ -25,12 +25,15 @@ export async function unauthenticated() {
   return json({ error: "unauthenticated" }, 401);
 }
 
-/** Runs a handler; a failure (such as the database being down) is a generic 503, never details. */
-export async function guarded(handler: () => Promise<Response>) {
+/**
+ * Runs a handler; a failure (such as the database being down) is a generic 503, never details.
+ * The log names the request and the error class only: never a message that could hold input.
+ */
+export async function guarded(handler: () => Promise<Response>, label = "Saved language request") {
   try {
     return await handler();
   } catch (error) {
-    console.error("Saved language request failed", error instanceof Error ? error.message : error);
+    console.error(`${label} failed`, error instanceof Error ? error.name : "error");
     return json({ error: "unavailable" }, 503);
   }
 }

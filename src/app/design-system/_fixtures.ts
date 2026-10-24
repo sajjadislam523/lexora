@@ -98,7 +98,7 @@ export const SAMPLE_QUERIES = [
 export const SAMPLE_BANK: {
   term: string;
   category: SampleResult["category"];
-  status: "new" | "learning" | "due" | "mastered";
+  status: "new" | "learning" | "due" | "known";
   nextReview: string;
   accuracy: number;
 }[] = [
@@ -119,7 +119,7 @@ export const SAMPLE_BANK: {
   {
     term: "In contrast,",
     category: "linker",
-    status: "mastered",
+    status: "known",
     nextReview: "In 24 days",
     accuracy: 96,
   },

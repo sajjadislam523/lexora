@@ -359,7 +359,7 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 | ----------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
 | `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                    |
 | `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                            |
-| `lexora/status-badge`   | Pill               | Learning status: New (ink), Learning (warning), Due (charcoal), Mastered (success)                          |
+| `lexora/status-badge`   | Pill               | New (ink), Learning (warning), Due (charcoal), Known (success); retired, no exercise (muted)                |
 | `lexora/fit-badge`      | Pill               | The Phase 3 verb-frame fit: Fits (success), Different preposition (warning), Doesn’t fit (neutral)          |
 | `lexora/verdict-badge`  | Pill               | Context-fit verdict: Fits · Likely fits · Depends · Unlikely · Not supported. Icon and label, never a score |
 | `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                    |
@@ -464,17 +464,22 @@ Components for language and practice. They are presentational and take data as p
 
 ## 10. Screen patterns
 
-The four core screens. They reuse the shell, `PageContainer`, `PageHeader` and the components above. Every prototype screen says what is sample data and what isn't stored.
+The core screens. They reuse the shell, `PageContainer`, `PageHeader` and the components above. Any prototype screen must say what is sample data and what isn't stored; none remains.
 
-### 10.1 Dashboard (`/home`)
+### 10.1 Home (`/home`)
 
-- **Header:** a sample-data badge, "Welcome back", this week's focus, then _Find language_ (outline) and _Start today's practice_ (primary).
+The learner's starting point (Phase 5 Step 7): only what is true for this learner, each line changing what they do next.
+
+- **Header:** "Welcome back, {first name}" and one line: "3 meanings are ready to review." or "Nothing is due right now. Your next review is in 2 days." Actions: _Find language_ (outline) and, when something is ready, _Start review_ (primary).
 - **Verification reminder:** only while the email is unverified, an info `Callout` under the header: "Verify your email when it suits you", the address the link went to, "Everything in Lexora works in the meantime", and a link to Settings for a new one. It never blocks anything and disappears once the address is verified.
-- **Today's focus:** the single **highlighter panel** on the page. It holds the review count and time, a `ProgressTrack`, _Continue review_, and up to three "needs attention" rows (category dot + reason) on `bg-card/70`.
-- **Continue learning:** `LanguageRow`s with a usage line, not definitions.
-- **Recent mistakes:** `MistakeRow`s, each with a next step (practise, or find alternatives).
-- **Quick actions:** a compact link list in the side column from `lg`.
-- **No metric tiles, charts or streaks.**
+- **Ready to review:** the single **highlighter panel**: "n meanings ready now" with _Start review_, or "Nothing is due right now" with the next review and _Open language bank_. "Ready" is due plus new, as the bank counts it.
+- **Your language bank:** one text line, no tiles and no zeros: "12 saved · 5 learning · 2 known", with _Open language bank_.
+- **Recurring mistakes:** up to three `MistakeRow`s, the most recent first: the wrong → right versions, the authored explanation, "You've made this mistake 2 times in the last 30 days", and _Open “term”_. Hidden when there are none.
+- **Recently saved:** up to four `LanguageRow`s (term, kind, best-when line, status), newest first. Hidden for an empty bank.
+- **Quick actions:** _Find language_ and _Open language bank_ ("n meanings saved"), a compact list in the side column from `lg`.
+- **Empty bank:** "Welcome to Lexora", "Save language from the Finder to start reviewing it.", _Find language_, and one highlighter panel saying what the bank does. No counts.
+- **Unavailable:** a danger `Callout` with _Try again_; never stand-in data.
+- **Not here:** weekly focus, weak areas, minutes, "reviewed today", percentages, progress bars, charts or streaks.
 
 ### 10.2 Language Finder (`/finder`) and Explore (`/explore`)
 
@@ -516,18 +521,47 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
   - A visually hidden status line announces the result summary after each search.
 - **Saving:** the card's bookmark. Visitors get the save gate (§10.7).
 
+### 10.2a Language bank (`/bank`)
+
+The learner's saved meanings and when each comes back (Phase 5 Step 4).
+
+- **Header:** `PageHeader`: "Language bank", "Everything you've saved, and when it comes back."
+- **Summary:** one text line, not tiles: "12 meanings · 3 due now · 2 new · 5 learning · 2 known". Beside it, a primary _Start review_ with "n due" (due plus new) links to Practice, only when something is.
+- **Sections:** in order, each an `h2` and one bordered list (`rounded-lg border bg-card p-1`, rows divided by `border-subtle`):
+  - _Ready to review_: Due, then New;
+  - _Coming up_: Learning, Known, and senses with no exercise yet, by when they come back;
+  - _No longer reviewed_: retired senses, with "Replaced by …" when they have a replacement.
+- **Row:**
+  - the term (`type-term-sm`, the link to its language page), the kind dot and the sense label;
+  - the definition (`type-body`, muted), the first authored pattern (`type-mono` chip), and the first authored example (`type-example`, highlighted);
+  - a `StatusBadge` and the next review in caption: "Due now", "Next review in 3 days" (whole days, no timezones), and "Missed n times" once a card has two wrong answers;
+  - each recurring mistake (§16 of the Phase 5 spec) as a `MistakeRow` in a `bg-muted` well: "Your mistake", the wrong → right versions, the authored explanation and "You've made this mistake 2 times in the last 30 days" (or "You typed “at” 2 times…");
+  - a ghost icon button that removes it, named "Remove “term (label)” from your language bank", 44px on touch.
+- **Removing:** it goes through the shared save flow (the same endpoint and notices as the Finder). The list refreshes only once the server confirms. On failure, including the rate limit, the row stays and the notice says why.
+- **States:**
+  - **Empty:** `EmptyState`: "Your language bank is empty", with _Find language_.
+  - **Loading:** a skeleton of the list inside the page.
+  - **Error:** a danger `Callout` with _Try again_.
+- **Pagination:** 50 per page with _Previous_ · "Page n of m" · _Next_, as in browse.
+- **Not here:** filters, sorting controls, search or notes.
+
 ### 10.3 Practice (`/practice`)
 
-- **Intro:** the five modes as numbered rows, each with a one-line purpose. Choosing a row jumps straight to that mode.
+The learner's review session (Phase 5 Step 5): up to five due meanings, one exercise each, checked and recorded by the server.
+
 - **Session:**
-  - one task at a time at `max-w-reading`
-  - "Question n of 5 · mode" with a `ProgressTrack` above, _End session_ on the right
-  - the prompt as the card heading, which receives focus on each new question
-- **Retrieval first:** prepositions are **typed**, not chosen. Multi-select is used for collocations.
-- **Feedback:** immediate, in a `Callout` (Correct · Also natural · Not quite). It explains why, reveals the best answer and links to the item. Answered options lock, and focus moves to _Continue_.
-- **Keyboard:** number keys choose, Enter checks or continues.
-- **Summary:** "You retrieved n of 5", a calm per-mode list, and _Worth revisiting_ as `LanguageRow`s.
-- **No XP, streaks, hearts or confetti.**
+  - one exercise at a time at `max-w-reading`, no intro screen;
+  - "Review n of 5 · mode" with a `ProgressTrack` above, _End session_ on the right;
+  - the mode as the card heading (`h1`): _Complete the sentence_, _Type the preposition_, _Which is correct?_
+- **Complete the sentence / Type the preposition:** the cue (the definition, with the meaning label when the item has several; or the pattern with its preposition hidden, as `type-mono`), the sentence in a `bg-muted` well as a `GapSentence`, and one input with _Check_. The input's label carries the sentence ("Missing word in: There was a … increase…"), and "2 words" is shown under it when the blank holds more than one. The headword isn't shown before answering: it would be the answer.
+- **Which is correct?:** the term (serif) and meaning label, then the two authored versions as `ChoiceOption`s in the language voice.
+- **Feedback** comes only from the server's answer, in a `Callout` (`role="status"`): _Correct_ (success) or _Not quite_ (danger), each with an icon and text. It says what Lexora was looking for, the authored explanation (the matched mistake's, the pattern's note, or the sense's best-when), "Also accepted here: …" when the content accepts other answers, the next review ("Next review in 3 days"), and _How to use “term”_ to its language page. Answered options lock, and focus moves to _Continue_.
+- **Recurring mistake:** when a wrong answer makes the same mistake twice in 30 days, the feedback adds one emphasised line: "You've made this mistake 2 times in the last 30 days" (or "You typed “at” 2 times…"). Nothing else changes: no penalty, no extra review.
+- **Refusals:** an item already reviewed, no longer due, changed or retired shows an info `Callout` and is skipped, uncounted. A failed request, the rate limit ("You're going a little fast. Try again in a moment.") or an ended session keeps the answer and nothing advances.
+- **Focus and keyboard:** a typed exercise focuses its input (its label reads the sentence); a choice focuses the heading. Enter checks, then continues; 1–2 choose. There are no time limits.
+- **Summary:** "You reviewed n · m correct", built from the server's answers: each item with its verdict and next review, linked to its language page. _Review 5 more_ when more is due, and _Open language bank_.
+- **States:** nothing saved → `EmptyState` "Nothing to review yet" with _Find language_; nothing due → "Nothing is due right now", with the next review when there is one, _Open language bank_ and _Find language_; unavailable → a danger `Callout` with _Try again_.
+- **No XP, streaks, hearts, points or confetti.**
 
 ### 10.4 Language detail (`/language/[slug]`)
 
@@ -602,10 +636,14 @@ The first thing a visitor sees is the product working, not a sign-up form (UX pr
   2. **Showcase:** a real result — the fit guide plus two saveable result cards for "better word for important".
   3. **How it works** (`#how-it-works`, `bg-sidebar`): three numbered cards — describe, see how it's used, save and practise.
   4. **Context tool:** "Choose the word that fits the sentence", the interactive gap sentence.
-  5. **Closing call to action:** _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
+  5. **Closing call to action:** "Keep the language you find", "A free account saves language to your own bank and brings it back for review when it's due.", then _Create free account_ / _Keep exploring_ (or _Open Lexora_ when signed in).
      Sections are separated by hairlines with `py-14 sm:py-20` rhythm, content at `max-w-page`; the hero sits at `max-w-3xl`.
-- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("…save language, practise it later, and track your progress."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`, primary on the right from `sm`, and the primary first in keyboard order. Closing it changes nothing.
-- **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and a calm notice ("Saved “term” to your language bank.") appears at the bottom of the viewport for five seconds (`role="status"`).
+- **Save gate:** a `Dialog`, not a page. Ink bookmark icon, `type-heading` "Save this to your Language Bank", one line on what an account adds ("Create a free Lexora account to save language and review it when it's due."), the term being saved in a muted well (`type-term-sm`), a caption promising the return, and _Create free account_ (primary) + _Sign in_ (outline) in the dialog footer — stacked with the primary on top below `sm`, primary on the right from `sm`, and the primary first in keyboard order. Closing it changes nothing.
+- **Return:** after signing up or in, the visitor lands back on the same URL; the save completes and the save notice below appears.
+- **Save and remove notices** (everywhere a meaning is saved or removed, the bank included): a calm notice at the bottom of the viewport for five seconds (`role="status"`).
+  - Saved: "Saved “term” to your language bank. It's ready to review." and an _Open language bank_ link. The second sentence appears only when the server says the meaning is due now (`review: "ready"`); saving one already scheduled says only that it was saved. No reminder is promised.
+  - Removed: "Removed “term” from your language bank. Its review history is kept."
+  - Failures keep their wording: the rate limit, "can no longer be saved", "Couldn't update…", offline.
 
 ### 10.8 Account email
 

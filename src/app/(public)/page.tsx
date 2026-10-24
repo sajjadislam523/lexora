@@ -149,8 +149,8 @@ export default async function LandingPage() {
               Keep the language you find
             </h2>
             <p className="type-reading text-muted-foreground">
-              A free account saves language to your own bank, brings it back for practice, and shows
-              how your recall is growing.
+              A free account saves language to your own bank and brings it back for review when it’s
+              due.
             </p>
           </div>
           <AccountCta />

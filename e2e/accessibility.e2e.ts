@@ -132,6 +132,22 @@ describe("accessibility of the HTML every page sends", () => {
     expect(problems(await html(path, learner.cookie))).toEqual([]);
   });
 
+  it("/practice with an exercise and with nothing due (signed in)", async () => {
+    const change = (method: "PUT" | "DELETE") =>
+      fetch(`${BASE_URL}/api/bank/saved/crucial.essential`, {
+        method,
+        headers: { origin: new URL(BASE_URL).origin, cookie: learner.cookie },
+      });
+    expect((await change("PUT")).status).toBe(200);
+    try {
+      const exercise = await html("/practice", learner.cookie);
+      expect(exercise).toContain('for="review-answer"');
+      expect(problems(exercise)).toEqual([]);
+    } finally {
+      await change("DELETE");
+    }
+  });
+
   it("names overlay triggers as opening a dialog", async () => {
     const home = await html("/home", learner.cookie);
     expect(home).toMatch(
@@ -142,12 +158,11 @@ describe("accessibility of the HTML every page sends", () => {
     expect(landing).toMatch(/aria-haspopup="dialog"/);
   });
 
-  it("marks only the screens that show sample data as a prototype", async () => {
+  it("marks no screen as a prototype: none shows sample data", async () => {
     const badge = /data-slot="badge"[^>]*>Prototype</;
-    for (const path of ["/home", "/practice"])
-      expect(await html(path, learner.cookie), path).toMatch(badge);
-    for (const path of ["/finder", "/settings", "/bank"])
+    for (const path of ["/home", "/finder", "/settings", "/bank", "/practice"])
       expect(await html(path, learner.cookie), path).not.toMatch(badge);
+    expect(await html("/home", learner.cookie)).not.toContain("Sample learner data");
     expect(await html("/finder", learner.cookie)).not.toContain("nothing is saved");
   });
 

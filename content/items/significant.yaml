@@ -27,6 +27,8 @@ senses:
         skill: writing
         task: writing-1
         collocation: increase
+        practice:
+          accept: [substantial]
       - id: ex2
         text: Social media has had a significant impact on how young people communicate.
         highlight: significant impact
@@ -39,6 +41,8 @@ senses:
         skill: speaking
         task: speaking-2
         collocation: difference
+        practice:
+          accept: [big]
     collocations:
       - id: increase
         phrase: a significant increase

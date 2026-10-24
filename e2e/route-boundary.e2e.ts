@@ -128,7 +128,11 @@ describe("saving language", () => {
   it("accepts the signed-in learner", async () => {
     const response = await save({ origin: ORIGIN, cookie });
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ senseId: "significant.statistical", saved: true });
+    expect(await response.json()).toEqual({
+      senseId: "significant.statistical",
+      saved: true,
+      review: "ready",
+    });
     await fetch(`${BASE_URL}/api/bank/saved/significant.statistical`, {
       method: "DELETE",
       headers: { origin: ORIGIN, cookie },

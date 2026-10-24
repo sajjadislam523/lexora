@@ -286,6 +286,15 @@ export class DatabaseLanguageRepository
     }));
   }
 
+  async hasIntentTrigger(normalised: string): Promise<boolean> {
+    const [row] = await this.db
+      .select({ intentId: intentTriggers.intentId })
+      .from(intentTriggers)
+      .where(eq(intentTriggers.normalized, normalised))
+      .limit(1);
+    return row !== undefined;
+  }
+
   async listIntents(): Promise<IntentDefinition[]> {
     const [intentRows, triggerRows, entryRows] = await Promise.all([
       this.db.select().from(intents).orderBy(asc(intents.id)),

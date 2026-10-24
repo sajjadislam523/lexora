@@ -36,6 +36,27 @@
       "when": 1792217847449,
       "tag": "0004_topics_and_functions",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792613449443,
+      "tag": "0005_request_limits",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792648611250,
+      "tag": "0006_review_cards_and_log",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792654408285,
+      "tag": "0007_example_practice",
+      "breakpoints": true
     }
   ]
 }

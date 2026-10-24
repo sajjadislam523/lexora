@@ -31,6 +31,7 @@ import {
   LINKER_POSITIONS,
   MISTAKE_TYPES,
   PARTS_OF_SPEECH,
+  PRACTICE_BLANKS,
   REGIONS,
   REGISTERS,
   RELATION_TYPES,
@@ -69,6 +70,7 @@ export const linkerConnects = pgEnum("linker_connects", LINKER_CONNECTS);
 export const linkerPosition = pgEnum("linker_position", LINKER_POSITIONS);
 export const complement = pgEnum("complement", COMPLEMENTS);
 export const mistakeType = pgEnum("mistake_type", MISTAKE_TYPES);
+export const practiceBlank = pgEnum("practice_blank", PRACTICE_BLANKS);
 export const relationType = pgEnum("relation_type", RELATION_TYPES);
 export const sourceKind = pgEnum("source_kind", SOURCE_KINDS);
 export const sourceUse = pgEnum("source_use", SOURCE_USES);
@@ -319,6 +321,21 @@ export const examples = pgTable(
     sourceId: text()
       .notNull()
       .references(() => contentSources.id),
+    /** Authored `practice.accept`: also-correct answers in the term blank (Phase 5 review). */
+    practiceAccept: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    /** Authored `practice.accept_preposition`: also-correct answers in the preposition blank. */
+    practiceAcceptPreposition: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    /** Authored `practice.exclude`: blanks not to make from this example. */
+    practiceExclude: practiceBlank()
+      .array()
+      .notNull()
+      .default(sql`'{}'::practice_blank[]`),
   },
   (table) => [index("examples_sense_position_idx").on(table.senseId, table.position)],
 );
