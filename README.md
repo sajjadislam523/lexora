@@ -49,6 +49,8 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 
 ## Production (Vercel + Neon)
 
+For a phase release, follow that phase's runbook, which is authoritative for the order and the checks (Phase 5: [docs/specs/phase-5-release-runbook.md](docs/specs/phase-5-release-runbook.md)). The general order is migrations, then content, then the merge that deploys.
+
 1. **Database:** create a Neon project (or add the Neon integration in Vercel). You need two connection strings: the **pooled** one (host contains `-pooler`) and the **direct** one.
 2. **Environment variables** in Vercel → Project → Settings → Environment Variables (Production):
 
@@ -73,10 +75,10 @@ To start again from an empty database: `pnpm db:reset && pnpm db:migrate`.
 
    Keep migrations backwards-compatible with the running version (add first, remove later). `LEXORA_ALLOW_REMOTE_DB` must name the direct URL's host exactly (see [Local-database guard](#local-database-guard)); type it in the shell for this one command, never in `.env.local`.
 
-4. **Content:** import the language content into Neon after migrating and before the new code goes live. Run it from the commit being deployed, with a clean `content/` folder:
+4. **Content:** import the language content into Neon after migrating and before the new code goes live. Run it from the commit being deployed (for a phase release, the phase PR's head commit, before it's merged), with a clean `content/` folder:
 
    ```bash
-   git checkout main && git pull && git status --short content   # must print nothing
+   git fetch origin && git checkout --detach <commit being deployed> && git status --short content   # must print nothing
    LEXORA_ALLOW_REMOTE_DB="<neon direct host>" DATABASE_URL_UNPOOLED="<neon direct url>" DATABASE_URL="<neon pooled url>" pnpm content:import
    ```
 
@@ -122,7 +124,7 @@ Public search is limited at the edge to **120 requests per minute per IP** (Phas
 
   expects about 120 × `200` and the rest `429`. Explore without `?q=`, language pages and the landing page aren't limited.
 
-Signed-in writes are limited in the app, per learner, in PostgreSQL (`request_limits`): 60 saves and removals a minute (429 with `Retry-After`). The review-answer limit (30 a minute) applies when that endpoint is built in Phase 5 Step 5.
+Signed-in writes are limited in the app, per learner, in PostgreSQL (`request_limits`): 60 saves and removals a minute, and 30 review answers a minute (429 with `Retry-After`).
 
 ### Account email check
 
@@ -150,4 +152,5 @@ Lexora doesn't use Better Auth Infrastructure. If Better Auth's website asks for
 - [docs/UX_PRINCIPLES.md](docs/UX_PRINCIPLES.md): product and interaction principles
 - [docs/WORKFLOW.md](docs/WORKFLOW.md): branching, commits, and phase reviews
 - [docs/audits/](docs/audits/): dated project audits, starting with the post-Phase-3 audit (9 October 2026)
+- [docs/specs/](docs/specs/): phase specifications, final audits and release runbooks (Phase 5: [spec](docs/specs/phase-5-retrieval-loop.md), [final audit](docs/specs/phase-5-final-audit.md), [release runbook](docs/specs/phase-5-release-runbook.md))
 - [CLAUDE.md](CLAUDE.md): working agreement for AI-assisted development

@@ -1,6 +1,6 @@
 # Phase 5 — Retrieval Loop: specification
 
-Written: 21 October 2026 · Baseline: `main` at `d0b8c09` (`v0.4.0`, Phase 4 complete) · Integration branch: `phase/5-retrieval-loop` · Status: **approved** (PR #39); built step by step (§38), with each step's _As built_ notes there.
+Written: 21 October 2026 · Baseline: `main` at `d0b8c09` (`v0.4.0`, Phase 4 complete) · Integration branch: `phase/5-retrieval-loop` · Status: **approved** (PR #39); built step by step (§38), with each step's _As built_ notes there; **code-complete** (final audit: [phase-5-final-audit.md](phase-5-final-audit.md)).
 
 > Saved language should come back at the right time.
 
@@ -1415,6 +1415,12 @@ Every step is a PR into `phase/5-retrieval-loop`, built only after the previous 
   - ROADMAP and ARCHITECTURE (decision log D1–D22);
   - the phase PR to `main` (the owner labels it; never Claude Code).
 - **Acceptance:** §39.
+- **As built (24 October 2026):**
+  - **The audit** is [phase-5-final-audit.md](phase-5-final-audit.md): no release blockers; the verification, statement counts against §32, latency, non-blocking issues and owner actions.
+  - **The runbook** is [phase-5-release-runbook.md](phase-5-release-runbook.md). It puts the content import **before** the merge, superseding §31's "immediately after the deploy": `v0.4.0` ignores the practice columns, and the first learner then sees the full accept lists. README points to it as the authoritative order.
+  - **No rollback SQL.** The schema is additive and `v0.4.0` ignores it, so rollback is Vercel Instant Rollback alone (§34). Dropping tables or editing migration history is never part of a rollback.
+  - **The 21 October incident** (0005 applied to an unidentified Neon branch) is recorded there with read-only checks and the expected migration hashes.
+  - The phase PR into `main` is opened by Claude Code and approved only by the owner.
 
 ## 39. Definition of done
 
