@@ -133,7 +133,7 @@ export const SECONDARY_NAV: NavEntry[] = [
     href: "/settings",
     label: "Settings",
     icon: Settings,
-    description: "Your profile, target band and preferences.",
+    description: "Your profile, learning goals and account.",
     status: "Available.",
   },
 ];

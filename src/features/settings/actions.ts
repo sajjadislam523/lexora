@@ -38,7 +38,7 @@ export async function updateNameAction(_prev: FormState, formData: FormData): Pr
   return { status: "success", message: "Name updated." };
 }
 
-/** Save the learning profile. The user id comes from the session, never from the form. */
+/** Save the learning goals (the learner profile). The user id comes from the session, never from the form. */
 export async function updateLearnerProfileAction(
   _prev: FormState,
   formData: FormData,
@@ -61,9 +61,9 @@ export async function updateLearnerProfileAction(
   } catch {
     return {
       status: "error",
-      message: "Your learning profile couldn’t be saved. Please try again.",
+      message: "Your learning goals couldn’t be saved. Please try again.",
     };
   }
   revalidatePath("/settings");
-  return { status: "success", message: "Learning profile saved." };
+  return { status: "success", message: "Learning goals saved." };
 }
