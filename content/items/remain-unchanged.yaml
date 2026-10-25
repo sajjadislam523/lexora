@@ -1,0 +1,45 @@
+id: remain-unchanged
+kind: collocation
+headword: remain unchanged
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: remain unchanged, type: lemma }
+  - { form: remains unchanged, type: inflection }
+  - { form: remained unchanged, type: inflection }
+  - { form: remaining unchanged, type: inflection }
+senses:
+  - key: same
+    pos: verb_phrase
+    definition: To stay exactly the same, with no change at all.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    best_when: A figure that is identical at two or more points, or a rule or situation that did not change.
+    avoid_when: The figure changed a little. "Remained stable" or "stayed roughly the same" is more accurate.
+    examples:
+      - id: ex1
+        text: The figure for rail travel remained unchanged at 12% between 2005 and 2010.
+        highlight: remained unchanged
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [stayed unchanged, remained the same, stayed the same]
+      - id: ex2
+        text: The school curriculum has remained largely unchanged for decades.
+        highlight: remained largely unchanged
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: unchange
+        wrong: The price remained unchange.
+        right: The price remained unchanged.
+        type: word_form
+        explanation: The adjective is "unchanged", with -ed.
+    relations:
+      - type: alternative
+        to: level-off.stop-changing
+        weight: 1
+        note: Level off describes a change that stops; remain unchanged describes no change at all.

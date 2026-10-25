@@ -1,0 +1,47 @@
+id: resemble
+kind: word
+headword: resemble
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: resemble, type: lemma }
+  - { form: resembles, type: inflection }
+  - { form: resembled, type: inflection }
+  - { form: resembling, type: inflection }
+senses:
+  - key: look-like
+    pos: verb
+    definition: To look like or be similar to someone or something.
+    cefr: C1
+    registers: [formal, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-1, speaking-2] }
+    functions: [comparison]
+    best_when: Similar shapes, patterns or appearances — "the two lines resemble each other".
+    examples:
+      - id: ex1
+        text: The pattern for 2020 closely resembles that of 2010.
+        highlight: closely resembles
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [mirrors]
+      - id: ex2
+        text: People say I resemble my grandfather.
+        highlight: resemble
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [look like, take after]
+    mistakes:
+      - id: to
+        wrong: She resembles to her mother.
+        right: She resembles her mother.
+        type: preposition
+        explanation: Resemble takes a direct object, with no preposition.
+    relations:
+      - type: alternative
+        to: similar.alike
+        weight: 2
+        note: '"Be similar to" is more common; resemble is formal and often about appearance.'

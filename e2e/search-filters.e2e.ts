@@ -53,8 +53,8 @@ describe("canonical Finder URLs", () => {
     ["/explore?kind=linker&page=abc", "/explore?kind=linker"],
     ["/explore?kind=linker' OR 1=1 --", "/explore"],
     ["/explore?q=%20important%20", "/explore?q=important"],
-    // Past the last page: the last page.
-    ["/explore?use=writing&page=9", "/explore?use=writing&page=2"],
+    // Past the last page: the last page (15 since the content expansion).
+    ["/explore?use=writing&page=99", "/explore?use=writing&page=15"],
     ["/finder?use=speaking&kind=linker", "/finder?kind=linker&use=speaking"],
   ])("redirects %s with 307 to its canonical URL", async (from, to) => {
     const response = await get(from, { cookie, follow: false });
@@ -76,60 +76,70 @@ describe("canonical Finder URLs", () => {
 
 describe("browsing by filters (no query)", () => {
   it("lists every linker, core first, as compact rows", async () => {
+    // Content expansion: 40 linkers, so the first page shows 30 of them.
     const page = await html("/explore?kind=linker");
-    expect(page).toContain("11 meanings");
+    expect(page).toContain("40 meanings");
     expect(page).toContain("Core IELTS language first, then A–Z");
     const terms = rowTerms(page);
-    expect(terms).toHaveLength(11);
-    expect(terms.slice(0, 3)).toEqual(["as a result", "for instance", "furthermore"]);
-    expect(page).toMatch(/Showing only <span><a [^>]*>Linker<\/a><\/span> · 11 meanings ·/);
+    expect(terms).toHaveLength(30);
+    expect(terms.slice(0, 3)).toEqual(["also", "although", "as a result"]);
+    expect(page).toMatch(/Showing only <span><a [^>]*>Linker<\/a><\/span> · 40 meanings ·/);
   });
 
   it("combines filters with AND", async () => {
-    expect(await html("/explore?kind=linker&use=speaking")).toContain("7 meanings");
+    expect(await html("/explore?kind=linker&use=speaking")).toContain("24 meanings");
     expect(rowTerms(await html("/explore?kind=linker&function=contrast&use=writing-1"))).toEqual([
+      "although",
       "however",
       "in contrast",
       "whereas",
+      "while",
+      "by comparison",
+      "conversely",
     ]);
   });
 
   it("pages 30 at a time, keeping the filters in the page links", async () => {
     const first = await html("/explore?use=writing");
-    expect(first).toContain("41 meanings");
+    expect(first).toContain("440 meanings");
     expect(rowTerms(first)).toHaveLength(30);
     expect(first).toContain('href="/explore?use=writing&amp;page=2"');
-    expect(first).toContain("Page 1 of 2");
+    expect(first).toContain("Page 1 of 15");
     const second = await html("/explore?use=writing&page=2");
-    expect(rowTerms(second)).toHaveLength(11);
+    expect(rowTerms(second)).toHaveLength(30);
     expect(second).toContain('href="/explore?use=writing"');
-    expect(new Set([...rowTerms(first), ...rowTerms(second)]).size).toBeGreaterThan(30);
+    // Rows are meanings; an item with two meanings (increase) shows its term twice.
+    expect(new Set([...rowTerms(first), ...rowTerms(second)]).size).toBeGreaterThan(50);
+    expect(rowTerms(await html("/explore?use=writing&page=15"))).toHaveLength(20);
   });
 
   it("says honestly when no language matches", async () => {
-    const page = await html("/explore?topic=environment");
+    // Since the content expansion every topic and function has language, so these use
+    // combinations nothing matches.
+    const page = await html("/explore?kind=linker&topic=health");
     expect(page).toContain("No language matches these filters yet");
     expect(page).toContain("isn’t tagged with one");
     expect(rowTerms(page)).toEqual([]);
-    expect(await html("/explore?function=hedging")).toContain(
+    expect(await html("/explore?kind=sentence-pattern&function=hedging&topic=education")).toContain(
       "No language matches these filters yet",
     );
   });
 
   it("shows how many each option would match and disables those that would match nothing", async () => {
     const page = await html("/explore?kind=linker");
-    expect(page).toMatch(/<option value="contrast">Contrast \(5\)<\/option>/);
+    expect(page).toMatch(/<option value="contrast">Contrast \(11\)<\/option>/);
     expect(page).toMatch(/<option value="hedging" disabled="">Softening a claim \(0\)<\/option>/);
     expect(page).toMatch(/<option value="environment" disabled="">Environment \(0\)<\/option>/);
     // The selected option stays enabled.
-    expect(page).toMatch(/<option value="linker" selected="">Linker \(11\)<\/option>/);
+    expect(page).toMatch(/<option value="linker" selected="">Linker \(40\)<\/option>/);
   });
 
   it("offers counts on the start page too, every value listed", async () => {
     const page = await html("/explore");
-    expect(page).toMatch(/<option value="linker">Linker \(11\)<\/option>/);
+    expect(page).toMatch(/<option value="linker">Linker \(40\)<\/option>/);
+    // Since the content expansion every topic has language, so none is disabled here.
     for (const topic of ["education", "environment", "health", "society"]) {
-      expect(page).toMatch(new RegExp(`<option value="${topic}" disabled="">`));
+      expect(page).toMatch(new RegExp(`<option value="${topic}">[^<]+ \\(\\d+\\)</option>`));
     }
   });
 });
@@ -148,9 +158,9 @@ describe("searching with filters", () => {
 
   it("says when the filters hide every result, with the way back", async () => {
     const page = await html("/explore?q=important&topic=environment");
-    expect(page).toContain("Your search found 5 results, but none match these filters");
+    expect(page).toContain("Your search found 7 results, but none match these filters");
     expect(page).toContain('href="/explore?q=important"');
-    expect(page).toContain("Show all 5 results");
+    expect(page).toContain("Show all 7 results");
     expect(page).not.toContain("Nothing in Lexora matches");
   });
 

@@ -1,0 +1,36 @@
+id: academic-performance
+kind: collocation
+headword: academic performance
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: academic performance, type: lemma }
+senses:
+  - key: results
+    pos: noun_phrase
+    definition: How well a student does in their studies, measured by marks and exam results.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    topics: [education]
+    best_when: Discussing what affects students' results — sleep, screen time, class size, diet.
+    examples:
+      - id: ex1
+        text: Several studies link poor sleep to lower academic performance.
+        highlight: academic performance
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [academic achievement, school results]
+      - id: ex2
+        text: Smaller classes can improve the academic performance of weaker students.
+        highlight: academic performance
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [academic achievement, results]
+    relations:
+      - type: related
+        to: assessment.judging

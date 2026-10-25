@@ -1,0 +1,41 @@
+id: consumer
+kind: word
+headword: consumer
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: consumer, type: lemma }
+  - { form: consumers, type: inflection }
+senses:
+  - key: buyer
+    pos: noun
+    definition: A person who buys goods or services for their own use.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [economy]
+    best_when: Advertising, shopping and environment topics — "consumer spending", "consumer choices".
+    examples:
+      - id: ex1
+        text: Advertising influences consumers more than they realise.
+        highlight: consumers
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [shoppers, customers, buyers]
+      - id: ex2
+        text: I think consumers should pay more attention to where their clothes are made.
+        highlight: consumers
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [shoppers, customers, people]
+    collocations:
+      - id: spending
+        phrase: consumer spending
+        note: 'also "consumer demand"'
+    relations:
+      - type: related
+        to: consumption.use

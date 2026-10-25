@@ -1,0 +1,36 @@
+id: obesity
+kind: word
+headword: obesity
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: obesity, type: lemma }
+  - { form: obese, type: lemma }
+senses:
+  - key: overweight
+    pos: noun
+    definition: The condition of being so overweight that it is dangerous to health; "obese" is the adjective.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [health]
+    best_when: Diet and exercise topics — "childhood obesity", "obesity rates", "tackle obesity".
+    examples:
+      - id: ex1
+        text: Childhood obesity has risen sharply in many developed countries.
+        highlight: Childhood obesity
+        skill: writing
+        task: writing-2
+        collocation: childhood
+      - id: ex2
+        text: I think fast food is the main reason for obesity in my country.
+        highlight: obesity
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: childhood
+        phrase: childhood obesity
+      - id: rates
+        phrase: obesity rates

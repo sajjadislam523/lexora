@@ -1,0 +1,33 @@
+id: carbon-footprint
+kind: word
+headword: carbon footprint
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: carbon footprint, type: lemma }
+  - { form: carbon footprints, type: inflection }
+senses:
+  - key: emissions
+    pos: noun
+    definition: The amount of carbon dioxide released into the air because of a person's or organisation's activities.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [environment]
+    best_when: Personal or business responsibility for climate change — "reduce your carbon footprint".
+    examples:
+      - id: ex1
+        text: Flying less is one of the easiest ways to reduce your carbon footprint.
+        highlight: reduce your carbon footprint
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I've been trying to cut my carbon footprint by eating less meat.
+        highlight: carbon footprint
+        skill: speaking
+        task: speaking-1
+    relations:
+      - type: related
+        to: emissions.gases

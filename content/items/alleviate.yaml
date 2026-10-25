@@ -1,0 +1,43 @@
+id: alleviate
+kind: word
+headword: alleviate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: alleviate, type: lemma }
+  - { form: alleviates, type: inflection }
+  - { form: alleviated, type: inflection }
+  - { form: alleviating, type: inflection }
+senses:
+  - key: ease
+    pos: verb
+    definition: To make suffering, pain or a problem less severe.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [society, health]
+    best_when: Reducing hardship people experience — "alleviate poverty", "alleviate pressure on hospitals".
+    examples:
+      - id: ex1
+        text: Free school meals can help alleviate child poverty.
+        highlight: alleviate
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [reduce, ease, relieve, tackle]
+      - id: ex2
+        text: Building new homes would alleviate pressure on the rental market.
+        highlight: alleviate
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [ease, reduce, relieve]
+    collocations:
+      - id: poverty
+        phrase: alleviate poverty
+        note: 'also "alleviate suffering"'
+      - id: pressure
+        phrase: alleviate pressure on
+        pattern: alleviate pressure on + noun

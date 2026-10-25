@@ -1,0 +1,40 @@
+id: the-elderly
+kind: word
+headword: the elderly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: the elderly, type: lemma }
+  - { form: elderly people, type: lemma }
+  - { form: older people, type: lemma }
+senses:
+  - key: old-people
+    pos: noun
+    definition: People who are old, considered as a group; "older people" is often preferred as more respectful.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [society, health]
+    best_when: Ageing-population topics — care, pensions, technology and loneliness. "Older people" sounds kinder.
+    examples:
+      - id: ex1
+        text: Governments must plan for the care of the elderly as populations age.
+        highlight: the elderly
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Older people in my family find smartphones quite confusing.
+        highlight: Older people
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: elderlies
+        wrong: The elderlies need more support.
+        right: The elderly need more support.
+        type: countability
+        explanation: '"The elderly" is a group noun with no plural "s", and it takes a plural verb.'
+    relations:
+      - type: related
+        to: population.people

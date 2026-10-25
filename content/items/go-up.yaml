@@ -1,0 +1,46 @@
+id: go-up
+kind: phrase
+headword: go up
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: go up, type: lemma }
+  - { form: goes up, type: inflection }
+  - { form: went up, type: inflection }
+  - { form: gone up, type: inflection }
+  - { form: going up, type: inflection }
+senses:
+  - key: increase
+    pos: verb_phrase
+    definition: To become higher in price, number or level.
+    cefr: A2
+    registers: [neutral, informal]
+    skills: [speaking, writing]
+    ielts: { relevance: high, tasks: [speaking-1, speaking-3] }
+    functions: [increase]
+    best_when: Speaking about prices, costs and numbers in everyday life — it sounds natural and relaxed.
+    avoid_when: Writing Task 1. Use "rise" or "increase" for a more academic tone.
+    skill_note: Natural in Speaking; slightly informal in an essay.
+    examples:
+      - id: ex1
+        text: Prices have gone up so much that eating out is a luxury now.
+        highlight: gone up
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [risen, increased]
+      - id: ex2
+        text: The number of people cycling to work went up after the new lanes opened.
+        highlight: went up
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [rose, increased, grew]
+    relations:
+      - type: more_formal
+        to: increase.verb
+        weight: 1
+        note: Increase is the standard written choice.
+      - type: opposite
+        to: go-down.decrease

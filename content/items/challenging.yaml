@@ -1,0 +1,37 @@
+id: challenging
+kind: word
+headword: challenging
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: challenging, type: lemma }
+senses:
+  - key: demanding
+    pos: adjective
+    definition: Difficult in a way that tests your ability or determination.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-2] }
+    best_when: Jobs, courses and tasks that are hard but worthwhile.
+    examples:
+      - id: ex1
+        text: Teaching is a challenging but rewarding profession.
+        highlight: challenging
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [demanding, difficult]
+      - id: ex2
+        text: My first year at university was really challenging.
+        highlight: challenging
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [difficult, hard, tough, demanding]
+    relations:
+      - type: alternative
+        to: complex.many-parts
+        weight: 1
+        note: Complex means it has many connected parts; challenging means it tests you.

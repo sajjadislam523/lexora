@@ -1,0 +1,50 @@
+id: contribution
+kind: word
+headword: contribution
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: contribution, type: lemma }
+  - { form: contributions, type: inflection }
+senses:
+  - key: part
+    pos: noun
+    definition: Something you give or do that helps to achieve a result or makes something successful.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    best_when: '"Make a contribution to" society, the economy or a team.'
+    examples:
+      - id: ex1
+        text: Immigrants make a significant contribution to the economy.
+        highlight: contribution to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Older people make a huge contribution to their communities.
+        highlight: contribution to
+        skill: speaking
+        task: speaking-3
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: contribution
+        preposition: to
+        pattern: make a contribution to + noun
+        complement: noun
+        note: what is helped
+        mistake: for
+    mistakes:
+      - id: for
+        wrong: They made a big contribution for the project.
+        right: They made a big contribution to the project.
+        type: preposition
+        explanation: '"A contribution to" + what is helped, like "contribute to".'
+    relations:
+      - type: derived_form
+        to: contribute-to.help-cause
+        weight: 2
+        note: 'The verb: "contribute to".'

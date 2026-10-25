@@ -51,8 +51,9 @@ describe("a different continuation than the authored one", () => {
       "It had a significant ___ in health",
       ["increase=fits", "difference=likely_fits", "impact=likely_fits", "proportion=likely_fits"],
     ],
-    ["A sharp ___ in prices", ["rise=fits"]],
-    ["A sharp ___ of prices", ["rise=likely_fits"]],
+    // Content expansion: "a sharp increase in" (increase.noun) follows the same rule as "a sharp rise".
+    ["A sharp ___ in prices", ["increase=fits", "rise=fits", "fall=fits"]],
+    ["A sharp ___ of prices", ["increase=likely_fits", "rise=likely_fits", "fall=likely_fits"]],
   ])("follows the authored pattern for %j", async (query, expected) => {
     expect(verdicts(await service.search(query))).toEqual(expected);
   });
@@ -60,11 +61,26 @@ describe("a different continuation than the authored one", () => {
 
 describe("what stays as it was", () => {
   it.each([
-    ["There was a ___ increase in cycling", ["significant=fits", "substantial=fits"]],
+    // Content expansion: "a gradual / marked / sharp / slight increase".
+    [
+      "There was a ___ increase in cycling",
+      [
+        "gradual=fits",
+        "marked=fits",
+        "sharp=fits",
+        "significant=fits",
+        "slight=fits",
+        "substantial=fits",
+      ],
+    ],
     ["The project required a ___ amount of money", ["considerable=fits", "substantial=fits"]],
     ["A ___ amount of people", ["considerable=fits", "substantial=fits"]],
     ["Governments should take ___ to reduce crime", ["measures=fits", "steps=fits"]],
-    ["It is ___ that governments should act", ["crucial=likely_fits", "essential=likely_fits"]],
+    // Content expansion: "it is clear that" (clear.obvious) joins, also only as likely fits.
+    [
+      "It is ___ that governments should act",
+      ["clear=likely_fits", "crucial=likely_fits", "essential=likely_fits"],
+    ],
     ["There is substantial ___ that cars pollute", ["evidence=fits"]],
   ])("%j", async (query, expected) => {
     expect(verdicts(await service.search(query))).toEqual(expected);

@@ -1,0 +1,49 @@
+id: mitigate
+kind: word
+headword: mitigate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: mitigate, type: lemma }
+  - { form: mitigates, type: inflection }
+  - { form: mitigated, type: inflection }
+  - { form: mitigating, type: inflection }
+senses:
+  - key: reduce-harm
+    pos: verb
+    definition: To make something harmful or unpleasant less severe.
+    cefr: C2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [environment]
+    best_when: Reducing the harm of something that can't be stopped completely — "mitigate the effects of climate change".
+    examples:
+      - id: ex1
+        text: Planting trees can help mitigate the effects of urban heat.
+        highlight: mitigate the effects of
+        skill: writing
+        task: writing-2
+        collocation: effects
+        practice:
+          accept: [reduce, lessen, limit]
+      - id: ex2
+        text: Insurance schemes can mitigate the financial risks for farmers.
+        highlight: mitigate
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [reduce, limit, lessen]
+    collocations:
+      - id: effects
+        phrase: mitigate the effects of
+        pattern: mitigate the effects of + noun
+        note: 'also "mitigate the impact of"'
+      - id: risk
+        phrase: mitigate the risk
+    relations:
+      - type: alternative
+        to: alleviate.ease
+        weight: 2
+        note: Alleviate is used for suffering people feel — poverty, pain, stress; mitigate for risks and effects.

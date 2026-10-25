@@ -1,0 +1,50 @@
+id: economic
+kind: word
+headword: economic
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: economic, type: lemma }
+  - { form: economically, type: inflection }
+senses:
+  - key: of-economy
+    pos: adjective
+    definition: Relating to trade, industry and money, or to the economy of a country.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [economy]
+    best_when: Before a noun — "economic growth", "economic development", "economic impact", "economic conditions".
+    examples:
+      - id: ex1
+        text: Tourism can bring significant economic benefits to poorer regions.
+        highlight: economic benefits
+        skill: writing
+        task: writing-2
+        collocation: benefits
+      - id: ex2
+        text: The economic situation in my country has improved recently.
+        highlight: economic situation
+        skill: speaking
+        task: speaking-3
+        collocation: conditions
+    collocations:
+      - id: growth
+        phrase: economic growth
+        item: economic-growth
+      - id: development
+        phrase: economic development
+      - id: benefits
+        phrase: economic benefits
+        note: 'also "economic impact"'
+      - id: conditions
+        phrase: economic conditions
+        note: 'also "economic situation"'
+    mistakes:
+      - id: economical
+        wrong: The country has serious economical problems.
+        right: The country has serious economic problems.
+        type: confusion
+        explanation: Economic relates to the economy. Economical means cheap to run or not wasteful (an economical car).

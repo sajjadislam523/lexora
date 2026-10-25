@@ -1,0 +1,43 @@
+id: plummet
+kind: word
+headword: plummet
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: plummet, type: lemma }
+  - { form: plummets, type: inflection }
+  - { form: plummeted, type: inflection }
+  - { form: plummeting, type: inflection }
+senses:
+  - key: decrease
+    pos: verb
+    definition: To fall very quickly and suddenly to a much lower level.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1] }
+    functions: [decrease]
+    strength: 3
+    best_when: The most dramatic fall on a chart. Use it once, for the change that matters most.
+    avoid_when: Any ordinary fall. Strong verbs lose their effect when they are repeated.
+    examples:
+      - id: ex1
+        text: The value of the currency plummeted within a few weeks.
+        highlight: plummeted
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [plunged]
+      - id: ex2
+        text: Fish stocks plummeted after decades of overfishing.
+        highlight: plummeted
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [plunged, collapsed]
+    relations:
+      - type: alternative
+        to: fall.verb
+        weight: 1
+        note: Fall is neutral; plummet adds great speed and size.

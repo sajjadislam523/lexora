@@ -1,0 +1,78 @@
+id: account-for
+kind: preposition_pattern
+headword: account for
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: account for, type: lemma }
+  - { form: accounts for, type: inflection }
+  - { form: accounted for, type: inflection }
+  - { form: accounting for, type: inflection }
+senses:
+  - key: share
+    label: to form a part
+    pos: verb_phrase
+    definition: To form a particular amount or part of a total.
+    cefr: B2
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1] }
+    best_when: Task 1 pie charts and tables — saying what share of a total something makes up.
+    examples:
+      - id: ex1
+        text: Coal accounted for 40% of electricity production in 2000.
+        highlight: accounted for
+        skill: writing
+        task: writing-1
+        pattern: for
+      - id: ex2
+        text: Tourism accounts for almost a fifth of the country's income.
+        highlight: accounts for
+        skill: writing
+        task: writing-1
+        pattern: for
+    preposition_patterns:
+      - id: for
+        base: account
+        preposition: for
+        pattern: account for + percentage / share + of + noun
+        complement: noun
+        note: the share of the total
+        mistake: no-for
+    mistakes:
+      - id: no-for
+        wrong: Coal accounts 40% of the total.
+        right: Coal accounts for 40% of the total.
+        type: preposition
+        explanation: In this meaning "account" always needs "for".
+  - key: explain
+    label: to explain
+    pos: verb_phrase
+    definition: To give or be the reason for something.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Explaining why something happened ("this may account for the fall in sales").
+    examples:
+      - id: ex1
+        text: Lower prices may account for the rise in online shopping.
+        highlight: account for
+        skill: writing
+        task: writing-2
+        pattern: for
+      - id: ex2
+        text: I think the weather accounts for why people here are so relaxed.
+        highlight: accounts for
+        skill: speaking
+        task: speaking-3
+        pattern: for
+    preposition_patterns:
+      - id: for
+        base: account
+        preposition: for
+        pattern: account for + noun
+        complement: noun
+        note: the thing being explained

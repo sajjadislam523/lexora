@@ -1,0 +1,41 @@
+id: inequality
+kind: word
+headword: inequality
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: inequality, type: lemma }
+  - { form: inequalities, type: inflection }
+senses:
+  - key: unfair-difference
+    pos: noun
+    definition: An unfair situation in which some people have more money, rights or opportunities than others.
+    cefr: C1
+    registers: [academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [society, economy]
+    best_when: Gaps in income, education, health or gender — "income inequality", "reduce inequality".
+    examples:
+      - id: ex1
+        text: Free university education could help reduce inequality.
+        highlight: reduce inequality
+        skill: writing
+        task: writing-2
+        collocation: reduce
+      - id: ex2
+        text: There's still a lot of inequality between men and women at work.
+        highlight: inequality between
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: income
+        phrase: income inequality
+        note: 'also "gender inequality"'
+      - id: reduce
+        phrase: reduce inequality
+        note: 'also "tackle inequality"'
+    relations:
+      - type: related
+        to: poverty.poor

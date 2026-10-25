@@ -1,0 +1,27 @@
+id: discuss-advantages
+label: Discuss advantages and disadvantages
+description: Name the good and bad points of something and weigh them up.
+triggers:
+  - discuss advantages and disadvantages
+  - talk about advantages
+  - describe advantages
+  - describe disadvantages
+  - give the pros and cons
+  - weigh up both sides
+  - discuss the benefits
+groups:
+  - label: Good points
+    entries:
+      - { sense: advantage.good-point, fit: '"the main advantage of" + noun' }
+      - { sense: benefit.noun, fit: "a good effect — health benefits" }
+      - { sense: merit.good-quality, fit: "formal; fair to both sides" }
+  - label: Bad points
+    entries:
+      - { sense: disadvantage.weak-point, fit: "the general, formal word" }
+      - { sense: drawback.disadvantage, fit: "one specific problem with something good" }
+      - { sense: limitation.weakness, fit: "a limit on what something can do" }
+  - label: Weighing them up
+    entries:
+      - { sense: outweigh.more-important, fit: "the benefits outweigh the drawbacks" }
+      - { sense: on-balance.weighing, fit: "your verdict after weighing both sides" }
+      - { sense: pros-and-cons.both-sides, fit: "informal, natural in Speaking" }

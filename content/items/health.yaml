@@ -1,0 +1,48 @@
+id: health
+kind: word
+headword: health
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: health, type: lemma }
+senses:
+  - key: wellbeing
+    pos: noun
+    definition: The condition of a person's body or mind, especially whether they are well or ill.
+    cefr: A2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [health]
+    best_when: '"Physical and mental health", "good for your health", "health problems" — "healthy" is the adjective.'
+    examples:
+      - id: ex1
+        text: Long working hours can damage both physical and mental health.
+        highlight: physical and mental health
+        skill: writing
+        task: writing-2
+        collocation: physical
+      - id: ex2
+        text: I started cycling to work to improve my health.
+        highlight: health
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: physical
+        phrase: good physical health
+        note: 'also "physical and mental health"'
+      - id: problems
+        phrase: health problems
+        note: 'also "health risks", "health benefits"'
+      - id: good-for
+        phrase: be good for your health
+    mistakes:
+      - id: healthy
+        wrong: Fast food is bad for your healthy.
+        right: Fast food is bad for your health.
+        type: word_form
+        explanation: Health is the noun; healthy is the adjective (a healthy diet).
+    relations:
+      - type: related
+        to: healthcare.medical-services

@@ -1,0 +1,45 @@
+id: plunge
+kind: word
+headword: plunge
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: plunge, type: lemma }
+  - { form: plunges, type: inflection }
+  - { form: plunged, type: inflection }
+  - { form: plunging, type: inflection }
+senses:
+  - key: decrease
+    pos: verb
+    definition: To fall suddenly and by a large amount.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1] }
+    functions: [decrease]
+    strength: 3
+    best_when: A sudden, very large fall that you want to stress.
+    avoid_when: The fall was gradual or moderate.
+    examples:
+      - id: ex1
+        text: Air travel plunged by 60% in 2020 as borders closed.
+        highlight: plunged
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [plummeted, fell, dropped]
+      - id: ex2
+        text: Profits plunged after the company lost its biggest customer.
+        highlight: plunged
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [plummeted, fell, dropped]
+    relations:
+      - type: stronger
+        to: plummet.decrease
+        weight: 1
+        note: Plummet sounds even more dramatic; both describe a very large, sudden fall.
+      - type: opposite
+        to: surge.increase

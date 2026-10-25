@@ -1,0 +1,39 @@
+id: pupil
+kind: word
+headword: pupil
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: pupil, type: lemma }
+  - { form: pupils, type: inflection }
+senses:
+  - key: child
+    pos: noun
+    definition: A child who goes to school, especially in British English.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-1] }
+    topics: [education]
+    best_when: Schoolchildren in British English — "primary school pupils".
+    examples:
+      - id: ex1
+        text: Many primary school pupils walk to school.
+        highlight: pupils
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [children, students]
+      - id: ex2
+        text: My mum teaches at a school with about six hundred pupils.
+        highlight: pupils
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [students, children, kids]
+    relations:
+      - type: confusable
+        to: student.learner
+        weight: 2
+        note: Pupil is a child at school (British English); student is anyone studying, especially at college or university, and is also used for schoolchildren in American English.

@@ -1,0 +1,50 @@
+id: surge
+kind: word
+headword: surge
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: surge, type: lemma }
+  - { form: surges, type: inflection }
+  - { form: surged, type: inflection }
+  - { form: surging, type: inflection }
+senses:
+  - key: increase
+    pos: verb
+    definition: To rise suddenly and powerfully by a large amount.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [increase]
+    strength: 3
+    best_when: A sudden, powerful increase — often in demand, interest or numbers after an event.
+    avoid_when: The rise was slow or steady.
+    examples:
+      - id: ex1
+        text: Sales of bicycles surged during the first months of the pandemic.
+        highlight: surged
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [soared, rocketed]
+      - id: ex2
+        text: The surge in online shopping has changed how city centres look.
+        highlight: surge in
+        skill: writing
+        task: writing-2
+        collocation: surge-in
+    collocations:
+      - id: surge-in
+        phrase: a surge in
+        pattern: a surge in + noun
+        note: the noun use, e.g. a surge in demand
+      - id: demand
+        phrase: a surge in demand
+        note: common for goods, energy and services
+    relations:
+      - type: alternative
+        to: soar.increase
+        weight: 2
+        note: Soar stresses reaching a very high level; surge stresses how sudden the rise was.

@@ -1,0 +1,32 @@
+id: social-responsibility
+kind: word
+headword: social responsibility
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: social responsibility, type: lemma }
+senses:
+  - key: duty
+    pos: noun
+    definition: The duty of companies and individuals to act in ways that benefit society.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    topics: [society, work]
+    best_when: Whether businesses should help society — "corporate social responsibility".
+    examples:
+      - id: ex1
+        text: Many companies now see social responsibility as part of their brand.
+        highlight: social responsibility
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Corporate social responsibility programmes often focus on education and the environment.
+        highlight: Corporate social responsibility
+        skill: writing
+        task: writing-2
+    relations:
+      - type: related
+        to: society.people

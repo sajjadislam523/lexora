@@ -82,7 +82,15 @@ describe("collocation gaps", () => {
     expect(shape(await service.search("There was a ___ increase in cycling"))).toEqual([
       [
         "Collocations with these words",
-        ["significant{significant.notable}", "substantial{substantial.large}"],
+        // Content expansion: increase.noun authors "a gradual / marked / sharp increase".
+        [
+          "gradual{increase.noun}",
+          "marked{increase.noun}",
+          "sharp{increase.noun}",
+          "significant{significant.notable}",
+          "slight{slightly.small}",
+          "substantial{substantial.large}",
+        ],
       ],
     ]);
     expect(shape(await service.search("Governments should take ___ to reduce crime"))).toEqual([
@@ -141,12 +149,21 @@ describe("linker gaps", () => {
   });
 
   it("offers clause linkers after a comma", async () => {
+    // Content expansion: every conjunction the content authors as joining two clauses.
+    const clauseLinkers = [
+      "because{because.cause}",
+      "since{since.cause}",
+      "although{although.concession}",
+      "even though{even-though.concession}",
+      "whereas{whereas.contrast}",
+      "while{while.contrast}",
+    ];
     expect(
       shape(await service.search("My brother loves the city, ___ I prefer the country")),
-    ).toEqual([["Linkers that join two clauses", ["whereas{whereas.contrast}"]]]);
+    ).toEqual([["Linkers that join two clauses", clauseLinkers]]);
     // No collocation is read across the comma ("rose sharply").
     expect(shape(await service.search("Prices rose, ___ demand fell"))).toEqual([
-      ["Linkers that join two clauses", ["whereas{whereas.contrast}"]],
+      ["Linkers that join two clauses", clauseLinkers],
     ]);
   });
 
@@ -173,7 +190,8 @@ describe("two blanks", () => {
   });
 
   it("answers the readable blank and leaves the other unknown", async () => {
-    const response = await service.search("Cars are responsible ___ pollution ___ cities");
+    // "smog", not "pollution": since the content expansion "pollution levels" reads the second blank.
+    const response = await service.search("Cars are responsible ___ smog ___ cities");
     expect(response?.gaps?.map((g) => g.type)).toEqual(["preposition", "unknown"]);
     expect(response?.groups.map((g) => g.label)).toEqual([
       "Gap 1 · Prepositions after “responsible”",

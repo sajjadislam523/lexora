@@ -1,0 +1,51 @@
+id: familiar-with
+kind: preposition_pattern
+headword: familiar with
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: familiar with, type: lemma }
+  - { form: familiar to, type: lemma }
+senses:
+  - key: know-well
+    pos: adjective_phrase
+    definition: Knowing something well because you have seen, heard or used it often.
+    cefr: B2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-1] }
+    best_when: '"Familiar with" + what someone knows; "familiar to" + the person who knows it.'
+    examples:
+      - id: ex1
+        text: Most children are familiar with technology from a very young age.
+        highlight: familiar with
+        skill: writing
+        task: writing-2
+        pattern: with
+      - id: ex2
+        text: Her face looked familiar to me, but I couldn't remember her name.
+        highlight: familiar to
+        skill: speaking
+        task: speaking-2
+        pattern: to
+    preposition_patterns:
+      - id: with
+        base: familiar
+        preposition: with
+        pattern: be familiar with + noun
+        complement: noun
+        note: what someone knows
+        mistake: about
+      - id: to
+        base: familiar
+        preposition: to
+        pattern: be familiar to + person
+        complement: person
+        note: who knows it
+    mistakes:
+      - id: about
+        wrong: Are you familiar about this software?
+        right: Are you familiar with this software?
+        type: preposition
+        explanation: '"Familiar with" + what you know.'

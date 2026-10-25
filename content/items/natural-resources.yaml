@@ -1,0 +1,37 @@
+id: natural-resources
+kind: word
+headword: natural resources
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: natural resources, type: lemma }
+  - { form: natural resource, type: inflection }
+senses:
+  - key: supply
+    pos: noun
+    definition: Materials found in nature, such as water, wood, minerals and oil, that people can use.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [environment, economy]
+    best_when: Arguments about consumption and the economy — "deplete natural resources", "rich in natural resources".
+    examples:
+      - id: ex1
+        text: Rapid population growth puts pressure on natural resources.
+        highlight: natural resources
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My country is rich in natural resources, especially oil.
+        highlight: rich in natural resources
+        skill: speaking
+        task: speaking-3
+        collocation: rich
+    collocations:
+      - id: rich
+        phrase: rich in natural resources
+      - id: deplete
+        phrase: deplete natural resources
+        note: 'also "use up natural resources"'

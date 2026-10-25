@@ -1,0 +1,45 @@
+id: soar
+kind: word
+headword: soar
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: soar, type: lemma }
+  - { form: soars, type: inflection }
+  - { form: soared, type: inflection }
+  - { form: soaring, type: inflection }
+senses:
+  - key: increase
+    pos: verb
+    definition: To rise very quickly to a high level.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, speaking-3] }
+    functions: [increase]
+    strength: 3
+    best_when: A very large, fast rise that you want to stress — prices, costs, temperatures, popularity.
+    avoid_when: The rise was moderate. Overusing strong verbs makes a Task 1 report sound exaggerated.
+    examples:
+      - id: ex1
+        text: Energy prices soared in 2022, reaching their highest level in decades.
+        highlight: soared
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [surged, rocketed]
+      - id: ex2
+        text: House prices have soared, so lots of young people can't afford to buy.
+        highlight: soared
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [rocketed]
+    collocations:
+      - id: prices
+        phrase: soaring prices
+        note: the adjective form, common in news and essays
+    relations:
+      - type: opposite
+        to: plummet.decrease

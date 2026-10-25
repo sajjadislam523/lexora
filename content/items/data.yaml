@@ -1,0 +1,50 @@
+id: data
+kind: word
+headword: data
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: data, type: lemma }
+senses:
+  - key: information
+    pos: noun
+    definition: Facts, numbers or information, especially stored on computers or used for analysis.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [technology]
+    best_when: Task 1 descriptions ("the data shows") and Task 2 privacy topics ("personal data").
+    skill_note: '"The data shows" and "the data show" are both correct; the singular is more common.'
+    examples:
+      - id: ex1
+        text: The data shows a clear rise in online shopping.
+        highlight: data shows
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [chart, graph]
+      - id: ex2
+        text: Companies collect huge amounts of personal data about their users.
+        highlight: personal data
+        skill: writing
+        task: writing-2
+        collocation: personal
+      - id: ex3
+        text: I'm always careful about sharing my data with apps.
+        highlight: data
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: personal
+        phrase: personal data
+      - id: collect
+        phrase: collect data
+        note: 'also "store data", "share data"'
+    mistakes:
+      - id: datas
+        wrong: The datas show a rise in sales.
+        right: The data show a rise in sales.
+        type: countability
+        explanation: Data has no "s" plural. "The data shows" and "the data show" are both accepted.

@@ -1,0 +1,44 @@
+id: aware-of
+kind: preposition_pattern
+headword: aware of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: aware of, type: lemma }
+senses:
+  - key: know
+    pos: adjective_phrase
+    definition: Knowing that something exists or is happening.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Knowledge of risks and issues — "aware of the dangers", "be aware that + clause".
+    examples:
+      - id: ex1
+        text: Many smokers are not fully aware of the risks.
+        highlight: aware of
+        skill: writing
+        task: writing-2
+        pattern: of
+      - id: ex2
+        text: I wasn't aware of how much plastic I used until I tried to cut down.
+        highlight: aware of
+        skill: speaking
+        task: speaking-2
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: aware
+        preposition: of
+        pattern: be aware of + noun / that + clause
+        complement: noun
+        note: what someone knows about
+        mistake: about
+    mistakes:
+      - id: about
+        wrong: People should be more aware about climate change.
+        right: People should be more aware of climate change.
+        type: preposition
+        explanation: '"Aware of" + noun, or "aware that" + clause.'

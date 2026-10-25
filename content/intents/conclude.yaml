@@ -1,0 +1,24 @@
+id: conclude
+label: Conclude or summarise
+description: Open a conclusion, a summary or a Task 1 overview.
+triggers:
+  - conclude an essay
+  - write a conclusion
+  - finish an essay
+  - sum up
+  - summarise
+  - write an overview
+  - end an essay
+groups:
+  - label: Task 2 conclusion
+    entries:
+      - { sense: in-conclusion.end, fit: "the standard opener for the final paragraph" }
+      - { sense: to-conclude.end, fit: "a formal alternative" }
+      - { sense: to-sum-up.summary, fit: "slightly less formal; fine in Speaking" }
+      - { sense: on-balance.weighing, fit: "a verdict after weighing both sides" }
+  - label: Task 1 overview
+    entries:
+      - { sense: overall.summary, fit: '"Overall, it is clear that …"' }
+  - label: The final point
+    entries:
+      - { sense: ultimately.in-the-end, fit: "the most basic point of the argument" }

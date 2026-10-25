@@ -1,0 +1,50 @@
+id: need
+kind: word
+headword: need
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: need, type: lemma }
+  - { form: needs, type: inflection }
+  - { form: needed, type: inflection }
+  - { form: needing, type: inflection }
+senses:
+  - key: require
+    pos: verb
+    definition: To have to have something, or to think it is necessary.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: Everyday necessity in Speaking, and plain statements in Writing.
+    avoid_when: You have used it several times in an essay. "Require" or "it is essential to" adds variety.
+    examples:
+      - id: ex1
+        text: Older people often need more support with technology.
+        highlight: need
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [require]
+      - id: ex2
+        text: I need about eight hours of sleep to feel normal.
+        highlight: need
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: need-for
+        phrase: the need for
+        pattern: the need for + noun
+        note: the noun use — "the need for affordable housing"
+    mistakes:
+      - id: need-of
+        wrong: We need of more doctors.
+        right: We need more doctors.
+        type: grammar
+        explanation: The verb need takes a direct object. "In need of" is a different, formal phrase.
+    relations:
+      - type: more_formal
+        to: require.need
+        weight: 1
+        note: Require is formal and suits rules, tasks and policies.

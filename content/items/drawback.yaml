@@ -1,0 +1,55 @@
+id: drawback
+kind: word
+headword: drawback
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: drawback, type: lemma }
+  - { form: drawbacks, type: inflection }
+senses:
+  - key: disadvantage
+    pos: noun
+    definition: A problem or feature that makes something less attractive or useful.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: One specific problem with something that is otherwise good — "the main drawback of".
+    examples:
+      - id: ex1
+        text: The main drawback of electric cars is their high price.
+        highlight: drawback of
+        skill: writing
+        task: writing-2
+        pattern: of
+        practice:
+          accept: [disadvantage, downside]
+      - id: ex2
+        text: The only drawback of living in the centre is the noise at night.
+        highlight: drawback of
+        skill: speaking
+        task: speaking-1
+        pattern: of
+        practice:
+          accept: [disadvantage, downside]
+    preposition_patterns:
+      - id: of
+        base: drawback
+        preposition: of
+        pattern: the drawback of + noun / -ing
+        complement: noun_or_ing
+        note: '"a drawback to" is also correct'
+    collocations:
+      - id: main
+        phrase: the main drawback
+        note: 'also "the major drawback"'
+      - id: outweigh
+        phrase: the benefits outweigh the drawbacks
+        item: outweigh
+    relations:
+      - type: synonym
+        to: disadvantage.weak-point
+        weight: 2
+        note: Disadvantage is the more general and more formal word; drawback often names one specific problem.

@@ -14,6 +14,8 @@ groups:
     entries:
       - { sense: furthermore.addition, fit: "a further supporting point in a formal essay" }
       - { sense: moreover.addition, fit: "a stronger point that builds the argument" }
+      - { sense: in-addition.addition, fit: "the safe, everyday formal choice" }
+      - { sense: additionally.addition, fit: "one word; varies in addition" }
   - label: In speaking
     entries:
       - { sense: on-top-of-that.addition, fit: "one more point, natural in conversation" }
@@ -21,3 +23,8 @@ groups:
           sense: whats-more.addition,
           fit: an even stronger point; fine in speech and informal writing,
         }
+      - { sense: also.addition, fit: "inside a sentence — it is also cheaper" }
+  - label: Inside one sentence
+    entries:
+      - { sense: as-well-as.addition, fit: '"as well as" + noun or -ing' }
+      - { sense: not-only-but-also.addition, fit: "stresses both points" }

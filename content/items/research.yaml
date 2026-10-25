@@ -1,0 +1,51 @@
+id: research
+kind: word
+headword: research
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: research, type: lemma }
+senses:
+  - key: study
+    pos: noun
+    definition: Detailed study of a subject to discover new facts or reach new conclusions.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Supporting a point with evidence — "research shows", "carry out research" — usually uncountable.
+    examples:
+      - id: ex1
+        text: Research shows that children who read for pleasure do better at school.
+        highlight: Research shows
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I'm doing some research into renewable energy for my dissertation.
+        highlight: doing some research into
+        skill: speaking
+        task: speaking-1
+        collocation: do
+    collocations:
+      - id: do
+        phrase: carry out research
+        pattern: carry out research into / on + topic
+        note: 'also "do research", "conduct research"'
+      - id: shows
+        phrase: research shows that
+        note: 'also "research suggests that"'
+    mistakes:
+      - id: plural
+        wrong: Many researches show that exercise improves mood.
+        right: Much research shows that exercise improves mood.
+        type: countability
+        explanation: Research is usually uncountable. Say "much research", "a lot of research" or "many studies".
+      - id: make
+        wrong: Scientists made a research on sleep.
+        right: Scientists carried out research on sleep.
+        type: collocation
+        explanation: You "do", "carry out" or "conduct" research, not "make" it.
+    relations:
+      - type: related
+        to: data.information

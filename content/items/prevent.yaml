@@ -1,0 +1,60 @@
+id: prevent
+kind: word
+headword: prevent
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: prevent, type: lemma }
+  - { form: prevents, type: inflection }
+  - { form: prevented, type: inflection }
+  - { form: preventing, type: inflection }
+senses:
+  - key: stop
+    pos: verb
+    definition: To stop something from happening, or stop someone from doing something.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Solutions that stop a problem before it starts — "prevent crime", "prevent people from".
+    examples:
+      - id: ex1
+        text: Vaccination programmes have prevented millions of deaths.
+        highlight: prevented
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [stopped, averted]
+      - id: ex2
+        text: High fees prevent many talented students from going to university.
+        highlight: prevent many talented students from
+        skill: writing
+        task: writing-2
+        pattern: from
+        practice:
+          accept: [stop]
+      - id: ex3
+        text: Wearing a helmet can prevent serious injuries.
+        highlight: prevent
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [stop]
+    preposition_patterns:
+      - id: from
+        base: prevent
+        preposition: from
+        pattern: prevent + person / thing + from + -ing
+        complement: ing
+        note: who or what is stopped
+        mistake: to-do
+    mistakes:
+      - id: to-do
+        wrong: The rules prevent people to smoke indoors.
+        right: The rules prevent people from smoking indoors.
+        type: grammar
+        explanation: Prevent + person + "from" + -ing.
+    relations:
+      - type: opposite
+        to: allow.permit

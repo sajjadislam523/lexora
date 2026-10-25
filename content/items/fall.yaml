@@ -1,0 +1,114 @@
+id: fall
+kind: word
+headword: fall
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: fall, type: lemma }
+  - { form: falls, type: inflection }
+  - { form: fell, type: inflection }
+  - { form: fallen, type: inflection }
+  - { form: falling, type: inflection }
+senses:
+  - key: verb
+    label: to go down
+    pos: verb
+    definition: To go down in number, amount or level.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    functions: [decrease]
+    best_when: The most common verb for a figure going down in Task 1.
+    examples:
+      - id: ex1
+        text: The unemployment rate fell to 4% in 2019.
+        highlight: fell to
+        skill: writing
+        task: writing-1
+        pattern: to
+        practice:
+          accept: [dropped, decreased, declined]
+      - id: ex2
+        text: Crime in the area fell sharply after more street lights were installed.
+        highlight: fell sharply
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [dropped, decreased, declined]
+      - id: ex3
+        text: The temperature can fall below zero in winter where I live.
+        highlight: fall below
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [drop]
+    preposition_patterns:
+      - id: to
+        base: fall
+        preposition: to
+        pattern: fall to + final level
+        complement: noun
+        note: the level reached
+      - id: by
+        base: fall
+        preposition: by
+        pattern: fall by + amount
+        complement: noun
+        note: the size of the fall
+    mistakes:
+      - id: fell-down
+        wrong: Sales fell down in 2010.
+        right: Sales fell in 2010.
+        type: confusion
+        explanation: '"Fall down" is for people and objects dropping to the ground. Figures simply "fall".'
+      - id: falled
+        wrong: The price falled last year.
+        right: The price fell last year.
+        type: grammar
+        explanation: Fall is irregular — fall, fell, fallen.
+    relations:
+      - type: synonym
+        to: drop.verb
+        weight: 2
+        note: Drop is slightly less formal and often suggests a sudden fall.
+  - key: noun
+    label: a decrease
+    pos: noun
+    definition: A decrease in the number, amount or level of something.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [decrease]
+    best_when: A downward change as a noun phrase, used like "a decrease" but slightly less formal.
+    examples:
+      - id: ex1
+        text: There was a sharp fall in car sales in 2009.
+        highlight: fall in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [drop, decrease, decline]
+      - id: ex2
+        text: A fall in tourist numbers can hurt the local economy.
+        highlight: fall in
+        skill: speaking
+        task: speaking-3
+        pattern: in
+        practice:
+          accept: [drop, decrease, decline]
+    preposition_patterns:
+      - id: in
+        base: fall
+        preposition: in
+        pattern: a fall in + noun
+        complement: noun
+        note: what went down
+    relations:
+      - type: synonym
+        to: drop.noun
+        weight: 2
+        note: Drop is a little less formal and often sudden.

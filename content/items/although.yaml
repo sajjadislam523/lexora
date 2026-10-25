@@ -1,0 +1,66 @@
+id: although
+kind: linker
+headword: although
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: although, type: lemma }
+  - { form: though, type: lemma }
+senses:
+  - key: concession
+    pos: conjunction
+    definition: Despite the fact that; introduces a clause that contrasts with the main clause.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [concession, contrast]
+    linker:
+      connects: clauses
+      positions: [start, middle]
+      punctuation: A comma after the although-clause when it comes first; usually a comma before it when it comes second.
+    best_when: Admitting one point while making another in the same sentence.
+    skill_note: In Speaking, "though" at the end of a sentence is very natural (It's expensive, though).
+    examples:
+      - id: ex1
+        text: Although online shopping is convenient, it has hurt many small shops.
+        highlight: Although
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Even though, While]
+      - id: ex2
+        text: Although the number of visitors fell in 2020, it recovered quickly.
+        highlight: Although
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [Even though, While]
+      - id: ex3
+        text: I enjoy living in the city, although it can be quite noisy.
+        highlight: although
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [even though]
+    mistakes:
+      - id: but
+        wrong: Although the city is expensive, but many people want to live there.
+        right: Although the city is expensive, many people want to live there.
+        type: grammar
+        explanation: Use "although" or "but", not both. The although-clause already shows the contrast.
+      - id: noun
+        wrong: Although the rain, we went out.
+        right: Despite the rain, we went out.
+        type: grammar
+        explanation: Although is followed by a clause. Before a noun, use "despite" or "in spite of".
+    relations:
+      - type: confusable
+        to: despite.concession
+        weight: 3
+        note: Although + clause (although it rained); despite + noun or -ing (despite the rain).
+      - type: stronger
+        to: even-though.concession
+        weight: 2
+        note: Even though is more emphatic.

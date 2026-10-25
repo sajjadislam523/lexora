@@ -1,0 +1,39 @@
+id: limitation
+kind: word
+headword: limitation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: limitation, type: lemma }
+  - { form: limitations, type: inflection }
+senses:
+  - key: weakness
+    pos: noun
+    definition: A limit on what something can do or how well it works.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [problem]
+    best_when: Evaluating research, technology or policies fairly — "the study has some limitations".
+    examples:
+      - id: ex1
+        text: Online courses have clear limitations when it comes to practical subjects.
+        highlight: limitations
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [drawbacks, weaknesses, disadvantages]
+      - id: ex2
+        text: One limitation of the survey is its small sample size.
+        highlight: limitation of
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [weakness, drawback]
+    relations:
+      - type: alternative
+        to: weakness.bad-point
+        weight: 2
+        note: A weakness is a bad feature; a limitation is a limit on what something can do.

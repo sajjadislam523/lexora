@@ -1,0 +1,38 @@
+id: since
+kind: linker
+headword: since
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: since, type: lemma }
+senses:
+  - key: cause
+    pos: conjunction
+    definition: Because; used to give a reason, often one the reader already knows or accepts.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    linker:
+      connects: clauses
+      positions: [start, middle]
+      punctuation: A comma after the since-clause when it comes first; usually none when it comes second.
+    best_when: Starting a sentence with an accepted reason — "Since most jobs require computer skills, …".
+    avoid_when: The meaning could be read as time ("since 2010"). Then use "because" to avoid confusion.
+    examples:
+      - id: ex1
+        text: Since most jobs now require digital skills, schools should teach coding.
+        highlight: Since
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [As, Because]
+      - id: ex2
+        text: Since I work from home, I don't really need a car.
+        highlight: Since
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [As, Because]

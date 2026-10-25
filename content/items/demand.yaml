@@ -1,0 +1,56 @@
+id: demand
+kind: word
+headword: demand
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: demand, type: lemma }
+senses:
+  - key: need
+    pos: noun
+    definition: The desire or need of people to buy or use goods and services.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [economy]
+    best_when: '"Demand for" + goods or services, and "supply and demand".'
+    examples:
+      - id: ex1
+        text: Demand for electric cars has grown rapidly.
+        highlight: Demand for
+        skill: writing
+        task: writing-1
+        pattern: for
+      - id: ex2
+        text: There's a huge demand for nurses in my country.
+        highlight: demand for
+        skill: speaking
+        task: speaking-3
+        pattern: for
+        practice:
+          accept: [need]
+    preposition_patterns:
+      - id: for
+        base: demand
+        preposition: for
+        pattern: (a) demand for + noun
+        complement: noun
+        note: what people want or need
+        mistake: of
+    collocations:
+      - id: growing
+        phrase: a growing demand for
+        note: 'also "high demand"'
+      - id: supply
+        phrase: supply and demand
+    mistakes:
+      - id: of
+        wrong: There is a high demand of housing.
+        right: There is a high demand for housing.
+        type: preposition
+        explanation: '"Demand for" + what people want.'
+    relations:
+      - type: opposite
+        to: supply.provision

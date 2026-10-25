@@ -1,0 +1,36 @@
+id: marginally
+kind: word
+headword: marginally
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: marginally, type: lemma }
+senses:
+  - key: small
+    pos: adverb
+    definition: By a very small amount, often too small to matter much.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    strength: 1
+    best_when: A very small change or difference in Task 1, when "slightly" has already been used.
+    examples:
+      - id: ex1
+        text: The figure for 2020 was marginally lower than in the previous year.
+        highlight: marginally lower
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [slightly]
+      - id: ex2
+        text: Average rents increased only marginally over the period.
+        highlight: increased only marginally
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [slightly]
+    relations:
+      - type: opposite
+        to: considerably.large

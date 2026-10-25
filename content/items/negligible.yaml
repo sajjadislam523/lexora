@@ -1,0 +1,42 @@
+id: negligible
+kind: word
+headword: negligible
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: negligible, type: lemma }
+senses:
+  - key: tiny
+    pos: adjective
+    definition: So small or unimportant that it is not worth considering.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    strength: 1
+    best_when: A figure or effect so small that it can be ignored — "a negligible difference".
+    examples:
+      - id: ex1
+        text: The difference between the two years was negligible.
+        highlight: negligible
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [minimal, insignificant, tiny]
+      - id: ex2
+        text: Some studies suggest that the effect on employment is negligible.
+        highlight: negligible
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [minimal, insignificant]
+    collocations:
+      - id: impact
+        phrase: a negligible impact
+        note: 'also "a negligible effect"'
+      - id: difference
+        phrase: a negligible difference
+    relations:
+      - type: opposite
+        to: significant.notable

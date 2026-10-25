@@ -1,0 +1,40 @@
+id: public-transport
+kind: word
+headword: public transport
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: American English usually says "public transportation". Both are correct.
+forms:
+  - { form: public transport, type: lemma, default: true }
+  - { form: public transportation, type: spelling_variant, region: us }
+senses:
+  - key: buses-trains
+    pos: noun
+    definition: Buses, trains and other transport that everyone can use for a fare.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1, speaking-3] }
+    topics: [transport, cities]
+    best_when: Congestion, pollution and city planning — "invest in public transport", "use public transport".
+    examples:
+      - id: ex1
+        text: Investing in public transport is the most effective way to reduce congestion.
+        highlight: public transport
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Public transport in my city is cheap but often crowded.
+        highlight: Public transport
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: the
+        wrong: I usually go to work by the public transport.
+        right: I usually go to work by public transport.
+        type: grammar
+        explanation: After "by", don't use "the" — by public transport, by bus, by car.
+    relations:
+      - type: related
+        to: congestion.traffic

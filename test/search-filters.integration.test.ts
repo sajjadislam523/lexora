@@ -46,18 +46,21 @@ describe.skipIf(!hasDatabase)("search filters and browse (PostgreSQL)", () => {
   // The engine's answer is identical on both repositories (the ranking snapshot); what filtering
   // adds on PostgreSQL is senseFacets, checked here for every published sense.
   it("reads the same filter metadata for every published sense", async () => {
-    const all = await pg.browse({ use: "writing" });
-    const speaking = await pg.browse({ use: "speaking" });
-    const senseIds = [...new Set([...all.items, ...speaking.items].map((item) => item.senseId))];
-    const rest = all.pages > 1 ? (await pg.browse({ use: "writing" }, 2)).items : [];
-    senseIds.push(...rest.map((item) => item.senseId).filter((id) => !senseIds.includes(id)));
+    const senseIds = new Set<string>();
+    for (const use of ["writing", "speaking"] as const) {
+      const first = await pg.browse({ use });
+      for (let page = 1; page <= first.pages; page++) {
+        const items = page === 1 ? first.items : (await pg.browse({ use }, page)).items;
+        for (const item of items) senseIds.add(item.senseId);
+      }
+    }
     const repoOf = (service: LanguageSearchService) =>
       (service as unknown as { repo: { senseFacets(ids: string[]): Promise<unknown[]> } }).repo;
     const sort = (rows: unknown[]) =>
       [...(rows as { senseId: string }[])].sort((a, b) => a.senseId.localeCompare(b.senseId));
-    expect(senseIds).toHaveLength(42);
-    expect(sort(await repoOf(pg).senseFacets(senseIds))).toEqual(
-      sort(await repoOf(memory).senseFacets(senseIds)),
+    expect(senseIds.size).toBe(442);
+    expect(sort(await repoOf(pg).senseFacets([...senseIds]))).toEqual(
+      sort(await repoOf(memory).senseFacets([...senseIds])),
     );
   });
 
@@ -116,7 +119,7 @@ describe.skipIf(!hasDatabase)("search filters and browse (PostgreSQL)", () => {
       await expect(pg.browse(filters as unknown as SearchFilters)).rejects.toThrow();
       await expect(pg.search("important", filters as unknown as SearchFilters)).rejects.toThrow();
     }
-    expect((await pg.browse({ kind: "linker" })).total).toBe(11);
+    expect((await pg.browse({ kind: "linker" })).total).toBe(40);
   });
 
   describe("topics on a tagged fixture", () => {

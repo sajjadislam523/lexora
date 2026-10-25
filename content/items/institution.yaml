@@ -1,0 +1,33 @@
+id: institution
+kind: word
+headword: institution
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: institution, type: lemma }
+  - { form: institutions, type: inflection }
+senses:
+  - key: organisation
+    pos: noun
+    definition: A large, important organisation such as a university, bank, hospital or museum.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    topics: [education, society]
+    best_when: Referring to universities, schools or public bodies in general — "educational institutions".
+    examples:
+      - id: ex1
+        text: Educational institutions should prepare students for a changing job market.
+        highlight: Educational institutions
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Public institutions such as libraries and museums need stable funding.
+        highlight: Public institutions
+        skill: writing
+        task: writing-2
+    relations:
+      - type: related
+        to: higher-education.university

@@ -1,0 +1,58 @@
+id: differ
+kind: word
+headword: differ
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: differ, type: lemma }
+  - { form: differs, type: inflection }
+  - { form: differed, type: inflection }
+  - { form: differing, type: inflection }
+senses:
+  - key: vary
+    pos: verb
+    definition: To be not the same as something else, or to vary between people or places.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [comparison, contrast]
+    best_when: Formal comparisons — "differ from", "differ considerably in", "views differ on".
+    examples:
+      - id: ex1
+        text: Attitudes to work differ greatly from one generation to the next.
+        highlight: differ greatly from
+        skill: writing
+        task: writing-2
+        pattern: from
+        practice:
+          accept: [vary]
+      - id: ex2
+        text: The two countries differed mainly in the amount spent on defence.
+        highlight: differed mainly in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [varied]
+    preposition_patterns:
+      - id: from
+        base: differ
+        preposition: from
+        pattern: differ from + noun
+        complement: noun
+        note: the thing compared with
+        mistake: than
+      - id: in
+        base: differ
+        preposition: in
+        pattern: differ in + feature
+        complement: noun
+        note: the way they are different
+    mistakes:
+      - id: than
+        wrong: Prices here differ than prices in the capital.
+        right: Prices here differ from prices in the capital.
+        type: preposition
+        explanation: '"Differ from" + what is compared.'

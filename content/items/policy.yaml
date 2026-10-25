@@ -1,0 +1,55 @@
+id: policy
+kind: word
+headword: policy
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: policy, type: lemma }
+  - { form: policies, type: inflection }
+senses:
+  - key: plan
+    pos: noun
+    definition: A set of plans or rules agreed by a government, organisation or business.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [government]
+    best_when: Government decisions and rules — "government policy", "a policy on", "introduce a policy".
+    examples:
+      - id: ex1
+        text: Government policy on housing has failed young people.
+        highlight: policy on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [strategy]
+      - id: ex2
+        text: My company has a strict policy on working from home.
+        highlight: policy on
+        skill: speaking
+        task: speaking-1
+        pattern: on
+        practice:
+          accept: [rule]
+    preposition_patterns:
+      - id: on
+        base: policy
+        preposition: on
+        pattern: a policy on + topic
+        complement: noun
+        note: the area the rules cover
+    collocations:
+      - id: government
+        phrase: government policy
+        note: 'also "public policy"'
+      - id: introduce
+        phrase: introduce a policy
+        note: 'also "implement a policy"'
+    relations:
+      - type: alternative
+        to: initiative.scheme
+        weight: 1
+        note: An initiative is a new plan or project, often to solve one problem.

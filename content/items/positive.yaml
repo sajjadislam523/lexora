@@ -1,0 +1,45 @@
+id: positive
+kind: word
+headword: positive
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: positive, type: lemma }
+senses:
+  - key: good
+    pos: adjective
+    definition: Good or useful in its effect, or hopeful and confident in attitude.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Effects, impacts, changes and attitudes — "a positive impact on", "positive aspects".
+    examples:
+      - id: ex1
+        text: Tourism can have a positive impact on local businesses.
+        highlight: positive impact
+        skill: writing
+        task: writing-2
+        collocation: impact
+        practice:
+          accept: [beneficial, significant]
+      - id: ex2
+        text: Living abroad had a really positive effect on my confidence.
+        highlight: positive effect
+        skill: speaking
+        task: speaking-2
+        collocation: impact
+        practice:
+          accept: [big, good, great]
+    collocations:
+      - id: impact
+        phrase: a positive impact
+        pattern: have a positive impact on + noun
+        note: 'also "a positive effect"'
+      - id: aspect
+        phrase: positive aspects
+        note: the good sides of something
+    relations:
+      - type: opposite
+        to: negative.bad

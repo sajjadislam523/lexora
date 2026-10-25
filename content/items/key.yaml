@@ -1,0 +1,56 @@
+id: key
+kind: word
+headword: key
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: key, type: lemma }
+senses:
+  - key: main
+    pos: adjective
+    definition: Very important and having a strong effect on something else.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    strength: 2
+    functions: [importance]
+    best_when: Before a noun only — "a key factor", "a key role", "the key issue". Short and strong.
+    avoid_when: After a verb. "This is key" is informal; write "this is essential".
+    examples:
+      - id: ex1
+        text: Cost is a key factor when families choose a school.
+        highlight: key factor
+        skill: writing
+        task: writing-2
+        collocation: factor
+        practice:
+          accept: [major, crucial, significant]
+      - id: ex2
+        text: One key difference between the two charts is the age of the users.
+        highlight: key difference
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [major, main, important, significant]
+      - id: ex3
+        text: I think patience is the key quality a teacher needs.
+        highlight: key quality
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [main, most important]
+    collocations:
+      - id: factor
+        phrase: a key factor
+        pattern: a key factor in + noun / -ing
+        note: one of the main causes or influences
+      - id: issue
+        phrase: the key issue
+        note: the most important problem to discuss
+    relations:
+      - type: alternative
+        to: important.main
+        weight: 1
+        note: Key is used only before a noun and sounds more decisive than important.

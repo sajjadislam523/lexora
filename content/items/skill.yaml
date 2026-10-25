@@ -1,0 +1,46 @@
+id: skill
+kind: word
+headword: skill
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: skill, type: lemma }
+  - { form: skills, type: inflection }
+senses:
+  - key: ability
+    pos: noun
+    definition: An ability to do something well, usually gained through training or experience.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [education, work]
+    best_when: Abilities that can be learned — "communication skills", "develop skills", "practical skills".
+    examples:
+      - id: ex1
+        text: Employers value communication skills as much as qualifications.
+        highlight: communication skills
+        skill: writing
+        task: writing-2
+        collocation: communication
+      - id: ex2
+        text: I'd like to improve my cooking skills.
+        highlight: cooking skills
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: communication
+        phrase: communication skills
+        note: 'also "social skills", "practical skills"'
+      - id: develop
+        phrase: develop new skills
+        note: 'also "acquire new skills", "improve skills"'
+      - id: transferable
+        phrase: transferable skills
+        note: skills useful in many jobs
+    relations:
+      - type: alternative
+        to: knowledge.know
+        weight: 2
+        note: Knowledge is what you know; a skill is what you can do.

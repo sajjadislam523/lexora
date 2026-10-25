@@ -1,0 +1,37 @@
+id: likewise
+kind: linker
+headword: likewise
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: likewise, type: lemma }
+senses:
+  - key: same-way
+    pos: adverb
+    definition: In the same way; also.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [comparison]
+    linker:
+      connects: sentences
+      positions: [start, end]
+      punctuation: A comma after it at the start of a sentence. At the end ("did likewise"), no comma.
+    best_when: A formal way to say the next point works in the same way.
+    examples:
+      - id: ex1
+        text: The UK saw a fall in birth rates. Likewise, Italy's population began to shrink.
+        highlight: Likewise,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [Similarly]
+      - id: ex2
+        text: Several cities have banned cars from their centres, and others are expected to do likewise.
+        highlight: do likewise
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [the same]

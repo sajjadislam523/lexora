@@ -1,0 +1,39 @@
+id: namely
+kind: functional_expression
+headword: namely
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: namely, type: lemma }
+senses:
+  - key: specify
+    pos: adverb
+    definition: Used to say exactly which person or thing you mean.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1, writing-2] }
+    functions: [example]
+    best_when: Naming the complete list after a general phrase — "two countries, namely France and Spain".
+    avoid_when: Giving only some examples. Use "such as" or "for example".
+    examples:
+      - id: ex1
+        text: Two countries saw a fall in sales, namely France and Italy.
+        highlight: namely
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [specifically]
+      - id: ex2
+        text: The plan has one serious weakness, namely its cost.
+        highlight: namely
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [specifically]
+    relations:
+      - type: alternative
+        to: such-as.example
+        weight: 2
+        note: Such as gives some examples; namely gives the exact, complete list.

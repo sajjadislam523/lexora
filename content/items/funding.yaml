@@ -1,0 +1,47 @@
+id: funding
+kind: word
+headword: funding
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: funding, type: lemma }
+senses:
+  - key: money-for
+    pos: noun
+    definition: Money given by a government or organisation for a particular purpose.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [government, economy]
+    best_when: Public money for services — "funding for", "government funding", "cuts in funding".
+    examples:
+      - id: ex1
+        text: Universities need more funding for research.
+        highlight: funding for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept: [money, investment]
+      - id: ex2
+        text: Our local library closed because of a lack of funding.
+        highlight: lack of funding
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [money]
+    preposition_patterns:
+      - id: for
+        base: funding
+        preposition: for
+        pattern: funding for + purpose
+        complement: noun
+        note: what the money pays for
+    mistakes:
+      - id: fundings
+        wrong: The school received several fundings.
+        right: The school received funding from several sources.
+        type: countability
+        explanation: Funding is uncountable.

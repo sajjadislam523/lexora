@@ -1,0 +1,51 @@
+id: consequence
+kind: word
+headword: consequence
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: consequence, type: lemma }
+  - { form: consequences, type: inflection }
+senses:
+  - key: result
+    pos: noun
+    definition: A result of an action or situation, especially a bad or unintended one.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [result]
+    best_when: The effects of decisions and trends, especially negative ones — "serious consequences for".
+    examples:
+      - id: ex1
+        text: Deforestation has serious consequences for wildlife.
+        highlight: consequences for
+        skill: writing
+        task: writing-2
+        collocation: for
+        practice:
+          accept: [effects, implications]
+      - id: ex2
+        text: Many people don't think about the long-term consequences of their spending.
+        highlight: consequences of
+        skill: speaking
+        task: speaking-3
+        collocation: of
+        practice:
+          accept: [effects, results]
+    collocations:
+      - id: for
+        phrase: consequences for
+        pattern: (serious) consequences for + person / thing affected
+      - id: of
+        phrase: the consequences of
+        pattern: the consequences of + action
+      - id: unintended
+        phrase: unintended consequences
+        note: results that nobody planned
+    relations:
+      - type: alternative
+        to: effect.result
+        weight: 2
+        note: Effect is neutral; a consequence is often negative or unplanned.

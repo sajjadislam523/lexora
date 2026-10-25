@@ -1,0 +1,34 @@
+id: urbanisation
+kind: word
+headword: urbanisation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: British English uses -isation or -ization; American English uses -ization. Both are correct.
+forms:
+  - { form: urbanisation, type: lemma, region: gb, default: true }
+  - { form: urbanization, type: spelling_variant, region: us }
+senses:
+  - key: city-growth
+    pos: noun
+    definition: The process of more and more people moving from the countryside to live in towns and cities.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    topics: [cities, society]
+    best_when: Causes and effects of city growth — housing shortages, congestion, rural decline.
+    examples:
+      - id: ex1
+        text: Rapid urbanisation has led to serious housing shortages in many countries.
+        highlight: Rapid urbanisation
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: The chart shows the rate of urbanisation in three regions.
+        highlight: urbanisation
+        skill: writing
+        task: writing-1
+    relations:
+      - type: related
+        to: migration.moving

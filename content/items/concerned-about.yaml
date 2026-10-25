@@ -1,0 +1,76 @@
+id: concerned-about
+kind: preposition_pattern
+headword: concerned about
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: concerned about, type: lemma }
+  - { form: concerned with, type: lemma }
+senses:
+  - key: worried
+    label: worried
+    pos: adjective_phrase
+    definition: Worried about something.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: People's worries — "concerned about the cost", "concerned that + clause".
+    examples:
+      - id: ex1
+        text: Many parents are concerned about the amount of time children spend online.
+        highlight: concerned about
+        skill: writing
+        task: writing-2
+        pattern: about
+      - id: ex2
+        text: I'm a bit concerned about how expensive housing is getting.
+        highlight: concerned about
+        skill: speaking
+        task: speaking-3
+        pattern: about
+    preposition_patterns:
+      - id: about
+        base: concerned
+        preposition: about
+        pattern: be concerned about + noun / that + clause
+        complement: noun
+        note: what worries someone
+        mistake: with-worry
+    mistakes:
+      - id: with-worry
+        wrong: Residents are concerned with the rise in crime.
+        right: Residents are concerned about the rise in crime.
+        type: confusion
+        explanation: '"Concerned about" means worried. "Concerned with" means dealing with or about a subject.'
+  - key: about-subject
+    label: dealing with a subject
+    pos: adjective_phrase
+    definition: Dealing with or relating to a particular subject.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    best_when: Saying what a report, study or job deals with — "The study is concerned with …".
+    examples:
+      - id: ex1
+        text: This essay is concerned with the causes of youth unemployment.
+        highlight: concerned with
+        skill: writing
+        task: writing-2
+        pattern: with
+      - id: ex2
+        text: The report is mainly concerned with energy use in schools.
+        highlight: concerned with
+        skill: writing
+        task: writing-2
+        pattern: with
+    preposition_patterns:
+      - id: with
+        base: concerned
+        preposition: with
+        pattern: be concerned with + noun
+        complement: noun
+        note: the subject dealt with

@@ -1,0 +1,92 @@
+id: decline
+kind: word
+headword: decline
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: decline, type: lemma }
+  - { form: declines, type: inflection }
+  - { form: declined, type: inflection }
+  - { form: declining, type: inflection }
+senses:
+  - key: verb
+    label: to become less
+    pos: verb
+    definition: To become smaller, weaker or lower in number or quality, usually gradually.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [decrease]
+    best_when: A gradual, continuing fall — especially of something valued, such as standards, health or a population.
+    avoid_when: A sudden drop; "plunge" or "drop sharply" is clearer.
+    examples:
+      - id: ex1
+        text: Newspaper sales have declined steadily since the early 2000s.
+        highlight: declined steadily
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [fallen, decreased, dropped]
+      - id: ex2
+        text: Birth rates are declining in many wealthy countries.
+        highlight: declining
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [falling, decreasing, dropping]
+      - id: ex3
+        text: I think the quality of TV programmes has declined in recent years.
+        highlight: declined
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [fallen, dropped, gone down]
+    relations:
+      - type: opposite
+        to: grow.increase
+  - key: noun
+    label: a fall
+    pos: noun
+    definition: A gradual fall in the amount, level or quality of something.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [decrease]
+    best_when: Naming a long, continuing fall as a noun phrase ("a steady decline in").
+    examples:
+      - id: ex1
+        text: The chart shows a steady decline in the use of coal.
+        highlight: decline in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [fall, decrease, drop]
+      - id: ex2
+        text: The decline in traditional industries has left many towns struggling.
+        highlight: decline in
+        skill: writing
+        task: writing-2
+        pattern: in
+    preposition_patterns:
+      - id: in
+        base: decline
+        preposition: in
+        pattern: a decline in + noun
+        complement: noun
+        note: what fell
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: a decline of sales
+        right: a decline in sales
+        type: preposition
+        explanation: '"A decline in" + what fell.'
+    relations:
+      - type: synonym
+        to: fall.noun
+        weight: 2
+        note: Fall says nothing about speed; decline suggests a gradual, continuing fall.

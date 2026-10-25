@@ -1,0 +1,37 @@
+id: communication
+kind: word
+headword: communication
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: communication, type: lemma }
+  - { form: communications, type: inflection }
+senses:
+  - key: exchange
+    pos: noun
+    definition: The exchange of information or ideas between people, or the ways of doing it.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [technology, society]
+    best_when: How people stay in touch and work together — "communication skills", "face-to-face communication".
+    examples:
+      - id: ex1
+        text: Video calls cannot fully replace face-to-face communication.
+        highlight: face-to-face communication
+        skill: writing
+        task: writing-2
+        collocation: face
+      - id: ex2
+        text: Good communication is the key to a successful team.
+        highlight: Good communication
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: face
+        phrase: face-to-face communication
+    relations:
+      - type: related
+        to: social-media.platforms

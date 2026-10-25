@@ -1,0 +1,85 @@
+id: suggest
+kind: word
+headword: suggest
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: suggest, type: lemma }
+  - { form: suggests, type: inflection }
+  - { form: suggested, type: inflection }
+  - { form: suggesting, type: inflection }
+senses:
+  - key: indicate
+    label: to point to a conclusion
+    pos: verb
+    definition: To show that something is probably true, without proving it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [hedging]
+    best_when: Reporting evidence carefully — "the data suggests", "research suggests that".
+    examples:
+      - id: ex1
+        text: The data suggests that online sales will continue to grow.
+        highlight: suggests
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [indicates, shows]
+      - id: ex2
+        text: Evidence suggests that bilingual children are better at problem-solving.
+        highlight: suggests
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [indicates, shows]
+      - id: ex3
+        text: Some research suggests that music helps people concentrate.
+        highlight: suggests
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [shows]
+    relations:
+      - type: stronger
+        to: demonstrate.prove
+        weight: 1
+        note: Demonstrate claims the evidence clearly proves it.
+  - key: propose
+    label: to put forward an idea
+    pos: verb
+    definition: To put forward an idea or plan for others to consider.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Recommending a solution — "suggest + -ing" or "suggest that + clause".
+    examples:
+      - id: ex1
+        text: Some experts suggest introducing a four-day working week.
+        highlight: suggest introducing
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I'd suggest that the council builds more cycle lanes.
+        highlight: suggest that
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: suggest-to
+        wrong: I suggest to build more parks.
+        right: I suggest building more parks.
+        type: grammar
+        explanation: Suggest is followed by -ing or a "that" clause, not "to" + verb.
+      - id: suggest-me
+        wrong: My teacher suggested me to read more.
+        right: My teacher suggested that I read more.
+        type: grammar
+        explanation: Suggest doesn't take a person + "to". Use a "that" clause, or "suggested reading more".
+    relations:
+      - type: synonym
+        to: recommend.advise
+        weight: 2
+        note: Recommend sounds stronger and more official, and uses the same grammar.

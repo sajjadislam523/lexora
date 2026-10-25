@@ -18,10 +18,12 @@ export const STEP_0_CASES: GoldenCase[] = [
     intent: "CONTEXTUAL_EXPRESSION",
     includes: ["rise sharply", "considerable"],
   },
+  // Content expansion: "for example" now leads the give-an-example intent.
   {
     query: "Give an example?",
     intent: "CONTEXTUAL_EXPRESSION",
-    only: ["for instance", "such as", "a case in point"],
+    top: ["for example", "for instance"],
+    includes: ["such as", "a case in point"],
   },
   { query: "  SHOW   a result ", intent: "CONTEXTUAL_EXPRESSION", top: ["as a result"] },
   // The prefixed phrasings are unchanged.
@@ -35,9 +37,10 @@ export const STEP_0_CASES: GoldenCase[] = [
     intent: "CONTEXTUAL_EXPRESSION",
     includes: ["however", "whereas", "on the other hand"],
   },
-  // Only exact triggers: part of one, or one with more words, stays an ordinary lookup.
-  { query: "express", intent: "LOOKUP", outcome: "none" },
-  { query: "contrast", intent: "LOOKUP", outcome: "fallback" },
+  // Only exact triggers: part of one, or one with more words, stays an ordinary lookup. (Since the
+  // content expansion, "express" finds "express an opinion" in full text and "contrast" is an item.)
+  { query: "express", intent: "LOOKUP", outcome: "fallback" },
+  { query: "contrast", intent: "LOOKUP", top: ["contrast"] },
   {
     query: "important",
     intent: "LOOKUP",
@@ -46,7 +49,8 @@ export const STEP_0_CASES: GoldenCase[] = [
   },
   // Extra-words mistakes ("such as for example Japan") show only with a neighbouring word:
   // "for example" alone is correct language.
-  { query: "for example", intent: "LOOKUP", outcome: "fallback", mistakes: [] },
+  // "for example" has been an item since the content expansion.
+  { query: "for example", intent: "LOOKUP", top: ["for example"], mistakes: [] },
   {
     query: "such as for example",
     intent: "LOOKUP",

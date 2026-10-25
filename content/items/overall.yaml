@@ -1,0 +1,47 @@
+id: overall
+kind: linker
+headword: overall
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: overall, type: lemma }
+senses:
+  - key: summary
+    pos: adverb
+    definition: Considering everything; used to introduce a general summary of the main points or trends.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: The Task 1 overview — "Overall, it is clear that …" — which examiners expect to see.
+    examples:
+      - id: ex1
+        text: Overall, it is clear that renewable energy replaced coal over the period.
+        highlight: Overall,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [In general]
+      - id: ex2
+        text: Overall, I think the advantages of city life are greater.
+        highlight: Overall,
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [On the whole, In general, All in all]
+    mistakes:
+      - id: in-overall
+        wrong: In overall, sales increased.
+        right: Overall, sales increased.
+        type: preposition
+        explanation: '"Overall" stands alone — no "in".'
+    relations:
+      - type: alternative
+        to: in-conclusion.end
+        weight: 2
+        note: In conclusion ends a Task 2 essay; overall introduces a summary of the main trends, as in a Task 1 overview.

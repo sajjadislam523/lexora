@@ -1,0 +1,48 @@
+id: suffer-from
+kind: preposition_pattern
+headword: suffer from
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: suffer from, type: lemma }
+  - { form: suffers from, type: inflection }
+  - { form: suffered from, type: inflection }
+  - { form: suffering from, type: inflection }
+senses:
+  - key: have-illness
+    pos: verb_phrase
+    definition: To have an illness or a problem, especially over a period of time.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: Illnesses and long-term problems — "suffer from stress", "cities suffer from congestion".
+    examples:
+      - id: ex1
+        text: Many office workers suffer from back pain.
+        highlight: suffer from
+        skill: writing
+        task: writing-2
+        pattern: from
+      - id: ex2
+        text: Lots of big cities suffer from terrible traffic.
+        highlight: suffer from
+        skill: speaking
+        task: speaking-3
+        pattern: from
+    preposition_patterns:
+      - id: from
+        base: suffer
+        preposition: from
+        pattern: suffer from + illness / problem
+        complement: noun
+        note: the illness or problem
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: Millions of people suffer of depression.
+        right: Millions of people suffer from depression.
+        type: preposition
+        explanation: '"Suffer from" + the illness or problem.'

@@ -1,0 +1,66 @@
+id: access
+kind: word
+headword: access
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: access, type: lemma }
+senses:
+  - key: noun
+    pos: noun
+    definition: The right or opportunity to use something or to enter a place.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Equality and services — "access to education", "access to healthcare", "internet access".
+    examples:
+      - id: ex1
+        text: Many rural children still lack access to good schools.
+        highlight: access to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex2
+        text: Everyone should have access to clean water.
+        highlight: access to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex3
+        text: In my village, internet access is still quite slow.
+        highlight: internet access
+        skill: speaking
+        task: speaking-1
+        collocation: internet
+    preposition_patterns:
+      - id: to
+        base: access
+        preposition: to
+        pattern: (have / lack / gain) access to + noun
+        complement: noun
+        note: what people can use or reach
+        mistake: of
+    collocations:
+      - id: internet
+        phrase: internet access
+      - id: equal
+        phrase: equal access to
+        note: the same opportunity for everyone
+    mistakes:
+      - id: of
+        wrong: Everyone should have access of education.
+        right: Everyone should have access to education.
+        type: preposition
+        explanation: '"Access to" + what people can use.'
+      - id: verb
+        wrong: Students can access to the library online.
+        right: Students can access the library online.
+        type: preposition
+        explanation: As a verb, access takes a direct object. Only the noun takes "to" (have access to).
+    relations:
+      - type: derived_form
+        to: accessible.available
+        weight: 2
+        note: 'The adjective: "accessible to everyone".'

@@ -1,0 +1,48 @@
+id: challenge
+kind: word
+headword: challenge
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: challenge, type: lemma }
+  - { form: challenges, type: inflection }
+senses:
+  - key: difficulty
+    pos: noun
+    definition: Something difficult that tests someone's ability or determination to deal with it.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-2, speaking-3] }
+    functions: [problem]
+    best_when: Difficulties that can be overcome — "face a challenge", "the main challenge is".
+    examples:
+      - id: ex1
+        text: An ageing population presents a major challenge for health services.
+        highlight: presents a major challenge for
+        skill: writing
+        task: writing-2
+        collocation: present
+      - id: ex2
+        text: Moving to a new country was the biggest challenge I've ever faced.
+        highlight: biggest challenge
+        skill: speaking
+        task: speaking-2
+        collocation: face
+    collocations:
+      - id: face
+        phrase: face a challenge
+        note: deal with a difficulty
+      - id: present
+        phrase: present a challenge
+        pattern: present a challenge for / to + noun
+        note: 'something creates a difficulty for someone; also "pose a challenge"'
+      - id: meet
+        phrase: meet a challenge
+        note: deal with it successfully
+    relations:
+      - type: alternative
+        to: obstacle.barrier
+        weight: 2
+        note: An obstacle blocks progress; a challenge tests you, and may be welcome.

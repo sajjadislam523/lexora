@@ -1,0 +1,66 @@
+id: remain-stable
+kind: collocation
+headword: remain stable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: remain stable, type: lemma }
+  - { form: remains stable, type: inflection }
+  - { form: remained stable, type: inflection }
+  - { form: remaining stable, type: inflection }
+senses:
+  - key: stable
+    pos: verb_phrase
+    definition: To stay at about the same level, with little or no change.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    best_when: A line on a chart that stays roughly flat for a period.
+    skill_note: In Speaking, "stayed about the same" is more natural.
+    examples:
+      - id: ex1
+        text: The number of hospital beds remained stable at around 8,000 throughout the decade.
+        highlight: remained stable
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [remained steady, stayed stable, remained constant]
+      - id: ex2
+        text: Prices remained stable for most of the year before rising in December.
+        highlight: remained stable
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [remained steady, stayed stable, remained constant]
+      - id: ex3
+        text: My weekly expenses have remained stable, which is a relief.
+        highlight: remained stable
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [stayed stable, stayed the same]
+    collocations:
+      - id: at
+        phrase: remain stable at
+        pattern: remain stable at + level
+        note: the level it stayed at
+      - id: steady
+        phrase: remain steady
+        note: a close alternative
+    mistakes:
+      - id: stably
+        wrong: Sales remained stably in 2015.
+        right: Sales remained stable in 2015.
+        type: word_form
+        explanation: '"Remain" is followed by an adjective, not an adverb: remain stable, remain steady.'
+    relations:
+      - type: synonym
+        to: remain-unchanged.same
+        weight: 2
+        note: Remain unchanged means exactly the same figure; remain stable allows very small changes.
+      - type: opposite
+        to: fluctuate.vary
+      - type: has_component
+        to: stable.steady

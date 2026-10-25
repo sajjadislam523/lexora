@@ -1,0 +1,48 @@
+id: technology
+kind: word
+headword: technology
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: technology, type: lemma }
+  - { form: technologies, type: inflection }
+senses:
+  - key: tools
+    pos: noun
+    definition: Scientific knowledge used to make machines, systems and tools, or the machines and systems themselves.
+    cefr: A2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [technology]
+    best_when: The topic in general — "modern technology", "advances in technology", "the use of technology in schools".
+    examples:
+      - id: ex1
+        text: Advances in technology have made it possible to work from almost anywhere.
+        highlight: Advances in technology
+        skill: writing
+        task: writing-2
+        collocation: advances
+      - id: ex2
+        text: I think technology makes life easier, but it also makes us lazier.
+        highlight: technology
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: advances
+        phrase: advances in technology
+        pattern: advances in + technology / medicine / science
+      - id: modern
+        phrase: modern technology
+        note: 'also "new technology"'
+      - id: green
+        phrase: green technologies
+        note: technologies that reduce harm to the environment
+    relations:
+      - type: derived_form
+        to: technological.relating
+        weight: 2
+        note: 'The adjective: "technological change", "technological advances".'
+      - type: related
+        to: innovation.new-idea

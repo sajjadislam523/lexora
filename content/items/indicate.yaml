@@ -1,0 +1,45 @@
+id: indicate
+kind: word
+headword: indicate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: indicate, type: lemma }
+  - { form: indicates, type: inflection }
+  - { form: indicated, type: inflection }
+  - { form: indicating, type: inflection }
+senses:
+  - key: show
+    pos: verb
+    definition: To show that something exists, is true or is likely, especially through evidence.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [hedging]
+    best_when: Reporting what data or research points to, without claiming it is proved.
+    examples:
+      - id: ex1
+        text: The figures indicate that rural populations are ageing faster than urban ones.
+        highlight: indicate
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [show, suggest, reveal]
+      - id: ex2
+        text: Recent surveys indicate a growing interest in plant-based diets.
+        highlight: indicate
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [show, suggest, reveal]
+    relations:
+      - type: synonym
+        to: suggest.indicate
+        weight: 2
+        note: Suggest is more tentative — the evidence points that way, but less strongly.
+      - type: stronger
+        to: demonstrate.prove
+        weight: 1
+        note: Demonstrate claims that the evidence clearly proves the point.

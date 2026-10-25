@@ -1,0 +1,33 @@
+id: tuition-fees
+kind: word
+headword: tuition fees
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: tuition fees, type: lemma }
+  - { form: tuition fee, type: inflection }
+senses:
+  - key: cost
+    pos: noun
+    definition: The money students pay for their teaching at a college or university.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [education, economy]
+    best_when: Debates about whether university should be free — "abolish tuition fees", "high tuition fees".
+    examples:
+      - id: ex1
+        text: High tuition fees discourage students from poorer families from applying to university.
+        highlight: tuition fees
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Tuition fees in my country are quite low compared with the UK.
+        highlight: Tuition fees
+        skill: speaking
+        task: speaking-3
+    relations:
+      - type: related
+        to: higher-education.university

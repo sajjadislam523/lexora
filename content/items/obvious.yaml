@@ -1,0 +1,40 @@
+id: obvious
+kind: word
+headword: obvious
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: obvious, type: lemma }
+senses:
+  - key: easy-to-see
+    pos: adjective
+    definition: Easy to see, notice or understand.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    best_when: A fact or reason anyone can see — "the most obvious reason", "an obvious choice".
+    avoid_when: Your reader might disagree. Calling a debatable point "obvious" weakens an argument.
+    examples:
+      - id: ex1
+        text: The most obvious advantage of living in a city is access to jobs.
+        highlight: most obvious advantage
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: For me, the obvious choice was to study medicine like my mother.
+        highlight: obvious choice
+        skill: speaking
+        task: speaking-2
+    mistakes:
+      - id: obviously-adj
+        wrong: It is obviously that prices have risen.
+        right: It is obvious that prices have risen.
+        type: word_form
+        explanation: After "it is", use the adjective "obvious". "Obviously" is an adverb (Obviously, prices have risen).
+    relations:
+      - type: alternative
+        to: evident.clear
+        weight: 1
+        note: Evident is formal and suits conclusions drawn from data.

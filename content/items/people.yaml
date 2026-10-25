@@ -1,0 +1,54 @@
+id: people
+kind: word
+headword: people
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: people, type: lemma }
+senses:
+  - key: persons
+    pos: noun
+    definition: Men, women and children in general; the usual plural of "person".
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1, speaking-3] }
+    best_when: Any group of humans, in both skills. It is already plural — "people are", "many people".
+    avoid_when: Starting every sentence of an essay with "People". Name the group instead — residents, young adults, employees, citizens.
+    examples:
+      - id: ex1
+        text: More people now work from home than ever before.
+        highlight: people
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: People in my city are really friendly.
+        highlight: People
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: peoples
+        wrong: Many peoples think that taxes are too high.
+        right: Many people think that taxes are too high.
+        type: countability
+        explanation: People is already plural. "Peoples" means different nations or ethnic groups.
+      - id: persons
+        wrong: Five persons were interviewed for the survey.
+        right: Five people were interviewed for the survey.
+        type: register
+        explanation: '"Persons" is used mainly in legal and official notices. In essays and speech, the plural of person is "people".'
+      - id: is
+        wrong: People is worried about the future.
+        right: People are worried about the future.
+        type: grammar
+        explanation: People takes a plural verb.
+    relations:
+      - type: more_formal
+        to: individual.person
+        weight: 1
+        note: Individuals stresses single people rather than a group.
+      - type: alternative
+        to: citizen.member
+        weight: 1
+        note: Citizens are people who belong to a country and have rights there.

@@ -1,0 +1,58 @@
+id: issue
+kind: word
+headword: issue
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: issue, type: lemma }
+  - { form: issues, type: inflection }
+senses:
+  - key: problem
+    pos: noun
+    definition: An important subject that people discuss or argue about, often a problem.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: Topics of public debate — "environmental issues", "the issue of", "address the issue".
+    examples:
+      - id: ex1
+        text: Climate change is one of the most pressing issues of our time.
+        highlight: pressing issues
+        skill: writing
+        task: writing-2
+        collocation: pressing
+        practice:
+          accept: [problems, challenges]
+      - id: ex2
+        text: Governments must address the issue of youth unemployment.
+        highlight: address the issue of
+        skill: writing
+        task: writing-2
+        collocation: of
+      - id: ex3
+        text: Housing is a big issue in my city right now.
+        highlight: big issue
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [problem]
+    collocations:
+      - id: pressing
+        phrase: a pressing issue
+        note: urgent and important
+      - id: of
+        phrase: the issue of
+        pattern: the issue of + noun
+        note: names the topic
+      - id: address
+        phrase: address an issue
+        note: 'also "tackle an issue"'
+    mistakes:
+      - id: about
+        wrong: There is an issue about the price.
+        right: There is an issue with the price.
+        type: preposition
+        explanation: '"An issue with" something means a problem with it. "The issue of" names a topic of debate.'

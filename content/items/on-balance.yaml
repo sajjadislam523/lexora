@@ -1,0 +1,42 @@
+id: on-balance
+kind: linker
+headword: on balance
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: on balance, type: lemma }
+senses:
+  - key: weighing
+    pos: prepositional_phrase
+    definition: After considering all the facts on both sides.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Giving your verdict in a discussion or advantages–disadvantages essay.
+    examples:
+      - id: ex1
+        text: On balance, I believe the benefits of tourism outweigh the costs.
+        highlight: On balance,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Overall, All things considered]
+      - id: ex2
+        text: On balance, I'd say working from home suits me better.
+        highlight: On balance,
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [Overall, All in all]
+    relations:
+      - type: alternative
+        to: overall.summary
+        weight: 2
+        note: On balance stresses that you have weighed both sides before deciding.

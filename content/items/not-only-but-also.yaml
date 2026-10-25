@@ -1,0 +1,41 @@
+id: not-only-but-also
+kind: functional_expression
+headword: not only … but also
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: not only but also, type: lemma }
+  - { form: not only, type: lemma }
+senses:
+  - key: addition
+    pos: conjunction
+    definition: Used to add a second, often more surprising point to a first one.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [addition, emphasis]
+    best_when: Stressing that something has two benefits or two problems.
+    examples:
+      - id: ex1
+        text: Cycling is not only cheap but also good for your health.
+        highlight: [not only, but also]
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Not only is the city expensive, but it is also very crowded.
+        highlight: [Not only, also]
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: inversion
+        wrong: Not only it is cheap, but it is also fast.
+        right: Not only is it cheap, but it is also fast.
+        type: grammar
+        explanation: At the start of a sentence, "not only" is followed by the question word order — is it, does it, can they.
+    relations:
+      - type: alternative
+        to: moreover.addition
+        weight: 1
+        note: Moreover adds a point in a new sentence; "not only … but also" stresses both points in one sentence.

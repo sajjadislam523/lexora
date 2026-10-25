@@ -65,3 +65,8 @@ senses:
         right: have a detrimental effect on health
         type: confusion
         explanation: Effect is the noun; affect is usually the verb.
+    relations:
+      - type: has_component
+        to: detrimental.damaging
+      - type: has_component
+        to: effect.result

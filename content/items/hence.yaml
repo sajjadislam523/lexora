@@ -1,0 +1,41 @@
+id: hence
+kind: linker
+headword: hence
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: hence, type: lemma }
+senses:
+  - key: result
+    pos: adverb
+    definition: For this reason; that is why.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    functions: [result]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: Often after a comma or full stop and followed directly by a noun phrase ("hence the need for …"), with no verb.
+    best_when: A short, formal link to a result, especially "hence + noun phrase".
+    avoid_when: You are not sure of the pattern. "Therefore" + a full clause is safer.
+    examples:
+      - id: ex1
+        text: Cities are growing rapidly; hence the need for better public transport.
+        highlight: hence
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [therefore, thus]
+      - id: ex2
+        text: Fuel prices rose sharply, hence the fall in car journeys.
+        highlight: hence
+        skill: writing
+        task: writing-1
+    relations:
+      - type: alternative
+        to: therefore.result
+        weight: 2
+        note: Therefore is followed by a full clause; hence is often followed by just a noun phrase.

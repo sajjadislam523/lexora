@@ -1,0 +1,75 @@
+id: support
+kind: word
+headword: support
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: support, type: lemma }
+  - { form: supports, type: inflection }
+  - { form: supported, type: inflection }
+  - { form: supporting, type: inflection }
+senses:
+  - key: help
+    label: to help
+    pos: verb
+    definition: To help someone or something with money, advice or encouragement, often over time.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-2, speaking-3] }
+    best_when: Ongoing help from governments, families or communities — "support families", "support local businesses".
+    examples:
+      - id: ex1
+        text: Governments should support families with the cost of childcare.
+        highlight: support
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [help, assist]
+      - id: ex2
+        text: My parents have always supported me, whatever I decided to do.
+        highlight: supported
+        skill: speaking
+        task: speaking-2
+    collocations:
+      - id: financially
+        phrase: support someone financially
+      - id: local
+        phrase: support local businesses
+  - key: agree
+    label: to agree with an idea
+    pos: verb
+    definition: To agree with an idea, plan or group and want it to succeed.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Stating which side of an argument you agree with — "I support this view".
+    examples:
+      - id: ex1
+        text: Many teachers support the idea of shorter school holidays.
+        highlight: support the idea of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [favour, favor, back]
+      - id: ex2
+        text: I fully support banning cars from the city centre.
+        highlight: fully support
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [agree with]
+    mistakes:
+      - id: support-to
+        wrong: I support to this policy.
+        right: I support this policy.
+        type: preposition
+        explanation: Support takes a direct object.
+    relations:
+      - type: alternative
+        to: agree.same-view
+        weight: 2
+        note: Agree is about sharing an opinion; support also means wanting a plan or group to succeed.

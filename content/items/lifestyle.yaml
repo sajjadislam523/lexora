@@ -1,0 +1,42 @@
+id: lifestyle
+kind: word
+headword: lifestyle
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: lifestyle, type: lemma }
+  - { form: lifestyles, type: inflection }
+senses:
+  - key: way-of-living
+    pos: noun
+    definition: The way someone lives, including their habits, work, diet and free time.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [health, society]
+    best_when: Health habits — "a healthy lifestyle", "a sedentary lifestyle" (sitting a lot, little exercise).
+    examples:
+      - id: ex1
+        text: A sedentary lifestyle is a major cause of obesity.
+        highlight: sedentary lifestyle
+        skill: writing
+        task: writing-2
+        collocation: sedentary
+      - id: ex2
+        text: I try to have a healthy lifestyle, but it's hard with exams.
+        highlight: healthy lifestyle
+        skill: speaking
+        task: speaking-1
+        collocation: healthy
+    collocations:
+      - id: sedentary
+        phrase: a sedentary lifestyle
+        note: spending most of the day sitting
+      - id: healthy
+        phrase: a healthy lifestyle
+        note: 'also "a active lifestyle"'
+    relations:
+      - type: related
+        to: exercise.activity

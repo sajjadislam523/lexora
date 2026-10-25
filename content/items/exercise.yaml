@@ -1,0 +1,46 @@
+id: exercise
+kind: word
+headword: exercise
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: exercise, type: lemma }
+  - { form: exercises, type: inflection }
+senses:
+  - key: activity
+    pos: noun
+    definition: Physical activity that you do to stay fit and healthy.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [health]
+    best_when: '"Do / take exercise", "regular exercise" — uncountable for physical activity in general.'
+    examples:
+      - id: ex1
+        text: Regular exercise reduces the risk of many serious diseases.
+        highlight: Regular exercise
+        skill: writing
+        task: writing-2
+        collocation: regular
+        practice:
+          accept: [physical activity]
+      - id: ex2
+        text: I try to do some exercise every morning before work.
+        highlight: do some exercise
+        skill: speaking
+        task: speaking-1
+        collocation: do
+    collocations:
+      - id: regular
+        phrase: regular exercise
+      - id: do
+        phrase: do exercise
+        note: '"take exercise" is more British; also "take exercise"'
+    mistakes:
+      - id: make
+        wrong: People should make more exercise.
+        right: People should do more exercise.
+        type: collocation
+        explanation: In English you "do" or "take" exercise, not "make" it.

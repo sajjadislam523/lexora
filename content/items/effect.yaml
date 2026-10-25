@@ -1,0 +1,76 @@
+id: effect
+kind: word
+headword: effect
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: effect, type: lemma }
+  - { form: effects, type: inflection }
+senses:
+  - key: result
+    pos: noun
+    definition: A change that happens because of something else; a result.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [result]
+    best_when: Naming a result or influence, with "on" for what is changed — "the effect of X on Y".
+    examples:
+      - id: ex1
+        text: Researchers are still studying the effect of social media on teenagers.
+        highlight: effect of social media on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [impact, influence]
+      - id: ex2
+        text: Longer school days could have a negative effect on children's wellbeing.
+        highlight: effect on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [impact]
+      - id: ex3
+        text: Living in a big city has had a big effect on how I see the world.
+        highlight: effect on
+        skill: speaking
+        task: speaking-2
+        pattern: on
+        practice:
+          accept: [impact, influence]
+    preposition_patterns:
+      - id: on
+        base: effect
+        preposition: on
+        pattern: have an effect on + noun
+        complement: noun
+        note: what is changed; "the effect of X on Y"
+        mistake: to
+    collocations:
+      - id: side
+        phrase: side effects
+        note: unwanted effects, especially of medicine
+      - id: long-term
+        phrase: long-term effects
+      - id: knock-on
+        phrase: a knock-on effect
+        note: an indirect effect that spreads to other things; less formal
+    mistakes:
+      - id: to
+        wrong: Pollution has a bad effect to our health.
+        right: Pollution has a bad effect on our health.
+        type: preposition
+        explanation: '"An effect on" + what is changed.'
+    relations:
+      - type: synonym
+        to: impact.noun
+        weight: 2
+        note: Impact suggests a strong or dramatic effect.
+      - type: alternative
+        to: influence.noun
+        weight: 1
+        note: Influence is a gradual or indirect effect, often on people's behaviour or opinions.

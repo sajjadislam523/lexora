@@ -78,8 +78,13 @@ describe("prepositions", () => {
 
 describe("collocations", () => {
   it("fits when the collocation is the learner's words as written", async () => {
+    // Content expansion: increase.noun authors "a gradual / marked / sharp increase".
     expect(verdicts(await service.search("There was a ___ increase in cycling"))).toEqual([
+      "gradual{increase.noun}=fits",
+      "marked{increase.noun}=fits",
+      "sharp{increase.noun}=fits",
       "significant{significant.notable}=fits",
+      "slight{slightly.small}=fits",
       "substantial{substantial.large}=fits",
     ]);
   });
@@ -87,11 +92,20 @@ describe("collocations", () => {
   it("likely fits when a word matched only through the stemmer", async () => {
     // Step 4.4: an inflection the content authors ("plays" / "play") counts as written, so
     // "Public transport plays a ___ role" is all fits (test/search-context-coverage.test.ts).
+    // Content expansion: the other authored "… skills" collocations behave the same way.
     expect(verdicts(await service.search("This job requires ___ skill"))).toEqual([
+      "digital{digital.electronic}=likely_fits",
       "essential{essential.necessary}=likely_fits",
+      "communication{skill.ability}=likely_fits",
+      "transferable{skill.ability}=likely_fits",
+      "practical{practical.realistic}=likely_fits",
     ]);
     expect(verdicts(await service.search("This job requires ___ skills"))).toEqual([
+      "digital{digital.electronic}=fits",
       "essential{essential.necessary}=fits",
+      "communication{skill.ability}=fits",
+      "transferable{skill.ability}=fits",
+      "practical{practical.realistic}=fits",
     ]);
   });
 
@@ -113,9 +127,17 @@ describe("linkers", () => {
         signals: ["linker_position", "position:start"],
       });
     }
+    // Content expansion: every conjunction authored as joining two clauses.
     expect(
       verdicts(await service.search("My brother loves the city, ___ I prefer the country")),
-    ).toEqual(["whereas{whereas.contrast}=depends"]);
+    ).toEqual([
+      "because{because.cause}=depends",
+      "since{since.cause}=depends",
+      "although{although.concession}=depends",
+      "even though{even-though.concession}=depends",
+      "whereas{whereas.contrast}=depends",
+      "while{while.contrast}=depends",
+    ]);
   });
 
   it("has no candidate, so no verdict, without punctuation or words to link", async () => {
@@ -162,7 +184,8 @@ describe("two blanks", () => {
   });
 
   it("judge a blank with candidates and leave the other without", async () => {
-    const response = await service.search("Cars are responsible ___ pollution ___ cities");
+    // "smog", not "pollution": since the content expansion "pollution levels" reads the second blank.
+    const response = await service.search("Cars are responsible ___ smog ___ cities");
     expect(response?.gaps?.map((g) => g.type)).toEqual(["preposition", "unknown"]);
     for (const result of response!.groups.flatMap((g) => g.results)) {
       expect(result.gapMatch?.gap).toBe(0);

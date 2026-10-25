@@ -1,0 +1,36 @@
+id: automation
+kind: word
+headword: automation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: automation, type: lemma }
+senses:
+  - key: machines
+    pos: noun
+    definition: The use of machines and computers to do work that people used to do.
+    cefr: C1
+    registers: [academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [technology, work]
+    best_when: The future of work — job losses, productivity and retraining.
+    examples:
+      - id: ex1
+        text: Automation is likely to replace many routine factory jobs.
+        highlight: Automation
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Automation has already changed a lot of jobs in banking, like cashiers.
+        highlight: Automation
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: of
+        phrase: the automation of
+        pattern: the automation of + process / industry
+    relations:
+      - type: related
+        to: artificial-intelligence.machines

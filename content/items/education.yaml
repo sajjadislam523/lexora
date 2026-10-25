@@ -1,0 +1,51 @@
+id: education
+kind: word
+headword: education
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: education, type: lemma }
+  - { form: educational, type: lemma }
+senses:
+  - key: system
+    pos: noun
+    definition: The process of teaching and learning, especially in schools, colleges and universities; "educational" is the adjective.
+    cefr: A2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [education]
+    best_when: Task 2 education topics — "access to education", "the quality of education", "educational opportunities".
+    examples:
+      - id: ex1
+        text: Every child has the right to a good education.
+        highlight: education
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Governments should spend more on primary education than on universities.
+        highlight: primary education
+        skill: writing
+        task: writing-2
+        collocation: primary
+      - id: ex3
+        text: I think education in my country focuses too much on exams.
+        highlight: education
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: primary
+        phrase: free primary education
+        note: "the stages of education: primary, secondary and higher education"
+      - id: quality
+        phrase: the quality of education
+      - id: opportunities
+        phrase: educational opportunities
+        note: the adjective form with a noun
+    mistakes:
+      - id: education-adj
+        wrong: Television can be very education for children.
+        right: Television can be very educational for children.
+        type: word_form
+        explanation: Education is the noun; educational is the adjective.

@@ -1,0 +1,78 @@
+id: lack
+kind: word
+headword: lack
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: lack, type: lemma }
+  - { form: lacks, type: inflection }
+  - { form: lacked, type: inflection }
+  - { form: lacking, type: inflection }
+senses:
+  - key: noun
+    label: not having enough
+    pos: noun
+    definition: The state of not having something, or not having enough of it.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem, cause]
+    best_when: Naming a cause — "a lack of funding", "a lack of exercise", "due to a lack of".
+    examples:
+      - id: ex1
+        text: A lack of affordable housing forces young people to leave the city.
+        highlight: lack of
+        skill: writing
+        task: writing-2
+        pattern: of
+        practice:
+          accept: [shortage]
+      - id: ex2
+        text: I think a lack of sleep is the main reason I can't concentrate.
+        highlight: lack of
+        skill: speaking
+        task: speaking-1
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: lack
+        preposition: of
+        pattern: a lack of + noun
+        complement: noun
+        note: what is missing (noun only)
+  - key: verb
+    label: to not have
+    pos: verb
+    definition: To not have something, or not have enough of it.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [problem]
+    best_when: '"Lack + noun" with no preposition — "Many schools lack funding".'
+    examples:
+      - id: ex1
+        text: Many rural schools lack basic equipment.
+        highlight: lack
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [need]
+      - id: ex2
+        text: Some graduates lack the practical skills employers want.
+        highlight: lack
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: of
+        wrong: Many schools lack of teachers.
+        right: Many schools lack teachers.
+        type: preposition
+        explanation: The verb lack takes a direct object. Only the noun takes "of" (a lack of teachers).
+    relations:
+      - type: derived_form
+        to: lack.noun
+        weight: 2
+        note: 'The noun takes "of": "a lack of teachers".'

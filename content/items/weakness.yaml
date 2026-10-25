@@ -1,0 +1,32 @@
+id: weakness
+kind: word
+headword: weakness
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: weakness, type: lemma }
+  - { form: weaknesses, type: inflection }
+senses:
+  - key: bad-point
+    pos: noun
+    definition: A fault or problem that makes someone or something less effective.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1] }
+    functions: [problem]
+    best_when: Evaluating fairly — "the main weakness of this argument", "strengths and weaknesses".
+    examples:
+      - id: ex1
+        text: The main weakness of this argument is that it ignores the cost.
+        highlight: weakness of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [flaw, drawback]
+      - id: ex2
+        text: My weakness is that I find it hard to say no to people.
+        highlight: weakness
+        skill: speaking
+        task: speaking-1

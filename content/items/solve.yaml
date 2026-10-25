@@ -1,0 +1,44 @@
+id: solve
+kind: word
+headword: solve
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: solve, type: lemma }
+  - { form: solves, type: inflection }
+  - { form: solved, type: inflection }
+  - { form: solving, type: inflection }
+senses:
+  - key: find-answer
+    pos: verb
+    definition: To find a way of dealing with a problem so that it stops existing.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Problems that can be fully fixed. For large social problems, "tackle" or "address" is more realistic.
+    examples:
+      - id: ex1
+        text: Building more roads will not solve the problem of congestion.
+        highlight: solve
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [resolve, fix]
+      - id: ex2
+        text: I think the city could solve its traffic problem with more trams.
+        highlight: solve
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [fix, sort out]
+    relations:
+      - type: more_formal
+        to: resolve.settle
+        weight: 2
+        note: Resolve is more formal and suits conflicts, disputes and issues.
+      - type: alternative
+        to: tackle.deal-with
+        weight: 2
+        note: Tackle means starting to deal with a problem in a determined way, without promising to end it.

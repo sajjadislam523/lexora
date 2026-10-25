@@ -1,0 +1,43 @@
+id: urban
+kind: word
+headword: urban
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: urban, type: lemma }
+senses:
+  - key: city
+    pos: adjective
+    definition: Relating to towns and cities.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [cities]
+    best_when: Comparing city and countryside in Task 1 and Task 2 — "urban areas", "urban planning".
+    examples:
+      - id: ex1
+        text: Car ownership is lower in urban areas than in rural ones.
+        highlight: urban areas
+        skill: writing
+        task: writing-1
+        collocation: areas
+        practice:
+          accept: [city]
+      - id: ex2
+        text: Urban planning should put pedestrians first.
+        highlight: Urban planning
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [City]
+    collocations:
+      - id: areas
+        phrase: urban areas
+      - id: planning
+        phrase: urban planning
+        note: 'also "urban development"'
+    relations:
+      - type: opposite
+        to: rural.countryside

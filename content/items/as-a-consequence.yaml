@@ -1,0 +1,43 @@
+id: as-a-consequence
+kind: linker
+headword: as a consequence
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: as a consequence, type: lemma }
+  - { form: as a consequence of, type: lemma }
+senses:
+  - key: result
+    pos: adverbial_phrase
+    definition: Because of what has just been described; add "of" and a noun to name the cause.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [result]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: A formal alternative to "as a result", especially for negative effects.
+    examples:
+      - id: ex1
+        text: Fewer people are having children. As a consequence, the population is ageing.
+        highlight: As a consequence,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [as a result, consequently]
+      - id: ex2
+        text: As a consequence of the drought, food prices rose across the region.
+        highlight: As a consequence of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [as a result of, because of, due to]
+    relations:
+      - type: synonym
+        to: consequently.result
+        weight: 2
+        note: Consequently is one word and works in the middle of a sentence too.

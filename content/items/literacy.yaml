@@ -1,0 +1,40 @@
+id: literacy
+kind: word
+headword: literacy
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: literacy, type: lemma }
+senses:
+  - key: reading
+    pos: noun
+    definition: The ability to read and write, or basic skill and knowledge in a particular area.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    topics: [education, society]
+    best_when: Literacy rates in Task 1 data, and "digital" or "financial literacy" in Task 2.
+    examples:
+      - id: ex1
+        text: Adult literacy rates rose from 60% to 85% over the period.
+        highlight: literacy rates
+        skill: writing
+        task: writing-1
+        collocation: rates
+      - id: ex2
+        text: Schools should teach financial literacy so that young people can manage money.
+        highlight: financial literacy
+        skill: writing
+        task: writing-2
+        collocation: financial
+    collocations:
+      - id: rates
+        phrase: literacy rates
+      - id: financial
+        phrase: digital literacy
+        note: 'basic skills in a particular area; also "financial literacy"'
+    relations:
+      - type: related
+        to: education.system

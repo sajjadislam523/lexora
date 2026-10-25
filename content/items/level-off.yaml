@@ -1,0 +1,47 @@
+id: level-off
+kind: phrase
+headword: level off
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: British English doubles the l (levelled, levelling); American English usually doesn't (leveled, leveling). Both are correct.
+forms:
+  - { form: level off, type: lemma }
+  - { form: levelled off, type: inflection, region: gb }
+  - { form: leveled off, type: spelling_variant, region: us }
+  - { form: levelling off, type: inflection, region: gb }
+  - { form: leveling off, type: spelling_variant, region: us }
+senses:
+  - key: stop-changing
+    pos: verb_phrase
+    definition: To stop rising or falling and stay at about the same level.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    best_when: The point in a Task 1 chart where a rise or fall ends and the line becomes flat.
+    examples:
+      - id: ex1
+        text: After rising sharply until 2010, the number of users levelled off at about 50 million.
+        highlight: levelled off
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [plateaued, stabilised, stabilized]
+      - id: ex2
+        text: Growth is expected to level off over the next five years.
+        highlight: level off
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [plateau, stabilise, stabilize]
+    collocations:
+      - id: at
+        phrase: level off at
+        pattern: level off at + level
+        note: the level where the line becomes flat
+    relations:
+      - type: synonym
+        to: plateau.verb
+        weight: 2
+        note: Plateau means the same and is slightly more formal.

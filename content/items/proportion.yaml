@@ -1,0 +1,47 @@
+id: proportion
+kind: word
+headword: proportion
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: proportion, type: lemma }
+  - { form: proportions, type: inflection }
+senses:
+  - key: part
+    pos: noun
+    definition: A part or share of a whole, often given as a percentage.
+    cefr: B2
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    best_when: Task 1 charts with percentages or shares ("the proportion of households with internet access").
+    examples:
+      - id: ex1
+        text: The proportion of adults with a university degree doubled between 1990 and 2020.
+        highlight: proportion of
+        skill: writing
+        task: writing-1
+        collocation: of
+        practice:
+          accept: [percentage]
+      - id: ex2
+        text: A large proportion of household income is spent on housing.
+        highlight: A large proportion of
+        skill: writing
+        task: writing-2
+        collocation: large
+    collocations:
+      - id: of
+        phrase: the proportion of
+        pattern: the proportion of + plural / uncountable noun
+        note: the share of a whole group
+      - id: large
+        phrase: a large proportion of
+        note: 'describing the size of the share; also "a small proportion of"'
+      - id: significant
+        phrase: a significant proportion of
+        note: a share large enough to matter
+    relations:
+      - type: related
+        to: account-for.share

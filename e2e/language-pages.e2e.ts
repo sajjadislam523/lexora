@@ -142,11 +142,12 @@ describe("language pages", () => {
   });
 
   it("renders only the sections an item has", async () => {
-    const analyse = (await page("/language/analyse")).html;
-    expect(analyse).toContain("Also spelled");
-    expect(analyse).toContain("(US)");
-    expect(analyse).not.toContain("Related language");
-    expect(analyse).not.toContain("Common collocations");
+    // "analyse" gained a related meaning in the content expansion; "emphasise" has none.
+    const emphasise = (await page("/language/emphasise")).html;
+    expect(emphasise).toContain("Also spelled");
+    expect(emphasise).toContain("(US)");
+    expect(emphasise).not.toContain("Related language");
+    expect(emphasise).not.toContain("Common collocations");
 
     const however = (await page("/language/however")).html;
     expect(however).toContain("How it links ideas");

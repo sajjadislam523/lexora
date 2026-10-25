@@ -1,0 +1,39 @@
+id: in-other-words
+kind: linker
+headword: in other words
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: in other words, type: lemma }
+senses:
+  - key: restate
+    pos: prepositional_phrase
+    definition: Used to explain something again in a simpler or clearer way.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-3] }
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle.
+    best_when: Clarifying a technical or abstract point with a plain restatement.
+    examples:
+      - id: ex1
+        text: Demand exceeded supply. In other words, there were not enough homes.
+        highlight: In other words,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [That is to say]
+      - id: ex2
+        text: My job is quite flexible — in other words, I can work when I want.
+        highlight: in other words,
+        skill: speaking
+        task: speaking-1
+    relations:
+      - type: alternative
+        to: namely.specify
+        weight: 1
+        note: Namely names exactly what you mean; in other words restates it more simply.

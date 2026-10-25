@@ -1,0 +1,42 @@
+id: to-some-extent
+kind: functional_expression
+headword: to some extent
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: to some extent, type: lemma }
+  - { form: to a certain extent, type: lemma }
+  - { form: to a large extent, type: lemma }
+senses:
+  - key: partly
+    pos: prepositional_phrase
+    definition: Partly, but not completely; used to agree or claim something in a limited way.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [hedging, opinion]
+    standalone: The standard way to agree partly; the alternatives are whole clauses ("I partly agree"), not phrases that do the same job.
+    best_when: Answering "To what extent do you agree?" with a balanced view, or softening a claim.
+    examples:
+      - id: ex1
+        text: I agree to some extent that technology has made people less sociable.
+        highlight: to some extent
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [partly]
+      - id: ex2
+        text: To a certain extent, I think the media is responsible for the problem.
+        highlight: To a certain extent,
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [partly]
+    mistakes:
+      - id: in-extent
+        wrong: In some extent, I agree with this view.
+        right: To some extent, I agree with this view.
+        type: preposition
+        explanation: The fixed phrase is "to some extent" (or "to a certain extent").

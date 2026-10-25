@@ -36,8 +36,11 @@ const results = (response: SearchResponse | null) =>
 describe("4.4-1 collocation guards", () => {
   it("never offers the learner's own neighbouring word or an inflection of it (A1)", async () => {
     const response = await service.search("Governments must take ___ measures");
+    // Content expansion: "effective measures" and "strict measures" are authored collocations too.
     expect(verdicts(response)).toEqual([
       "urgent{take-measures.act}=fits",
+      "effective{effective.works}=fits",
+      "strict{measure.action}=fits",
       "steps{take-measures.act}=likely_fits",
     ]);
     const fills = results(response).map((r) => r.fill?.word);
@@ -75,8 +78,9 @@ describe("4.4-2 inflected multiword bases", () => {
     [
       "Plastic waste poses a threat ___ marine life",
       "Prepositions after “pose a threat”",
-      ["to{pose-a-threat.danger}=likely_fits"],
-      ["pose a threat for wildlife"],
+      // Content expansion: the noun threat has its own "threat to" pattern.
+      ["to{pose-a-threat.danger}=likely_fits", "to{threat.danger}=likely_fits"],
+      ["pose a threat for wildlife", "Plastic is a threat for marine life."],
     ],
     [
       "Tourism plays a crucial role ___ the economy",
@@ -173,7 +177,9 @@ describe("4.4-4 collocations anchored by any content word", () => {
     ["Plastic waste ___ a threat to marine life", ["pose{pose-a-threat.danger}=fits"]],
     [
       "Rising sea levels ___ a serious threat to coastal cities",
-      ["pose{pose-a-threat.danger}=fits"],
+      // Content expansion: "level off" matches "levels" only through the stemmer, so it only
+      // likely fits (noun and verb uses aren't told apart yet).
+      ["pose{pose-a-threat.danger}=fits", "off{level-off.stop-changing}=likely_fits"],
     ],
     ["Teachers ___ a crucial role in shaping attitudes", ["play{play-a-crucial-role.main}=fits"]],
     ["Teachers ___ a key role", ["play{play-a-crucial-role.main}=fits"]],
@@ -206,8 +212,11 @@ describe("4.4-4 collocations anchored by any content word", () => {
     "never fits %j: the function word before a collocation's first word is unchecked",
     async (query, candidate, word) => {
       const response = await service.search(query);
-      expect(verdicts(response)).toEqual([`${candidate}=likely_fits`]);
-      const [result] = results(response);
+      // Since the content expansion, other collocations can answer too ("the develop skills"):
+      // none of them fits, and the authored one keeps its hedge and its reason.
+      expect(verdicts(response)).toContain(`${candidate}=likely_fits`);
+      expect(verdicts(response).filter((v) => v.endsWith("=fits"))).toEqual([]);
+      const result = results(response).find((r) => `${r.fill?.word}{${r.senseId}}` === candidate);
       expect(result?.gapMatch?.signals).toEqual(["collocation", "other_side_unchecked"]);
       expect(result?.reason).toContain(`Lexora can't check “${word}” before it`);
     },
@@ -242,7 +251,12 @@ describe("4.4-5 first words the content authors as inflections", () => {
     ],
     [
       "Prices rose ___ in 2020",
+      // Content expansion: rise authors "rise in / by / to". They only likely fit here: what
+      // follows a preposition's blank isn't checked yet.
       [
+        "in{rise.noun}=likely_fits",
+        "by{rise.verb}=likely_fits",
+        "to{rise.verb}=likely_fits",
         "sharply{rise-sharply.increase}=fits",
         "dramatically{rise-sharply.increase}=fits",
         "gradually{rise-sharply.increase}=fits",
@@ -254,6 +268,12 @@ describe("4.4-5 first words the content authors as inflections", () => {
       [
         "detrimental{have-a-detrimental-effect-on.harm}=fits",
         "negative{have-a-detrimental-effect-on.harm}=fits",
+        // Content expansion: more authored collocations with "effect".
+        "beneficial{beneficial.helpful}=fits",
+        "knock-on{effect.result}=fits",
+        "long-term{effect.result}=likely_fits",
+        "side{effect.result}=likely_fits",
+        "harmful{harmful.damaging}=likely_fits",
       ],
     ],
   ])("%j (E1, E2)", async (query, expected) => {

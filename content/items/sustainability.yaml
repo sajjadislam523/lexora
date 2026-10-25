@@ -1,0 +1,29 @@
+id: sustainability
+kind: word
+headword: sustainability
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: sustainability, type: lemma }
+senses:
+  - key: lasting
+    pos: noun
+    definition: The ability to continue without damaging the environment or using up resources.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [environment, economy]
+    best_when: Naming the general goal — "environmental sustainability", "a commitment to sustainability".
+    examples:
+      - id: ex1
+        text: Many companies now publish reports on their sustainability.
+        highlight: sustainability
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Tourism must balance economic growth with environmental sustainability.
+        highlight: environmental sustainability
+        skill: writing
+        task: writing-2

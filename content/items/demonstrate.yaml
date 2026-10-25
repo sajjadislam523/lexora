@@ -1,0 +1,37 @@
+id: demonstrate
+kind: word
+headword: demonstrate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: demonstrate, type: lemma }
+  - { form: demonstrates, type: inflection }
+  - { form: demonstrated, type: inflection }
+  - { form: demonstrating, type: inflection }
+senses:
+  - key: prove
+    pos: verb
+    definition: To show clearly that something is true, by giving proof or evidence.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    strength: 3
+    best_when: Evidence that clearly proves a point — stronger than "suggest" or "indicate".
+    avoid_when: The evidence is limited. Use "suggest" so that you don't overstate your case.
+    examples:
+      - id: ex1
+        text: Several studies have demonstrated the link between sleep and memory.
+        highlight: demonstrated
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [shown, proved, proven, established]
+      - id: ex2
+        text: The project demonstrates that small changes can save a lot of energy.
+        highlight: demonstrates
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [shows, proves]

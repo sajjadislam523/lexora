@@ -1,0 +1,48 @@
+id: arise-from
+kind: preposition_pattern
+headword: arise from
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: arise from, type: lemma }
+  - { form: arises from, type: inflection }
+  - { form: arose from, type: inflection }
+  - { form: arisen from, type: inflection }
+  - { form: arising from, type: inflection }
+senses:
+  - key: origin
+    pos: verb_phrase
+    definition: To begin to exist because of a particular situation or cause.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    functions: [cause]
+    best_when: Problems, questions or conflicts that come out of a situation.
+    examples:
+      - id: ex1
+        text: Several problems arise from the rapid growth of cities.
+        highlight: arise from
+        skill: writing
+        task: writing-2
+        pattern: from
+      - id: ex2
+        text: Conflicts often arise from misunderstandings between cultures.
+        highlight: arise from
+        skill: writing
+        task: writing-2
+        pattern: from
+    preposition_patterns:
+      - id: from
+        base: arise
+        preposition: from
+        pattern: problem + arise from + situation
+        complement: noun_or_ing
+        note: the situation that creates the problem
+    mistakes:
+      - id: arised
+        wrong: Problems arised from the new rules.
+        right: Problems arose from the new rules.
+        type: grammar
+        explanation: Arise is irregular — arise, arose, arisen.

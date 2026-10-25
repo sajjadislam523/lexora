@@ -1,0 +1,49 @@
+id: measure
+kind: word
+headword: measure
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: measure, type: lemma }
+  - { form: measures, type: inflection }
+senses:
+  - key: action
+    pos: noun
+    definition: An official action taken to deal with a problem or achieve a result.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    best_when: Specific government or institutional actions — "introduce measures", "strict measures".
+    examples:
+      - id: ex1
+        text: The government introduced new measures to reduce air pollution.
+        highlight: introduced new measures
+        skill: writing
+        task: writing-2
+        collocation: introduce
+        practice:
+          accept: [policies, rules]
+      - id: ex2
+        text: Stricter measures are needed to protect children online.
+        highlight: Stricter measures
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [rules, laws, regulations]
+    collocations:
+      - id: take
+        phrase: take measures
+        item: take-measures
+      - id: introduce
+        phrase: introduce new measures
+        note: 'also "implement measures"'
+      - id: strict
+        phrase: strict measures
+        note: 'also "effective measures"'
+    relations:
+      - type: alternative
+        to: policy.plan
+        weight: 2
+        note: A policy is a general plan or rule; a measure is one specific action within it.

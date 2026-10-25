@@ -1,0 +1,40 @@
+id: congestion
+kind: word
+headword: congestion
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: congestion, type: lemma }
+senses:
+  - key: traffic
+    pos: noun
+    definition: A situation in which a road or place is too crowded with traffic or people.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [transport, cities]
+    best_when: City traffic problems — "traffic congestion", "reduce congestion", "a congestion charge".
+    examples:
+      - id: ex1
+        text: A congestion charge has reduced traffic in central London.
+        highlight: congestion charge
+        skill: writing
+        task: writing-2
+        collocation: charge
+      - id: ex2
+        text: Traffic congestion is the worst thing about living in my city.
+        highlight: Traffic congestion
+        skill: speaking
+        task: speaking-1
+        collocation: traffic
+    collocations:
+      - id: traffic
+        phrase: traffic congestion
+      - id: charge
+        phrase: a congestion charge
+        note: a fee to drive into a city centre
+      - id: reduce
+        phrase: reduce congestion
+        note: 'also "ease congestion"'

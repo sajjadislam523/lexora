@@ -1,0 +1,59 @@
+id: opinion
+kind: word
+headword: opinion
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: opinion, type: lemma }
+  - { form: opinions, type: inflection }
+senses:
+  - key: view
+    pos: noun
+    definition: What someone thinks or believes about something.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    functions: [opinion]
+    best_when: '"An opinion on / about", "public opinion", "express an opinion".'
+    examples:
+      - id: ex1
+        text: Public opinion on nuclear power has changed in recent years.
+        highlight: opinion on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept_preposition: [about]
+      - id: ex2
+        text: Everyone in my family has a different opinion about politics.
+        highlight: opinion about
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [view]
+    preposition_patterns:
+      - id: on
+        base: opinion
+        preposition: on
+        pattern: an opinion on / about + topic
+        complement: noun
+        note: both "on" and "about" are correct
+    collocations:
+      - id: public
+        phrase: public opinion
+      - id: express
+        phrase: express an opinion
+        note: 'also "give an opinion"'
+    mistakes:
+      - id: according
+        wrong: According to my opinion, exams are unfair.
+        right: In my opinion, exams are unfair.
+        type: collocation
+        explanation: The fixed phrase is "in my opinion". "According to" is for other people's views or sources.
+    relations:
+      - type: synonym
+        to: viewpoint.opinion
+        weight: 2
+        note: '"Point of view" can also mean the angle you look from — "from an employer''s point of view".'

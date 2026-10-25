@@ -1,0 +1,39 @@
+id: in-spite-of
+kind: functional_expression
+headword: in spite of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: in spite of, type: lemma }
+senses:
+  - key: concession
+    pos: prepositional_phrase
+    definition: Without being affected or stopped by something; followed by a noun or -ing form.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [concession]
+    best_when: The same job as "despite", especially in Speaking.
+    examples:
+      - id: ex1
+        text: In spite of the risks, many people still smoke.
+        highlight: In spite of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Despite]
+      - id: ex2
+        text: In spite of being tired, I finished my essay.
+        highlight: In spite of
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [Despite]
+    mistakes:
+      - id: no-of
+        wrong: In spite the rain, we went out.
+        right: In spite of the rain, we went out.
+        type: preposition
+        explanation: The phrase is always "in spite of".

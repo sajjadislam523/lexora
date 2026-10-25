@@ -1,0 +1,52 @@
+id: climate-change
+kind: word
+headword: climate change
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: climate change, type: lemma }
+senses:
+  - key: warming
+    pos: noun
+    definition: Long-term changes in the Earth's weather patterns, especially those caused by human activity.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [environment]
+    best_when: The general topic — rising temperatures, extreme weather and their wider effects. No article ("climate change", not "the climate change").
+    examples:
+      - id: ex1
+        text: Climate change is likely to make droughts more frequent.
+        highlight: Climate change
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Governments must act now to tackle climate change.
+        highlight: tackle climate change
+        skill: writing
+        task: writing-2
+        collocation: tackle
+      - id: ex3
+        text: I think young people worry about climate change more than older people do.
+        highlight: climate change
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: tackle
+        phrase: tackle climate change
+        note: 'also "combat climate change"'
+      - id: effects
+        phrase: the effects of climate change
+    mistakes:
+      - id: the
+        wrong: The climate change is a serious problem.
+        right: Climate change is a serious problem.
+        type: grammar
+        explanation: Climate change is used without "the".
+    relations:
+      - type: alternative
+        to: global-warming.warming
+        weight: 2
+        note: Global warming is the rise in temperature; climate change includes all its wider effects.

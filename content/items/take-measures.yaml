@@ -68,3 +68,5 @@ senses:
         to: raise-awareness.inform
         weight: 1
         note: Both are common ways to propose a solution in Task 2.
+      - type: has_component
+        to: measure.action

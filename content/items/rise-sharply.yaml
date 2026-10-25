@@ -69,3 +69,7 @@ senses:
         to: significant.notable
         weight: 2
         note: '"A significant increase" names the change as a noun phrase; "rise sharply" describes it with a verb and stresses speed.'
+      - type: has_component
+        to: rise.verb
+      - type: has_component
+        to: sharply.fast

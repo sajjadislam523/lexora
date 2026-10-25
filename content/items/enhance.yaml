@@ -1,0 +1,42 @@
+id: enhance
+kind: word
+headword: enhance
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: enhance, type: lemma }
+  - { form: enhances, type: inflection }
+  - { form: enhanced, type: inflection }
+  - { form: enhancing, type: inflection }
+senses:
+  - key: improve
+    pos: verb
+    definition: To improve the quality, value or strength of something that is already good.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    best_when: Formal writing about skills, quality, reputation or experience being made better.
+    avoid_when: Fixing a problem. Something bad is "improved", not "enhanced".
+    examples:
+      - id: ex1
+        text: Group projects can enhance students' communication skills.
+        highlight: enhance
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [improve, develop]
+      - id: ex2
+        text: Well-designed parks enhance the quality of urban life.
+        highlight: enhance
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [improve]
+    collocations:
+      - id: skills
+        phrase: enhance their skills
+        note: 'also "enhance performance"'
+      - id: reputation
+        phrase: enhance a reputation

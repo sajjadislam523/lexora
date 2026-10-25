@@ -1,0 +1,53 @@
+id: expenditure
+kind: word
+headword: expenditure
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: expenditure, type: lemma }
+  - { form: expenditures, type: inflection }
+senses:
+  - key: spending
+    pos: noun
+    definition: The total amount of money that a government, organisation or person spends.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    topics: [economy, government]
+    best_when: Task 1 spending charts — "expenditure on", "public expenditure", "household expenditure".
+    examples:
+      - id: ex1
+        text: Government expenditure on education rose to 6% of GDP.
+        highlight: expenditure on
+        skill: writing
+        task: writing-1
+        pattern: on
+        practice:
+          accept: [spending]
+      - id: ex2
+        text: Household expenditure on energy peaked in 2022.
+        highlight: expenditure on
+        skill: writing
+        task: writing-1
+        pattern: on
+        practice:
+          accept: [spending]
+    preposition_patterns:
+      - id: on
+        base: expenditure
+        preposition: on
+        pattern: expenditure on + area
+        complement: noun
+        note: what the money is spent on
+        mistake: for
+    mistakes:
+      - id: for
+        wrong: expenditure for healthcare
+        right: expenditure on healthcare
+        type: preposition
+        explanation: '"Expenditure on" and "spending on" + what the money buys.'
+    relations:
+      - type: related
+        to: investment.money

@@ -1,0 +1,43 @@
+id: social-media
+kind: word
+headword: social media
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: social media, type: lemma }
+senses:
+  - key: platforms
+    pos: noun
+    definition: Websites and apps that let people share content and communicate with each other.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [technology, society]
+    best_when: Effects on teenagers, news, relationships and privacy — "on social media", "the use of social media".
+    examples:
+      - id: ex1
+        text: Young people increasingly get their news from social media.
+        highlight: social media
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I spend too much time on social media, to be honest.
+        highlight: on social media
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: in
+        wrong: I saw it in social media.
+        right: I saw it on social media.
+        type: preposition
+        explanation: Things are posted and seen "on" social media, like "on the internet".
+      - id: plural
+        wrong: Social medias are popular among teenagers.
+        right: Social media is popular among teenagers.
+        type: countability
+        explanation: '"Media" is already plural in form, so there is no "medias". Use "social media" or name the platforms.'
+    relations:
+      - type: related
+        to: screen-time.hours

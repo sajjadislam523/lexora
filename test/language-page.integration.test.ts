@@ -122,7 +122,7 @@ describe.skipIf(!hasDatabase)("language pages", () => {
 
     it("gives every published item a page", async () => {
       const slugs = await repo.listPublishedSlugs();
-      expect(slugs).toHaveLength(40);
+      expect(slugs).toHaveLength(420);
       for (const slug of slugs) {
         const item = await load(repo, slug);
         expect(item.slug).toBe(slug);

@@ -1,0 +1,63 @@
+id: help
+kind: word
+headword: help
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: help, type: lemma }
+  - { form: helps, type: inflection }
+  - { form: helped, type: inflection }
+  - { form: helping, type: inflection }
+senses:
+  - key: assist
+    pos: verb
+    definition: To make it easier for someone to do something, or to improve a situation.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: A clear, natural verb in both skills — "help people (to) find work".
+    avoid_when: You need a precise academic verb. Say how it helps — it makes something possible (enable), it gives support (support), it improves something (benefit).
+    examples:
+      - id: ex1
+        text: Training programmes can help unemployed people find new jobs.
+        highlight: help
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My older brother helped me a lot when I started secondary school.
+        highlight: helped
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [supported]
+    collocations:
+      - id: help-to
+        phrase: help (to) do
+        pattern: help + person + (to) + verb
+        note: both forms are correct
+    mistakes:
+      - id: help-ing
+        wrong: Technology helps people finding information.
+        right: Technology helps people find information.
+        type: grammar
+        explanation: Help + person + verb (with or without "to"), not -ing.
+      - id: help-for
+        wrong: This helps for reducing stress.
+        right: This helps to reduce stress.
+        type: preposition
+        explanation: Use "help (to)" + verb, or "help with" + noun (help with stress).
+    relations:
+      - type: more_formal
+        to: enable.make-possible
+        weight: 1
+        note: Enable means giving someone the means to do something.
+      - type: alternative
+        to: support.help
+        weight: 1
+        note: Support suggests ongoing help — money, advice or encouragement.
+      - type: more_formal
+        to: benefit.verb
+        weight: 1
+        note: Benefit means having a good effect on someone or something.

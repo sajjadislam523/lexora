@@ -1,0 +1,46 @@
+id: intervention
+kind: word
+headword: intervention
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: intervention, type: lemma }
+  - { form: interventions, type: inflection }
+senses:
+  - key: action
+    pos: noun
+    definition: Action taken to improve a situation or stop it getting worse, especially by a government.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    topics: [government, health]
+    best_when: Arguing whether governments should act — "government intervention", "early intervention".
+    examples:
+      - id: ex1
+        text: Some economists argue that government intervention in the housing market is necessary.
+        highlight: government intervention in
+        skill: writing
+        task: writing-2
+        collocation: government
+      - id: ex2
+        text: Early intervention can stop minor health problems becoming serious.
+        highlight: Early intervention
+        skill: writing
+        task: writing-2
+        collocation: early
+        practice:
+          accept: [treatment, action]
+    collocations:
+      - id: government
+        phrase: government intervention
+        pattern: government intervention in + area
+      - id: early
+        phrase: early intervention
+        note: acting before a problem grows
+    relations:
+      - type: alternative
+        to: measure.action
+        weight: 1
+        note: A measure is one specific official action; intervention is the general act of stepping in.

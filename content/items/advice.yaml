@@ -1,0 +1,42 @@
+id: advice
+kind: word
+headword: advice
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: advice, type: lemma }
+senses:
+  - key: suggestion
+    pos: noun
+    definition: An opinion someone gives you about what you should do; it is uncountable.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-2, speaking-3] }
+    best_when: Recommendations from parents, teachers and experts — "give advice", "a piece of advice".
+    examples:
+      - id: ex1
+        text: Young people often ignore advice from older generations.
+        highlight: advice
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: The best piece of advice my dad gave me was to save money.
+        highlight: piece of advice
+        skill: speaking
+        task: speaking-2
+    mistakes:
+      - id: advise-noun
+        wrong: My teacher gave me some good advise.
+        right: My teacher gave me some good advice.
+        type: confusion
+        explanation: Advice (with c) is the noun; advise (with s) is the verb — "She advised me to study".
+      - id: plural
+        wrong: She gave me many advices.
+        right: She gave me a lot of advice.
+        type: countability
+        explanation: Advice is uncountable. Use "a lot of advice" or "some advice".
+    relations:
+      - type: related
+        to: recommend.advise

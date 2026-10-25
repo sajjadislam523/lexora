@@ -1,0 +1,45 @@
+id: keen-on
+kind: preposition_pattern
+headword: keen on
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: keen on, type: lemma }
+senses:
+  - key: like
+    pos: adjective_phrase
+    definition: Liking something or being very interested in it.
+    cefr: B1
+    registers: [neutral, informal]
+    skills: [speaking]
+    ielts: { relevance: high, tasks: [speaking-1, speaking-2] }
+    best_when: Speaking Part 1 hobbies and preferences — "I'm really keen on cooking".
+    skill_note: '"Keen to do" means wanting to do something (I''m keen to travel).'
+    examples:
+      - id: ex1
+        text: I'm really keen on photography at the moment.
+        highlight: keen on
+        skill: speaking
+        task: speaking-1
+        pattern: on
+      - id: ex2
+        text: I've never been very keen on football, to be honest.
+        highlight: keen on
+        skill: speaking
+        task: speaking-1
+        pattern: on
+    preposition_patterns:
+      - id: on
+        base: keen
+        preposition: on
+        pattern: be keen on + noun / -ing
+        complement: noun_or_ing
+        note: what you like
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: I'm keen of swimming.
+        right: I'm keen on swimming.
+        type: preposition
+        explanation: '"Keen on" + noun or -ing.'

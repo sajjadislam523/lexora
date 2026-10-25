@@ -1,0 +1,38 @@
+id: unemployment
+kind: word
+headword: unemployment
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: unemployment, type: lemma }
+  - { form: unemployed, type: lemma }
+senses:
+  - key: no-work
+    pos: noun
+    definition: The state of not having a job, or the number of people without one; "unemployed" is the adjective.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [work, economy]
+    best_when: '"The unemployment rate", "youth unemployment", "tackle unemployment".'
+    examples:
+      - id: ex1
+        text: The unemployment rate peaked at 10% in 2010.
+        highlight: unemployment rate
+        skill: writing
+        task: writing-1
+        collocation: rate
+      - id: ex2
+        text: Youth unemployment is a big problem in my region.
+        highlight: Youth unemployment
+        skill: speaking
+        task: speaking-3
+        collocation: youth
+    collocations:
+      - id: rate
+        phrase: the unemployment rate
+      - id: youth
+        phrase: youth unemployment
+        note: 'also "long-term unemployment"'

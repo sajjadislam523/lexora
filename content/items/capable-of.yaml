@@ -1,0 +1,44 @@
+id: capable-of
+kind: preposition_pattern
+headword: capable of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: capable of, type: lemma }
+senses:
+  - key: able
+    pos: adjective_phrase
+    definition: Having the ability, skill or power to do something.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    best_when: What people or machines can do — "capable of + -ing".
+    examples:
+      - id: ex1
+        text: Modern computers are capable of translating speech instantly.
+        highlight: capable of
+        skill: writing
+        task: writing-2
+        pattern: of
+      - id: ex2
+        text: I think teenagers are capable of making their own decisions.
+        highlight: capable of
+        skill: speaking
+        task: speaking-3
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: capable
+        preposition: of
+        pattern: be capable of + noun / -ing
+        complement: noun_or_ing
+        note: what someone or something can do
+        mistake: to
+    mistakes:
+      - id: to
+        wrong: Children are capable to learn two languages.
+        right: Children are capable of learning two languages.
+        type: grammar
+        explanation: Capable is followed by "of" + -ing. With "to" + verb, use "able" (able to learn).

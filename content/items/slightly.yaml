@@ -1,0 +1,62 @@
+id: slightly
+kind: word
+headword: slightly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: slightly, type: lemma }
+senses:
+  - key: small
+    pos: adverb
+    definition: By a small amount; a little.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-1, speaking-3] }
+    strength: 1
+    best_when: Describing a small change in Task 1, or softening a comparison ("slightly higher than").
+    examples:
+      - id: ex1
+        text: The proportion of female students rose slightly, from 48% to 51%.
+        highlight: rose slightly
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [marginally]
+      - id: ex2
+        text: Spending on food was slightly higher in rural areas than in cities.
+        highlight: slightly higher
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [marginally]
+      - id: ex3
+        text: I'm slightly worried about how much time I spend on my phone.
+        highlight: slightly worried
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [a bit, a little]
+    collocations:
+      - id: higher
+        phrase: slightly higher
+        pattern: slightly higher / lower than + noun
+        note: 'a small difference between two figures; also "slightly lower"'
+      - id: slight
+        phrase: a slight increase
+        pattern: a slight increase in + noun
+        note: 'the adjective form with a noun; also "a slight decrease"'
+    mistakes:
+      - id: slight-rise
+        wrong: There was a slightly rise in prices.
+        right: There was a slight rise in prices.
+        type: word_form
+        explanation: Use the adjective "slight" before a noun, and the adverb "slightly" after a verb (prices rose slightly).
+    relations:
+      - type: more_formal
+        to: marginally.small
+        weight: 2
+        note: Marginally is more formal and suggests an even smaller change.
+      - type: opposite
+        to: dramatically.large

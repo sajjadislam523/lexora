@@ -1,0 +1,50 @@
+id: approximately
+kind: word
+headword: approximately
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: approximately, type: lemma }
+senses:
+  - key: about
+    pos: adverb
+    definition: Close to a number or amount, but not exactly; about.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1] }
+    functions: [hedging]
+    best_when: Giving a figure from a chart that you can't read exactly.
+    avoid_when: The exact figure is shown. Then give it.
+    skill_note: In Speaking, "about" or "around" is far more natural.
+    examples:
+      - id: ex1
+        text: Approximately 40% of households owned a computer in 2000.
+        highlight: Approximately
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [roughly, about, around]
+      - id: ex2
+        text: The project will cost approximately £2 million.
+        highlight: approximately
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [roughly, about, around]
+    mistakes:
+      - id: about
+        wrong: approximately about 20%
+        right: approximately 20%
+        type: grammar
+        explanation: Approximately and about mean the same thing. Use one of them, not both.
+    relations:
+      - type: synonym
+        to: roughly.about
+        weight: 2
+        note: Roughly is less formal; approximately suits Task 1 writing best.
+      - type: alternative
+        to: nearly.almost
+        weight: 1
+        note: Nearly means a little less than the figure; approximately can be a little more or less.

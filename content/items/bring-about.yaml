@@ -1,0 +1,54 @@
+id: bring-about
+kind: phrase
+headword: bring about
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: bring about, type: lemma }
+  - { form: brings about, type: inflection }
+  - { form: brought about, type: inflection }
+  - { form: bringing about, type: inflection }
+senses:
+  - key: cause
+    pos: verb_phrase
+    definition: To make something happen, especially a change.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Changes, especially planned or positive ones — "bring about change", "bring about improvements".
+    examples:
+      - id: ex1
+        text: The internet has brought about major changes in the way people work.
+        highlight: brought about
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [caused, produced, led to, resulted in]
+      - id: ex2
+        text: Only government action can bring about real change.
+        highlight: bring about
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [produce, create, achieve]
+      - id: ex3
+        text: I think social media has brought about a lot of positive change.
+        highlight: brought about
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [caused, created, led to]
+    mistakes:
+      - id: brang
+        wrong: The reforms bringed about change.
+        right: The reforms brought about change.
+        type: grammar
+        explanation: Bring is irregular — bring, brought, brought.
+    relations:
+      - type: alternative
+        to: cause.verb
+        weight: 2
+        note: Cause is often used for problems; bring about is common for changes, including positive ones.

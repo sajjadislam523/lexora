@@ -1,0 +1,87 @@
+id: peak
+kind: word
+headword: peak
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: peak, type: lemma }
+  - { form: peaks, type: inflection }
+  - { form: peaked, type: inflection }
+  - { form: peaking, type: inflection }
+senses:
+  - key: noun
+    label: the highest point
+    pos: noun
+    definition: The highest point or level that something reaches.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    best_when: Naming the top of a line in Task 1 ("reach a peak of").
+    examples:
+      - id: ex1
+        text: Membership reached a peak of 12,000 in 2008.
+        highlight: reached a peak of
+        skill: writing
+        task: writing-1
+        collocation: reach
+      - id: ex2
+        text: Trains are really crowded at peak times, so I try to travel later.
+        highlight: peak times
+        skill: speaking
+        task: speaking-1
+        collocation: times
+    collocations:
+      - id: reach
+        phrase: reach a peak
+        pattern: reach a peak of + figure (in + time)
+        note: the highest figure on the chart
+      - id: times
+        phrase: peak times
+        note: the busiest times of day
+    relations:
+      - type: derived_form
+        to: peak.verb
+        weight: 2
+        note: 'The verb: "peaked at 45% in 2015".'
+  - key: verb
+    label: to reach the highest point
+    pos: verb
+    definition: To reach the highest point or level before falling.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1] }
+    best_when: Marking the highest figure on a line, with "at" + the figure.
+    examples:
+      - id: ex1
+        text: Unemployment peaked at 11% in 1993.
+        highlight: peaked at
+        skill: writing
+        task: writing-1
+        pattern: at
+      - id: ex2
+        text: Online sales peaked in December, as they do every year.
+        highlight: peaked
+        skill: writing
+        task: writing-1
+    preposition_patterns:
+      - id: at
+        base: peak
+        preposition: at
+        pattern: peak at + figure (in + time)
+        complement: noun
+        note: the highest figure; "in" is for the time
+        mistake: in-figure
+    mistakes:
+      - id: in-figure
+        wrong: The rate peaked in 11% in 1993.
+        right: The rate peaked at 11% in 1993.
+        type: preposition
+        explanation: Use "at" for the figure and "in" for the year or month.
+    relations:
+      - type: alternative
+        to: soar.increase
+        weight: 1
+        note: Soar describes the rise; peak marks the top of it.

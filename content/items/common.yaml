@@ -1,0 +1,50 @@
+id: common
+kind: word
+headword: common
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: common, type: lemma }
+senses:
+  - key: usual
+    pos: adjective
+    definition: Happening often or found in many places or among many people.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: Saying something happens often — "it is common for", "a common problem".
+    examples:
+      - id: ex1
+        text: It is increasingly common for young adults to live with their parents.
+        highlight: common for
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [usual, normal]
+      - id: ex2
+        text: Cycling is really common in my city because it's so flat.
+        highlight: common
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [popular, normal]
+    collocations:
+      - id: for
+        phrase: it is common for
+        pattern: it is common for + person + to + verb
+      - id: problem
+        phrase: a common problem
+        note: 'also "a common mistake"'
+    mistakes:
+      - id: commonly
+        wrong: This is a commonly problem.
+        right: This is a common problem.
+        type: word_form
+        explanation: Use the adjective "common" before a noun; "commonly" goes with a verb (commonly used).
+    relations:
+      - type: alternative
+        to: widespread.many-places
+        weight: 2
+        note: Widespread stresses that something exists in many places or among many people.

@@ -1,0 +1,42 @@
+id: illustrate
+kind: word
+headword: illustrate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: illustrate, type: lemma }
+  - { form: illustrates, type: inflection }
+  - { form: illustrated, type: inflection }
+  - { form: illustrating, type: inflection }
+senses:
+  - key: show
+    pos: verb
+    definition: To show something clearly in a picture or chart, or to explain it with an example.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [example]
+    best_when: Opening a Task 1 report, and supporting a Task 2 point with an example ("This is illustrated by …").
+    examples:
+      - id: ex1
+        text: The diagram illustrates how glass bottles are recycled.
+        highlight: illustrates
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [shows, explains]
+      - id: ex2
+        text: The success of cycling schemes in Copenhagen illustrates what good planning can achieve.
+        highlight: illustrates
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [shows, demonstrates]
+    mistakes:
+      - id: illustrate-about
+        wrong: The chart illustrates about energy use.
+        right: The chart illustrates energy use.
+        type: preposition
+        explanation: Illustrate takes a direct object, with no "about".

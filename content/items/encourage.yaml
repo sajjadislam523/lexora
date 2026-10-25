@@ -1,0 +1,57 @@
+id: encourage
+kind: word
+headword: encourage
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: encourage, type: lemma }
+  - { form: encourages, type: inflection }
+  - { form: encouraged, type: inflection }
+  - { form: encouraging, type: inflection }
+senses:
+  - key: persuade
+    pos: verb
+    definition: To make someone more likely to do something, or to make something more likely to happen.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Policies and people that push behaviour in a good direction — "encourage people to recycle".
+    examples:
+      - id: ex1
+        text: Free bus travel would encourage more people to leave their cars at home.
+        highlight: encourage
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [persuade, motivate]
+      - id: ex2
+        text: Lower taxes on electric cars encourage their use.
+        highlight: encourage
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [promote]
+      - id: ex3
+        text: My teachers always encouraged me to ask questions.
+        highlight: encouraged
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [motivated]
+    collocations:
+      - id: to
+        phrase: encourage someone to
+        pattern: encourage + person + to + verb
+    mistakes:
+      - id: ing
+        wrong: Schools should encourage students reading more.
+        right: Schools should encourage students to read more.
+        type: grammar
+        explanation: 'Encourage + person + "to" + verb.'
+    relations:
+      - type: alternative
+        to: promote.support
+        weight: 2
+        note: Promote is used for ideas, products and behaviour, not with "someone to do".

@@ -1,0 +1,40 @@
+id: steadily
+kind: word
+headword: steadily
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: steadily, type: lemma }
+senses:
+  - key: regular
+    pos: adverb
+    definition: At a regular, continuous rate, without sudden changes.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1] }
+    best_when: A line that rises or falls at about the same rate for a long time.
+    examples:
+      - id: ex1
+        text: Life expectancy rose steadily throughout the twentieth century.
+        highlight: rose steadily
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [gradually, consistently]
+      - id: ex2
+        text: Coal production fell steadily from 1990 onwards.
+        highlight: fell steadily
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [gradually, consistently]
+    collocations:
+      - id: steady
+        phrase: a steady rise
+        pattern: a steady rise in + noun
+        note: 'the adjective form with a noun; also "a steady decline"'
+    relations:
+      - type: opposite
+        to: fluctuate.vary

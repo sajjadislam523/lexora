@@ -80,15 +80,18 @@ describe("R-2: a content word after a collocation that ends on a content word", 
     ]);
   });
 
+  // Since the content expansion other collocations answer too, some only as likely fits ("harmful
+  // effects" against "effect"); the ones R3 is about keep fitting.
   it.each([
-    "Screen time has a ___ effect on sleep",
-    "Screens can ___ a negative effect on sleep",
-    "There was a ___ increase in cycling",
-    "Public transport plays a ___ role",
-  ])("keeps %j fitting (R3)", async (query) => {
-    expect(new Set(results(await service.search(query)).map((r) => r.gapMatch?.verdict))).toEqual(
-      new Set(["fits"]),
-    );
+    ["Screen time has a ___ effect on sleep", ["detrimental", "negative"]],
+    ["Screens can ___ a negative effect on sleep", ["have"]],
+    ["There was a ___ increase in cycling", ["significant", "substantial"]],
+    ["Public transport plays a ___ role", ["crucial", "key", "vital", "major"]],
+  ])("keeps %j fitting (R3)", async (query, words) => {
+    const found = results(await service.search(query));
+    for (const word of words) {
+      expect(found.find((r) => r.fill?.word === word)?.gapMatch?.verdict, word).toBe("fits");
+    }
   });
 });
 
@@ -170,11 +173,15 @@ describe("one authored structure for both blanks (G5-D1, G5-D2)", () => {
       "Gap 1 · Collocations with these words",
     ]);
     const rise = await service.search("The policy ___ rise ___ protests");
+    // Content expansion: "policy on" and "rise in / by / to" answer each gap on its own too.
     expect(rise?.groups.map((g) => g.label)).toEqual([
       "Both gaps · give … to",
+      "Gap 1 · Prepositions after “policy”",
+      "Gap 2 · Prepositions after “rise”",
       "Gap 2 · Collocations with these words",
     ]);
-    expect(rise?.gaps?.map((g) => g.type)).toEqual(["preposition", "collocation"]);
+    // The second blank's first candidate is now a preposition ("rise in").
+    expect(rise?.gaps?.map((g) => g.type)).toEqual(["preposition", "preposition"]);
   });
 
   it.each([
@@ -241,7 +248,9 @@ describe("window isolation", () => {
 describe('"It is ___ that" (G5-D4)', () => {
   it("offers the authored collocations, never as fits", async () => {
     const response = await service.search("It is ___ that governments should act");
+    // Content expansion: "it is clear that" (clear.obvious) joins.
     expect(verdicts(response)).toEqual([
+      "clear{clear.obvious}=likely_fits",
       "crucial{crucial.essential}=likely_fits",
       "essential{essential.necessary}=likely_fits",
     ]);

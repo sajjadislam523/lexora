@@ -1,0 +1,32 @@
+id: remarkable
+kind: word
+headword: remarkable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: remarkable, type: lemma }
+senses:
+  - key: surprising
+    pos: adjective
+    definition: Unusual or surprising in a way that makes people notice it.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-1, writing-2, speaking-2] }
+    strength: 3
+    functions: [emphasis]
+    best_when: A change, achievement or person that is impressive or surprising.
+    examples:
+      - id: ex1
+        text: The country has made remarkable progress in reducing child poverty.
+        highlight: remarkable progress
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [significant, considerable, impressive]
+      - id: ex2
+        text: My grandmother is a remarkable woman — she started university at sixty.
+        highlight: remarkable
+        skill: speaking
+        task: speaking-2

@@ -1,0 +1,39 @@
+id: substantially
+kind: word
+headword: substantially
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: substantially, type: lemma }
+senses:
+  - key: large
+    pos: adverb
+    definition: By a large amount, especially of money, numbers or size.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    strength: 2
+    best_when: A large change in an amount — spending, income, costs, numbers.
+    avoid_when: Speaking; "a lot" or "much" is more natural.
+    examples:
+      - id: ex1
+        text: Government spending on defence rose substantially between 2010 and 2020.
+        highlight: rose substantially
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [considerably, significantly]
+      - id: ex2
+        text: Remote working could substantially reduce office costs for employers.
+        highlight: substantially reduce
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [considerably, significantly, greatly]
+    relations:
+      - type: derived_form
+        to: substantial.large
+        weight: 2
+        note: 'The adjective: "a substantial rise".'

@@ -1,0 +1,34 @@
+id: strength
+kind: word
+headword: strength
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: strength, type: lemma }
+  - { form: strengths, type: inflection }
+senses:
+  - key: good-point
+    pos: noun
+    definition: A good quality or ability that makes someone or something effective.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: Evaluating people, systems and arguments — "strengths and weaknesses".
+    examples:
+      - id: ex1
+        text: One strength of the British system is its focus on independent study.
+        highlight: strength of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [advantage]
+      - id: ex2
+        text: I'd say my biggest strength is that I'm very organised.
+        highlight: biggest strength
+        skill: speaking
+        task: speaking-1
+    relations:
+      - type: opposite
+        to: weakness.bad-point

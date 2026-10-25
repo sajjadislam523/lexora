@@ -1,0 +1,61 @@
+id: show
+kind: word
+headword: show
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: show, type: lemma }
+  - { form: shows, type: inflection }
+  - { form: showed, type: inflection }
+  - { form: shown, type: inflection }
+  - { form: showing, type: inflection }
+senses:
+  - key: data
+    pos: verb
+    definition: To present information, or to make a fact clear through evidence.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    best_when: Opening a Task 1 report ("The graph shows …") — clear and always correct.
+    avoid_when: Every sentence of a report. Vary it with "illustrates", "indicates" or "reveals".
+    examples:
+      - id: ex1
+        text: The bar chart shows the number of visitors to three museums in 2019.
+        highlight: shows
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [illustrates, compares, presents, gives]
+      - id: ex2
+        text: Research shows that children learn languages more easily than adults.
+        highlight: shows
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [suggests, indicates]
+      - id: ex3
+        text: Studies show that people who exercise sleep better.
+        highlight: show
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [suggest]
+    relations:
+      - type: more_formal
+        to: illustrate.show
+        weight: 1
+        note: Illustrates is a common Task 1 opener; it suits diagrams and charts.
+      - type: more_formal
+        to: indicate.show
+        weight: 1
+        note: Indicates presents a finding a little more cautiously.
+      - type: more_formal
+        to: demonstrate.prove
+        weight: 1
+        note: Demonstrates means the evidence proves it clearly.
+      - type: alternative
+        to: reveal.make-known
+        weight: 1
+        note: Reveals suggests the data uncovers something surprising or not obvious.

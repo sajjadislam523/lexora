@@ -1,0 +1,35 @@
+id: recommend
+kind: word
+headword: recommend
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: recommend, type: lemma }
+  - { form: recommends, type: inflection }
+  - { form: recommended, type: inflection }
+  - { form: recommending, type: inflection }
+senses:
+  - key: advise
+    pos: verb
+    definition: To advise that something should be done, or say that something is good.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-2, speaking-3] }
+    best_when: Advice from experts or bodies, and your own proposals in a Task 2 conclusion.
+    examples:
+      - id: ex1
+        text: Doctors recommend that adults do at least 150 minutes of exercise a week.
+        highlight: recommend
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [advise, suggest]
+      - id: ex2
+        text: I'd definitely recommend visiting the old town if you come to my city.
+        highlight: recommend
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [suggest]

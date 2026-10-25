@@ -1,0 +1,48 @@
+id: emphasise
+kind: word
+headword: emphasise
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: British English uses -ise or -ize; American English uses -ize. Both are correct.
+forms:
+  - { form: emphasise, type: lemma, region: gb, default: true }
+  - { form: emphasize, type: spelling_variant, region: us }
+  - { form: emphasises, type: inflection, region: gb }
+  - { form: emphasizes, type: spelling_variant, region: us }
+  - { form: emphasised, type: inflection, region: gb }
+  - { form: emphasized, type: spelling_variant, region: us }
+  - { form: emphasising, type: inflection, region: gb }
+  - { form: emphasizing, type: spelling_variant, region: us }
+senses:
+  - key: stress
+    pos: verb
+    definition: To show that something is especially important or deserves attention.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [emphasis]
+    standalone: Its close alternatives (stress, highlight, underline) aren't in Lexora yet.
+    best_when: Reporting what research or experts stress — "The report emphasises the need for …".
+    examples:
+      - id: ex1
+        text: The report emphasises the need for more affordable housing.
+        highlight: emphasises
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [stresses, highlights, underlines]
+      - id: ex2
+        text: My teachers always emphasised the importance of reading.
+        highlight: emphasised
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [stressed, highlighted]
+    mistakes:
+      - id: on
+        wrong: The study emphasises on the role of parents.
+        right: The study emphasises the role of parents.
+        type: preposition
+        explanation: The verb emphasise takes a direct object. The noun takes "on" (an emphasis on).

@@ -1,0 +1,41 @@
+id: enable
+kind: word
+headword: enable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: enable, type: lemma }
+  - { form: enables, type: inflection }
+  - { form: enabled, type: inflection }
+  - { form: enabling, type: inflection }
+senses:
+  - key: make-possible
+    pos: verb
+    definition: To make it possible for someone to do something.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    best_when: Technology, education or money giving people the means to do something.
+    examples:
+      - id: ex1
+        text: The internet enables students to learn from experts all over the world.
+        highlight: enables
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [allows, helps]
+      - id: ex2
+        text: Scholarships enable talented students from poor families to attend university.
+        highlight: enable
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [allow, help]
+    mistakes:
+      - id: ing
+        wrong: Technology enables people working from home.
+        right: Technology enables people to work from home.
+        type: grammar
+        explanation: Enable + person + "to" + verb.

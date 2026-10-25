@@ -1,0 +1,43 @@
+id: combat
+kind: word
+headword: combat
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: combat, type: lemma }
+  - { form: combats, type: inflection }
+  - { form: combated, type: inflection }
+  - { form: combatted, type: spelling_variant }
+  - { form: combating, type: inflection }
+  - { form: combatting, type: spelling_variant }
+senses:
+  - key: fight
+    pos: verb
+    definition: To try to stop something harmful from happening or spreading.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    best_when: Long efforts against crime, disease, climate change or misinformation.
+    examples:
+      - id: ex1
+        text: More police officers alone will not combat knife crime.
+        highlight: combat
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [tackle, reduce, stop, fight]
+      - id: ex2
+        text: Schools have a role to play in combating misinformation online.
+        highlight: combating
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [tackling, fighting]
+    mistakes:
+      - id: against
+        wrong: We must combat against climate change.
+        right: We must combat climate change.
+        type: preposition
+        explanation: Combat takes a direct object. Use "against" only with the noun — "the fight against climate change".

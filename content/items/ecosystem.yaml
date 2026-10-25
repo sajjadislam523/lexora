@@ -1,0 +1,38 @@
+id: ecosystem
+kind: word
+headword: ecosystem
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: ecosystem, type: lemma }
+  - { form: ecosystems, type: inflection }
+senses:
+  - key: system
+    pos: noun
+    definition: All the living things in an area and the way they depend on each other and their surroundings.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [environment]
+    best_when: Explaining how damage to one species or area affects others — "fragile ecosystems", "marine ecosystems".
+    examples:
+      - id: ex1
+        text: Plastic waste is damaging fragile marine ecosystems.
+        highlight: marine ecosystems
+        skill: writing
+        task: writing-2
+        collocation: marine
+      - id: ex2
+        text: Removing a single species can upset the balance of an entire ecosystem.
+        highlight: entire ecosystem
+        skill: writing
+        task: writing-2
+    collocations:
+      - id: marine
+        phrase: marine ecosystems
+        note: 'also "fragile ecosystems"'
+    relations:
+      - type: related
+        to: biodiversity.variety

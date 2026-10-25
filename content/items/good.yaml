@@ -1,0 +1,81 @@
+id: good
+kind: word
+headword: good
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: good, type: lemma }
+senses:
+  - key: quality
+    pos: adjective
+    definition: Of a high standard, pleasant, or having a helpful effect.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-2, speaking-3] }
+    strength: 1
+    best_when: Speaking about things you like or enjoy. It is natural, clear and never wrong.
+    avoid_when: Writing an essay. Say how something is good — it has good effects (beneficial), it works (effective), it is worth a lot (valuable).
+    skill_note: Fine in Speaking. In Task 2, a more precise adjective shows range.
+    examples:
+      - id: ex1
+        text: I think living near the sea is really good for your mood.
+        highlight: good for
+        skill: speaking
+        task: speaking-3
+        pattern: for
+        practice:
+          accept: [great]
+      - id: ex2
+        text: Learning a second language is good for children's development.
+        highlight: good for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept: [beneficial]
+    preposition_patterns:
+      - id: for
+        base: good
+        preposition: for
+        pattern: good for + noun / -ing
+        complement: noun_or_ing
+        note: what something helps or improves
+      - id: at
+        base: good
+        preposition: at
+        pattern: good at + noun / -ing
+        complement: noun_or_ing
+        note: a skill someone has
+        mistake: in
+    mistakes:
+      - id: more-good
+        wrong: Public transport is more good than driving.
+        right: Public transport is better than driving.
+        type: grammar
+        explanation: Good is irregular — good, better, best.
+      - id: in
+        wrong: She is very good in maths.
+        right: She is very good at maths.
+        type: preposition
+        explanation: Use "good at" for skills and subjects.
+    relations:
+      - type: more_formal
+        to: beneficial.helpful
+        weight: 1
+        note: Beneficial means it has good effects — on health, learning or the economy.
+      - type: more_formal
+        to: positive.good
+        weight: 1
+        note: Positive suits effects, attitudes and results ("a positive impact").
+      - type: alternative
+        to: effective.works
+        weight: 1
+        note: Effective means it works and produces the result you want.
+      - type: alternative
+        to: valuable.useful
+        weight: 1
+        note: Valuable means very useful or important — skills, experience, advice.
+      - type: opposite
+        to: bad.quality

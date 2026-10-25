@@ -13,10 +13,12 @@ groups:
     entries:
       - { sense: important.main, fit: "the safe, general word" }
       - { sense: significant.notable, fit: "it has a noticeable or measurable effect" }
+      - { sense: key.main, fit: "before a noun — a key factor" }
   - label: Stronger
     entries:
       - { sense: crucial.essential, fit: "an outcome depends on it" }
       - { sense: essential.necessary, fit: "you can't do without it" }
+      - { sense: vital.essential, fit: "needed to survive or work; urgent" }
       - { sense: fundamental.basic, fit: "everything else rests on it" }
   - label: As a phrase
     entries:

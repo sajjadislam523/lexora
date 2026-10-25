@@ -1,0 +1,28 @@
+id: give-a-reason
+label: Give a reason
+description: Explain why something happens, with a noun phrase, a clause or a verb.
+function: cause
+triggers:
+  - give a reason
+  - explain why
+  - explain the reason
+  - explain a cause
+  - give the cause
+  - say why something happened
+  - introduce a cause
+groups:
+  - label: Before a noun phrase
+    entries:
+      - { sense: because-of.cause, fit: "the everyday choice — because of the rain" }
+      - { sense: due-to.cause, fit: "more formal; also after be — was due to" }
+      - { sense: owing-to.cause, fit: "formal, usually at the start of a sentence" }
+      - { sense: as-a-result-of.cause, fit: "names the cause of a result" }
+  - label: Before a clause
+    entries:
+      - { sense: because.cause, fit: "the clearest way to give a reason" }
+      - { sense: since.cause, fit: "a reason the reader already accepts" }
+  - label: With a verb
+    entries:
+      - { sense: stem-from.origin, fit: "a problem + stem from + its root cause" }
+      - { sense: attribute-to.explain, fit: "a careful explanation of a trend" }
+      - { sense: result-in.cause, fit: '"result from" + the cause' }

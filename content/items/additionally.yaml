@@ -1,0 +1,42 @@
+id: additionally
+kind: linker
+headword: additionally
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: additionally, type: lemma }
+senses:
+  - key: addition
+    pos: adverb
+    definition: Used to introduce an extra fact or point.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [addition]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Varying "in addition" and "moreover" in a Task 2 body paragraph.
+    examples:
+      - id: ex1
+        text: Remote work saves commuting time. Additionally, it lets companies hire from anywhere.
+        highlight: Additionally,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [In addition, Moreover, Furthermore]
+      - id: ex2
+        text: Coal use fell sharply. Additionally, the share of gas rose slightly.
+        highlight: Additionally,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [In addition, Moreover, Furthermore]
+    relations:
+      - type: synonym
+        to: in-addition.addition
+        weight: 2
+        note: In addition is two words and a little more common; both add a point.

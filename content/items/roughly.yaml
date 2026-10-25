@@ -1,0 +1,45 @@
+id: roughly
+kind: word
+headword: roughly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: roughly, type: lemma }
+senses:
+  - key: about
+    pos: adverb
+    definition: Approximately; close to the number or amount, but not exact.
+    cefr: B2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, speaking-1, speaking-3] }
+    functions: [hedging]
+    best_when: An approximate figure in either skill; less formal than "approximately".
+    examples:
+      - id: ex1
+        text: Roughly half of the participants preferred online classes.
+        highlight: Roughly
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [approximately, about, around]
+      - id: ex2
+        text: It takes roughly an hour to get to work by bus.
+        highlight: roughly
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [about, around, approximately]
+    collocations:
+      - id: same
+        phrase: roughly the same
+        note: almost equal figures
+      - id: half
+        phrase: roughly half
+        note: 'approximate fractions in Task 1; also "roughly a third"'
+    relations:
+      - type: alternative
+        to: just-over.above
+        weight: 1
+        note: Just over is more precise — a little above the figure.

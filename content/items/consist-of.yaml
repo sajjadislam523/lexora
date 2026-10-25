@@ -1,0 +1,46 @@
+id: consist-of
+kind: preposition_pattern
+headword: consist of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: consist of, type: lemma }
+  - { form: consists of, type: inflection }
+  - { form: consisted of, type: inflection }
+  - { form: consisting of, type: inflection }
+senses:
+  - key: made-of
+    pos: verb_phrase
+    definition: To be formed from two or more parts or things.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    best_when: Describing the parts of a process, diagram or group in Task 1.
+    examples:
+      - id: ex1
+        text: The process consists of five main stages.
+        highlight: consists of
+        skill: writing
+        task: writing-1
+        pattern: of
+      - id: ex2
+        text: The sample consisted of 500 adults from three cities.
+        highlight: consisted of
+        skill: writing
+        task: writing-1
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: consist
+        preposition: of
+        pattern: consist of + parts
+        complement: noun
+        note: the parts that make up the whole
+    mistakes:
+      - id: passive
+        wrong: The course is consisted of four modules.
+        right: The course consists of four modules.
+        type: grammar
+        explanation: Consist has no passive. Use "consists of" or "is made up of".

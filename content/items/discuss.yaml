@@ -1,0 +1,46 @@
+id: discuss
+kind: word
+headword: discuss
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: discuss, type: lemma }
+  - { form: discusses, type: inflection }
+  - { form: discussed, type: inflection }
+  - { form: discussing, type: inflection }
+senses:
+  - key: talk-about
+    pos: verb
+    definition: To talk or write about a subject in detail, considering different ideas or opinions.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Task 2 instructions and introductions — "This essay will discuss both views".
+    examples:
+      - id: ex1
+        text: This essay will discuss both sides of the argument.
+        highlight: discuss
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [consider, examine, explore]
+      - id: ex2
+        text: My friends and I often discuss politics.
+        highlight: discuss
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [talk about]
+    mistakes:
+      - id: about
+        wrong: We need to discuss about this problem.
+        right: We need to discuss this problem.
+        type: preposition
+        explanation: Discuss takes a direct object. The noun can take "about" (a discussion about), but the verb can't.
+    relations:
+      - type: alternative
+        to: consider.think-about
+        weight: 1
+        note: Consider means thinking about something before deciding; discuss means talking or writing about it from different sides.

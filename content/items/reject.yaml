@@ -1,0 +1,44 @@
+id: reject
+kind: word
+headword: reject
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: reject, type: lemma }
+  - { form: rejects, type: inflection }
+  - { form: rejected, type: inflection }
+  - { form: rejecting, type: inflection }
+senses:
+  - key: refuse
+    pos: verb
+    definition: To refuse to accept, believe in or agree with something.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Ideas, proposals, claims and offers that are refused — "reject the idea that".
+    examples:
+      - id: ex1
+        text: Most scientists reject the claim that climate change is natural.
+        highlight: reject
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [dismiss, dispute]
+      - id: ex2
+        text: Voters rejected the proposal to build a new stadium.
+        highlight: rejected
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [turned down, refused]
+    collocations:
+      - id: idea
+        phrase: reject the idea that
+        pattern: reject the idea that + clause
+        note: 'also "reject the claim that"'
+      - id: proposal
+        phrase: reject a proposal
+        note: 'also "reject an offer"'

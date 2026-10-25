@@ -1,0 +1,34 @@
+id: mental-health
+kind: word
+headword: mental health
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: mental health, type: lemma }
+  - { form: mental wellbeing, type: lemma }
+  - { form: mental well-being, type: spelling_variant }
+senses:
+  - key: mind
+    pos: noun
+    definition: The condition of someone's mind and emotions, and how well they cope with stress.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [health, society]
+    best_when: Stress, social media and work topics — "mental health problems", "mental well-being".
+    examples:
+      - id: ex1
+        text: Excessive social media use has been linked to poor mental health in teenagers.
+        highlight: mental health
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I think people talk about mental health more openly now.
+        highlight: mental health
+        skill: speaking
+        task: speaking-3
+    relations:
+      - type: has_component
+        to: health.wellbeing

@@ -1,0 +1,41 @@
+id: dip
+kind: word
+headword: dip
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: dip, type: lemma }
+  - { form: dips, type: inflection }
+  - { form: dipped, type: inflection }
+  - { form: dipping, type: inflection }
+senses:
+  - key: decrease
+    pos: verb
+    definition: To fall slightly, usually for a short time before recovering.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1] }
+    functions: [decrease]
+    strength: 1
+    best_when: A small, temporary fall in a line that otherwise rises or stays level.
+    avoid_when: The fall was large or lasted. Use "fall" or "decline".
+    examples:
+      - id: ex1
+        text: Visitor numbers dipped slightly in 2016 before recovering the following year.
+        highlight: dipped slightly
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [fell, dropped, decreased]
+      - id: ex2
+        text: Apart from a brief dip in 2012, the figure rose throughout the period.
+        highlight: brief dip
+        skill: writing
+        task: writing-1
+    relations:
+      - type: alternative
+        to: fall.verb
+        weight: 2
+        note: A dip is small and usually short; fall says nothing about size or length.

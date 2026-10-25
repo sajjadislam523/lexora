@@ -1,0 +1,30 @@
+id: migration
+kind: word
+headword: migration
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: migration, type: lemma }
+senses:
+  - key: moving
+    pos: noun
+    definition: The movement of people from one place or country to another to live or work.
+    cefr: C1
+    registers: [academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [society, work]
+    best_when: Movement within or between countries — "rural-to-urban migration", "economic migration".
+    skill_note: '"Immigration" is moving into a country, "emigration" is leaving it; "migration" covers both.'
+    examples:
+      - id: ex1
+        text: Migration from rural areas to cities has accelerated since 2000.
+        highlight: Migration from
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: A lot of young people's migration abroad is about finding better jobs.
+        highlight: migration
+        skill: speaking
+        task: speaking-3

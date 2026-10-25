@@ -1,0 +1,31 @@
+id: cybersecurity
+kind: word
+headword: cybersecurity
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: cybersecurity, type: lemma }
+  - { form: cyber security, type: spelling_variant }
+  - { form: cybercrime, type: lemma }
+senses:
+  - key: protection
+    pos: noun
+    definition: Protecting computer systems and data from attack or theft; "cybercrime" is crime committed online.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    topics: [technology]
+    best_when: Risks of online banking, data storage and government systems.
+    examples:
+      - id: ex1
+        text: Banks are spending more on cybersecurity as cybercrime grows.
+        highlight: cybersecurity
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Cybercrime costs businesses billions every year.
+        highlight: Cybercrime
+        skill: writing
+        task: writing-2

@@ -1,0 +1,44 @@
+id: tackle
+kind: word
+headword: tackle
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: tackle, type: lemma }
+  - { form: tackles, type: inflection }
+  - { form: tackled, type: inflection }
+  - { form: tackling, type: inflection }
+senses:
+  - key: deal-with
+    pos: verb
+    definition: To make a determined effort to deal with a difficult problem.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Large problems that need effort — "tackle climate change", "tackle unemployment".
+    examples:
+      - id: ex1
+        text: Governments must work together to tackle climate change.
+        highlight: tackle
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [address, combat, fight]
+      - id: ex2
+        text: The council has done very little to tackle crime in the area.
+        highlight: tackle
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [address, deal with, reduce, fight]
+    relations:
+      - type: synonym
+        to: address.deal-with
+        weight: 2
+        note: Address is more formal; tackle suggests energetic effort.
+      - type: alternative
+        to: combat.fight
+        weight: 1
+        note: Combat suggests a long fight against something harmful, such as crime or disease.

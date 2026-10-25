@@ -1,0 +1,60 @@
+id: reason
+kind: word
+headword: reason
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: reason, type: lemma }
+  - { form: reasons, type: inflection }
+senses:
+  - key: why
+    pos: noun
+    definition: A fact or situation that explains why something happens or why someone does something.
+    cefr: A2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    functions: [cause]
+    best_when: Explaining why — "the reason for", "the main reason why", "there are several reasons".
+    examples:
+      - id: ex1
+        text: The main reason for the decline in bus use is the rise in car ownership.
+        highlight: reason for
+        skill: writing
+        task: writing-2
+        pattern: for
+      - id: ex2
+        text: There are several reasons why young people leave rural areas.
+        highlight: reasons why
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: The reason I chose this course is that I love working with children.
+        highlight: The reason
+        skill: speaking
+        task: speaking-1
+    preposition_patterns:
+      - id: for
+        base: reason
+        preposition: for
+        pattern: the reason for + noun
+        complement: noun
+        note: what is explained; or "the reason why + clause"
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: the reason of the problem
+        right: the reason for the problem
+        type: preposition
+        explanation: '"The reason for" a problem; "the cause of" a problem.'
+      - id: because
+        wrong: The reason is because prices are too high.
+        right: The reason is that prices are too high.
+        type: register
+        explanation: '"The reason is because" repeats the idea of cause and is avoided in formal writing. Use "the reason is that".'
+    relations:
+      - type: alternative
+        to: factor.influence
+        weight: 1
+        note: A factor is one of several things that influence a result.

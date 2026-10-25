@@ -1,0 +1,48 @@
+id: protect
+kind: word
+headword: protect
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: protect, type: lemma }
+  - { form: protects, type: inflection }
+  - { form: protected, type: inflection }
+  - { form: protecting, type: inflection }
+senses:
+  - key: keep-safe
+    pos: verb
+    definition: To keep someone or something safe from harm, damage or loss.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: '"Protect people from / against" a danger, and "protect the environment".'
+    examples:
+      - id: ex1
+        text: Laws should protect children from harmful content online.
+        highlight: protect children from
+        skill: writing
+        task: writing-2
+        pattern: from
+        practice:
+          accept_preposition: [against]
+      - id: ex2
+        text: I think we need to protect old buildings in my city.
+        highlight: protect
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [preserve, save]
+    preposition_patterns:
+      - id: from
+        base: protect
+        preposition: from
+        pattern: protect + noun + from / against + danger
+        complement: noun
+        note: the danger
+    relations:
+      - type: alternative
+        to: preserve.protect
+        weight: 2
+        note: Preserve is for keeping something valuable from being lost or changed; protect is for keeping it safe from harm.

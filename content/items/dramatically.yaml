@@ -1,0 +1,62 @@
+id: dramatically
+kind: word
+headword: dramatically
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: dramatically, type: lemma }
+senses:
+  - key: large
+    pos: adverb
+    definition: Suddenly and by a very large amount, in a way that is striking.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    strength: 3
+    best_when: The biggest, most striking change on a chart, or a change that transformed a situation.
+    avoid_when: Every change you describe. Keep it for the one that really stands out.
+    examples:
+      - id: ex1
+        text: The number of mobile phone users rose dramatically in the early 2000s.
+        highlight: rose dramatically
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [sharply, rapidly, significantly]
+      - id: ex2
+        text: The internet has dramatically changed the way people shop.
+        highlight: dramatically changed
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [completely, significantly, radically]
+      - id: ex3
+        text: My city has changed dramatically in the last ten years.
+        highlight: changed dramatically
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [a lot, completely, significantly]
+    collocations:
+      - id: dramatic
+        phrase: a dramatic rise
+        pattern: a dramatic rise in + noun
+        note: 'the adjective form with a noun; also "a dramatic fall"'
+    mistakes:
+      - id: adjective
+        wrong: Sales rose dramatic in 2015.
+        right: Sales rose dramatically in 2015.
+        type: word_form
+        explanation: Use the adverb after a verb and the adjective before a noun (a dramatic rise).
+      - id: dramatically-noun
+        wrong: There was a dramatically increase in crime.
+        right: There was a dramatic increase in crime.
+        type: word_form
+        explanation: Before a noun, use the adjective "dramatic".
+    relations:
+      - type: alternative
+        to: sharply.fast
+        weight: 2
+        note: Sharply stresses how steep and sudden the change was; dramatically stresses how big and striking.

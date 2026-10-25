@@ -1,0 +1,35 @@
+id: wealth
+kind: word
+headword: wealth
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: wealth, type: lemma }
+  - { form: wealthy, type: lemma }
+senses:
+  - key: money
+    pos: noun
+    definition: A large amount of money or property; "wealthy" means rich.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [society, economy]
+    best_when: How money is shared in society — "the distribution of wealth", "wealthy countries".
+    examples:
+      - id: ex1
+        text: The gap in wealth between rich and poor has widened.
+        highlight: wealth
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Wealthy countries should do more to help poorer nations.
+        highlight: Wealthy
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [Rich, Developed]
+    collocations:
+      - id: distribution
+        phrase: the distribution of wealth

@@ -1,0 +1,43 @@
+id: by-comparison
+kind: linker
+headword: by comparison
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: by comparison, type: lemma }
+  - { form: in comparison, type: lemma }
+senses:
+  - key: comparing
+    pos: prepositional_phrase
+    definition: When compared with the thing just mentioned.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    functions: [comparison, contrast]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle.
+    best_when: Task 1 — giving a second figure that looks small or large next to the first.
+    examples:
+      - id: ex1
+        text: Japan spent $4,000 per person on healthcare. By comparison, India spent less than $100.
+        highlight: By comparison,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [In contrast]
+      - id: ex2
+        text: Coal use fell sharply. Gas use, by comparison, remained stable.
+        highlight: by comparison,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [in contrast]
+    relations:
+      - type: alternative
+        to: in-contrast.difference
+        weight: 2
+        note: In contrast stresses a difference; by comparison simply puts the two figures side by side.

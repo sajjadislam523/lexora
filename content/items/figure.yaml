@@ -1,0 +1,50 @@
+id: figure
+kind: word
+headword: figure
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: figure, type: lemma }
+  - { form: figures, type: inflection }
+senses:
+  - key: number
+    pos: noun
+    definition: A number, especially one in official data or statistics.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1] }
+    best_when: Referring to the numbers in a chart without repeating the noun ("the figure for France").
+    examples:
+      - id: ex1
+        text: The figure for Japan was considerably lower than that for the USA.
+        highlight: figure for
+        skill: writing
+        task: writing-1
+        collocation: for
+      - id: ex2
+        text: Official figures show that unemployment fell last year.
+        highlight: Official figures
+        skill: writing
+        task: writing-2
+        collocation: official
+    collocations:
+      - id: for
+        phrase: the figure for
+        pattern: the figure for + country / group / year
+        note: the number that belongs to one category
+      - id: official
+        phrase: official figures
+        note: government statistics
+    mistakes:
+      - id: of
+        wrong: The figure of Japan was lower.
+        right: The figure for Japan was lower.
+        type: preposition
+        explanation: Use "the figure for" + the category. "A figure of" + the number itself (a figure of 20%).
+    relations:
+      - type: alternative
+        to: proportion.part
+        weight: 1
+        note: A proportion is a share of a whole; a figure is any number in the data.

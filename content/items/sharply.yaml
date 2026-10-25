@@ -1,0 +1,46 @@
+id: sharply
+kind: word
+headword: sharply
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: sharply, type: lemma }
+senses:
+  - key: fast
+    pos: adverb
+    definition: Suddenly and by a large amount, so that a line on a chart is steep.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1] }
+    strength: 3
+    best_when: A sudden, steep rise or fall in Task 1.
+    examples:
+      - id: ex1
+        text: Oil prices dropped sharply at the end of 2014.
+        highlight: dropped sharply
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [dramatically, rapidly, steeply]
+      - id: ex2
+        text: Demand for face masks increased sharply in early 2020.
+        highlight: increased sharply
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [dramatically, rapidly, steeply]
+    collocations:
+      - id: sharp
+        phrase: a sharp fall
+        pattern: a sharp fall in + noun
+        note: 'the adjective form with a noun; also "a sharp rise"'
+      - id: contrast
+        phrase: in sharp contrast to
+        note: a very clear difference between two things
+    relations:
+      - type: synonym
+        to: rapidly.fast
+        weight: 2
+        note: Rapidly stresses speed over a period; sharply stresses a sudden, steep change.

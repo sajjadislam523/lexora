@@ -1,0 +1,48 @@
+id: approve-of
+kind: preposition_pattern
+headword: approve of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: approve of, type: lemma }
+  - { form: approves of, type: inflection }
+  - { form: approved of, type: inflection }
+  - { form: approving of, type: inflection }
+senses:
+  - key: like
+    pos: verb_phrase
+    definition: To think that someone or something is good, right or acceptable.
+    cefr: B2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Personal or public opinion of behaviour — "approve of the plan". Without "of", approve means to officially accept.
+    examples:
+      - id: ex1
+        text: Most residents approve of the new cycle lanes.
+        highlight: approve of
+        skill: writing
+        task: writing-2
+        pattern: of
+      - id: ex2
+        text: My parents didn't approve of me leaving university.
+        highlight: approve of
+        skill: speaking
+        task: speaking-2
+        pattern: of
+    preposition_patterns:
+      - id: of
+        base: approve
+        preposition: of
+        pattern: approve of + noun / -ing
+        complement: noun_or_ing
+        note: what someone thinks is good
+        mistake: no-of
+    mistakes:
+      - id: no-of
+        wrong: My parents don't approve my friends.
+        right: My parents don't approve of my friends.
+        type: preposition
+        explanation: For an opinion, use "approve of". "Approve" with no preposition means to officially accept (the council approved the plan).

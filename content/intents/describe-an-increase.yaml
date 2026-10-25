@@ -13,10 +13,14 @@ groups:
   - label: With a verb
     entries:
       - { sense: rise-sharply.increase, fit: "a fast, large rise in a Task 1 chart" }
+      - { sense: increase.verb, fit: "the standard verb; can take an object" }
+      - { sense: rise.verb, fit: "very common; no object" }
+      - { sense: surge.increase, fit: "a sudden, powerful rise" }
   - label: With a noun phrase
     entries:
       - { sense: significant.notable, fit: '"a significant increase in" + noun' }
       - { sense: substantial.large, fit: '"a substantial increase in" + noun; large and lasting' }
+      - { sense: increase.noun, fit: '"a sharp increase in" + noun' }
   - label: Describing the size
     entries:
       - { sense: considerable.large, fit: 'a large amount or degree — "by a considerable margin"' }

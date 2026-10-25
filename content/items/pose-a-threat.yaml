@@ -66,3 +66,5 @@ senses:
         to: have-a-detrimental-effect-on.harm
         weight: 2
         note: '"Have a detrimental effect on" says the harm is already happening; "pose a threat" says it might.'
+      - type: has_component
+        to: threat.danger

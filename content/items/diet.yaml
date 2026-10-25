@@ -1,0 +1,48 @@
+id: diet
+kind: word
+headword: diet
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: diet, type: lemma }
+  - { form: diets, type: inflection }
+senses:
+  - key: food
+    pos: noun
+    definition: The food that someone usually eats, or a plan to eat less or eat differently.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [health]
+    best_when: '"A balanced / healthy diet", and "be / go on a diet" for eating less.'
+    examples:
+      - id: ex1
+        text: Schools should teach children the importance of a balanced diet.
+        highlight: balanced diet
+        skill: writing
+        task: writing-2
+        collocation: balanced
+      - id: ex2
+        text: My brother went on a diet before his wedding.
+        highlight: went on a diet
+        skill: speaking
+        task: speaking-2
+        collocation: go-on
+    collocations:
+      - id: balanced
+        phrase: a balanced diet
+        note: 'also "a healthy diet"'
+      - id: go-on
+        phrase: go on a diet
+        note: 'also "be on a diet"'
+    mistakes:
+      - id: make
+        wrong: I'm making a diet at the moment.
+        right: I'm on a diet at the moment.
+        type: collocation
+        explanation: You "go on" or "are on" a diet, not "make" one.
+    relations:
+      - type: related
+        to: obesity.overweight

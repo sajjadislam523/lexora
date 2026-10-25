@@ -1,0 +1,52 @@
+id: overcome
+kind: word
+headword: overcome
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: overcome, type: lemma }
+  - { form: overcomes, type: inflection }
+  - { form: overcame, type: inflection }
+  - { form: overcoming, type: inflection }
+senses:
+  - key: defeat
+    pos: verb
+    definition: To succeed in dealing with a difficulty, obstacle or feeling.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-2, speaking-3] }
+    best_when: Personal or practical difficulties — "overcome obstacles", "overcome a fear".
+    examples:
+      - id: ex1
+        text: Many immigrants have to overcome language barriers to find work.
+        highlight: overcome
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [get over, break down]
+      - id: ex2
+        text: I overcame my fear of public speaking by joining a drama club.
+        highlight: overcame
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [conquered, beat]
+    collocations:
+      - id: obstacles
+        phrase: overcome obstacles
+        note: 'also "overcome barriers", "overcome challenges"'
+      - id: fear
+        phrase: overcome a fear
+    relations:
+      - type: alternative
+        to: tackle.deal-with
+        weight: 1
+        note: Tackle is for large problems that need effort; overcome means getting past a difficulty, often a personal one.
+    mistakes:
+      - id: overcomed
+        wrong: She overcomed many difficulties.
+        right: She overcame many difficulties.
+        type: grammar
+        explanation: Overcome is irregular — overcome, overcame, overcome.

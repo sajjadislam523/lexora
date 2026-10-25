@@ -212,6 +212,8 @@ describe("filters on the published content (in memory)", () => {
 
   // Every golden query under every single filter value: the same reading, a subset of the same
   // results in the same order, and every result kept matches. Filters never re-rank.
+  // Every golden query under 38 filter sets (over 3,000 searches) through the linear in-memory
+  // repository: it outgrew the default timeout with the content expansion.
   it("restricts every golden search without changing its reading or order", async () => {
     let checked = 0;
     for (const golden of GOLDEN_CASES) {
@@ -241,24 +243,31 @@ describe("filters on the published content (in memory)", () => {
       }
     }
     expect(checked).toBe(GOLDEN_CASES.length * 38);
-  });
+  }, 120_000);
 
-  it("finds no topics and none of the four new functions in today's content", async () => {
-    for (const topic of FILTER_VALUES.topic)
-      expect((await service.browse({ topic })).total).toBe(0);
+  // Since the content expansion (Wave 2), every topic and every Phase 4 function has language.
+  it("finds every topic and the four Phase 4 functions in today's content", async () => {
+    for (const topic of FILTER_VALUES.topic) {
+      expect((await service.browse({ topic })).total, topic).toBeGreaterThan(0);
+    }
     for (const fn of ["comparison", "decrease", "opinion", "hedging"] as const) {
-      expect((await service.browse({ function: fn })).total).toBe(0);
+      expect((await service.browse({ function: fn })).total, fn).toBeGreaterThan(0);
     }
   });
 
   it("pages through a long browse without gaps or repeats", async () => {
     const first = await service.browse({ use: "writing" });
-    expect(first.total).toBeGreaterThan(30);
-    const second = await service.browse({ use: "writing" }, 2);
+    expect(first.pages).toBeGreaterThan(2);
+    const all = [...first.items];
+    for (let page = 2; page <= first.pages; page++) {
+      const next = await service.browse({ use: "writing" }, page);
+      expect(next.items).toHaveLength(
+        page < first.pages ? 30 : first.total - 30 * (first.pages - 1),
+      );
+      all.push(...next.items);
+    }
     expect(first.items).toHaveLength(30);
-    expect(second.items).toHaveLength(first.total - 30);
-    const all = [...first.items, ...second.items].map((item) => item.senseId);
-    expect(new Set(all).size).toBe(first.total);
+    expect(new Set(all.map((item) => item.senseId)).size).toBe(first.total);
   });
 });
 

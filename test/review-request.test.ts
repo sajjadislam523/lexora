@@ -28,7 +28,7 @@ const body = (overrides: Record<string, unknown> = {}) => ({
 describe("review answer request", () => {
   it("accepts every published exercise, with a typed answer or an option", () => {
     const exercises = materials.flatMap((material) => generateExercises(material));
-    expect(exercises).toHaveLength(178);
+    expect(exercises).toHaveLength(1364);
     for (const { prompt } of exercises) {
       const answer = prompt.type === "mistake" ? "a" : "x";
       const parsed = answerRequestSchema.safeParse(

@@ -1,0 +1,33 @@
+id: public-services
+kind: word
+headword: public services
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: public services, type: lemma }
+  - { form: public service, type: inflection }
+senses:
+  - key: state-services
+    pos: noun
+    definition: Services such as hospitals, schools, transport and the police that the state provides for everyone.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [government, society]
+    best_when: Tax and spending debates — "fund public services", "cuts to public services".
+    examples:
+      - id: ex1
+        text: Higher taxes could pay for better public services.
+        highlight: public services
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Public services in my town have got worse since the budget cuts.
+        highlight: Public services
+        skill: speaking
+        task: speaking-3
+    relations:
+      - type: related
+        to: government.state

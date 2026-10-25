@@ -79,8 +79,9 @@ describe("one gap", () => {
 
   it('answers "It is ___ that" only as likely fits, saying why', async () => {
     const page = await rendered(explore("It is ___ that governments should act"));
-    expect(answers(page)).toEqual(["crucial", "essential"]);
-    expect(verdicts(page)).toEqual(["likely_fits", "likely_fits"]);
+    // Content expansion: "it is clear that" joins, also only as likely fits.
+    expect(answers(page)).toEqual(["clear", "crucial", "essential"]);
+    expect(verdicts(page)).toEqual(["likely_fits", "likely_fits", "likely_fits"]);
     expect(page).toContain("only small function words around the gap match it");
   });
 
@@ -119,8 +120,11 @@ describe("two gaps", () => {
 
   it("keeps a gap's independent answers in their own group after the pair", async () => {
     const page = await rendered(explore("The policy ___ rise ___ protests"));
+    // Content expansion: "policy on" and "rise in / by / to" answer each gap on its own too.
     expect(headings(page)).toEqual([
       "Both gaps · give … to",
+      "Gap 1 · Prepositions after “policy”",
+      "Gap 2 · Prepositions after “rise”",
       "Gap 2 · Collocations with these words",
     ]);
   });
