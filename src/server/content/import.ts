@@ -30,6 +30,9 @@ import type { ValidatedContent } from "./validate";
  *    entries) that are no longer authored. Items and senses are never deleted, except drafts that
  *    were never published.
  * 5. Write inverse relations, rebuild the search vectors, and record a release.
+ * 6. After the commit, refresh the planner's statistics for the content tables (ANALYZE). Until
+ *    autovacuum gets to them, a large import leaves PostgreSQL planning search queries for the
+ *    previous row counts, which made typo correction about ten times slower at 270 items.
  */
 
 export type ImportResult = {
@@ -57,7 +60,7 @@ export async function importContent(
   const rows = buildRows(content);
   const counts = countRows(content, rows);
 
-  return db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx): Promise<ImportResult> => {
     await tx.execute(sql`select pg_advisory_xact_lock(hashtext('lexora:content-import'))`);
 
     const [latest] = await tx
@@ -84,6 +87,30 @@ export async function importContent(
 
     return { status: "imported", checksum, releaseId: release!.id, counts };
   });
+  if (result.status === "imported") await refreshStatistics(db);
+  return result;
+}
+
+/** The tables search reads, analysed so their plans match the imported row counts (step 6). */
+const SEARCHED_TABLES: PgTable[] = [
+  schema.languageItems,
+  schema.itemForms,
+  schema.senses,
+  schema.linkerDetails,
+  schema.mistakes,
+  schema.collocations,
+  schema.prepositionPatterns,
+  schema.examples,
+  schema.frames,
+  schema.senseRelations,
+  schema.intents,
+  schema.intentTriggers,
+  schema.intentEntries,
+];
+
+async function refreshStatistics(db: Database) {
+  const tables = SEARCHED_TABLES.map((table) => sql.identifier(getTableName(table)));
+  await db.execute(sql`analyze ${sql.join(tables, sql`, `)}`);
 }
 
 // ── Safety checks ──────────────────────────────────────────────────────────────────────────
