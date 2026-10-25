@@ -21,6 +21,7 @@
     "content:import": "node --conditions=react-server --import tsx scripts/content.mts import",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:retrieval": "vitest run test/retrieval-benchmark",
     "test:e2e": "vitest run --config vitest.e2e.config.mts"
   },
   "dependencies": {

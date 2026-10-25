@@ -1,0 +1,695 @@
+# The retrieval benchmark (Phase 6B): representative learner queries and the language a good
+# answer puts first. It measures ranking quality; the golden suite (search-golden.yaml) pins exact
+# behaviour. Run it with `pnpm test:retrieval`; the report is test/retrieval-benchmark-report.txt.
+#
+# Each entry in expected / acceptable / rejected is an item slug (content/items/<slug>.yaml) or an
+# authored term exactly as a result shows it (a collocation, "base preposition" of a pattern). The
+# runner refuses a reference the content doesn't have, so nothing here is invented.
+#
+#   query       what the learner types
+#   category    one of the categories in the report
+#   intent      the query shape the engine must read (optional)
+#   expected    the best answers: one of them should be first
+#   acceptable  also correct, so they may come first without failing the case
+#   rejected    wrong for this query: never in the top 3, never above the first expected answer
+#
+# A case passes when the first result is expected or acceptable, an expected result is in the top
+# 3, no rejected result breaks its rule, and the intent (when given) matches.
+#
+# Expectations describe the right answer, not what the engine happens to return: when the engine
+# and a case disagree, fix the engine or justify the case in its comment.
+
+# ── Basic lexical ───────────────────────────────────────────────────────────────────────────
+
+- { query: important, category: basic-lexical, intent: LOOKUP, expected: [important] }
+- { query: increase, category: basic-lexical, intent: LOOKUP, expected: [increase] }
+- { query: good, category: basic-lexical, intent: LOOKUP, expected: [good] }
+- { query: bad, category: basic-lexical, intent: LOOKUP, expected: [bad] }
+- { query: think, category: basic-lexical, intent: LOOKUP, expected: [think] }
+- { query: however, category: basic-lexical, intent: LOOKUP, expected: [however] }
+- { query: decrease, category: basic-lexical, intent: LOOKUP, expected: [decrease] }
+- { query: analyze, category: basic-lexical, intent: LOOKUP, expected: [analyse] }
+- { query: signifcant, category: basic-lexical, intent: LOOKUP, expected: [significant] }
+- { query: responsable for, category: basic-lexical, intent: LOOKUP, expected: [responsible-for] }
+- { query: depend on, category: basic-lexical, intent: LOOKUP, expected: [depend-on] }
+- {
+    query: a significant increase,
+    category: basic-lexical,
+    intent: LOOKUP,
+    expected: [significant],
+  }
+
+# ── Synonym intent ──────────────────────────────────────────────────────────────────────────
+
+- query: better word for important
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+  rejected: [considerable, substantial]
+
+- query: a better word for important
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+
+- query: what is a better word for important
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+
+- query: another word for important
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+
+- query: alternative word for important
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+
+- query: can you give me another word for important?
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+
+- query: synonym of important
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
+
+- query: another word for increase
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [rise, grow]
+  acceptable: [surge, expand, go-up]
+
+- query: what's another word for increase
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [rise, grow]
+  acceptable: [surge, expand, go-up]
+
+# "Formal" asks for the more formal choices: the authored more_formal relations come first.
+- query: formal word for good
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [beneficial, positive]
+  acceptable: [effective, valuable]
+
+- query: academic word for good
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [beneficial, positive, effective]
+  acceptable: [valuable]
+
+# A verb's alternatives first; "in my opinion" is a phrase that replaces "I think", not "think".
+- query: academic word for think
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [argue, believe]
+  acceptable: [consider, in-my-opinion]
+
+- query: formal way to say think
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [argue, believe]
+  acceptable: [consider, in-my-opinion]
+
+- query: academic way to say show
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [demonstrate, illustrate, indicate]
+  acceptable: [reveal]
+
+- query: better word for show
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [demonstrate, illustrate, indicate, reveal]
+
+- query: another word for big
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [major, significant, considerable, substantial]
+
+- query: better word for bad
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [harmful, negative, detrimental]
+
+- query: stronger word for important
+  category: synonym-intent
+  intent: STRONGER_ALTERNATIVE
+  expected: [crucial, essential]
+
+# "Very important" asks for a stronger word, not for "important" again.
+- query: word for very important
+  category: synonym-intent
+  intent: STRONGER_ALTERNATIVE
+  expected: [crucial, essential]
+  acceptable: [vital, fundamental]
+  rejected: [important]
+
+- query: word meaning very important
+  category: synonym-intent
+  intent: STRONGER_ALTERNATIVE
+  expected: [crucial, essential]
+  acceptable: [vital, fundamental]
+  rejected: [important]
+
+- query: another word for problem
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [issue, challenge]
+  acceptable: [difficulty, obstacle, drawback, concern]
+
+- query: better word for help
+  category: synonym-intent
+  intent: SYNONYM
+  expected: [enable, support]
+  acceptable: [encourage, enhance, improve, benefit, promote]
+
+# ── Modifier intent ─────────────────────────────────────────────────────────────────────────
+# A modifier ("large", "rapid") narrows the head word. Answers must combine the two in authored
+# content: a collocation, a definition, or examples that use the head word.
+
+- query: word for a large increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [significant, substantial, considerable]
+  acceptable: [dramatically, a marked increase, surge, jump, substantially, considerably, sharply]
+  rejected: [slightly, marginally, decrease, increase]
+
+- query: word for a big increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [significant, substantial, considerable]
+  acceptable: [dramatically, a marked increase, surge, jump, substantially, considerably, sharply]
+  rejected: [slightly, marginally, decrease]
+
+- query: word for a huge rise
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [significant, substantial, considerable, dramatically]
+  acceptable: [a marked increase, surge, jump, substantially, considerably, sharply]
+  rejected: [slightly, marginally]
+
+- query: word for a small increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [slightly, marginally]
+  rejected: [surge, jump, substantial, significant, dramatically]
+
+- query: word for a slight increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [slightly, marginally]
+  rejected: [surge, jump, substantial, significant, dramatically]
+
+- query: word for a rapid increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [rise-sharply, surge, soar, jump, a sharp increase, sharply, rapidly]
+  acceptable: [dramatically, a sharp rise]
+  rejected: [gradually, steadily, slightly, climb]
+
+- query: word for a sudden increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [rise-sharply, surge, jump, a sharp increase, sharply]
+  acceptable: [soar, rapidly, dramatically, a sharp rise]
+  rejected: [gradually, steadily, slightly, climb]
+
+- query: word for a gradual increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [gradually, steadily, climb, a gradual increase]
+  acceptable: [a steady rise, rise gradually, rise steadily, grow]
+  rejected: [surge, soar, jump, sharply]
+
+- query: word for a steady increase
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [steadily, gradually, a steady rise]
+  acceptable: [climb, a gradual increase, rise gradually, rise steadily, grow]
+  rejected: [surge, soar, jump, sharply]
+
+- query: word for a large decrease
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [plunge, sharply, dramatically]
+  acceptable: [plummet, a sharp fall, considerably, substantially, significantly]
+  rejected: [dip, slightly, marginally, increase]
+
+- query: word for a sharp fall
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [plummet, plunge]
+  acceptable: [sharply, dramatically, drop]
+  rejected: [dip, slightly, gradually]
+
+- query: word for a slight decrease
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [dip, slightly, marginally]
+  rejected: [plunge, plummet, sharply]
+
+- query: word for a gradual decline
+  category: modifier-intent
+  intent: SYNONYM
+  expected: [gradually, steadily, decline]
+  acceptable: [a gradual decline]
+  rejected: [plunge, plummet, sharply]
+
+# ── Preposition ─────────────────────────────────────────────────────────────────────────────
+
+- {
+    query: preposition after responsible,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [responsible for],
+  }
+- {
+    query: preposition after contribute,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [contribute to],
+  }
+- {
+    query: preposition after depend,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [depend on],
+  }
+- {
+    query: preposition after result,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [result in],
+    acceptable: [result from],
+  }
+- {
+    query: preposition with responsible,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [responsible for],
+  }
+- {
+    query: what preposition goes with focus,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [focus on],
+  }
+- {
+    query: preposition after suffer,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [suffer from],
+  }
+- {
+    query: preposition after interested,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [interested in],
+  }
+- {
+    query: preposition after depends,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [depend on],
+  }
+- {
+    query: which preposition after aware,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [aware of],
+  }
+- {
+    query: preposition after an increase,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [increase in],
+  }
+- {
+    query: responsible for or to,
+    category: preposition,
+    intent: PREPOSITION,
+    expected: [responsible for],
+    acceptable: [responsible to],
+  }
+
+# ── Context gaps ────────────────────────────────────────────────────────────────────────────
+
+# A preposition goes between "suffer" and its object; a verb can't ("suffer reduce poverty").
+- query: suffer ___ poverty
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [suffer from]
+  rejected: [reduce poverty, alleviate poverty]
+
+- query: responsible ___ the problem
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [responsible for]
+
+- query: contribute ___ society
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [contribute to]
+
+- query: depend ___ public transport
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [depend on]
+
+# A preposition before "in 2020" would make two prepositions in a row: the gap wants an adverb.
+- query: Prices rose ___ in 2020.
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [rose sharply, rise dramatically, rise gradually, rise steadily]
+  rejected: [rise in, rise by, rise to]
+
+# Here a noun phrase follows the gap, so an adverb can't go there ("rose sharply 2020").
+- query: prices rose ___ 2020
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [rise in, rise by, rise to]
+  rejected: [rose sharply, rise dramatically, rise gradually, rise steadily]
+
+- query: Governments should ____ more money into public transportation
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [invest]
+  acceptable: [allocate]
+
+- query: The government is responsible ___ providing healthcare.
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [responsible for]
+
+- query: Many people depend ___ their cars.
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [depend on]
+
+- query: The government took ___ to reduce crime
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [take-measures]
+
+- query: Public transport plays a ___ role
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [play-a-crucial-role, crucial, key, vital]
+  acceptable: [major, significant]
+
+- query: Screen time has a ___ effect on sleep
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [have-a-detrimental-effect-on]
+  acceptable: [beneficial, harmful, effect]
+
+- query: Plastic waste ___ a threat to marine life
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [pose-a-threat]
+
+- query: Plastic waste poses a threat ___ marine life
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [pose-a-threat]
+
+- query: The council allocated money ___ education
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [allocate]
+
+- query: Schools raised awareness ___ the dangers
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [raise-awareness]
+
+- query: She devoted her life ___ helping others
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [devote]
+
+- query: There was a ___ increase in prices
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [significant, substantial, a sharp increase, a gradual increase, a marked increase]
+  acceptable: [a slight increase]
+
+- query: Prices rose, ___ demand fell
+  category: context-gap
+  intent: CONTEXT_GAP
+  expected: [whereas, while]
+  acceptable: [although, even-though]
+
+# ── Linkers ─────────────────────────────────────────────────────────────────────────────────
+
+- query: alternative to however
+  category: linker
+  intent: ALTERNATIVE
+  expected: [on-the-other-hand, nevertheless, in-contrast]
+  acceptable: [whereas, nonetheless]
+  rejected: [however]
+
+- query: linker for reason
+  category: linker
+  intent: LINKER
+  expected: [because-of, due-to, owing-to, because, since]
+  acceptable: [as-a-result-of]
+
+- query: cause and effect linker
+  category: linker
+  intent: LINKER
+  expected: [as-a-result, therefore, consequently, because-of, due-to, because]
+  acceptable: [thus, owing-to, since, as-a-result-of]
+
+- query: linker for contrast
+  category: linker
+  intent: LINKER
+  expected: [however, in-contrast, on-the-other-hand, whereas]
+  acceptable: [while, nevertheless]
+
+- query: linker for giving an example
+  category: linker
+  intent: LINKER
+  expected: [for-example, for-instance, such-as]
+
+- query: linker for addition
+  category: linker
+  intent: LINKER
+  expected: [furthermore, moreover, in-addition]
+  acceptable: [additionally]
+
+- query: linker for result
+  category: linker
+  intent: LINKER
+  expected: [as-a-result, therefore, consequently]
+  acceptable: [thus]
+
+- query: alternative to furthermore
+  category: linker
+  intent: ALTERNATIVE
+  expected: [moreover, in-addition]
+  acceptable: [on-top-of-that, whats-more, additionally]
+  rejected: [furthermore]
+
+- query: linker for concession
+  category: linker
+  intent: LINKER
+  expected: [nevertheless, nonetheless, although, even-though]
+  acceptable: [however, despite, in-spite-of]
+
+- query: another word for because
+  category: linker
+  intent: SYNONYM
+  expected: [since, because-of, due-to]
+  acceptable: [owing-to, as-a-result-of]
+
+- query: linking words for contrast
+  category: linker
+  intent: LINKER
+  expected: [however, in-contrast, on-the-other-hand, whereas]
+  acceptable: [while, nevertheless]
+
+# ── Functional language ─────────────────────────────────────────────────────────────────────
+
+- query: phrase for giving an opinion
+  category: functional
+  intent: PHRASE
+  expected: [in-my-opinion, believe]
+  acceptable: [viewpoint, think, argue]
+
+- query: phrase for comparing two things
+  category: functional
+  intent: PHRASE
+  expected: [similar, compared-with, whereas, comparable]
+  acceptable: [similarly, likewise, unlike, different, by-comparison]
+
+# "A trend" can go up, go down or stay level: any of the trend intents' language is right.
+- query: phrase for describing a trend
+  category: functional
+  intent: PHRASE
+  expected: [increase, rise, rise-sharply, decrease, fall, remain-stable, level-off, fluctuate]
+  acceptable: [remain-unchanged, plateau, stabilise, decline, surge]
+
+- query: phrase for introducing a solution
+  category: functional
+  intent: PHRASE
+  expected: [tackle, address, solve, solution]
+  acceptable: [mitigate, alleviate, overcome, measure, approach, strategy, take-measures]
+
+- query: phrase for concluding
+  category: functional
+  intent: PHRASE
+  expected: [in-conclusion, to-conclude, to-sum-up]
+  acceptable: [on-balance, overall, ultimately]
+
+- query: phrase for giving an example
+  category: functional
+  intent: PHRASE
+  expected: [for-example, for-instance, such-as]
+
+- query: I want to express contrast
+  category: functional
+  intent: CONTEXTUAL_EXPRESSION
+  expected: [however, in-contrast, on-the-other-hand]
+  acceptable: [whereas, while]
+
+- query: how to say something is important
+  category: functional
+  intent: CONTEXTUAL_EXPRESSION
+  expected: [important, significant, crucial, essential, key]
+  acceptable: [vital, fundamental, play-a-crucial-role]
+
+- query: phrase for softening a claim
+  category: functional
+  intent: PHRASE
+  expected: [likely, possible, to-some-extent, it-can-be-argued-that]
+  acceptable: [suggest, indicate, approximately]
+
+- query: phrase for describing a problem
+  category: functional
+  intent: PHRASE
+  expected: [have-a-detrimental-effect-on, pose-a-threat, there-is-growing-concern-about]
+  acceptable: [give-rise-to, result-in]
+
+- query: sentence starter for giving an opinion
+  category: functional
+  intent: SENTENCE_PATTERN
+  expected: [in-my-opinion, it-can-be-argued-that]
+  acceptable: [believe, critics-argue-that, supporters-argue-that, viewpoint]
+
+- query: phrase for summarising
+  category: functional
+  intent: PHRASE
+  expected: [to-sum-up, in-conclusion, overall]
+  acceptable: [to-conclude, on-balance, ultimately]
+
+# ── Multi-word queries ──────────────────────────────────────────────────────────────────────
+# A pattern or phrase that starts the query and takes the rest as its object is what the
+# learner is using; the object ("public transport") is secondary.
+
+- query: depend on public transport
+  category: multi-word
+  intent: LOOKUP
+  expected: [depend-on]
+  acceptable: [public-transport]
+
+- { query: result in higher costs, category: multi-word, intent: LOOKUP, expected: [result-in] }
+- query: responsible for the increase
+  category: multi-word
+  intent: LOOKUP
+  expected: [responsible-for]
+  acceptable: [increase]
+
+- query: contribute to climate change
+  category: multi-word
+  intent: LOOKUP
+  expected: [contribute-to]
+  acceptable: [climate-change]
+
+- query: focus on education
+  category: multi-word
+  intent: LOOKUP
+  expected: [focus-on]
+  acceptable: [education]
+
+- query: suffer from poverty
+  category: multi-word
+  intent: LOOKUP
+  expected: [suffer-from]
+  acceptable: [poverty]
+
+- query: lead to unemployment
+  category: multi-word
+  intent: LOOKUP
+  expected: [lead-to]
+  acceptable: [unemployment]
+
+- query: raise awareness of the problem
+  category: multi-word
+  intent: LOOKUP
+  expected: [raise-awareness]
+
+- query: a significant increase in prices
+  category: multi-word
+  intent: LOOKUP
+  expected: [significant]
+
+- query: rely on social media
+  category: multi-word
+  intent: LOOKUP
+  expected: [rely-on]
+  acceptable: [social-media]
+
+- query: tackle climate change
+  category: multi-word
+  intent: LOOKUP
+  expected: [tackle, climate-change]
+
+# ── Task-aware queries ──────────────────────────────────────────────────────────────────────
+
+- query: IELTS Task 1 word for increase
+  category: task-aware
+  intent: SYNONYM
+  expected: [rise, grow, surge]
+  acceptable: [expand, go-up]
+
+- query: Task 2 phrase for giving an opinion
+  category: task-aware
+  intent: PHRASE
+  expected: [in-my-opinion, believe]
+  acceptable: [viewpoint, think, argue]
+
+- query: academic word for describing a trend
+  category: task-aware
+  expected: [increase, rise, rise-sharply, decrease, fall, remain-stable, level-off, fluctuate]
+  acceptable: [remain-unchanged, plateau, stabilise, decline, surge]
+
+- query: Task 1 phrase for describing an increase
+  category: task-aware
+  intent: PHRASE
+  expected: [rise-sharply, increase, rise, surge]
+  acceptable: [significant, substantial, considerable]
+
+- query: writing task 2 linker for contrast
+  category: task-aware
+  intent: LINKER
+  expected: [however, in-contrast, on-the-other-hand, whereas]
+  acceptable: [while, nevertheless]
+
+- query: better word for important in task 2
+  category: task-aware
+  intent: SYNONYM
+  expected: [significant, crucial, essential]
+  acceptable: [fundamental, key, major]
