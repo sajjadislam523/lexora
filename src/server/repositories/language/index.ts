@@ -10,6 +10,7 @@ import {
   type IeltsUse,
   type SearchFilters,
 } from "@/language/filters";
+import { normaliseTerm } from "@/language/normalise";
 import { toGapFrame } from "@/language/search/match";
 import { stem } from "@/language/search/text";
 import type {
@@ -27,6 +28,8 @@ import type {
   RelationHit,
   SenseFacets,
   SenseRef,
+  SenseTexts,
+  WordClassHit,
 } from "@/language/search/repository";
 import type { DiscourseFunction, ItemKind, RelationType } from "@/language/schema/vocabulary";
 import type {
@@ -540,6 +543,93 @@ export class DatabaseLanguageRepository
     return rows;
   }
 
+  // ── Retrieval intelligence (Phase 6B) ────────────────────────────────────────────────────
+
+  async wordClasses(words: readonly string[]): Promise<WordClassHit[]> {
+    if (words.length === 0) return [];
+    const wanted = [...new Set(words)];
+    // A word's own forms, and the first word of verb and adjective phrase forms ("suffer from").
+    const rows = await this.db.execute<{
+      word: string;
+      pos: WordClassHit["partOfSpeech"];
+      form_type: WordClassHit["formType"];
+      phrase_head: boolean;
+    }>(sql`
+      select f.normalized as word, s.part_of_speech as pos, f.form_type, false as phrase_head
+        from item_forms f
+        join language_items i on i.id = f.item_id and i.status = 'published'
+        join senses s on s.item_id = i.id and s.status = 'published'
+        where f.normalized = any(${textArray(wanted)})
+      union
+      select split_part(f.normalized, ' ', 1), s.part_of_speech, f.form_type, true
+        from item_forms f
+        join language_items i on i.id = f.item_id and i.status = 'published'
+        join senses s on s.item_id = i.id and s.status = 'published'
+        where s.part_of_speech in ('verb_phrase', 'adjective_phrase')
+          and f.normalized like any(${textArray(wanted.map((w) => `${escapeLike(w)} %`))})
+      order by 1, 2, 3, 4
+    `);
+    return rows.map((row) => ({
+      word: row.word,
+      partOfSpeech: row.pos,
+      formType: row.form_type,
+      phraseHead: row.phrase_head,
+    }));
+  }
+
+  async collocationsContaining(phrases: readonly string[]): Promise<CollocationHit[]> {
+    if (phrases.length === 0) return [];
+    const likes = [...new Set(phrases)].map((p) => `% ${escapeLike(p)} %`);
+    return this.collocationsWhere(
+      sql`(' ' || ${collocations.normalized} || ' ') like any(${textArray(likes)})`,
+    );
+  }
+
+  async sensesDefinedWith(phrases: readonly string[]): Promise<SenseTexts[]> {
+    if (phrases.length === 0) return [];
+    const likes = [...new Set(phrases)].map((p) => `%${escapeLike(p)}%`);
+    const rows = await this.db
+      .select({ id: senses.id, definition: senses.definition })
+      .from(senses)
+      .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+      .where(and(sql`lower(${senses.definition}) like any(${textArray(likes)})`, livePublished()))
+      .orderBy(asc(senses.id));
+    if (rows.length === 0) return [];
+    const ids = rows.map((row) => row.id);
+    const [exampleRows, collocationRows] = await Promise.all([
+      this.db
+        .select({ senseId: examples.senseId, text: examples.text })
+        .from(examples)
+        .where(inArray(examples.senseId, ids))
+        .orderBy(asc(examples.senseId), asc(examples.position)),
+      this.db
+        .select({ senseId: collocations.senseId, normalized: collocations.normalized })
+        .from(collocations)
+        .where(inArray(collocations.senseId, ids))
+        .orderBy(asc(collocations.senseId), asc(collocations.position)),
+    ]);
+    return rows.map((row) => ({
+      senseId: row.id,
+      definition: normaliseTerm(row.definition),
+      usage: [
+        ...exampleRows.filter((e) => e.senseId === row.id).map((e) => normaliseTerm(e.text)),
+        ...collocationRows.filter((c) => c.senseId === row.id).map((c) => c.normalized),
+      ],
+    }));
+  }
+
+  async formsOfSenses(senseIds: readonly string[]): Promise<{ senseId: string; form: string }[]> {
+    if (senseIds.length === 0) return [];
+    const rows = await this.db
+      .select({ senseId: senses.id, form: itemForms.normalized })
+      .from(senses)
+      .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
+      .innerJoin(itemForms, eq(itemForms.itemId, languageItems.id))
+      .where(and(inArray(senses.id, [...new Set(senseIds)]), livePublished()))
+      .orderBy(asc(senses.id), asc(itemForms.normalized));
+    return rows;
+  }
+
   // ── Filters and browse (Phase 4) ─────────────────────────────────────────────────────────
 
   async senseFacets(senseIds: readonly string[]): Promise<SenseFacets[]> {
@@ -552,6 +642,7 @@ export class DatabaseLanguageRepository
         topics: senses.topics,
         skills: senses.skills,
         ieltsTasks: senses.ieltsTasks,
+        partOfSpeech: senses.partOfSpeech,
       })
       .from(senses)
       .innerJoin(languageItems, eq(languageItems.id, senses.itemId))
@@ -961,6 +1052,14 @@ function ieltsUseCondition(use: IeltsUse): SQL {
   return use === "writing" || use === "speaking"
     ? sql`${use} = any(${senses.skills})`
     : sql`${use} = any(${senses.ieltsTasks})`;
+}
+
+/** A bound text[] parameter. */
+function textArray(values: readonly string[]) {
+  return sql`array[${sql.join(
+    values.map((value) => sql`${value}`),
+    sql`, `,
+  )}]::text[]`;
 }
 
 function escapeLike(text: string) {

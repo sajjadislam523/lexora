@@ -14,6 +14,7 @@ import type {
   LinkerConnects,
   LinkerPosition,
   MistakeType,
+  PartOfSpeech,
   Region,
   RelationType,
 } from "../schema/vocabulary";
@@ -130,8 +131,24 @@ export type LinkerHit = {
   functions: DiscourseFunction[];
 };
 
-/** A sense's filterable metadata (kind from its item). */
-export type SenseFacets = FilterFacets & { senseId: string };
+/** A sense's filterable metadata (kind from its item), and its part of speech for ranking. */
+export type SenseFacets = FilterFacets & { senseId: string; partOfSpeech: PartOfSpeech };
+
+/**
+ * What the content says a single word can be (Phase 6B): the part of speech of a sense of an item
+ * that has the word as a form, or whose verb or adjective phrase starts with it ("suffer" in
+ * "suffer from").
+ */
+export type WordClassHit = {
+  word: string;
+  partOfSpeech: PartOfSpeech;
+  formType: FormType;
+  /** The word is the first word of a form of a verb or adjective phrase, not a form itself. */
+  phraseHead: boolean;
+};
+
+/** A sense's definition and authored usage (its examples and collocations), normalised. */
+export type SenseTexts = { senseId: string; definition: string; usage: string[] };
 
 /**
  * For each filter dimension, how many published senses each value would match together with the
@@ -209,6 +226,17 @@ export interface LanguageSearchRepository extends Pick<
   findCollocationTemplates(words: readonly string[]): Promise<CollocationTemplates>;
   /** Every published linker sense with its position and connection details. */
   listLinkers(): Promise<LinkerHit[]>;
+  /** Phase 6B: the parts of speech the content gives these normalised single words. */
+  wordClasses(words: readonly string[]): Promise<WordClassHit[]>;
+  /** Phase 6B: published collocations containing any of these normalised words or phrases as whole words. */
+  collocationsContaining(phrases: readonly string[]): Promise<CollocationHit[]>;
+  /**
+   * Phase 6B: published senses whose lower-case definition contains any of these phrases, with
+   * their usage. A superset: the engine checks whole words itself.
+   */
+  sensesDefinedWith(phrases: readonly string[]): Promise<SenseTexts[]>;
+  /** Phase 6B: the normalised forms of the items these senses belong to. */
+  formsOfSenses(senseIds: readonly string[]): Promise<{ senseId: string; form: string }[]>;
   /**
    * The preposition patterns a structure spanning two blanks can come from (Step 4.5): those whose
    * base is one word followed by `rest` ("pose" + "a threat" when "a threat" stands between the
