@@ -1,0 +1,49 @@
+id: jump
+kind: word
+headword: jump
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: jump, type: lemma }
+  - { form: jumps, type: inflection }
+  - { form: jumped, type: inflection }
+  - { form: jumping, type: inflection }
+senses:
+  - key: increase
+    label: a sudden rise
+    pos: verb
+    definition: To rise suddenly by a large amount between two points in time.
+    cefr: B2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-1, speaking-3] }
+    functions: [increase]
+    best_when: A sudden rise from one year or point to the next, rather than a long trend.
+    avoid_when: Very formal writing; "rise sharply" is more neutral.
+    examples:
+      - id: ex1
+        text: The figure jumped from 15% to 40% in a single year.
+        highlight: jumped
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [rose, increased, climbed, surged]
+      - id: ex2
+        text: There was a huge jump in the number of people working from home.
+        highlight: jump in
+        skill: speaking
+        task: speaking-3
+        collocation: jump-in
+        practice:
+          accept: [rise, increase]
+    collocations:
+      - id: jump-in
+        phrase: a jump in
+        pattern: a jump in + noun
+        note: the noun use
+    relations:
+      - type: alternative
+        to: surge.increase
+        weight: 2
+        note: A jump is one sudden rise between two points; a surge can continue for longer.

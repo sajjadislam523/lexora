@@ -1,0 +1,60 @@
+id: problem
+kind: word
+headword: problem
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: problem, type: lemma }
+  - { form: problems, type: inflection }
+senses:
+  - key: difficulty
+    pos: noun
+    definition: A situation that causes difficulty or harm and needs to be dealt with.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    functions: [problem]
+    best_when: Any difficulty, in both skills. Pair it with a precise verb — "tackle a problem", "a problem facing cities".
+    avoid_when: Repeating it in every paragraph. "Issue", "challenge" and "concern" each say something slightly different.
+    examples:
+      - id: ex1
+        text: Traffic congestion is one of the most serious problems facing large cities.
+        highlight: serious problems facing
+        skill: writing
+        task: writing-2
+        collocation: facing
+        practice:
+          accept: [challenges, issues]
+      - id: ex2
+        text: The biggest problem in my neighbourhood is the lack of parking.
+        highlight: biggest problem
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [issue]
+    collocations:
+      - id: facing
+        phrase: problems facing
+        pattern: the problems facing + group / place
+        note: a natural Task 2 opening
+      - id: tackle
+        phrase: tackle a problem
+        note: 'start dealing with it; also "address a problem"'
+      - id: serious
+        phrase: a serious problem
+        note: 'also "a growing problem"'
+    relations:
+      - type: synonym
+        to: issue.problem
+        weight: 2
+        note: Issue is more neutral — an important topic people discuss, not always a difficulty.
+      - type: alternative
+        to: challenge.difficulty
+        weight: 2
+        note: Challenge frames a difficulty as something that can be overcome.
+      - type: alternative
+        to: concern.worry
+        weight: 1
+        note: A concern is something people worry about, which may or may not become a problem.

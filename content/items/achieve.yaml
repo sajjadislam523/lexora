@@ -1,0 +1,59 @@
+id: achieve
+kind: word
+headword: achieve
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: achieve, type: lemma }
+  - { form: achieves, type: inflection }
+  - { form: achieved, type: inflection }
+  - { form: achieving, type: inflection }
+senses:
+  - key: succeed
+    pos: verb
+    definition: To succeed in getting a result or reaching a goal, usually through effort.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-2, speaking-3] }
+    best_when: Goals, success, results and targets that take effort — "achieve a goal", "achieve success".
+    examples:
+      - id: ex1
+        text: Countries cannot achieve their climate targets without cutting coal use.
+        highlight: achieve
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [meet, reach]
+      - id: ex2
+        text: Students who set clear goals usually achieve better results.
+        highlight: achieve
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [get, obtain]
+      - id: ex3
+        text: I'm proud of what I've achieved since I left school.
+        highlight: achieved
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [accomplished, done]
+    collocations:
+      - id: goal
+        phrase: achieve a goal
+        note: 'also "achieve a target"'
+      - id: success
+        phrase: achieve success
+    mistakes:
+      - id: achieve-to
+        wrong: She achieved to pass the exam.
+        right: She managed to pass the exam.
+        type: grammar
+        explanation: Achieve takes a noun (achieve a goal), not "to" + verb. Use "manage to" or "succeed in" + -ing.
+    relations:
+      - type: alternative
+        to: reach.level
+        weight: 2
+        note: Reach is for levels, figures and agreements; achieve is for goals and results you work for.

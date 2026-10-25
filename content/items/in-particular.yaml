@@ -1,0 +1,43 @@
+id: in-particular
+kind: linker
+headword: in particular
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: in particular, type: lemma }
+  - { form: particularly, type: lemma }
+senses:
+  - key: especially
+    pos: prepositional_phrase
+    definition: Especially; used to single out one person, thing or group from those mentioned.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [emphasis, example]
+    linker:
+      connects: sentences
+      positions: [start, middle, end]
+      punctuation: A comma after it at the start of a sentence; often between commas in the middle.
+    best_when: Picking out the most important case from a group — "Young people, in particular, …".
+    examples:
+      - id: ex1
+        text: Prices rose across Europe. Spain, in particular, saw a sharp increase.
+        highlight: in particular,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [especially, notably]
+      - id: ex2
+        text: I love Italian food, pizza in particular.
+        highlight: in particular
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [especially]
+    relations:
+      - type: alternative
+        to: for-example.example
+        weight: 1
+        note: For example gives one case among many; in particular singles out the most important one.

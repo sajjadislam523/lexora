@@ -1,0 +1,41 @@
+id: prevention
+kind: word
+headword: prevention
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: prevention, type: lemma }
+senses:
+  - key: stopping
+    pos: noun
+    definition: Action taken to stop something bad, such as illness or crime, from happening.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [health, society]
+    best_when: Arguing for early action — "prevention is better than cure", "crime prevention".
+    examples:
+      - id: ex1
+        text: Spending on prevention saves money on treatment later.
+        highlight: prevention
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My grandmother always says that prevention is better than cure.
+        highlight: prevention is better than cure
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: cure
+        phrase: prevention is better than cure
+        note: a well-known saying
+      - id: crime
+        phrase: crime prevention
+        note: 'also "disease prevention"'
+    relations:
+      - type: derived_form
+        to: prevent.stop
+        weight: 2
+        note: 'The verb: "prevent people from".'

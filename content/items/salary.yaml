@@ -1,0 +1,44 @@
+id: salary
+kind: word
+headword: salary
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: salary, type: lemma }
+  - { form: salaries, type: inflection }
+senses:
+  - key: pay
+    pos: noun
+    definition: A fixed amount of money paid to someone for their job, usually every month.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-1] }
+    topics: [work, economy]
+    best_when: Pay from a job — "a high salary", "earn a salary". "Wages" is often used for weekly or hourly pay.
+    examples:
+      - id: ex1
+        text: Teachers' salaries have not kept up with inflation.
+        highlight: salaries
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [wages, pay]
+      - id: ex2
+        text: I'd choose an interesting job over a high salary.
+        highlight: high salary
+        skill: speaking
+        task: speaking-3
+        collocation: high
+    collocations:
+      - id: high
+        phrase: a high salary
+        note: 'also "a good salary"'
+      - id: earn
+        phrase: earn a salary
+    relations:
+      - type: alternative
+        to: income.money-received
+        weight: 2
+        note: Income is all the money someone receives, including from investments and benefits; a salary is pay from a job.

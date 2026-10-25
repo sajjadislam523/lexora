@@ -1,0 +1,55 @@
+id: disadvantage
+kind: word
+headword: disadvantage
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: disadvantage, type: lemma }
+  - { form: disadvantages, type: inflection }
+senses:
+  - key: weak-point
+    pos: noun
+    definition: Something that makes a situation less good or successful, or puts someone in a weaker position.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: '"Advantages and disadvantages" essays, and saying someone is in a weaker position ("at a disadvantage").'
+    examples:
+      - id: ex1
+        text: One disadvantage of online learning is the lack of face-to-face contact.
+        highlight: disadvantage of
+        skill: writing
+        task: writing-2
+        pattern: of
+        practice:
+          accept: [drawback, downside]
+      - id: ex2
+        text: Children without internet access are at a disadvantage at school.
+        highlight: at a disadvantage
+        skill: speaking
+        task: speaking-3
+        collocation: at-a
+    preposition_patterns:
+      - id: of
+        base: disadvantage
+        preposition: of
+        pattern: a disadvantage of + noun / -ing
+        complement: noun_or_ing
+        note: what has the weak point
+    collocations:
+      - id: at-a
+        phrase: be at a disadvantage
+        note: in a weaker position than others
+      - id: outweigh
+        phrase: outweigh the disadvantages
+        item: outweigh
+    relations:
+      - type: opposite
+        to: advantage.good-point
+      - type: alternative
+        to: limitation.weakness
+        weight: 1
+        note: A limitation is something a thing can't do, or a limit on how well it works.

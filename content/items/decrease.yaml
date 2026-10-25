@@ -1,0 +1,132 @@
+id: decrease
+kind: word
+headword: decrease
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: decrease, type: lemma }
+  - { form: decreases, type: inflection }
+  - { form: decreased, type: inflection }
+  - { form: decreasing, type: inflection }
+senses:
+  - key: verb
+    label: to go down or make go down
+    pos: verb
+    definition: To become smaller in number, amount or level, or to make something do this.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [decrease]
+    best_when: The standard verb for a downward change in Task 1.
+    avoid_when: Someone deliberately makes something smaller; "reduce" is usually more natural ("reduce costs").
+    examples:
+      - id: ex1
+        text: The number of smokers decreased by almost half between 1990 and 2020.
+        highlight: decreased by
+        skill: writing
+        task: writing-1
+        pattern: by
+        practice:
+          accept: [fell, dropped, declined]
+      - id: ex2
+        text: Car use in the city centre decreased after the congestion charge was introduced.
+        highlight: decreased
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [fell, dropped, declined]
+      - id: ex3
+        text: The number of people who read newspapers has decreased a lot.
+        highlight: decreased
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [fallen, dropped, declined, gone down]
+    preposition_patterns:
+      - id: by
+        base: decrease
+        preposition: by
+        pattern: decrease by + amount
+        complement: noun
+        note: the size of the change
+        mistake: of-amount
+      - id: to
+        base: decrease
+        preposition: to
+        pattern: decrease to + final level
+        complement: noun
+        note: the level reached
+    mistakes:
+      - id: of-amount
+        wrong: Profits decreased of 5%.
+        right: Profits decreased by 5%.
+        type: preposition
+        explanation: The verb takes "by" for the size of the change; "of" is used only after the noun (a decrease of 5%).
+    relations:
+      - type: synonym
+        to: fall.verb
+        weight: 3
+        note: Fall has no object and is equally common in Task 1.
+      - type: synonym
+        to: decline.verb
+        weight: 2
+        note: Decline suits a gradual fall over time, often of something valued.
+      - type: alternative
+        to: reduce.make-smaller
+        weight: 2
+        note: Reduce is the natural verb when someone makes something smaller on purpose.
+  - key: noun
+    label: a fall
+    pos: noun
+    definition: A fall in the number, amount or level of something.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [decrease]
+    best_when: Describing a downward change as a noun phrase, with an adjective for size or speed.
+    examples:
+      - id: ex1
+        text: The data shows a slight decrease in the birth rate.
+        highlight: decrease in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [fall, drop, decline]
+      - id: ex2
+        text: A decrease in funding would force many libraries to close.
+        highlight: decrease in
+        skill: writing
+        task: writing-2
+        pattern: in
+        practice:
+          accept: [fall, drop, reduction, cut]
+      - id: ex3
+        text: I've noticed a decrease in the number of shops on my street.
+        highlight: decrease in
+        skill: speaking
+        task: speaking-1
+        pattern: in
+        practice:
+          accept: [fall, drop]
+    preposition_patterns:
+      - id: in
+        base: decrease
+        preposition: in
+        pattern: a decrease in + noun
+        complement: noun
+        note: what went down; "of" + the amount
+    relations:
+      - type: synonym
+        to: fall.noun
+        weight: 3
+        note: Fall is equally common and slightly less formal.
+      - type: synonym
+        to: decline.noun
+        weight: 2
+        note: Decline suggests a gradual, continuing fall.
+      - type: opposite
+        to: increase.noun

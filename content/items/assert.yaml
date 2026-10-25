@@ -1,0 +1,38 @@
+id: assert
+kind: word
+headword: assert
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: assert, type: lemma }
+  - { form: asserts, type: inflection }
+  - { form: asserted, type: inflection }
+  - { form: asserting, type: inflection }
+senses:
+  - key: state
+    pos: verb
+    definition: To state something firmly and confidently, as if it is certainly true.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    functions: [opinion]
+    strength: 3
+    best_when: Reporting a strong, confident statement by someone else.
+    avoid_when: Your own opinion in Task 2. It can sound as if you are ignoring the evidence; "I would argue" is more measured.
+    examples:
+      - id: ex1
+        text: The report asserts that public transport is the key to cleaner cities.
+        highlight: asserts
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [states, claims, argues, maintains]
+      - id: ex2
+        text: Some politicians assert that immigration harms the economy, but the data suggests otherwise.
+        highlight: assert
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [claim, argue, insist]

@@ -1,0 +1,39 @@
+id: employer
+kind: word
+headword: employer
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: employer, type: lemma }
+  - { form: employers, type: inflection }
+senses:
+  - key: company
+    pos: noun
+    definition: A person or organisation that pays people to work for them.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [work]
+    best_when: Who provides jobs and decides conditions — "employers should offer flexible hours".
+    examples:
+      - id: ex1
+        text: Employers should allow staff to work flexible hours.
+        highlight: Employers
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Companies, Businesses]
+      - id: ex2
+        text: My employer pays for my English lessons.
+        highlight: employer
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [company, boss]
+    relations:
+      - type: confusable
+        to: employee.worker
+        weight: 3
+        note: The employer gives the job and pays; the employee does the job and is paid.

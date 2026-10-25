@@ -1,0 +1,42 @@
+id: ultimately
+kind: linker
+headword: ultimately
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: ultimately, type: lemma }
+senses:
+  - key: in-the-end
+    pos: adverb
+    definition: In the end, after a long process; or at the most basic level.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [emphasis]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence is common but optional.
+    best_when: Giving the final, most basic point of an argument — "Ultimately, it is a question of money."
+    examples:
+      - id: ex1
+        text: Ultimately, the success of any policy depends on public support.
+        highlight: Ultimately,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [In the end]
+      - id: ex2
+        text: Ultimately, it's up to parents to decide.
+        highlight: Ultimately,
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [In the end, At the end of the day]
+    relations:
+      - type: alternative
+        to: overall.summary
+        weight: 1
+        note: Overall summarises everything; ultimately gives the final or most basic point.

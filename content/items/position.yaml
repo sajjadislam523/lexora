@@ -1,0 +1,45 @@
+id: position
+kind: word
+headword: position
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: position, type: lemma }
+  - { form: positions, type: inflection }
+senses:
+  - key: stance
+    label: an opinion on an issue
+    pos: noun
+    definition: The opinion or side that someone takes in a debate or on an issue.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [opinion]
+    best_when: Stating your side clearly in a Task 2 essay — examiners look for a clear position throughout.
+    examples:
+      - id: ex1
+        text: This essay will take the position that university should be free for all.
+        highlight: take the position
+        skill: writing
+        task: writing-2
+        collocation: take
+        practice:
+          accept: [view]
+      - id: ex2
+        text: My position on this issue is that both sides have valid points.
+        highlight: position on
+        skill: writing
+        task: writing-2
+        collocation: on
+        practice:
+          accept: [view]
+    collocations:
+      - id: take
+        phrase: take a position
+        pattern: take the position that + clause
+      - id: on
+        phrase: a position on
+        pattern: (my) position on + issue
+        note: '"on" introduces the topic'

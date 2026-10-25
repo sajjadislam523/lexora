@@ -1,0 +1,59 @@
+id: reach
+kind: word
+headword: reach
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: reach, type: lemma }
+  - { form: reaches, type: inflection }
+  - { form: reached, type: inflection }
+  - { form: reaching, type: inflection }
+senses:
+  - key: level
+    pos: verb
+    definition: To get to a particular level, number, point or stage.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    best_when: The level a line gets to in Task 1 ("reached a peak of", "reached 50%"), and agreements or decisions.
+    examples:
+      - id: ex1
+        text: The number of users reached 2 billion in 2019.
+        highlight: reached
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [hit]
+      - id: ex2
+        text: Governments must reach an agreement on carbon emissions.
+        highlight: reach an agreement
+        skill: writing
+        task: writing-2
+        collocation: agreement
+      - id: ex3
+        text: Temperatures can reach forty degrees in summer where I live.
+        highlight: reach
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [hit]
+    collocations:
+      - id: peak
+        phrase: reach a peak
+        note: 'Task 1 turning points; also "reach a high", "reach a low"'
+      - id: agreement
+        phrase: reach an agreement
+        note: 'also "reach a decision"'
+    mistakes:
+      - id: reach-to
+        wrong: Sales reached to 5 million.
+        right: Sales reached 5 million.
+        type: preposition
+        explanation: Reach takes a direct object. Use "rise to" or "reach" — not "reach to".
+    relations:
+      - type: alternative
+        to: peak.verb
+        weight: 1
+        note: Peak means reaching the highest point; reach works for any level.

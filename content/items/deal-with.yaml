@@ -1,0 +1,53 @@
+id: deal-with
+kind: preposition_pattern
+headword: deal with
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: deal with, type: lemma }
+  - { form: deals with, type: inflection }
+  - { form: dealt with, type: inflection }
+  - { form: dealing with, type: inflection }
+senses:
+  - key: handle
+    pos: verb_phrase
+    definition: To take action to solve a problem or handle a difficult situation.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    functions: [problem]
+    best_when: A natural, flexible verb for handling problems, people, stress and tasks in both skills.
+    examples:
+      - id: ex1
+        text: Hospitals are struggling to deal with the number of patients in winter.
+        highlight: deal with
+        skill: writing
+        task: writing-2
+        pattern: with
+      - id: ex2
+        text: In my job I deal with customer complaints every day.
+        highlight: deal with
+        skill: speaking
+        task: speaking-1
+        pattern: with
+    preposition_patterns:
+      - id: with
+        base: deal
+        preposition: with
+        pattern: deal with + noun
+        complement: noun
+        note: the problem, person or task handled
+        mistake: about
+    mistakes:
+      - id: about
+        wrong: We must deal about this problem.
+        right: We must deal with this problem.
+        type: preposition
+        explanation: '"Deal with" a problem.'
+      - id: dealed
+        wrong: The council dealed with the complaint quickly.
+        right: The council dealt with the complaint quickly.
+        type: grammar
+        explanation: Deal is irregular — deal, dealt, dealt.

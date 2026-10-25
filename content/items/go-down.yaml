@@ -1,0 +1,43 @@
+id: go-down
+kind: phrase
+headword: go down
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: go down, type: lemma }
+  - { form: goes down, type: inflection }
+  - { form: went down, type: inflection }
+  - { form: gone down, type: inflection }
+  - { form: going down, type: inflection }
+senses:
+  - key: decrease
+    pos: verb_phrase
+    definition: To become lower in price, number or level.
+    cefr: A2
+    registers: [neutral, informal]
+    skills: [speaking, writing]
+    ielts: { relevance: high, tasks: [speaking-1, speaking-3] }
+    functions: [decrease]
+    best_when: Speaking about prices, numbers or levels in an everyday way.
+    avoid_when: Writing Task 1. Use "fall", "drop" or "decrease".
+    examples:
+      - id: ex1
+        text: The price of phones has gone down, so almost everyone has one now.
+        highlight: gone down
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [fallen, dropped, decreased]
+      - id: ex2
+        text: Pollution levels went down when the factory closed.
+        highlight: went down
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [fell, dropped, decreased, declined]
+    relations:
+      - type: more_formal
+        to: decrease.verb
+        weight: 1
+        note: Decrease is the standard written choice.

@@ -1,0 +1,24 @@
+id: soften-a-claim
+label: Soften a claim
+description: Make a statement more careful, so that it doesn't claim more than the evidence shows.
+function: hedging
+triggers:
+  - soften a claim
+  - make a careful claim
+  - avoid sounding too certain
+  - hedge a statement
+  - be cautious
+groups:
+  - label: Probability
+    entries:
+      - { sense: likely.probable, fit: '"be likely to" — probably, not certainly' }
+      - { sense: possible.could-happen, fit: "it could happen" }
+  - label: Reporting evidence
+    entries:
+      - { sense: suggest.indicate, fit: '"the data suggests" — the most careful' }
+      - { sense: indicate.show, fit: '"the figures indicate"' }
+  - label: Limiting the claim
+    entries:
+      - { sense: to-some-extent.partly, fit: "true only partly" }
+      - { sense: it-can-be-argued-that.argue, fit: "a reasonable view, not a fact" }
+      - { sense: approximately.about, fit: "a figure that isn't exact" }

@@ -1,0 +1,42 @@
+id: because-of
+kind: functional_expression
+headword: because of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: because of, type: lemma }
+senses:
+  - key: cause
+    pos: prepositional_phrase
+    definition: As a result of; followed by the cause as a noun phrase.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    functions: [cause]
+    best_when: The natural choice in Speaking, and fine in Writing, before a noun phrase.
+    examples:
+      - id: ex1
+        text: I moved to the city because of the job opportunities.
+        highlight: because of
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [for]
+      - id: ex2
+        text: Many flights were cancelled because of the storm.
+        highlight: because of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [due to, owing to, as a result of]
+    relations:
+      - type: more_formal
+        to: due-to.cause
+        weight: 2
+        note: Due to is more formal and very common after "be" (was due to).
+      - type: confusable
+        to: because.cause
+        weight: 3
+        note: Because of + noun (because of the rain); because + clause (because it was raining).

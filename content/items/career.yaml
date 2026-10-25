@@ -1,0 +1,52 @@
+id: career
+kind: word
+headword: career
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: career, type: lemma }
+  - { form: careers, type: inflection }
+senses:
+  - key: long-term
+    pos: noun
+    definition: The series of jobs someone has in a particular area of work over their life.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [work]
+    best_when: Long-term working life — "a career in", "career prospects", "change careers".
+    examples:
+      - id: ex1
+        text: A degree can improve a young person's career prospects.
+        highlight: career prospects
+        skill: writing
+        task: writing-2
+        collocation: prospects
+      - id: ex2
+        text: I'd like a career in journalism.
+        highlight: career in
+        skill: speaking
+        task: speaking-1
+        pattern: in
+    preposition_patterns:
+      - id: in
+        base: career
+        preposition: in
+        pattern: a career in + field
+        complement: noun
+        note: the area of work
+        mistake: of
+    collocations:
+      - id: prospects
+        phrase: career prospects
+        note: 'also "career opportunities"'
+      - id: change
+        phrase: change careers
+    mistakes:
+      - id: of
+        wrong: She wants a career of medicine.
+        right: She wants a career in medicine.
+        type: preposition
+        explanation: '"A career in" + the field.'

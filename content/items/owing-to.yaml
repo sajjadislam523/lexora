@@ -1,0 +1,34 @@
+id: owing-to
+kind: functional_expression
+headword: owing to
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: owing to, type: lemma }
+senses:
+  - key: cause
+    pos: prepositional_phrase
+    definition: Because of; a formal way to introduce a cause as a noun phrase.
+    cefr: C1
+    registers: [formal, academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [cause]
+    best_when: Formal writing, usually at the start of a sentence — "Owing to a lack of funding, …".
+    avoid_when: After "be". Write "the delay was due to the weather", not "owing to".
+    examples:
+      - id: ex1
+        text: Owing to a lack of funding, the project was cancelled.
+        highlight: Owing to
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Due to, Because of, As a result of]
+      - id: ex2
+        text: Visitor numbers dropped in 2020 owing to travel restrictions.
+        highlight: owing to
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [due to, because of, as a result of]

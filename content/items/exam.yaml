@@ -1,0 +1,56 @@
+id: exam
+kind: word
+headword: exam
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: exam, type: lemma }
+  - { form: exams, type: inflection }
+  - { form: examination, type: lemma }
+  - { form: examinations, type: inflection }
+senses:
+  - key: test
+    pos: noun
+    definition: A formal test of knowledge or ability; "examination" is the formal word.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [education]
+    best_when: Speaking about your studies and writing about testing — "take", "pass" and "fail" an exam.
+    examples:
+      - id: ex1
+        text: Students who sleep well perform better in exams.
+        highlight: exams
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [tests]
+      - id: ex2
+        text: I took my final exams last summer and passed all of them.
+        highlight: took my final exams
+        skill: speaking
+        task: speaking-1
+        collocation: take
+    collocations:
+      - id: take
+        phrase: take an exam
+        note: 'do the test; also "sit an exam"'
+      - id: pass
+        phrase: pass an exam
+        note: 'succeed or not succeed; also "fail an exam"'
+      - id: pressure
+        phrase: exam pressure
+        note: 'also "exam stress"'
+    mistakes:
+      - id: make
+        wrong: I have to make an exam tomorrow.
+        right: I have to take an exam tomorrow.
+        type: collocation
+        explanation: In English you "take" or "sit" an exam, not "make" one.
+      - id: pass-take
+        wrong: I passed the exam yesterday, but I don't know my result yet.
+        right: I took the exam yesterday, but I don't know my result yet.
+        type: confusion
+        explanation: '"Pass" means succeed. "Take" or "sit" means do the exam.'

@@ -1,0 +1,53 @@
+id: treatment
+kind: word
+headword: treatment
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: treatment, type: lemma }
+  - { form: treatments, type: inflection }
+senses:
+  - key: medical-care
+    pos: noun
+    definition: Medical care given to someone who is ill or injured, or a particular way of curing an illness.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [health]
+    best_when: '"Medical treatment", "treatment for" an illness, "receive treatment".'
+    examples:
+      - id: ex1
+        text: Waiting times for hospital treatment have increased.
+        highlight: hospital treatment
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [care]
+      - id: ex2
+        text: There's still no effective treatment for the common cold.
+        highlight: treatment for
+        skill: speaking
+        task: speaking-3
+        pattern: for
+        practice:
+          accept: [cure]
+    preposition_patterns:
+      - id: for
+        base: treatment
+        preposition: for
+        pattern: (a) treatment for + illness
+        complement: noun
+        note: the illness treated; "the treatment of patients" is also used
+    collocations:
+      - id: medical
+        phrase: medical treatment
+      - id: receive
+        phrase: receive treatment
+        note: 'also "undergo treatment"'
+    relations:
+      - type: alternative
+        to: prevention.stopping
+        weight: 1
+        note: Treatment deals with an illness people already have; prevention stops it from starting.

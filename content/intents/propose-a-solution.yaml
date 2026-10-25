@@ -1,0 +1,31 @@
+id: propose-a-solution
+label: Propose a solution
+description: Say how a problem could be dealt with, using the verbs and nouns of problem–solution essays.
+triggers:
+  - propose a solution
+  - suggest a solution
+  - offer a solution
+  - solve a problem
+  - talk about solutions
+  - describe a solution
+  - deal with a problem
+groups:
+  - label: Dealing with the problem
+    entries:
+      - { sense: tackle.deal-with, fit: "a determined effort on a big problem" }
+      - { sense: address.deal-with, fit: "formal; start dealing with an issue" }
+      - { sense: solve.find-answer, fit: "fix it completely" }
+      - { sense: mitigate.reduce-harm, fit: "make the harm less severe" }
+      - { sense: alleviate.ease, fit: "ease suffering — poverty, pressure" }
+      - { sense: overcome.defeat, fit: "get past an obstacle or difficulty" }
+  - label: Naming the solution
+    entries:
+      - { sense: solution.answer, fit: '"a solution to" the problem' }
+      - { sense: measure.action, fit: "one specific official action" }
+      - { sense: approach.method, fit: '"a different approach to" the problem' }
+      - { sense: strategy.plan, fit: "a long-term plan" }
+  - label: Putting it into action
+    entries:
+      - { sense: take-measures.act, fit: "the classic Task 2 phrase" }
+      - { sense: implement.put-into-action, fit: "make a plan or policy work" }
+      - { sense: adopt.start-using, fit: "start using a strategy or approach" }

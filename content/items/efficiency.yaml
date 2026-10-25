@@ -1,0 +1,44 @@
+id: efficiency
+kind: word
+headword: efficiency
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: efficiency, type: lemma }
+senses:
+  - key: no-waste
+    pos: noun
+    definition: The quality of getting good results without wasting time, money or energy.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [technology, work, environment]
+    best_when: Machines, businesses and energy use — "improve efficiency", "energy efficiency".
+    examples:
+      - id: ex1
+        text: Automation can improve efficiency in factories.
+        highlight: improve efficiency
+        skill: writing
+        task: writing-2
+        collocation: improve
+        practice:
+          accept: [productivity]
+      - id: ex2
+        text: Better insulation is the cheapest way to increase energy efficiency at home.
+        highlight: energy efficiency
+        skill: writing
+        task: writing-2
+        collocation: energy
+    collocations:
+      - id: improve
+        phrase: improve efficiency
+        note: 'also "increase efficiency"'
+      - id: energy
+        phrase: energy efficiency
+    relations:
+      - type: derived_form
+        to: efficient.no-waste
+        weight: 2
+        note: 'The adjective: "more efficient", "energy-efficient".'

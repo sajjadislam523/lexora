@@ -1,0 +1,57 @@
+id: gradually
+kind: word
+headword: gradually
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: gradually, type: lemma }
+senses:
+  - key: slow
+    pos: adverb
+    definition: Slowly and in small steps over a period of time.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    best_when: A slow change over a long period — a line that rises or falls gently.
+    examples:
+      - id: ex1
+        text: The number of people living alone has increased gradually since 1980.
+        highlight: increased gradually
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [steadily, slowly]
+      - id: ex2
+        text: Older industries are gradually being replaced by technology companies.
+        highlight: gradually being replaced
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [slowly, steadily]
+      - id: ex3
+        text: My English has improved gradually since I started reading every day.
+        highlight: improved gradually
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [steadily, slowly]
+    collocations:
+      - id: gradual
+        phrase: a gradual decline
+        pattern: a gradual decline in + noun
+        note: 'the adjective form with a noun; also "a gradual increase"'
+    mistakes:
+      - id: gradual-verb
+        wrong: The figure decreased gradual.
+        right: The figure decreased gradually.
+        type: word_form
+        explanation: After a verb, use the adverb "gradually"; before a noun, the adjective "gradual" (a gradual decrease).
+    relations:
+      - type: synonym
+        to: steadily.regular
+        weight: 2
+        note: Steadily stresses a regular, continuous change; gradually stresses that it was slow.
+      - type: opposite
+        to: rapidly.fast

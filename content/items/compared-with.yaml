@@ -1,0 +1,48 @@
+id: compared-with
+kind: phrase
+headword: compared with
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: compared with, type: lemma }
+  - { form: compared to, type: lemma }
+  - { form: in comparison with, type: lemma }
+senses:
+  - key: comparing
+    pos: prepositional_phrase
+    definition: Used when considering how two things differ in size, amount or quality.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [comparison]
+    best_when: Comparing two figures or periods with a noun phrase ("compared with 2010"). "Compared to" is equally correct.
+    skill_note: In Speaking, "compared to" is the more common of the two.
+    examples:
+      - id: ex1
+        text: Car ownership was much lower in 1970 compared with today.
+        highlight: compared with
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: Compared with rural areas, cities offer far more job opportunities.
+        highlight: Compared with
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: Compared to my parents, I spend much more time online.
+        highlight: Compared to
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: comparing
+        wrong: Comparing with 2010, prices were higher.
+        right: Compared with 2010, prices were higher.
+        type: word_form
+        explanation: Use the past participle "compared" in this fixed phrase.
+    relations:
+      - type: alternative
+        to: whereas.contrast
+        weight: 2
+        note: Whereas joins two full clauses; compared with is followed only by a noun phrase.

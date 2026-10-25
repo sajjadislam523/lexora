@@ -1,0 +1,37 @@
+id: respectively
+kind: word
+headword: respectively
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: respectively, type: lemma }
+senses:
+  - key: in-order
+    pos: adverb
+    definition: In the same order as the things just mentioned.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    functions: [comparison]
+    standalone: No other word pairs two lists in order, so it has no alternatives; rewrite the sentence instead if it is unclear.
+    best_when: Giving figures for two or three items in one sentence, in the same order as the items.
+    avoid_when: The lists are long or the order is unclear. Two sentences are easier to read.
+    examples:
+      - id: ex1
+        text: The figures for France and Germany were 25% and 32% respectively.
+        highlight: respectively
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: Coal and gas accounted for 40% and 35% of electricity respectively.
+        highlight: respectively
+        skill: writing
+        task: writing-1
+    mistakes:
+      - id: respectfully
+        wrong: The rates were 10% and 15% respectfully.
+        right: The rates were 10% and 15% respectively.
+        type: confusion
+        explanation: '"Respectfully" means politely. "Respectively" means in the order given.'

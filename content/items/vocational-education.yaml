@@ -1,0 +1,32 @@
+id: vocational-education
+kind: word
+headword: vocational education
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: vocational education, type: lemma }
+  - { form: vocational training, type: lemma }
+  - { form: vocational course, type: lemma }
+  - { form: vocational courses, type: inflection }
+senses:
+  - key: job-training
+    pos: noun
+    definition: Education that teaches the practical skills needed for a particular job or trade.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [education, work]
+    best_when: Arguing that not everyone needs university — plumbing, nursing, engineering and other trades.
+    examples:
+      - id: ex1
+        text: Vocational training can be a better route into work than a university degree.
+        highlight: Vocational training
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My cousin did a vocational course in electrical engineering and got a job straight away.
+        highlight: vocational course
+        skill: speaking
+        task: speaking-2

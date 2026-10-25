@@ -1,0 +1,39 @@
+id: occupation
+kind: word
+headword: occupation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: occupation, type: lemma }
+  - { form: occupations, type: inflection }
+senses:
+  - key: job
+    pos: noun
+    definition: A person's job or type of work, especially as written on forms or in statistics.
+    cefr: C1
+    registers: [formal, academic]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1, writing-2] }
+    topics: [work]
+    best_when: Task 1 charts that compare jobs, and formal statements about types of work.
+    examples:
+      - id: ex1
+        text: The table compares average earnings in five occupations.
+        highlight: occupations
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [jobs, professions]
+      - id: ex2
+        text: Women remain under-represented in many technical occupations.
+        highlight: technical occupations
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [jobs, professions, fields]
+    relations:
+      - type: alternative
+        to: profession.skilled-job
+        weight: 2
+        note: A profession needs special training and qualifications, such as medicine or law.

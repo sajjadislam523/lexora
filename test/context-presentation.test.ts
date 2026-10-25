@@ -115,8 +115,12 @@ describe("groups", () => {
 
   it("keep the engine's label when it already names the gap", async () => {
     const response = await search("The policy ___ rise ___ protests");
+    // Content expansion: "policy on" and "rise in / by / to" now answer each gap on its own, after
+    // the pair (only as likely fits).
     expect(groupHeadings(response.groups, 2)).toEqual([
       "Both gaps · give … to",
+      "Gap 1 · Prepositions after “policy”",
+      "Gap 2 · Prepositions after “rise”",
       "Gap 2 · Collocations with these words",
     ]);
   });

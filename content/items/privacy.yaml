@@ -1,0 +1,41 @@
+id: privacy
+kind: word
+headword: privacy
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: privacy, type: lemma }
+senses:
+  - key: private-life
+    pos: noun
+    definition: The right to keep your personal life and personal information to yourself.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [technology, society]
+    best_when: Data, surveillance and social media topics — "invasion of privacy", "privacy concerns".
+    examples:
+      - id: ex1
+        text: Facial recognition cameras raise serious privacy concerns.
+        highlight: privacy concerns
+        skill: writing
+        task: writing-2
+        collocation: concerns
+      - id: ex2
+        text: I think posting photos of children online is an invasion of privacy.
+        highlight: invasion of privacy
+        skill: speaking
+        task: speaking-3
+        collocation: invasion
+    collocations:
+      - id: concerns
+        phrase: privacy concerns
+      - id: invasion
+        phrase: an invasion of privacy
+      - id: protect
+        phrase: protect people's privacy
+    relations:
+      - type: related
+        to: cybersecurity.protection

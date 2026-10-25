@@ -1,0 +1,38 @@
+id: greenhouse-gases
+kind: word
+headword: greenhouse gases
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: greenhouse gases, type: lemma }
+  - { form: greenhouse gas, type: inflection }
+senses:
+  - key: gases
+    pos: noun
+    definition: Gases such as carbon dioxide and methane that trap heat in the atmosphere.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    topics: [environment]
+    best_when: Explaining the cause of climate change — "emit / release greenhouse gases".
+    examples:
+      - id: ex1
+        text: Agriculture is a major source of greenhouse gases such as methane.
+        highlight: greenhouse gases
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Burning coal releases large amounts of greenhouse gases into the atmosphere.
+        highlight: releases large amounts of greenhouse gases
+        skill: writing
+        task: writing-2
+        collocation: release
+    collocations:
+      - id: release
+        phrase: release greenhouse gases
+        note: 'also "emit greenhouse gases"'
+    relations:
+      - type: related
+        to: fossil-fuels.fuel

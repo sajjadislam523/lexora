@@ -1,0 +1,68 @@
+id: argument
+kind: word
+headword: argument
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: argument, type: lemma }
+  - { form: arguments, type: inflection }
+senses:
+  - key: reason
+    pos: noun
+    definition: A reason or set of reasons given to show that an idea is right or wrong.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Discussion essays — "the main argument for", "a strong argument against", "both arguments".
+    examples:
+      - id: ex1
+        text: The strongest argument for free university education is that it widens access.
+        highlight: argument for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept: [case, reason]
+      - id: ex2
+        text: There are good arguments against keeping animals in zoos.
+        highlight: arguments against
+        skill: speaking
+        task: speaking-3
+        pattern: against
+        practice:
+          accept: [reasons]
+    preposition_patterns:
+      - id: for
+        base: argument
+        preposition: for
+        pattern: an argument for + noun / -ing
+        complement: noun_or_ing
+        note: a reason to support it; also "in favour of"
+        mistake: of
+      - id: against
+        base: argument
+        preposition: against
+        pattern: an argument against + noun / -ing
+        complement: noun_or_ing
+        note: a reason to oppose it
+    collocations:
+      - id: strong
+        phrase: a strong argument
+        note: 'also "a convincing argument"'
+      - id: put-forward
+        phrase: put forward an argument
+        note: present it formally
+    mistakes:
+      - id: of
+        wrong: The main argument of banning cars is safety.
+        right: The main argument for banning cars is safety.
+        type: preposition
+        explanation: '"An argument for" (or "against") + what it supports or opposes.'
+    relations:
+      - type: alternative
+        to: viewpoint.opinion
+        weight: 1
+        note: A point of view is an opinion; an argument is the reasoning that supports it.

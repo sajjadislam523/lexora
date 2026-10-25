@@ -1,0 +1,42 @@
+id: assessment
+kind: word
+headword: assessment
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: assessment, type: lemma }
+  - { form: assessments, type: inflection }
+senses:
+  - key: judging
+    pos: noun
+    definition: The process of judging how well someone has learned or performed, through tests, coursework or observation.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [education]
+    best_when: Debates about exams versus coursework — "continuous assessment", "methods of assessment".
+    examples:
+      - id: ex1
+        text: Continuous assessment gives a fairer picture of a student's ability than a single exam.
+        highlight: Continuous assessment
+        skill: writing
+        task: writing-2
+        collocation: continuous
+      - id: ex2
+        text: Schools are moving towards new forms of assessment such as group projects.
+        highlight: forms of assessment
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [evaluation]
+    collocations:
+      - id: continuous
+        phrase: continuous assessment
+        note: marks given throughout a course, not only in a final exam
+    relations:
+      - type: alternative
+        to: exam.test
+        weight: 2
+        note: An exam is one formal test; assessment is any way of judging work, including coursework.

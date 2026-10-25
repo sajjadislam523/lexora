@@ -1,0 +1,45 @@
+id: on-the-contrary
+kind: linker
+headword: on the contrary
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: on the contrary, type: lemma }
+senses:
+  - key: rejection
+    pos: prepositional_phrase
+    definition: Used to say that the opposite of what was just stated is true.
+    cefr: C1
+    registers: [neutral, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-3] }
+    functions: [contrast]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Rejecting a statement and replacing it with the opposite — "It isn't a waste of money. On the contrary, it saves money."
+    avoid_when: Comparing two different things. Use "in contrast" or "on the other hand".
+    examples:
+      - id: ex1
+        text: Video games are not always harmful. On the contrary, some improve problem-solving skills.
+        highlight: On the contrary,
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I don't find the city stressful. On the contrary, I love the energy.
+        highlight: On the contrary,
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: contrast-two
+        wrong: Cities are noisy. On the contrary, the countryside is quiet.
+        right: Cities are noisy. In contrast, the countryside is quiet.
+        type: confusion
+        explanation: '"On the contrary" rejects what was just said. To compare two different things, use "in contrast" or "on the other hand".'
+    relations:
+      - type: confusable
+        to: on-the-other-hand.other-side
+        weight: 3
+        note: On the other hand gives a second side; on the contrary says the first statement is wrong.

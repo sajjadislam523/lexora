@@ -1,0 +1,39 @@
+id: citizen
+kind: word
+headword: citizen
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: citizen, type: lemma }
+  - { form: citizens, type: inflection }
+senses:
+  - key: member
+    pos: noun
+    definition: A person who legally belongs to a country, or who lives in a particular town or city.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [government, society]
+    best_when: Rights, duties and government — "ordinary citizens", "senior citizens".
+    examples:
+      - id: ex1
+        text: Governments have a duty to protect the health of their citizens.
+        highlight: citizens
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [people, population]
+      - id: ex2
+        text: In my country, senior citizens get free bus travel.
+        highlight: senior citizens
+        skill: speaking
+        task: speaking-1
+        collocation: senior
+    collocations:
+      - id: senior
+        phrase: senior citizens
+        note: a polite term for older people
+      - id: ordinary
+        phrase: ordinary citizens

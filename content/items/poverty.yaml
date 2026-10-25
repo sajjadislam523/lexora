@@ -1,0 +1,42 @@
+id: poverty
+kind: word
+headword: poverty
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: poverty, type: lemma }
+senses:
+  - key: poor
+    pos: noun
+    definition: The state of being very poor and not having enough money for basic needs.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [society, economy]
+    best_when: '"Live in poverty", "child poverty", "reduce poverty" — and its links to health and education.'
+    examples:
+      - id: ex1
+        text: Millions of children still live in poverty.
+        highlight: live in poverty
+        skill: writing
+        task: writing-2
+        collocation: live
+      - id: ex2
+        text: I think education is the best way out of poverty.
+        highlight: way out of poverty
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: live
+        phrase: live in poverty
+      - id: child
+        phrase: child poverty
+      - id: reduce
+        phrase: reduce poverty
+        item: alleviate
+        note: 'also "alleviate poverty"'
+    relations:
+      - type: opposite
+        to: wealth.money

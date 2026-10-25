@@ -1,0 +1,53 @@
+id: stem-from
+kind: preposition_pattern
+headword: stem from
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: stem from, type: lemma }
+  - { form: stems from, type: inflection }
+  - { form: stemmed from, type: inflection }
+  - { form: stemming from, type: inflection }
+senses:
+  - key: origin
+    pos: verb_phrase
+    definition: To develop as a result of something; to have it as the origin.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [cause]
+    best_when: Tracing a problem back to its underlying cause — "Many social problems stem from poverty".
+    examples:
+      - id: ex1
+        text: Much of the anger about the plan stems from a lack of consultation.
+        highlight: stems from
+        skill: writing
+        task: writing-2
+        pattern: from
+      - id: ex2
+        text: Many crimes stem from poverty and a lack of opportunity.
+        highlight: stem from
+        skill: writing
+        task: writing-2
+        pattern: from
+    preposition_patterns:
+      - id: from
+        base: stem
+        preposition: from
+        pattern: problem + stem from + cause
+        complement: noun_or_ing
+        note: the origin comes after "from"
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: The problem stems of poor planning.
+        right: The problem stems from poor planning.
+        type: preposition
+        explanation: Stem always takes "from".
+    relations:
+      - type: synonym
+        to: arise-from.origin
+        weight: 2
+        note: Arise from is very similar and often used for problems, questions and difficulties.

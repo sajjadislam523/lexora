@@ -1,0 +1,41 @@
+id: conversely
+kind: linker
+headword: conversely
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: conversely, type: lemma }
+senses:
+  - key: opposite
+    pos: adverb
+    definition: Used to introduce a situation that is the opposite or reverse of the one just described.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1, writing-2] }
+    functions: [contrast]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: The second fact reverses the first — "Rich countries import food. Conversely, poorer ones export it."
+    avoid_when: The two facts are simply different, not opposite. Use "in contrast".
+    examples:
+      - id: ex1
+        text: Older users preferred email. Conversely, younger users relied on messaging apps.
+        highlight: Conversely,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [In contrast, On the other hand, By contrast]
+      - id: ex2
+        text: Higher prices reduce demand. Conversely, lower prices tend to increase it.
+        highlight: Conversely,
+        skill: writing
+        task: writing-2
+    relations:
+      - type: alternative
+        to: on-the-other-hand.other-side
+        weight: 1
+        note: On the other hand gives the other side of one argument; conversely gives the reverse case.

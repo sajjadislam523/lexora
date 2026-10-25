@@ -165,15 +165,17 @@ describe("context coverage on Explore (Step 4.4)", () => {
 
   it("doesn't offer the learner's own word, and hedges what it can't check", async () => {
     const page = await html(explore("Governments must take ___ measures"));
-    expect(fillsIn(page)).toEqual(["urgent", "steps"]);
-    expect(verdictsIn(page)).toEqual(["fits", "likely_fits"]);
+    // Content expansion: "effective measures" and "strict measures" are authored collocations too.
+    expect(fillsIn(page)).toEqual(["urgent", "effective", "strict", "steps"]);
+    expect(verdictsIn(page)).toEqual(["fits", "fits", "fits", "likely_fits"]);
     expect(page).toContain("other_side_unchecked");
   });
 
   it("reads a preposition after an inflected phrase", async () => {
     const page = await html(explore("Plastic waste poses a threat ___ marine life"));
     expect(page).toContain("Prepositions after “pose a threat”");
-    expect(verdictsIn(page)).toEqual(["likely_fits"]);
+    // Content expansion: the noun threat's own "threat to" pattern answers too.
+    expect(verdictsIn(page)).toEqual(["likely_fits", "likely_fits"]);
   });
 
   it("reads the preposition after a verb frame's object", async () => {

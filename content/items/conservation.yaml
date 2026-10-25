@@ -1,0 +1,44 @@
+id: conservation
+kind: word
+headword: conservation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: conservation, type: lemma }
+senses:
+  - key: protection
+    pos: noun
+    definition: The protection of animals, plants, natural areas and resources from harm or waste.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [environment]
+    best_when: '"Wildlife conservation", "conservation projects", and saving energy or water ("energy conservation").'
+    examples:
+      - id: ex1
+        text: Zoos can play a useful role in wildlife conservation.
+        highlight: wildlife conservation
+        skill: writing
+        task: writing-2
+        collocation: wildlife
+        practice:
+          accept: [protection]
+      - id: ex2
+        text: Water conservation is essential in countries with little rainfall.
+        highlight: Water conservation
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [saving]
+    collocations:
+      - id: wildlife
+        phrase: wildlife conservation
+        note: 'also "marine conservation"'
+      - id: energy
+        phrase: energy conservation
+        note: 'using less of it; also "water conservation"'
+    relations:
+      - type: related
+        to: preserve.protect

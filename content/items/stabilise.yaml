@@ -1,0 +1,47 @@
+id: stabilise
+kind: word
+headword: stabilise
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: British English uses -ise or -ize; American English uses -ize. Both are correct.
+forms:
+  - { form: stabilise, type: lemma, region: gb, default: true }
+  - { form: stabilize, type: spelling_variant, region: us }
+  - { form: stabilises, type: inflection, region: gb }
+  - { form: stabilizes, type: spelling_variant, region: us }
+  - { form: stabilised, type: inflection, region: gb }
+  - { form: stabilized, type: spelling_variant, region: us }
+  - { form: stabilising, type: inflection, region: gb }
+  - { form: stabilizing, type: spelling_variant, region: us }
+senses:
+  - key: steady
+    pos: verb
+    definition: To become steady and stop changing, especially after a period of rises and falls.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    best_when: A line that becomes steady after fluctuating, or a situation that becomes calm after change.
+    examples:
+      - id: ex1
+        text: After several years of fluctuation, prices stabilised at around $300.
+        highlight: stabilised
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [plateaued]
+      - id: ex2
+        text: The economy began to stabilise once interest rates were lowered.
+        highlight: stabilise
+        skill: writing
+        task: writing-2
+    relations:
+      - type: alternative
+        to: level-off.stop-changing
+        weight: 2
+        note: Stabilise often follows a period of rises and falls; level off follows one clear rise or fall.
+      - type: alternative
+        to: remain-stable.stable
+        weight: 2
+        note: Remain stable describes the whole period; stabilise describes the moment it became steady.

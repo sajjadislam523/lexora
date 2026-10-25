@@ -1,0 +1,84 @@
+id: drop
+kind: word
+headword: drop
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: drop, type: lemma }
+  - { form: drops, type: inflection }
+  - { form: dropped, type: inflection }
+  - { form: dropping, type: inflection }
+senses:
+  - key: verb
+    label: to fall
+    pos: verb
+    definition: To fall to a lower level or amount, often suddenly.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    functions: [decrease]
+    best_when: Varying "fall" in Task 1, especially for a sudden or noticeable fall.
+    examples:
+      - id: ex1
+        text: The number of visitors dropped to just 2,000 in 2020.
+        highlight: dropped to
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [fell, decreased, declined]
+      - id: ex2
+        text: My screen time dropped a lot when I started playing sport again.
+        highlight: dropped
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [fell, decreased]
+    relations:
+      - type: opposite
+        to: rise.verb
+  - key: noun
+    label: a fall
+    pos: noun
+    definition: A fall in the amount or level of something, often a sudden one.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, speaking-3] }
+    functions: [decrease]
+    best_when: A noticeable or sudden fall described as a noun phrase.
+    examples:
+      - id: ex1
+        text: The graph shows a significant drop in the number of landline users.
+        highlight: drop in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [fall, decrease, decline]
+      - id: ex2
+        text: There's been a big drop in crime since they put in more cameras.
+        highlight: drop in
+        skill: speaking
+        task: speaking-3
+        pattern: in
+        practice:
+          accept: [fall, decrease]
+    preposition_patterns:
+      - id: in
+        base: drop
+        preposition: in
+        pattern: a drop in + noun
+        complement: noun
+        note: what fell
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: a drop of unemployment
+        right: a drop in unemployment
+        type: preposition
+        explanation: '"A drop in" + what fell; "a drop of" + the amount (a drop of 10%).'
+    relations:
+      - type: opposite
+        to: rise.noun

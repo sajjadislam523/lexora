@@ -29,31 +29,39 @@ describe("exercise inventory (published content)", () => {
       preposition: inventory.preposition,
       mistake: inventory.mistake,
       total: inventory.total,
-    }).toEqual({ senses: 42, term: 77, preposition: 45, mistake: 56, total: 178 });
+    }).toEqual({ senses: 442, term: 896, preposition: 211, mistake: 257, total: 1364 });
   });
 
   it("gives every sense at least two exercises", () => {
     const inventory = practiceInventory(materials);
     expect(inventory.withoutExercises).toEqual([]);
-    expect(inventory.sensesWithExercises).toEqual({ none: 0, one: 0, twoOrMore: 42 });
-    expect(inventory.sensesWithTypes).toEqual({ 0: 0, 1: 3, 2: 25, 3: 14 });
+    expect(inventory.sensesWithExercises).toEqual({ none: 0, one: 0, twoOrMore: 442 });
+    expect(inventory.sensesWithTypes).toEqual({ 0: 0, 1: 211, 2: 171, 3: 60 });
   });
 
   it("skips exactly the examples the authored content can't make a safe blank from", () => {
     expect(practiceInventory(materials).unusedExamples).toEqual({
-      // The form is split by another word, or isn't the item's form at all ("a sharp rise").
+      // The form is split by another word, or isn't the item's form at all ("a sharp rise"), or
+      // sits inside a hyphenated word the blank can't split ("energy-efficient", "low-income").
       term: [
+        "efficient.no-waste:ex2",
+        "income.money-received:ex2",
         "pose-a-threat.danger:ex1",
         "raise-awareness.inform:ex2",
+        "remain-unchanged.same:ex2",
         "rise-sharply.increase:ex2",
         "take-measures.act:ex1",
+        "three-times-as-many-as.multiple:ex1",
+        "three-times-as-many-as.multiple:ex2",
+        "twice-as-much-as.double:ex2",
       ],
       // The highlight goes past the preposition ("contribute to keeping", "important to me").
       preposition: ["contribute-to.help-cause:ex2", "important.main:ex2"],
     });
   });
 
-  it("has the accept lists authored in the Step 3b content review", () => {
+  // The content expansion (Wave 2) authored accept lists for its new examples as well.
+  it("has the accept lists authored in the content reviews", () => {
     const examples = materials.flatMap((m) => m.examples);
     expect({
       withAccept: examples.filter((e) => e.accept.length).length,
@@ -62,10 +70,10 @@ describe("exercise inventory (published content)", () => {
       acceptedPrepositions: examples.reduce((n, e) => n + e.acceptPreposition.length, 0),
       withExclude: examples.filter((e) => e.exclude.length).length,
     }).toEqual({
-      withAccept: 26,
-      accepted: 28,
-      withAcceptPreposition: 5,
-      acceptedPrepositions: 5,
+      withAccept: 516,
+      accepted: 1021,
+      withAcceptPreposition: 14,
+      acceptedPrepositions: 14,
       withExclude: 0,
     });
   });

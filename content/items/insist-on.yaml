@@ -1,0 +1,47 @@
+id: insist-on
+kind: preposition_pattern
+headword: insist on
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: insist on, type: lemma }
+  - { form: insists on, type: inflection }
+  - { form: insisted on, type: inflection }
+  - { form: insisting on, type: inflection }
+senses:
+  - key: demand
+    pos: verb_phrase
+    definition: To demand firmly that something happens or that you do something.
+    cefr: B2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: useful, tasks: [writing-2, speaking-2] }
+    best_when: Firm demands — "insist on + -ing / noun", or "insist that + clause".
+    examples:
+      - id: ex1
+        text: Some parents insist on driving their children to school.
+        highlight: insist on
+        skill: writing
+        task: writing-2
+        pattern: on
+      - id: ex2
+        text: My grandmother always insists on cooking when we visit.
+        highlight: insists on
+        skill: speaking
+        task: speaking-2
+        pattern: on
+    preposition_patterns:
+      - id: on
+        base: insist
+        preposition: on
+        pattern: insist on + -ing / noun
+        complement: noun_or_ing
+        note: or "insist that + clause"
+        mistake: to
+    mistakes:
+      - id: to
+        wrong: He insisted to pay for dinner.
+        right: He insisted on paying for dinner.
+        type: grammar
+        explanation: Insist is followed by "on" + -ing, or by "that" + clause.

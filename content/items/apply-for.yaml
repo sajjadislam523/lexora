@@ -1,0 +1,54 @@
+id: apply-for
+kind: preposition_pattern
+headword: apply for
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: apply for, type: lemma }
+  - { form: applies for, type: inflection }
+  - { form: applied for, type: inflection }
+  - { form: applying for, type: inflection }
+senses:
+  - key: request
+    pos: verb_phrase
+    definition: To make a formal request for a job, place, visa or permission.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-2] }
+    topics: [work, education]
+    best_when: '"Apply for" the thing you want; "apply to" the organisation.'
+    examples:
+      - id: ex1
+        text: Thousands of graduates apply for the same few jobs.
+        highlight: apply for
+        skill: writing
+        task: writing-2
+        pattern: for
+      - id: ex2
+        text: I applied to three universities in the end.
+        highlight: applied to
+        skill: speaking
+        task: speaking-2
+        pattern: to
+    preposition_patterns:
+      - id: for
+        base: apply
+        preposition: for
+        pattern: apply for + job / place / visa
+        complement: noun
+        note: the thing you want
+        mistake: to-job
+      - id: to
+        base: apply
+        preposition: to
+        pattern: apply to + organisation / university
+        complement: noun
+        note: who you send the request to
+    mistakes:
+      - id: to-job
+        wrong: She applied to a job at the bank.
+        right: She applied for a job at the bank.
+        type: preposition
+        explanation: '"Apply for" a job or place; "apply to" the company or university.'

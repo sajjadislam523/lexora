@@ -1,0 +1,45 @@
+id: dependent-on
+kind: preposition_pattern
+headword: dependent on
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: dependent on, type: lemma }
+  - { form: dependent upon, type: lemma }
+senses:
+  - key: need
+    pos: adjective_phrase
+    definition: Needing someone or something in order to exist, succeed or be supported.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Reliance on money, technology, imports or people — "heavily dependent on".
+    examples:
+      - id: ex1
+        text: Many rural areas are heavily dependent on tourism.
+        highlight: dependent on
+        skill: writing
+        task: writing-2
+        pattern: on
+      - id: ex2
+        text: I think young people are too dependent on their phones.
+        highlight: dependent on
+        skill: speaking
+        task: speaking-3
+        pattern: on
+    preposition_patterns:
+      - id: on
+        base: dependent
+        preposition: on
+        pattern: be dependent on + noun
+        complement: noun
+        note: what is needed; "upon" is more formal
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: The economy is dependent of oil.
+        right: The economy is dependent on oil.
+        type: preposition
+        explanation: Dependent takes "on", like "depend on".

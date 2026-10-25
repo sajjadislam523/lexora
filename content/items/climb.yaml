@@ -1,0 +1,42 @@
+id: climb
+kind: word
+headword: climb
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: climb, type: lemma }
+  - { form: climbs, type: inflection }
+  - { form: climbed, type: inflection }
+  - { form: climbing, type: inflection }
+senses:
+  - key: increase
+    pos: verb
+    definition: To go up gradually to a higher level, especially over a period of time.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    functions: [increase]
+    best_when: Varying "rise" in Task 1, especially for a steady upward line that keeps going.
+    avoid_when: The rise was sudden. "Jump" or "surge" says that better.
+    examples:
+      - id: ex1
+        text: The figure climbed steadily to reach a peak of 60% in 2015.
+        highlight: climbed steadily
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [rose, increased, grew]
+      - id: ex2
+        text: Unemployment climbed to 12% during the recession.
+        highlight: climbed to
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [rose, increased]
+    relations:
+      - type: alternative
+        to: soar.increase
+        weight: 1
+        note: Soar means rising quickly to a very high level; climb is gradual.

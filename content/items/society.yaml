@@ -1,0 +1,48 @@
+id: society
+kind: word
+headword: society
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: society, type: lemma }
+  - { form: societies, type: inflection }
+senses:
+  - key: people
+    pos: noun
+    definition: People in general, living together in organised communities with shared laws and customs.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [society]
+    best_when: People as a whole — "in society", "modern society", "benefit society". No "the" for society in general.
+    examples:
+      - id: ex1
+        text: Older people have a great deal of experience to offer society.
+        highlight: society
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I think modern society puts too much pressure on young people.
+        highlight: modern society
+        skill: speaking
+        task: speaking-3
+        collocation: modern
+    collocations:
+      - id: modern
+        phrase: modern society
+      - id: in
+        phrase: in society
+        note: among people in general
+    mistakes:
+      - id: the
+        wrong: Crime is a big problem in the society.
+        right: Crime is a big problem in society.
+        type: grammar
+        explanation: For society in general, don't use "the". Use "the" only for a particular society (the society of ancient Rome).
+    relations:
+      - type: alternative
+        to: community.local
+        weight: 2
+        note: A community is a smaller group — people living in one area or sharing an interest.

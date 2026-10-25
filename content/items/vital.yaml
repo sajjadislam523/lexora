@@ -1,0 +1,58 @@
+id: vital
+kind: word
+headword: vital
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: vital, type: lemma }
+senses:
+  - key: essential
+    pos: adjective
+    definition: Absolutely necessary or extremely important, often for something to survive or succeed.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    strength: 3
+    functions: [importance]
+    best_when: Something without which a system, person or plan would fail — "vital services", "a vital role".
+    examples:
+      - id: ex1
+        text: Clean water is vital for the health of any community.
+        highlight: vital for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept: [essential, crucial]
+      - id: ex2
+        text: It is vital that young people learn how to manage money.
+        highlight: vital that
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [essential, crucial, important]
+      - id: ex3
+        text: I think a good night's sleep is vital before an exam.
+        highlight: vital
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [essential, crucial, important]
+    preposition_patterns:
+      - id: for
+        base: vital
+        preposition: for
+        pattern: vital for / to + noun
+        complement: noun
+        note: what depends on it
+    relations:
+      - type: synonym
+        to: essential.necessary
+        weight: 2
+        note: Essential is slightly more neutral; vital adds a sense of urgency.
+      - type: synonym
+        to: crucial.essential
+        weight: 2
+        note: Crucial stresses that a result depends on it; vital stresses that it is needed to survive or work.

@@ -58,7 +58,9 @@
 
 - query: natural speaking alternative to furthermore
   intent: ALTERNATIVE
-  only: [on top of that, what's more]
+  # Content expansion: "in addition" is now a synonym of furthermore; formal, so it ranks after
+  # the two natural spoken choices.
+  top: [on top of that, what's more]
 
 - query: I want to say something increased a lot
   intent: CONTEXTUAL_EXPRESSION
@@ -117,7 +119,9 @@
 
 - query: phrase for giving an example
   intent: PHRASE
-  only: [for instance, such as, a case in point]
+  # Content expansion: "for example" now leads the intent, and "namely" and "in particular" follow.
+  top: [for example, for instance]
+  includes: [such as, a case in point, namely]
 
 - query: preposition after depend
   intent: PREPOSITION
@@ -173,7 +177,9 @@
 - query: contributed to
   intent: LOOKUP
   term: { via: exact, resolved: contribute to }
-  only: [contribute to]
+  # Content expansion: related language follows (cause, the noun contribution).
+  top: [contribute to]
+  includes: [cause, contribution]
 
 # A past tense resolves to the verb, and its related verbs follow.
 - query: allocated
@@ -234,7 +240,8 @@
 
 - query: synonyms for considerable
   intent: SYNONYM
-  only: [significant, substantial]
+  # Content expansion: "big" is now linked as the everyday word (weight 1), so it ranks last.
+  top: [significant, substantial]
 
 - query: stronger word for significant
   intent: STRONGER_ALTERNATIVE
@@ -247,7 +254,8 @@
 
 - query: alternative to moreover
   intent: ALTERNATIVE
-  only: [furthermore, what's more]
+  # Content expansion: "not only … but also" (weight 1) follows the two close alternatives.
+  top: [furthermore, what's more]
 
 # "instead of" never returns the term itself.
 - query: instead of however
@@ -257,7 +265,7 @@
 # A skill modifier keeps only language used in that skill.
 - query: speaking alternative to moreover
   intent: ALTERNATIVE
-  only: [what's more]
+  top: [what's more]
 
 - query: replace furthermore
   intent: ALTERNATIVE
@@ -307,8 +315,11 @@
 
 - query: linkers for addition
   intent: LINKER
-  groups: [In writing, In speaking]
-  only: [furthermore, moreover, on top of that, what's more]
+  # Content expansion: the add-a-point intent gained in addition, additionally, also and a group
+  # for linkers inside one sentence; the authored first entries are unchanged.
+  groups: [In writing, In speaking, Inside one sentence]
+  top: [furthermore, moreover]
+  includes: [in addition, on top of that, what's more, as well as]
 
 - query: linking words to show result
   intent: LINKER
@@ -323,7 +334,9 @@
 
 - query: how do I give an example
   intent: CONTEXTUAL_EXPRESSION
-  only: [for instance, such as, a case in point]
+  # Content expansion: "for example" now leads the intent, and "namely" and "in particular" follow.
+  top: [for example, for instance]
+  includes: [such as, a case in point, namely]
 
 - query: I want to say something is important
   intent: CONTEXTUAL_EXPRESSION
@@ -407,8 +420,10 @@
 
 - query: depend on public transport
   intent: LOOKUP
-  term: { via: exact, resolved: depend on }
-  top: [depend on]
+  # Content expansion: "public transport" is now an item and is the longest known term in the
+  # query, so the longest-term rule resolves to it rather than "depend on".
+  term: { via: exact, resolved: public transport }
+  top: [public transport]
 
 - query: we should raise awareness
   intent: LOOKUP
@@ -420,15 +435,20 @@
   intent: LOOKUP
   outcome: none
 
-# Full-text fallback, labelled as such (same first result on both repositories).
+# Full-text fallback, labelled as such. ("environment" was the fallback case until the content
+# expansion gave it an item; "wildlife" still has none.)
+- query: wildlife
+  intent: LOOKUP
+  outcome: fallback
+  includes: [conservation, habitat]
+
 - query: environment
   intent: LOOKUP
-  outcome: fallback
-  top: [have a detrimental effect on]
+  top: [environment]
 
-# Step 1 fix: "public transport" appears in a mistake sentence but isn't the error.
+# Step 1 fix: "public transport" appears in a mistake sentence but isn't the error. Since the
+# content expansion it is an item of its own; its authored mistake still isn't shown as one.
 - query: public transport
   intent: LOOKUP
-  outcome: fallback
-  top: [invest]
+  top: [public transport]
   mistakes: []

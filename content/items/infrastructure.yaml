@@ -1,0 +1,32 @@
+id: infrastructure
+kind: word
+headword: infrastructure
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: infrastructure, type: lemma }
+senses:
+  - key: systems
+    pos: noun
+    definition: The basic systems a country or city needs, such as roads, railways, water and power supplies.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [cities, government, transport]
+    best_when: Investment and development — "invest in infrastructure", "transport infrastructure".
+    examples:
+      - id: ex1
+        text: Hosting the Olympics requires huge investment in infrastructure.
+        highlight: investment in infrastructure
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Poor transport infrastructure holds back rural economies.
+        highlight: transport infrastructure
+        skill: writing
+        task: writing-2
+    relations:
+      - type: related
+        to: public-services.state-services

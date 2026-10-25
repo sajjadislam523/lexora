@@ -1,0 +1,52 @@
+id: due-to
+kind: functional_expression
+headword: due to
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: due to, type: lemma }
+  - { form: due to the fact that, type: lemma }
+senses:
+  - key: cause
+    pos: prepositional_phrase
+    definition: Because of; followed by the cause as a noun phrase.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Giving the cause as a noun phrase — "due to rising costs", "largely due to". With a clause, use "due to the fact that" or "because".
+    examples:
+      - id: ex1
+        text: The fall in sales was largely due to the economic crisis.
+        highlight: due to
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [because of]
+      - id: ex2
+        text: Due to the high cost of living, many graduates move back home.
+        highlight: Due to
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Because of, Owing to, As a result of]
+      - id: ex3
+        text: My train was cancelled due to the snow.
+        highlight: due to
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [because of]
+    mistakes:
+      - id: clause
+        wrong: Due to prices are high, people buy less.
+        right: Because prices are high, people buy less.
+        type: grammar
+        explanation: Due to is followed by a noun phrase, not a clause. Use "because", or "due to the fact that" in formal writing.
+    relations:
+      - type: more_formal
+        to: owing-to.cause
+        weight: 2
+        note: Owing to is more formal and is not used after "be" (not "the delay was owing to").

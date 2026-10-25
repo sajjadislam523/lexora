@@ -1,0 +1,49 @@
+id: twice-as-much-as
+kind: phrase
+headword: twice as much as
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: twice as much as, type: lemma }
+  - { form: twice as many as, type: lemma }
+senses:
+  - key: double
+    pos: adverbial_phrase
+    definition: Two times the amount or number of something else.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    functions: [comparison]
+    best_when: Comparing two figures where one is double the other. Use "much" with uncountable nouns and "many" with plural nouns.
+    examples:
+      - id: ex1
+        text: Men spent twice as much as women on gaming in 2020.
+        highlight: twice as much as
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: The city has twice as many cars as it did twenty years ago.
+        highlight: twice as many cars as
+        skill: writing
+        task: writing-1
+      - id: ex3
+        text: A flat in the centre costs twice as much as one in the suburbs.
+        highlight: twice as much as
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: high
+        phrase: twice as high as
+        pattern: twice as high / large / likely as + noun
+        note: with an adjective between the two "as"
+    mistakes:
+      - id: much-people
+        wrong: twice as much people as last year
+        right: twice as many people as last year
+        type: countability
+        explanation: Use "many" with plural countable nouns (people, cars) and "much" with uncountable ones (money, time).
+    relations:
+      - type: related
+        to: three-times-as-many-as.multiple

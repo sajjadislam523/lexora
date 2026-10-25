@@ -1,0 +1,41 @@
+id: to-conclude
+kind: linker
+headword: to conclude
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: to conclude, type: lemma }
+senses:
+  - key: end
+    pos: verb_phrase
+    definition: Used to introduce the last part of an essay or talk.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of the paragraph.
+    best_when: Varying "in conclusion" at the start of a Task 2 conclusion.
+    examples:
+      - id: ex1
+        text: To conclude, I believe the advantages of the scheme outweigh its drawbacks.
+        highlight: To conclude,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [In conclusion, To sum up]
+      - id: ex2
+        text: To conclude, schools should focus on practical skills as well as exams.
+        highlight: To conclude,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [In conclusion, To sum up]
+    relations:
+      - type: alternative
+        to: to-sum-up.summary
+        weight: 2
+        note: To sum up is slightly less formal and suits Speaking too.

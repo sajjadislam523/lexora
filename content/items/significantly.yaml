@@ -1,0 +1,55 @@
+id: significantly
+kind: word
+headword: significantly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: significantly, type: lemma }
+senses:
+  - key: large
+    pos: adverb
+    definition: By a large or noticeable amount, enough to have a real effect.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    strength: 2
+    best_when: A change that is large enough to matter, in Task 1 trends and Task 2 effects.
+    examples:
+      - id: ex1
+        text: The number of electric cars sold increased significantly after 2018.
+        highlight: increased significantly
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [considerably, substantially, dramatically, sharply]
+      - id: ex2
+        text: Regular exercise can significantly reduce the risk of heart disease.
+        highlight: significantly reduce
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [considerably, substantially, greatly]
+      - id: ex3
+        text: Having a car would significantly change my daily routine.
+        highlight: significantly change
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [considerably, really]
+    mistakes:
+      - id: adjective
+        wrong: Prices increased significant last year.
+        right: Prices increased significantly last year.
+        type: word_form
+        explanation: After a verb, use the adverb "significantly". The adjective goes before a noun (a significant increase).
+    relations:
+      - type: derived_form
+        to: significant.notable
+        weight: 2
+        note: 'The adjective: "a significant increase".'
+      - type: stronger
+        to: dramatically.large
+        weight: 2
+        note: Dramatically means a very large, striking change.

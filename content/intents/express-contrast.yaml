@@ -19,6 +19,8 @@ groups:
   - label: Within one sentence
     entries:
       - { sense: whereas.contrast, fit: "two contrasting facts side by side" }
+      - { sense: while.contrast, fit: "the same job; very common in Task 1" }
+      - { sense: unlike.different, fit: '"Unlike X, …" with a noun phrase' }
   - label: Conceding a point
     entries:
       - { sense: nevertheless.concession, fit: "accept the first point, then continue" }

@@ -1,0 +1,49 @@
+id: equivalent
+kind: word
+headword: equivalent
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: equivalent, type: lemma }
+senses:
+  - key: equal
+    pos: adjective
+    definition: Equal in value, amount, meaning or importance.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1, writing-2] }
+    functions: [comparison]
+    best_when: Two amounts or values that are the same — "equivalent to", "the equivalent of".
+    examples:
+      - id: ex1
+        text: The amount spent on advertising was equivalent to a third of the budget.
+        highlight: equivalent to
+        skill: writing
+        task: writing-1
+        pattern: to
+        practice:
+          accept: [equal]
+      - id: ex2
+        text: A degree in one country is not always equivalent to a degree in another.
+        highlight: equivalent to
+        skill: writing
+        task: writing-2
+        pattern: to
+        practice:
+          accept: [equal, comparable]
+    preposition_patterns:
+      - id: to
+        base: equivalent
+        preposition: to
+        pattern: equivalent to + amount / noun
+        complement: noun
+        note: also the noun use, "the equivalent of"
+        mistake: with
+    mistakes:
+      - id: with
+        wrong: This is equivalent with two months' salary.
+        right: This is equivalent to two months' salary.
+        type: preposition
+        explanation: '"Equivalent to" + what it equals.'

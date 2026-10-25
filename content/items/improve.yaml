@@ -1,0 +1,58 @@
+id: improve
+kind: word
+headword: improve
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: improve, type: lemma }
+  - { form: improves, type: inflection }
+  - { form: improved, type: inflection }
+  - { form: improving, type: inflection }
+senses:
+  - key: better
+    pos: verb
+    definition: To become better, or to make something better.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1, speaking-3] }
+    best_when: Any change for the better — services, health, skills, conditions, results.
+    examples:
+      - id: ex1
+        text: Investing in teachers is the most reliable way to improve schools.
+        highlight: improve schools
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Air quality improved significantly after the factory closed.
+        highlight: improved significantly
+        skill: writing
+        task: writing-1
+      - id: ex3
+        text: I watch films in English to improve my listening.
+        highlight: improve
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: significantly
+        phrase: improve significantly
+        note: 'also "improve dramatically"'
+      - id: quality
+        phrase: improve the quality of
+        pattern: improve the quality of + noun
+        note: life, education, healthcare, air
+      - id: standards
+        phrase: improve standards
+        note: 'also "improve conditions"'
+    mistakes:
+      - id: improve-better
+        wrong: This will improve the situation better.
+        right: This will improve the situation.
+        type: grammar
+        explanation: Improve already means "make better", so "better" is repeated.
+    relations:
+      - type: more_formal
+        to: enhance.improve
+        weight: 2
+        note: Enhance is formal and means improving something that is already good.

@@ -1,0 +1,40 @@
+id: practical
+kind: word
+headword: practical
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: practical, type: lemma }
+senses:
+  - key: realistic
+    pos: adjective
+    definition: Likely to work in real situations, or useful in everyday life rather than in theory.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [education, work]
+    best_when: Solutions that will work in reality, and skills or courses that prepare people for real life.
+    examples:
+      - id: ex1
+        text: Schools should teach more practical skills, such as cooking and budgeting.
+        highlight: practical skills
+        skill: writing
+        task: writing-2
+        collocation: skills
+        practice:
+          accept: [useful]
+      - id: ex2
+        text: A car isn't very practical in my city because parking is so hard.
+        highlight: practical
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [useful, convenient, sensible]
+    collocations:
+      - id: skills
+        phrase: practical skills
+        note: 'abilities used in real work and life; also "practical experience"'
+      - id: solution
+        phrase: a practical solution

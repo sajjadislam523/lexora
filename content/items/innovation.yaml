@@ -1,0 +1,39 @@
+id: innovation
+kind: word
+headword: innovation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: innovation, type: lemma }
+  - { form: innovations, type: inflection }
+senses:
+  - key: new-idea
+    pos: noun
+    definition: A new idea, method or product, or the process of creating new ideas and methods.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [technology, economy]
+    best_when: New products and methods, and the conditions that encourage them — "drive innovation", "technological innovation".
+    examples:
+      - id: ex1
+        text: Competition between companies drives innovation.
+        highlight: drives innovation
+        skill: writing
+        task: writing-2
+        collocation: drive
+      - id: ex2
+        text: I think the smartphone was the most important innovation of my lifetime.
+        highlight: innovation
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [invention]
+    collocations:
+      - id: drive
+        phrase: drive innovation
+        note: 'also "encourage innovation"'
+      - id: technological
+        phrase: technological innovation

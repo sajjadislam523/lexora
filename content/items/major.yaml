@@ -1,0 +1,60 @@
+id: major
+kind: word
+headword: major
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: major, type: lemma }
+senses:
+  - key: large
+    pos: adjective
+    definition: Very large, serious or important compared with others of the same kind.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    strength: 2
+    functions: [importance, problem]
+    best_when: Problems, causes, changes and cities that are among the biggest or most serious — "a major cause of".
+    examples:
+      - id: ex1
+        text: Traffic is a major cause of air pollution in large cities.
+        highlight: major cause
+        skill: writing
+        task: writing-2
+        collocation: cause
+        practice:
+          accept: [leading, main, key, significant]
+      - id: ex2
+        text: Unemployment remains a major problem in rural areas.
+        highlight: major problem
+        skill: writing
+        task: writing-2
+        collocation: problem
+        practice:
+          accept: [serious, significant, key]
+      - id: ex3
+        text: Getting into university was a major achievement for my family.
+        highlight: major achievement
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [big, huge, great]
+    collocations:
+      - id: cause
+        phrase: a major cause of
+        pattern: a major cause of + noun
+      - id: problem
+        phrase: a major problem
+        note: 'also "a major concern"'
+      - id: change
+        phrase: a major change
+        note: large, important changes to a system
+    relations:
+      - type: alternative
+        to: important.main
+        weight: 1
+        note: Major adds size or seriousness; important only says it matters.
+      - type: opposite
+        to: minor.small

@@ -1,0 +1,37 @@
+id: evident
+kind: word
+headword: evident
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: evident, type: lemma }
+senses:
+  - key: clear
+    pos: adjective
+    definition: Clear and easy to see, especially from evidence or data.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    best_when: Conclusions drawn from a chart or from evidence — "it is evident from the data that".
+    examples:
+      - id: ex1
+        text: It is evident from the graph that car use peaked in 2005.
+        highlight: evident from
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [clear, apparent]
+      - id: ex2
+        text: The benefits of the scheme are already evident.
+        highlight: evident
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [clear, apparent, visible]
+    collocations:
+      - id: from
+        phrase: it is evident from … that
+        pattern: it is evident from + noun + that + clause
+        note: names the source of the conclusion

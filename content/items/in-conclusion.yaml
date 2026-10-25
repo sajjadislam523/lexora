@@ -1,0 +1,48 @@
+id: in-conclusion
+kind: linker
+headword: in conclusion
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: in conclusion, type: lemma }
+senses:
+  - key: end
+    pos: prepositional_phrase
+    definition: Used to introduce the final paragraph or the last point of an essay or talk.
+    cefr: B1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of the paragraph.
+    best_when: Opening a Task 2 conclusion that restates your position.
+    avoid_when: Task 1. A Task 1 report needs an overview ("Overall, …"), not a conclusion.
+    examples:
+      - id: ex1
+        text: In conclusion, the benefits of public transport clearly outweigh the costs.
+        highlight: In conclusion,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [To conclude, To sum up, Overall]
+      - id: ex2
+        text: In conclusion, both governments and individuals must act on climate change.
+        highlight: In conclusion,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [To conclude, To sum up]
+    mistakes:
+      - id: as-a
+        wrong: As a conclusion, I believe tourism is beneficial.
+        right: In conclusion, I believe tourism is beneficial.
+        type: collocation
+        explanation: The fixed phrase is "in conclusion" (or "to conclude").
+    relations:
+      - type: synonym
+        to: to-conclude.end
+        weight: 2
+        note: To conclude does the same job; use either to open the final paragraph.

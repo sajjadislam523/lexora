@@ -1,0 +1,49 @@
+id: crime
+kind: word
+headword: crime
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: crime, type: lemma }
+  - { form: crimes, type: inflection }
+senses:
+  - key: illegal-acts
+    pos: noun
+    definition: Illegal activities in general, or a single illegal act.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [society, government]
+    standalone: A topic noun; its useful language is its collocations (commit, reduce, crime rates) rather than alternative words.
+    best_when: '"Crime rates", "reduce crime", "commit a crime" — uncountable for crime in general.'
+    examples:
+      - id: ex1
+        text: Crime rates fell steadily throughout the decade.
+        highlight: Crime rates
+        skill: writing
+        task: writing-1
+        collocation: rates
+      - id: ex2
+        text: Young people who commit a crime should be given a second chance.
+        highlight: commit a crime
+        skill: writing
+        task: writing-2
+        collocation: commit
+      - id: ex3
+        text: There isn't much crime where I live, so I feel safe.
+        highlight: crime
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: rates
+        phrase: crime rates
+      - id: commit
+        phrase: commit a crime
+    mistakes:
+      - id: do
+        wrong: Some teenagers do crimes because they are bored.
+        right: Some teenagers commit crimes because they are bored.
+        type: collocation
+        explanation: You "commit" a crime, not "do" or "make" one.

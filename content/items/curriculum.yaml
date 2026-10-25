@@ -1,0 +1,45 @@
+id: curriculum
+kind: word
+headword: curriculum
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: curriculum, type: lemma }
+  - { form: curricula, type: inflection }
+  - { form: curriculums, type: inflection }
+senses:
+  - key: subjects
+    pos: noun
+    definition: The subjects and content that are taught in a school, college or course.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [education]
+    best_when: What schools should teach — "on the curriculum", "the national curriculum".
+    examples:
+      - id: ex1
+        text: Financial skills should be part of the school curriculum.
+        highlight: school curriculum
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [syllabus]
+      - id: ex2
+        text: Art was hardly on the curriculum at my secondary school.
+        highlight: on the curriculum
+        skill: speaking
+        task: speaking-1
+        collocation: on
+        practice:
+          accept: [timetable]
+    collocations:
+      - id: on
+        phrase: on the curriculum
+        note: taught as part of it
+      - id: national
+        phrase: the national curriculum
+    relations:
+      - type: related
+        to: assessment.judging

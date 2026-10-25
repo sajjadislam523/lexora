@@ -1,0 +1,57 @@
+id: sustainable
+kind: word
+headword: sustainable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: sustainable, type: lemma }
+  - { form: unsustainable, type: lemma }
+senses:
+  - key: lasting
+    pos: adjective
+    definition: Able to continue for a long time without harming the environment or using up resources; the opposite is "unsustainable".
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [environment, economy]
+    best_when: Development, energy, farming, tourism and growth that can last — and "unsustainable" for what can't.
+    examples:
+      - id: ex1
+        text: Cities need more sustainable forms of transport.
+        highlight: sustainable
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [environmentally friendly]
+      - id: ex2
+        text: Current levels of meat consumption are simply unsustainable.
+        highlight: unsustainable
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: I try to buy clothes from more sustainable brands.
+        highlight: sustainable
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [ethical, eco-friendly, environmentally friendly]
+    collocations:
+      - id: development
+        phrase: sustainable development
+        note: 'also "sustainable growth"'
+      - id: tourism
+        phrase: sustainable tourism
+        note: 'also "sustainable farming"'
+    mistakes:
+      - id: noun
+        wrong: We need sustainability development.
+        right: We need sustainable development.
+        type: word_form
+        explanation: Use the adjective "sustainable" before a noun; "sustainability" is the noun.
+    relations:
+      - type: derived_form
+        to: sustainability.lasting
+        weight: 2
+        note: 'The noun: "the importance of sustainability".'

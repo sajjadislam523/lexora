@@ -1,0 +1,41 @@
+id: higher-education
+kind: word
+headword: higher education
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: higher education, type: lemma }
+senses:
+  - key: university
+    pos: noun
+    definition: Education at a university or college, after secondary school.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [education]
+    best_when: Discussing university study as a system — funding, access, fees and graduates.
+    examples:
+      - id: ex1
+        text: The number of women in higher education has risen steadily since 1990.
+        highlight: higher education
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: Should higher education be free for everyone?
+        highlight: higher education
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: In my country, most young people go into higher education after school.
+        highlight: higher education
+        skill: speaking
+        task: speaking-3
+    relations:
+      - type: has_component
+        to: education.system
+      - type: alternative
+        to: vocational-education.job-training
+        weight: 2
+        note: Vocational education trains people for a particular job; higher education is academic study at university.

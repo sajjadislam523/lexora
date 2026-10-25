@@ -1,0 +1,38 @@
+id: fossil-fuels
+kind: word
+headword: fossil fuels
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: fossil fuels, type: lemma }
+  - { form: fossil fuel, type: inflection }
+senses:
+  - key: fuel
+    pos: noun
+    definition: Fuels such as coal, oil and gas, formed underground over millions of years.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [environment, economy]
+    best_when: Energy and climate topics — "reliance on fossil fuels", "phase out fossil fuels".
+    examples:
+      - id: ex1
+        text: Our reliance on fossil fuels is the main cause of climate change.
+        highlight: reliance on fossil fuels
+        skill: writing
+        task: writing-2
+        collocation: reliance
+      - id: ex2
+        text: Most cars still run on fossil fuels, but that's changing fast.
+        highlight: fossil fuels
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: reliance
+        phrase: reliance on fossil fuels
+        note: 'also "dependence on fossil fuels"'
+      - id: phase-out
+        phrase: phase out fossil fuels
+        note: stop using them gradually

@@ -1,0 +1,53 @@
+id: appropriate
+kind: word
+headword: appropriate
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: appropriate, type: lemma }
+  - { form: inappropriate, type: lemma }
+senses:
+  - key: suitable
+    pos: adjective
+    definition: Suitable or right for a particular situation or purpose; the opposite is "inappropriate".
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    best_when: Judging whether behaviour, content or action fits a situation — "appropriate for children", "appropriate action".
+    examples:
+      - id: ex1
+        text: Parents should decide which films are appropriate for their children.
+        highlight: appropriate for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept: [suitable]
+      - id: ex2
+        text: Governments must take appropriate action to protect consumers.
+        highlight: appropriate action
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [suitable, necessary]
+      - id: ex3
+        text: I don't think it's appropriate to use your phone during a meal.
+        highlight: appropriate
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [polite, acceptable]
+    preposition_patterns:
+      - id: for
+        base: appropriate
+        preposition: for
+        pattern: appropriate for + noun / person
+        complement: noun
+        note: who or what it suits
+    relations:
+      - type: alternative
+        to: effective.works
+        weight: 1
+        note: Effective means it works; appropriate means it fits the situation.

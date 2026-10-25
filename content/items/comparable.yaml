@@ -1,0 +1,54 @@
+id: comparable
+kind: word
+headword: comparable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: comparable, type: lemma }
+senses:
+  - key: similar
+    pos: adjective
+    definition: Similar in size, amount or quality, so that a fair comparison can be made.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [comparison]
+    best_when: Figures or situations that are close — "comparable to", "a comparable figure".
+    examples:
+      - id: ex1
+        text: Spending on transport was comparable to spending on food.
+        highlight: comparable to
+        skill: writing
+        task: writing-1
+        pattern: to
+        practice:
+          accept: [similar]
+          accept_preposition: [with]
+      - id: ex2
+        text: Few countries have a healthcare system comparable with Norway's.
+        highlight: comparable with
+        skill: writing
+        task: writing-2
+        pattern: with
+        practice:
+          accept_preposition: [to]
+    preposition_patterns:
+      - id: to
+        base: comparable
+        preposition: to
+        pattern: comparable to + noun
+        complement: noun
+        note: both "to" and "with" are correct
+      - id: with
+        base: comparable
+        preposition: with
+        pattern: comparable with + noun
+        complement: noun
+        note: both "to" and "with" are correct
+    relations:
+      - type: alternative
+        to: equivalent.equal
+        weight: 1
+        note: Equivalent means equal in value or amount; comparable means close enough to compare.

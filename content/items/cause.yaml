@@ -1,0 +1,111 @@
+id: cause
+kind: word
+headword: cause
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: cause, type: lemma }
+  - { form: causes, type: inflection }
+  - { form: caused, type: inflection }
+  - { form: causing, type: inflection }
+senses:
+  - key: verb
+    label: to make happen
+    pos: verb
+    definition: To make something happen, especially something bad.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: A direct link between a cause and a result, especially problems — "cause pollution", "cause stress".
+    avoid_when: Something is only one of several causes. "Contribute to" is more careful and accurate.
+    examples:
+      - id: ex1
+        text: Burning fossil fuels causes air pollution and climate change.
+        highlight: causes
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [leads to, results in, contributes to]
+      - id: ex2
+        text: Heavy rain caused flooding in several towns.
+        highlight: caused
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [led to, resulted in]
+      - id: ex3
+        text: Too much homework can cause a lot of stress for kids.
+        highlight: cause
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [lead to, create]
+    mistakes:
+      - id: cause-to
+        wrong: Smoking can cause to cancer.
+        right: Smoking can cause cancer.
+        type: preposition
+        explanation: Cause takes a direct object. "Lead to" and "contribute to" are the ones with "to".
+    relations:
+      - type: alternative
+        to: result-in.cause
+        weight: 2
+        note: Result in puts the focus on the outcome; cause puts it on what makes it happen.
+      - type: alternative
+        to: contribute-to.help-cause
+        weight: 2
+        note: Contribute to is more careful — one cause among several.
+  - key: noun
+    label: a reason
+    pos: noun
+    definition: The person, event or thing that makes something happen.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Naming what produces a problem or effect — "a major cause of", "the root cause".
+    examples:
+      - id: ex1
+        text: Poor diet is a leading cause of heart disease.
+        highlight: cause of
+        skill: writing
+        task: writing-2
+        pattern: of
+      - id: ex2
+        text: I think the main cause of stress for students is exams.
+        highlight: cause of
+        skill: speaking
+        task: speaking-3
+        pattern: of
+        practice:
+          accept: [source]
+    preposition_patterns:
+      - id: of
+        base: cause
+        preposition: of
+        pattern: the cause of + noun
+        complement: noun
+        note: what is produced; compare "the reason for"
+        mistake: for
+    collocations:
+      - id: leading
+        phrase: a leading cause of
+        note: 'also "a major cause of"'
+      - id: root
+        phrase: the root cause
+        note: the basic, underlying cause of a problem
+    mistakes:
+      - id: for
+        wrong: the main cause for the problem
+        right: the main cause of the problem
+        type: preposition
+        explanation: '"The cause of" a problem; "the reason for" a problem.'
+    relations:
+      - type: alternative
+        to: reason.why
+        weight: 2
+        note: A reason explains why something happened; a cause is what made it happen.

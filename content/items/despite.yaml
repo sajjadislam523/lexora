@@ -1,0 +1,57 @@
+id: despite
+kind: functional_expression
+headword: despite
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: despite, type: lemma }
+  - { form: despite the fact that, type: lemma }
+senses:
+  - key: concession
+    pos: preposition
+    definition: Without being affected or stopped by something; followed by a noun or -ing form.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [concession, contrast]
+    best_when: Conceding with a noun phrase — "despite the cost", "despite rising prices". Use "despite the fact that" before a clause.
+    examples:
+      - id: ex1
+        text: Despite the high cost, the project was completed on time.
+        highlight: Despite
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [In spite of, Notwithstanding]
+      - id: ex2
+        text: Despite falling slightly in 2015, sales rose overall.
+        highlight: Despite
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [In spite of]
+      - id: ex3
+        text: I still enjoyed the trip despite the bad weather.
+        highlight: despite
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [in spite of]
+    mistakes:
+      - id: of
+        wrong: Despite of the rain, the match continued.
+        right: Despite the rain, the match continued.
+        type: preposition
+        explanation: '"Despite" has no "of". You can say "in spite of" instead.'
+      - id: clause
+        wrong: Despite it was expensive, they bought it.
+        right: Although it was expensive, they bought it.
+        type: grammar
+        explanation: Despite is followed by a noun or -ing form. Before a clause, use "although" or "despite the fact that".
+    relations:
+      - type: synonym
+        to: in-spite-of.concession
+        weight: 3
+        note: In spite of means the same; it is three words and slightly less formal.

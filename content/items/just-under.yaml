@@ -1,0 +1,37 @@
+id: just-under
+kind: phrase
+headword: just under
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: just under, type: lemma }
+senses:
+  - key: below
+    pos: adverbial_phrase
+    definition: A little less than a particular number or amount.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-1] }
+    best_when: Reporting a figure slightly below a round number in Task 1 ("just under 60%").
+    examples:
+      - id: ex1
+        text: Just under 60% of graduates found a job within six months.
+        highlight: Just under
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [slightly under, slightly less than, nearly, almost]
+      - id: ex2
+        text: I spend just under half my salary on rent.
+        highlight: just under
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [nearly, almost, slightly under]
+    relations:
+      - type: alternative
+        to: approximately.about
+        weight: 1
+        note: Approximately doesn't say whether the real figure is above or below.

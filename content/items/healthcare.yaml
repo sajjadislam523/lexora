@@ -1,0 +1,42 @@
+id: healthcare
+kind: word
+headword: healthcare
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: healthcare, type: lemma }
+  - { form: health care, type: spelling_variant }
+senses:
+  - key: medical-services
+    pos: noun
+    definition: The services that look after people's health, such as hospitals, doctors and nurses.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [health, government]
+    best_when: Spending and access debates — "access to healthcare", "the healthcare system", "free healthcare".
+    examples:
+      - id: ex1
+        text: Everyone should have access to affordable healthcare.
+        highlight: healthcare
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: An ageing population puts pressure on the healthcare system.
+        highlight: healthcare system
+        skill: writing
+        task: writing-2
+        collocation: system
+      - id: ex3
+        text: Healthcare is free in my country, which I think is fantastic.
+        highlight: Healthcare
+        skill: speaking
+        task: speaking-3
+    collocations:
+      - id: system
+        phrase: the healthcare system
+      - id: spending
+        phrase: healthcare spending
+        note: 'also "healthcare costs"'

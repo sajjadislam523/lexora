@@ -43,9 +43,11 @@ describe.skipIf(!hasDatabase)("golden search suite (PostgreSQL)", () => {
   // in-memory repository, which matches any one word and only approximates it, so these
   // expectations hold for PostgreSQL only.
   it.each([
-    ["climate change", ["pose a threat"]],
-    ["describe a graph", ["rise sharply"]],
-    ["words about the environment", ["have a detrimental effect on"]],
+    // Content expansion: "climate change" and "environment" became items, so "vaccines" and
+    // "describe a process" (still none) replace them; "drop" now also mentions a graph.
+    ["vaccines", ["disease", "prevent"]],
+    ["describe a graph", ["drop", "rise sharply"]],
+    ["describe a process", ["consist of", "change"]],
   ])("keeps the full-text fallback precise for %j", async (query, expected) => {
     const response = await service.search(query);
     expect(response?.outcome).toBe("fallback");

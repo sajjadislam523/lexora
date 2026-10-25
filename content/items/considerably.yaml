@@ -1,0 +1,53 @@
+id: considerably
+kind: word
+headword: considerably
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: considerably, type: lemma }
+senses:
+  - key: large
+    pos: adverb
+    definition: By a large amount or to a large degree.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    strength: 2
+    best_when: A large change or difference, especially before a comparative ("considerably higher").
+    examples:
+      - id: ex1
+        text: Spending on healthcare was considerably higher in 2020 than in 2000.
+        highlight: considerably higher
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [significantly, substantially, much]
+      - id: ex2
+        text: Online learning has changed considerably over the past decade.
+        highlight: changed considerably
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [significantly, substantially, dramatically]
+      - id: ex3
+        text: Life in my village is considerably quieter than in the capital.
+        highlight: considerably quieter
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [much, a lot, far]
+    relations:
+      - type: synonym
+        to: significantly.large
+        weight: 2
+        note: Significantly stresses that the change matters; considerably stresses its size.
+      - type: synonym
+        to: substantially.large
+        weight: 2
+        note: Substantially is slightly more formal and suits amounts and money.
+      - type: derived_form
+        to: considerable.large
+        weight: 2
+        note: 'The adjective: "a considerable increase".'

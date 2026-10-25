@@ -546,7 +546,7 @@ export function FinderView({ basePath, url, state, eyebrow, title, description }
           <ExampleSearches queries={suggestions} onRun={run} />
           <p className="flex items-center gap-1.5 type-caption text-subtle-foreground">
             <Info aria-hidden className="size-3.5 shrink-0" />
-            Lexora covers a small, reviewed set of language for now. Every result says why it
+            Lexora covers a growing, curated set of IELTS language. Every result says why it
             appears.
           </p>
         </div>

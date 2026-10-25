@@ -1,0 +1,49 @@
+id: accessible
+kind: word
+headword: accessible
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: accessible, type: lemma }
+  - { form: inaccessible, type: lemma }
+  - { form: accessibility, type: lemma }
+senses:
+  - key: available
+    pos: adjective
+    definition: Easy to reach, use, obtain or understand; "accessibility" is the noun.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [technology, education, cities]
+    best_when: Services, buildings, information and education that everyone can use — "accessible to all".
+    examples:
+      - id: ex1
+        text: Online courses make education accessible to people in remote areas.
+        highlight: accessible to
+        skill: writing
+        task: writing-2
+        pattern: to
+        practice:
+          accept: [available]
+      - id: ex2
+        text: All public buildings should be accessible to wheelchair users.
+        highlight: accessible to
+        skill: writing
+        task: writing-2
+        pattern: to
+      - id: ex3
+        text: The city centre is very accessible by public transport.
+        highlight: accessible
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [easy to reach]
+    preposition_patterns:
+      - id: to
+        base: accessible
+        preposition: to
+        pattern: accessible to + person / group
+        complement: noun
+        note: who can use it; "accessible for" is also used

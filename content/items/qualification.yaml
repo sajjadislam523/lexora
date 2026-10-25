@@ -1,0 +1,40 @@
+id: qualification
+kind: word
+headword: qualification
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: qualification, type: lemma }
+  - { form: qualifications, type: inflection }
+senses:
+  - key: certificate
+    pos: noun
+    definition: An official record, such as a degree or diploma, showing you have passed a course or exam.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-1] }
+    topics: [education, work]
+    best_when: Degrees and certificates, and the link between education and jobs — "gain qualifications".
+    examples:
+      - id: ex1
+        text: Young people without qualifications find it much harder to get a job.
+        highlight: qualifications
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I'm studying for a teaching qualification at the moment.
+        highlight: teaching qualification
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: gain
+        phrase: gain qualifications
+        note: 'also "obtain qualifications"'
+      - id: formal
+        phrase: formal qualifications
+        note: 'also "academic qualifications"'
+    relations:
+      - type: related
+        to: skill.ability

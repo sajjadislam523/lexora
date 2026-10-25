@@ -1,0 +1,50 @@
+id: require
+kind: word
+headword: require
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: require, type: lemma }
+  - { form: requires, type: inflection }
+  - { form: required, type: inflection }
+  - { form: requiring, type: inflection }
+senses:
+  - key: need
+    pos: verb
+    definition: To need something, or to make something necessary by a rule or law.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    best_when: Formal statements about what a task, job or law needs — "requires investment", "be required to".
+    skill_note: In Speaking, "need" is far more natural.
+    examples:
+      - id: ex1
+        text: Solving the housing crisis will require significant public investment.
+        highlight: require
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [need, demand]
+      - id: ex2
+        text: In some countries, employers are required to offer paid training.
+        highlight: required to
+        skill: writing
+        task: writing-2
+        collocation: required-to
+        practice:
+          accept: [obliged]
+    collocations:
+      - id: required-to
+        phrase: be required to
+        pattern: be required to + verb
+        note: a rule or law says you must
+      - id: skills
+        phrase: the skills required for
+    mistakes:
+      - id: require-of
+        wrong: The job requires of a degree.
+        right: The job requires a degree.
+        type: preposition
+        explanation: Require takes a direct object, with no preposition.

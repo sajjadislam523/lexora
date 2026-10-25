@@ -1,0 +1,44 @@
+id: widespread
+kind: word
+headword: widespread
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: widespread, type: lemma }
+senses:
+  - key: many-places
+    pos: adjective
+    definition: Existing or happening in many places or among many people.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    best_when: Problems, beliefs, use and support that reach a large area or many people.
+    examples:
+      - id: ex1
+        text: The widespread use of smartphones has changed how people read news.
+        highlight: widespread use
+        skill: writing
+        task: writing-2
+        collocation: use
+      - id: ex2
+        text: There is widespread concern about the cost of housing.
+        highlight: widespread concern
+        skill: writing
+        task: writing-2
+        collocation: concern
+        practice:
+          accept: [growing, considerable]
+    collocations:
+      - id: use
+        phrase: the widespread use of
+        pattern: the widespread use of + noun
+      - id: concern
+        phrase: widespread concern
+        note: 'what many people feel; also "widespread support"'
+    relations:
+      - type: alternative
+        to: there-is-growing-concern-about.problem
+        weight: 1
+        note: '"There is widespread concern about" stresses how many people worry; "growing concern" stresses that the worry is increasing.'

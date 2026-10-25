@@ -1,0 +1,110 @@
+id: benefit
+kind: word
+headword: benefit
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: benefit, type: lemma }
+  - { form: benefits, type: inflection }
+  - { form: benefited, type: inflection }
+  - { form: benefitted, type: spelling_variant }
+  - { form: benefiting, type: inflection }
+  - { form: benefitting, type: spelling_variant }
+senses:
+  - key: noun
+    label: an advantage
+    pos: noun
+    definition: A helpful or good effect, or an advantage that something gives you.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Discussing the good results of something — "the benefits of", "health benefits".
+    examples:
+      - id: ex1
+        text: The benefits of learning a second language go far beyond travel.
+        highlight: benefits of
+        skill: writing
+        task: writing-2
+        collocation: of
+        practice:
+          accept: [advantages]
+      - id: ex2
+        text: One of the main benefits of working from home is not having to commute.
+        highlight: benefits of
+        skill: speaking
+        task: speaking-3
+        collocation: of
+        practice:
+          accept: [advantages]
+    collocations:
+      - id: of
+        phrase: the benefits of
+        pattern: the benefits of + noun / -ing
+      - id: health
+        phrase: health benefits
+        note: 'also "economic benefits"'
+      - id: outweigh
+        phrase: the benefits outweigh the costs
+        item: outweigh
+    relations:
+      - type: synonym
+        to: advantage.good-point
+        weight: 2
+        note: An advantage is a good point compared with something else; a benefit is a good effect.
+  - key: verb
+    label: to help
+    pos: verb
+    definition: To be helpful to someone, or to get an advantage from something.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: '"X benefits Y" (no preposition) or "Y benefits from X" — who gains, and from what.'
+    examples:
+      - id: ex1
+        text: Lower fares would benefit people on low incomes most.
+        highlight: benefit
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [help]
+      - id: ex2
+        text: Small businesses benefit from tourism in the summer.
+        highlight: benefit from
+        skill: writing
+        task: writing-2
+        pattern: from
+      - id: ex3
+        text: I've really benefited from having a mentor at work.
+        highlight: benefited from
+        skill: speaking
+        task: speaking-2
+        pattern: from
+        practice:
+          accept: [gained]
+    preposition_patterns:
+      - id: from
+        base: benefit
+        preposition: from
+        pattern: benefit from + noun / -ing
+        complement: noun_or_ing
+        note: the source of the advantage
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: Students can benefit of smaller classes.
+        right: Students can benefit from smaller classes.
+        type: preposition
+        explanation: '"Benefit from" + the thing that helps.'
+      - id: benefit-to
+        wrong: The policy will benefit to farmers.
+        right: The policy will benefit farmers.
+        type: preposition
+        explanation: When the helpful thing is the subject, benefit takes a direct object.
+    relations:
+      - type: derived_form
+        to: beneficial.helpful
+        weight: 2
+        note: 'The adjective: "beneficial to / for".'

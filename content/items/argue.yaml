@@ -1,0 +1,64 @@
+id: argue
+kind: word
+headword: argue
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: argue, type: lemma }
+  - { form: argues, type: inflection }
+  - { form: argued, type: inflection }
+  - { form: arguing, type: inflection }
+senses:
+  - key: claim
+    pos: verb
+    definition: To give reasons why you think something is true or should happen.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Presenting a view with reasons — your own ("I would argue that") or others' ("Some argue that …").
+    examples:
+      - id: ex1
+        text: Some people argue that zoos play an important role in protecting endangered species.
+        highlight: argue that
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [believe, claim, maintain, contend]
+      - id: ex2
+        text: I would argue that the benefits of tourism outweigh its drawbacks.
+        highlight: I would argue that
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: You could argue that social media brings people closer together.
+        highlight: argue
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [say, claim]
+    collocations:
+      - id: would
+        phrase: I would argue that
+        note: a confident but polite way to state your position
+      - id: for
+        phrase: argue for
+        pattern: argue for / against + noun / -ing
+        note: 'support or oppose an idea with reasons; also "argue against"'
+    mistakes:
+      - id: argue-about-that
+        wrong: Some people argue about that taxes are too high.
+        right: Some people argue that taxes are too high.
+        type: preposition
+        explanation: '"Argue that" + clause gives a view. "Argue about" + noun means to disagree angrily or discuss a topic.'
+    relations:
+      - type: more_formal
+        to: contend.argue
+        weight: 2
+        note: Contend is more formal and often introduces a view you are about to challenge.
+      - type: alternative
+        to: claim.state
+        weight: 2
+        note: Claim can suggest the view may not be true; argue suggests a reasoned case.

@@ -1,0 +1,35 @@
+id: reveal
+kind: word
+headword: reveal
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: reveal, type: lemma }
+  - { form: reveals, type: inflection }
+  - { form: revealed, type: inflection }
+  - { form: revealing, type: inflection }
+senses:
+  - key: make-known
+    pos: verb
+    definition: To make known something that was hidden, surprising or not known before.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    best_when: Data or research that uncovers something unexpected.
+    examples:
+      - id: ex1
+        text: The survey reveals that most teenagers sleep less than seven hours a night.
+        highlight: reveals
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [shows, indicates]
+      - id: ex2
+        text: The study revealed a link between noise and poor health.
+        highlight: revealed
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [showed, found, identified]

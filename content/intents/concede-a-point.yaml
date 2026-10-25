@@ -12,7 +12,14 @@ groups:
   - label: Accept, then continue
     entries:
       - { sense: nevertheless.concession, fit: "the point is true, but your view stands" }
+      - { sense: nonetheless.concession, fit: "the same, slightly more formal" }
       - { sense: however.contrast, fit: "a softer turn back to your own view" }
   - label: Weigh both sides
     entries:
       - { sense: on-the-other-hand.other-side, fit: "present the other side fairly" }
+  - label: Inside one sentence
+    entries:
+      - { sense: although.concession, fit: "although + clause" }
+      - { sense: even-though.concession, fit: "a more surprising contrast" }
+      - { sense: despite.concession, fit: "despite + noun or -ing" }
+      - { sense: in-spite-of.concession, fit: "the same as despite" }

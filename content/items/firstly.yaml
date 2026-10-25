@@ -1,0 +1,41 @@
+id: firstly
+kind: linker
+headword: firstly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: firstly, type: lemma }
+  - { form: first of all, type: lemma }
+senses:
+  - key: sequence
+    pos: adverb
+    definition: Used to introduce the first of several points or reasons.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [addition]
+    linker:
+      connects: sentences
+      positions: [start]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Listing reasons clearly — follow it with "secondly" and "finally", or with "in addition".
+    examples:
+      - id: ex1
+        text: Firstly, public transport reduces congestion.
+        highlight: Firstly,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [First]
+      - id: ex2
+        text: First of all, I love the food here.
+        highlight: First of all,
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [First]
+    relations:
+      - type: related
+        to: in-addition.addition

@@ -1,0 +1,53 @@
+id: environment
+kind: word
+headword: environment
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: environment, type: lemma }
+  - { form: environments, type: inflection }
+senses:
+  - key: nature
+    pos: noun
+    definition: The natural world of land, water, air, plants and animals, especially as affected by human activity.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [environment]
+    best_when: '"The environment" with "the" for the natural world — "protect the environment", "harm the environment".'
+    examples:
+      - id: ex1
+        text: Mass tourism can do serious damage to the environment.
+        highlight: the environment
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [nature]
+      - id: ex2
+        text: I try to protect the environment by cycling instead of driving.
+        highlight: protect the environment
+        skill: speaking
+        task: speaking-3
+        collocation: protect
+    collocations:
+      - id: protect
+        phrase: protect the environment
+      - id: damage
+        phrase: damage the environment
+        note: 'also "harm the environment"'
+      - id: impact
+        phrase: an impact on the environment
+        note: or "environmental impact"
+    mistakes:
+      - id: no-the
+        wrong: Plastic is bad for environment.
+        right: Plastic is bad for the environment.
+        type: grammar
+        explanation: In this meaning, "environment" needs "the".
+    relations:
+      - type: derived_form
+        to: environmental.relating
+        weight: 2
+        note: 'The adjective: "environmental problems", "environmental damage".'

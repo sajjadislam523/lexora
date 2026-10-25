@@ -1,0 +1,43 @@
+id: fluctuation
+kind: word
+headword: fluctuation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: fluctuation, type: lemma }
+  - { form: fluctuations, type: inflection }
+senses:
+  - key: change
+    pos: noun
+    definition: A repeated, irregular change up and down in level or amount.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    best_when: Describing an unsteady period as a noun phrase ("experienced some fluctuation").
+    examples:
+      - id: ex1
+        text: The figure for rail passengers experienced considerable fluctuation over the period.
+        highlight: experienced considerable fluctuation
+        skill: writing
+        task: writing-1
+        collocation: experience
+      - id: ex2
+        text: Despite minor fluctuations, the overall trend was upward.
+        highlight: minor fluctuations
+        skill: writing
+        task: writing-1
+    collocations:
+      - id: experience
+        phrase: experience fluctuations
+        pattern: experience (some / considerable) fluctuation(s)
+        note: a formal way to say it went up and down
+      - id: minor
+        phrase: minor fluctuations
+        note: small ups and downs within a clear trend
+    relations:
+      - type: alternative
+        to: plateau.noun
+        weight: 1
+        note: A plateau is a flat period; fluctuation is a period of ups and downs.

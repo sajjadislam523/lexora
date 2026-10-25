@@ -1,0 +1,37 @@
+id: student
+kind: word
+headword: student
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: student, type: lemma }
+  - { form: students, type: inflection }
+senses:
+  - key: learner
+    pos: noun
+    definition: A person who is studying at a school, college or university.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1] }
+    topics: [education]
+    best_when: Anyone studying — the safe, general word in both skills.
+    examples:
+      - id: ex1
+        text: International students make a significant contribution to the economy.
+        highlight: International students
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I'm a student, so I'm on a tight budget.
+        highlight: student
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: international
+        phrase: international students
+        note: 'mature students are adults returning to study; also "mature students"'
+      - id: loan
+        phrase: student loans
+        note: 'also "student debt"'

@@ -1,0 +1,36 @@
+id: artificial-intelligence
+kind: word
+headword: artificial intelligence
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: artificial intelligence, type: lemma }
+  - { form: ai, type: lemma }
+senses:
+  - key: machines
+    pos: noun
+    definition: Computer systems that can do tasks that normally need human intelligence, such as understanding language; often "AI".
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [technology, work]
+    best_when: The effects of AI on jobs, education and privacy — usually without "the".
+    examples:
+      - id: ex1
+        text: Artificial intelligence could transform the way doctors diagnose illness.
+        highlight: Artificial intelligence
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Lots of students use AI to help them revise these days.
+        highlight: AI
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: the
+        wrong: The artificial intelligence will change education.
+        right: Artificial intelligence will change education.
+        type: grammar
+        explanation: Used as the name of the technology in general, artificial intelligence has no "the".

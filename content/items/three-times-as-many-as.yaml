@@ -1,0 +1,50 @@
+id: three-times-as-many-as
+kind: phrase
+headword: three times as many as
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: three times as many as, type: lemma }
+  - { form: three times as much as, type: lemma }
+senses:
+  - key: multiple
+    pos: adverbial_phrase
+    definition: Three times the number or amount of something else; the same pattern works with four, five or ten times.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1] }
+    functions: [comparison]
+    best_when: Comparing two figures where one is a clear multiple of the other.
+    examples:
+      - id: ex1
+        text: Three times as many people used the library in 2010 as in 1990.
+        highlight: Three times as many
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: Wealthy households produced three times as much waste as poorer ones.
+        highlight: three times as much waste as
+        skill: writing
+        task: writing-1
+      - id: ex3
+        text: By 2020 the city had 30,000 cyclists, three times as many as in 2000.
+        highlight: three times as many as
+        skill: writing
+        task: writing-1
+    collocations:
+      - id: higher
+        phrase: three times higher than
+        note: also common, though "three times as high as" is clearer
+    mistakes:
+      - id: much-tourists
+        wrong: The island had three times as much tourists as in 2000.
+        right: The island had three times as many tourists as in 2000.
+        type: countability
+        explanation: Use "many" with plural countable nouns and "much" with uncountable ones (three times as much water).
+    relations:
+      - type: alternative
+        to: twice-as-much-as.double
+        weight: 1
+        note: For a figure that is double, say "twice", not "two times as many".

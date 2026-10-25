@@ -1,0 +1,43 @@
+id: nonetheless
+kind: linker
+headword: nonetheless
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: nonetheless, type: lemma }
+  - { form: none the less, type: spelling_variant }
+senses:
+  - key: concession
+    pos: adverb
+    definition: Despite what has just been said; even so.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [concession, contrast]
+    linker:
+      connects: sentences
+      positions: [start, middle, end]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle.
+    best_when: Accepting a point and then continuing with your argument — a formal alternative to "nevertheless".
+    examples:
+      - id: ex1
+        text: The scheme is expensive. Nonetheless, its long-term benefits are clear.
+        highlight: Nonetheless,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Nevertheless, Even so, However]
+      - id: ex2
+        text: Many people dislike wind farms. They remain, nonetheless, an important source of energy.
+        highlight: nonetheless,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [nevertheless, however]
+    relations:
+      - type: synonym
+        to: nevertheless.concession
+        weight: 3
+        note: The two mean the same; nevertheless is slightly more common.

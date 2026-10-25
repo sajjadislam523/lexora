@@ -1,0 +1,40 @@
+id: employment
+kind: word
+headword: employment
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: employment, type: lemma }
+senses:
+  - key: having-work
+    pos: noun
+    definition: The state of having paid work, or the number of people who have it.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    topics: [work, economy]
+    best_when: Statistics and policy — "employment rates", "full-time employment", "employment opportunities".
+    examples:
+      - id: ex1
+        text: Employment in manufacturing fell by a third between 1990 and 2010.
+        highlight: Employment in
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: Tourism creates employment opportunities in rural areas.
+        highlight: employment opportunities
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [job]
+    collocations:
+      - id: full-time
+        phrase: full-time employment
+        note: 'also "part-time employment"'
+      - id: rates
+        phrase: employment rates
+    relations:
+      - type: opposite
+        to: unemployment.no-work

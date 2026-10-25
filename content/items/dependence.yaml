@@ -1,0 +1,55 @@
+id: dependence
+kind: word
+headword: dependence
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: dependence, type: lemma }
+  - { form: dependency, type: lemma }
+senses:
+  - key: reliance
+    pos: noun
+    definition: The state of needing something or someone so much that it is difficult to manage without them.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [technology, economy]
+    best_when: Over-reliance on technology, cars, imports or fossil fuels — "dependence on".
+    examples:
+      - id: ex1
+        text: Our growing dependence on smartphones may be affecting our memory.
+        highlight: dependence on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [reliance]
+      - id: ex2
+        text: The country must reduce its dependence on imported oil.
+        highlight: dependence on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [reliance]
+    preposition_patterns:
+      - id: on
+        base: dependence
+        preposition: on
+        pattern: (a) dependence on + noun
+        complement: noun
+        note: what is needed
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: our dependence of technology
+        right: our dependence on technology
+        type: preposition
+        explanation: '"Dependence on" + what you need, like "depend on".'
+    relations:
+      - type: derived_form
+        to: depend-on.rely
+        weight: 2
+        note: 'The verb: "depend on". The adjective is "dependent on".'

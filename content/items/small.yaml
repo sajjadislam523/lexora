@@ -1,0 +1,49 @@
+id: small
+kind: word
+headword: small
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: small, type: lemma }
+  - { form: smaller, type: inflection }
+  - { form: smallest, type: inflection }
+senses:
+  - key: size
+    pos: adjective
+    definition: Little in size, amount or importance.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1] }
+    strength: 1
+    best_when: Physical size and everyday speaking — "a small town", "a small flat".
+    avoid_when: Writing about changes, effects and amounts. "A slight fall", "a minor problem" or "a limited effect" is more precise.
+    examples:
+      - id: ex1
+        text: I grew up in a small village in the north of the country.
+        highlight: small village
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [tiny, little]
+      - id: ex2
+        text: Only a small proportion of the budget was spent on research.
+        highlight: small proportion
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [tiny, low]
+    relations:
+      - type: more_formal
+        to: minor.small
+        weight: 1
+        note: Minor means not very important or serious — "a minor problem", "minor changes".
+      - type: more_formal
+        to: limited.small
+        weight: 1
+        note: Limited means not very much, often less than needed — "limited resources".
+      - type: stronger
+        to: negligible.tiny
+        weight: 1
+        note: Negligible means so small that it does not matter.

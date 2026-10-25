@@ -1,0 +1,31 @@
+id: give-an-opinion
+label: Give an opinion
+description: State your own view, report other people's views, or give a balanced verdict.
+function: opinion
+triggers:
+  - give an opinion
+  - give my opinion
+  - give your opinion
+  - express an opinion
+  - express my view
+  - state my opinion
+  - say what I think
+  - give my point of view
+groups:
+  - label: Your own view
+    entries:
+      - { sense: in-my-opinion.opinion, fit: "states your view at the start of a sentence" }
+      - { sense: believe.think, fit: "a committed position — I firmly believe that" }
+      - { sense: viewpoint.opinion, fit: '"from my point of view", natural in both skills' }
+      - { sense: think.opinion, fit: "the natural choice in Speaking" }
+  - label: Other people's views
+    entries:
+      - { sense: argue.claim, fit: "a view with reasons — some people argue that" }
+      - { sense: it-can-be-argued-that.argue, fit: "one side of a balanced essay" }
+      - { sense: supporters-argue-that.argue, fit: "the arguments for an idea" }
+      - { sense: critics-argue-that.argue, fit: "the arguments against an idea" }
+      - { sense: claim.state, fit: "a view you may want to question" }
+  - label: A balanced verdict
+    entries:
+      - { sense: on-balance.weighing, fit: "after weighing both sides" }
+      - { sense: to-some-extent.partly, fit: "agreeing partly" }

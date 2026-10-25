@@ -123,7 +123,7 @@ An answer is correct only if it's the expected answer, another of the item's `fo
     # exclude: [term]                   # don't make this blank: term | preposition
 ```
 
-`pnpm content:check` checks that `practice` describes a blank the example makes, doesn't repeat the expected answer, doesn't accept an authored wrong answer, and isn't accepted for an excluded blank. It also prints how many exercises the content supports. `pnpm content:check --practice` lists every exercise with its expected and accepted answers, for review. A content change that changes those numbers updates `test/exercise-inventory.test.ts` and says why.
+`pnpm content:check` checks that `practice` describes a blank the example makes, doesn't repeat the expected answer, doesn't accept an authored wrong answer, and isn't accepted for an excluded blank. It also prints how many exercises the content supports; `pnpm content:check --stats` prints exact counts of the published dataset (items by kind, senses by task, function and topic) for content PRs. `pnpm content:check --practice` lists every exercise with its expected and accepted answers, for review. A content change that changes those numbers updates `test/exercise-inventory.test.ts` and says why.
 
 ### Collocations and preposition patterns
 
@@ -149,6 +149,13 @@ preposition_patterns:
 ```
 
 `base` is what learners ask about ("preposition after _responsible_"). The pattern must contain both the base and the preposition. `complement` is `noun`, `ing`, `noun_or_ing`, `person` or `clause`.
+
+**Every collocation `phrase` is also a context-gap template.** The gap reader fills a blank with one of the phrase's words when the phrase's other words stand next to the blank, so write phrases that are safe to match:
+
+- **One phrase, no alternatives.** Never `reduce / cut emissions`: the slash version is read as one phrase ("reduce cut emissions"). Write `reduce emissions` and put the alternatives in `note` (`also "cut emissions"`).
+- **Give the left context.** A word at the start of a phrase is matched with nothing checked before it. Write `a growing demand for`, not `growing demand`, and `a significant increase`, not `significant increase`, so the blank must follow "a".
+- **Give the continuation in `pattern`** (`a sharp fall in + noun`), so a different preposition after the phrase only likely fits.
+- **Don't repeat a collocation another item owns.** "play a key role" belongs to `play-a-crucial-role`; repeating it elsewhere shows the learner the same answer twice.
 
 ### Frames
 
@@ -207,6 +214,12 @@ Write each relation **once**, on either side. The importer writes the reverse.
 
 `weight` (3 strongest, default 2) orders results. `note` explains the difference and is shown to learners. `context` limits a relation to some contexts. Relations always point at senses that exist in Lexora; if a useful alternative isn't here yet, add it as an item or leave it out.
 
+### Choosing a kind
+
+- **Compound nouns are words** (`kind: word`, `pos: noun`): _climate change_, _higher education_, _life expectancy_. They are single lexical units; as `phrase` items their forms would act as gap templates and offer "higher" before any "education".
+- **Phrases** are verb phrases (_go up_, _level off_, _bring about_) and fixed quantity or comparison phrases (_just over_, _compared with_).
+- **Linkers join clauses or sentences.** Something followed by a noun phrase — _due to_, _despite_, _as well as_, _namely_ — is a `functional_expression`, like _such as_: the linker model has no "+ noun phrase", and as a clause linker it would be offered before full clauses.
+
 ## Expression intents
 
 ```yaml
@@ -260,6 +273,7 @@ Checked automatically, for drafts as well as published content (drafts only skip
 2. It refuses, and changes nothing, if a published or retired item or sense is missing, published content is set back to draft, or a slug changed without listing the old one in `previous_slugs`.
 3. It upserts everything by ID, touching only rows whose values changed, and deletes child rows (examples, collocations, patterns, frames, mistakes, relations, intent triggers and entries) that are no longer authored. Drafts that were never published are deleted when their file goes.
 4. It writes inverse relations, rebuilds the full-text search vectors and records a release (git commit, checksum, counts) in `content_releases`.
+5. After the commit, it refreshes PostgreSQL's statistics for the content tables (`analyze`), so search is planned for the new row counts straight away instead of after autovacuum.
 
 The production procedure is in the main [README](../README.md#production-vercel--neon).
 

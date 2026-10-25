@@ -1,0 +1,33 @@
+id: work-life-balance
+kind: word
+headword: work-life balance
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: work-life balance, type: lemma }
+  - { form: work life balance, type: spelling_variant }
+senses:
+  - key: balance
+    pos: noun
+    definition: The amount of time someone spends working compared with time for family, rest and interests.
+    cefr: B2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [work, health]
+    best_when: Working hours, home working and stress topics — "a good work-life balance".
+    examples:
+      - id: ex1
+        text: Flexible hours help employees achieve a better work-life balance.
+        highlight: work-life balance
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My job pays well, but my work-life balance isn't great.
+        highlight: work-life balance
+        skill: speaking
+        task: speaking-1
+    relations:
+      - type: related
+        to: workplace.place

@@ -1,0 +1,42 @@
+id: it-can-be-argued-that
+kind: sentence_pattern
+headword: It can be argued that …
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: it can be argued that, type: lemma }
+  - { form: it could be argued that, type: lemma }
+senses:
+  - key: argue
+    pos: clause_frame
+    definition: Introduces a view that is reasonable to hold, without saying who holds it.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    functions: [opinion, hedging]
+    frames:
+      - id: that
+        parts:
+          - { text: It can be argued that }
+          - { slot: clause, hint: tourism does more harm than good }
+    best_when: Presenting one side of an argument in a balanced Task 2 essay, before giving the other side or your view.
+    avoid_when: Using it several times. Name who holds the view instead ("Supporters argue that …").
+    examples:
+      - id: ex1
+        text: It can be argued that tourism damages the cultures it claims to celebrate.
+        highlight: It can be argued that
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: It could be argued that the internet has made people less patient.
+        highlight: It could be argued that
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: active
+        wrong: It can argue that exams are unfair.
+        right: It can be argued that exams are unfair.
+        type: grammar
+        explanation: The pattern is passive — "it can be argued that", with "be".

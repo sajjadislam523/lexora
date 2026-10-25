@@ -1,0 +1,57 @@
+id: think
+kind: word
+headword: think
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: think, type: lemma }
+  - { form: thinks, type: inflection }
+  - { form: thought, type: inflection }
+  - { form: thinking, type: inflection }
+senses:
+  - key: opinion
+    pos: verb
+    definition: To have a particular opinion or belief about something.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-2, speaking-3] }
+    functions: [opinion]
+    best_when: Giving your opinion in Speaking — natural, polite and never wrong.
+    avoid_when: Repeating "I think" in every sentence of an essay. Vary it, or simply state your position with reasons.
+    skill_note: '"I think" softens an opinion in Speaking. In Task 2, "I believe" or "I would argue that" sounds more committed.'
+    examples:
+      - id: ex1
+        text: I think people should be allowed to work from home if they want to.
+        highlight: I think
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [believe, feel, reckon]
+      - id: ex2
+        text: Many people think that university education should be free.
+        highlight: think that
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [believe, feel]
+    mistakes:
+      - id: progressive
+        wrong: I am thinking that cars should be banned.
+        right: I think that cars should be banned.
+        type: grammar
+        explanation: For an opinion, use the simple form "I think". "I'm thinking about" means you are considering something.
+    relations:
+      - type: more_formal
+        to: believe.think
+        weight: 1
+        note: Believe sounds more committed and suits a Task 2 position.
+      - type: more_formal
+        to: argue.claim
+        weight: 1
+        note: Argue means you state an opinion and give reasons for it.
+      - type: alternative
+        to: in-my-opinion.opinion
+        weight: 1
+        note: In my opinion states your view directly at the start of a sentence.

@@ -1,0 +1,47 @@
+id: stable
+kind: word
+headword: stable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: stable, type: lemma }
+  - { form: unstable, type: lemma }
+  - { form: stability, type: lemma }
+senses:
+  - key: steady
+    pos: adjective
+    definition: Not changing much, or not likely to change suddenly; "stability" is the noun.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    best_when: Figures that stay steady in Task 1 ("remain stable") and economies, jobs or prices in Task 2.
+    examples:
+      - id: ex1
+        text: The price of wheat was relatively stable between 2005 and 2010.
+        highlight: relatively stable
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [steady, constant, unchanged]
+      - id: ex2
+        text: A stable job is more important to me than a high salary.
+        highlight: stable job
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [secure, steady]
+    collocations:
+      - id: remain
+        phrase: remain stable
+        item: remain-stable
+      - id: relatively
+        phrase: relatively stable
+        note: almost no change
+      - id: economy
+        phrase: a stable economy
+        note: 'also "a stable job"'
+    relations:
+      - type: opposite
+        to: fluctuate.vary

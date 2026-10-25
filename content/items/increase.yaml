@@ -1,0 +1,154 @@
+id: increase
+kind: word
+headword: increase
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: increase, type: lemma }
+  - { form: increases, type: inflection }
+  - { form: increased, type: inflection }
+  - { form: increasing, type: inflection }
+senses:
+  - key: verb
+    label: to go up or make go up
+    pos: verb
+    definition: To become larger in number, amount or level, or to make something do this.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [increase]
+    best_when: The safest verb for any upward change in Task 1, and the one to use when something makes a figure go up ("the policy increased costs").
+    avoid_when: You have used it twice in one paragraph. Vary it with "rise", "grow" or "climb", or switch to the noun ("an increase in").
+    skill_note: In Speaking, "go up" is just as natural for everyday changes such as prices.
+    examples:
+      - id: ex1
+        text: The number of cars on the road increased by 20% between 2000 and 2010.
+        highlight: increased by
+        skill: writing
+        task: writing-1
+        pattern: by
+        practice:
+          accept: [rose, grew, climbed]
+      - id: ex2
+        text: Building more roads tends to increase traffic rather than reduce it.
+        highlight: increase traffic
+        skill: writing
+        task: writing-2
+      - id: ex3
+        text: The price of a coffee in my town has increased a lot recently.
+        highlight: increased a lot
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [risen, gone up]
+    preposition_patterns:
+      - id: by
+        base: increase
+        preposition: by
+        pattern: increase by + amount
+        complement: noun
+        note: the size of the change (by 10%, by 2 million)
+        mistake: with
+      - id: to
+        base: increase
+        preposition: to
+        pattern: increase to + final level
+        complement: noun
+        note: the figure it reached (to 40%)
+    collocations:
+      - id: steadily
+        phrase: increase steadily
+        note: a regular rise over a period
+      - id: significantly
+        phrase: increase significantly
+        note: a large, noticeable rise
+    mistakes:
+      - id: with
+        wrong: Sales increased with 10% in 2019.
+        right: Sales increased by 10% in 2019.
+        type: preposition
+        explanation: Use "by" for the size of a change and "to" for the level reached.
+    relations:
+      - type: synonym
+        to: rise.verb
+        weight: 3
+        note: "Rise never takes an object: prices rose, but the company increased its prices."
+      - type: synonym
+        to: grow.increase
+        weight: 2
+        note: Grow suits things that develop over time, such as a population, an economy or demand.
+      - type: stronger
+        to: surge.increase
+        weight: 1
+        note: Surge means a sudden, large increase.
+      - type: opposite
+        to: decrease.verb
+  - key: noun
+    label: a rise
+    pos: noun
+    definition: A rise in the number, amount or level of something.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [increase]
+    best_when: Describing a change as a noun phrase, which lets you add size and speed with an adjective ("a sharp increase in").
+    skill_note: In Speaking, "a big increase" is natural; in Writing prefer "a significant" or "a substantial increase".
+    examples:
+      - id: ex1
+        text: The chart shows a steady increase in the use of public transport.
+        highlight: increase in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [rise, growth]
+      - id: ex2
+        text: Many experts link the increase in obesity to sedentary lifestyles.
+        highlight: increase in
+        skill: writing
+        task: writing-2
+        pattern: in
+        practice:
+          accept: [rise]
+      - id: ex3
+        text: There's been a big increase in the number of tourists visiting my city.
+        highlight: big increase in
+        skill: speaking
+        task: speaking-3
+        pattern: in
+        practice:
+          accept: [rise]
+    preposition_patterns:
+      - id: in
+        base: increase
+        preposition: in
+        pattern: an increase in + noun
+        complement: noun
+        note: what went up; "of" is used for the amount (an increase of 5%)
+        mistake: of-prices
+    collocations:
+      - id: sharp
+        phrase: a sharp increase
+        pattern: a sharp increase in + noun
+        note: sudden and large
+      - id: gradual
+        phrase: a gradual increase
+        pattern: a gradual increase in + noun
+        note: slow and over a long period
+      - id: marked
+        phrase: a marked increase
+        note: clear and noticeable; formal
+    mistakes:
+      - id: of-prices
+        wrong: There was an increase of prices.
+        right: There was an increase in prices.
+        type: preposition
+        explanation: Use "an increase in" + what changed. "An increase of" + the amount (an increase of 5%).
+    relations:
+      - type: synonym
+        to: rise.noun
+        weight: 3
+        note: Rise is equally common in Task 1 and slightly less formal.

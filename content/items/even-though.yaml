@@ -1,0 +1,43 @@
+id: even-though
+kind: linker
+headword: even though
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: even though, type: lemma }
+senses:
+  - key: concession
+    pos: conjunction
+    definition: Despite the fact that; a more emphatic way to introduce a contrasting fact.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-2, speaking-3] }
+    functions: [concession]
+    linker:
+      connects: clauses
+      positions: [start, middle]
+      punctuation: A comma after the clause when it comes first.
+    best_when: The contrast is surprising — something happens in spite of a strong reason against it.
+    examples:
+      - id: ex1
+        text: Many people still drive to work even though the bus is cheaper.
+        highlight: even though
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [although, though]
+      - id: ex2
+        text: I went to the party even though I was really tired.
+        highlight: even though
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [although, though]
+    mistakes:
+      - id: even-if
+        wrong: Even if it was raining, we went for a walk.
+        right: Even though it was raining, we went for a walk.
+        type: confusion
+        explanation: '"Even though" is for a real fact (it was raining). "Even if" is for something imagined or possible.'

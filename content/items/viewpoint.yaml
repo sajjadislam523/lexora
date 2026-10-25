@@ -1,0 +1,43 @@
+id: viewpoint
+kind: word
+headword: point of view
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: point of view, type: lemma, default: true }
+  - { form: points of view, type: inflection }
+  - { form: viewpoint, type: lemma }
+  - { form: viewpoints, type: inflection }
+senses:
+  - key: opinion
+    pos: noun_phrase
+    definition: A particular way of thinking about a situation or issue; an opinion.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Introducing your view ("from my point of view") or presenting different sides ("from an employer's point of view").
+    examples:
+      - id: ex1
+        text: From an employer's point of view, remote working can reduce office costs.
+        highlight: From an employer's point of view
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: From my point of view, the city has become much more crowded.
+        highlight: From my point of view
+        skill: speaking
+        task: speaking-3
+    mistakes:
+      - id: in-my
+        wrong: In my point of view, homework is useful.
+        right: From my point of view, homework is useful.
+        type: preposition
+        explanation: The fixed phrase is "from my point of view". "In my view" and "in my opinion" are also correct.
+    relations:
+      - type: synonym
+        to: perspective.view
+        weight: 2
+        note: A perspective is a way of seeing an issue that is often shaped by your situation or field.

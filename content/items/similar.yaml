@@ -1,0 +1,68 @@
+id: similar
+kind: word
+headword: similar
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: similar, type: lemma }
+senses:
+  - key: alike
+    pos: adjective
+    definition: Almost the same as something else, but not exactly.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [comparison]
+    best_when: Comparing two figures or situations in Task 1 — "similar to", "a similar pattern".
+    examples:
+      - id: ex1
+        text: The figures for 2015 were similar to those for 2010.
+        highlight: similar to
+        skill: writing
+        task: writing-1
+        pattern: to
+        practice:
+          accept: [comparable]
+      - id: ex2
+        text: Germany and France followed a similar pattern throughout the period.
+        highlight: similar pattern
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [comparable]
+      - id: ex3
+        text: My brother and I have very similar personalities.
+        highlight: similar
+        skill: speaking
+        task: speaking-1
+    preposition_patterns:
+      - id: to
+        base: similar
+        preposition: to
+        pattern: similar to + noun
+        complement: noun
+        note: the thing compared with
+        mistake: with
+    collocations:
+      - id: pattern
+        phrase: a similar pattern
+        note: 'Task 1 comparisons of two lines; also "a similar trend"'
+      - id: in
+        phrase: similar in
+        pattern: similar in + size / age / price
+        note: the way two things are alike
+    mistakes:
+      - id: with
+        wrong: The results were similar with last year.
+        right: The results were similar to last year's.
+        type: preposition
+        explanation: '"Similar to" + the thing compared with.'
+    relations:
+      - type: synonym
+        to: comparable.similar
+        weight: 2
+        note: Comparable is more formal and means close enough to be compared fairly.
+      - type: opposite
+        to: different.not-same

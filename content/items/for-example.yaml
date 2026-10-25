@@ -1,0 +1,42 @@
+id: for-example
+kind: linker
+headword: for example
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: for example, type: lemma }
+senses:
+  - key: example
+    pos: prepositional_phrase
+    definition: Used to introduce an example of what has just been said.
+    cefr: A2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [example]
+    linker:
+      connects: sentences
+      positions: [start, middle, end]
+      punctuation: A comma after it at the start of a sentence; between commas in the middle.
+    best_when: Supporting a Task 2 point with a real case — the most common and safest example linker.
+    examples:
+      - id: ex1
+        text: Some cities have banned cars from their centres. Oslo, for example, has removed most parking spaces.
+        highlight: for example,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [for instance]
+      - id: ex2
+        text: There's lots to do here. For example, there's a huge park near my flat.
+        highlight: For example,
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [For instance]
+    relations:
+      - type: synonym
+        to: for-instance.example
+        weight: 3
+        note: For instance means the same; use both to avoid repetition.

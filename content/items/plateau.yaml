@@ -1,0 +1,77 @@
+id: plateau
+kind: word
+headword: plateau
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: The plural is "plateaus" or, more formally, "plateaux". Both are correct.
+forms:
+  - { form: plateau, type: lemma }
+  - { form: plateaus, type: inflection }
+  - { form: plateaux, type: inflection }
+  - { form: plateaued, type: inflection }
+  - { form: plateauing, type: inflection }
+senses:
+  - key: noun
+    label: a flat period
+    pos: noun
+    definition: A period when something stays at the same level after rising or falling.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1] }
+    best_when: Naming the flat part of a line after a change ("reach a plateau").
+    examples:
+      - id: ex1
+        text: Car ownership reached a plateau in the mid-2000s.
+        highlight: reached a plateau
+        skill: writing
+        task: writing-1
+        collocation: reach
+      - id: ex2
+        text: The figures suggest that demand has hit a plateau.
+        highlight: hit a plateau
+        skill: writing
+        task: writing-2
+        collocation: hit
+    collocations:
+      - id: reach
+        phrase: reach a plateau
+        note: the most common pattern
+      - id: hit
+        phrase: hit a plateau
+        note: slightly less formal
+    relations:
+      - type: alternative
+        to: level-off.stop-changing
+        weight: 2
+        note: Level off is the verb; "reach a plateau" is the noun phrase for the same change.
+  - key: verb
+    label: to stop changing
+    pos: verb
+    definition: To stop rising or falling and stay at the same level.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-1] }
+    best_when: Varying "level off" in Task 1.
+    examples:
+      - id: ex1
+        text: Sales plateaued at around 500 units a month.
+        highlight: plateaued
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [stabilised, stabilized]
+      - id: ex2
+        text: The number of members has plateaued since 2018.
+        highlight: plateaued
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [stabilised, stabilized]
+    relations:
+      - type: alternative
+        to: peak.verb
+        weight: 1
+        note: Peak marks the highest point before a fall; plateau means staying at one level.

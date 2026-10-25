@@ -1,0 +1,45 @@
+id: device
+kind: word
+headword: device
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: device, type: lemma }
+  - { form: devices, type: inflection }
+senses:
+  - key: gadget
+    pos: noun
+    definition: A piece of equipment made for a particular purpose, especially an electronic one.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [technology]
+    best_when: Phones, tablets and laptops as a group — "electronic devices", "mobile devices".
+    examples:
+      - id: ex1
+        text: Many teenagers spend more than six hours a day on electronic devices.
+        highlight: electronic devices
+        skill: writing
+        task: writing-2
+        collocation: electronic
+        practice:
+          accept: [gadgets]
+      - id: ex2
+        text: I try not to use any devices for an hour before bed.
+        highlight: devices
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [screens, gadgets]
+    collocations:
+      - id: electronic
+        phrase: electronic devices
+        note: 'also "mobile devices", "digital devices"'
+    mistakes:
+      - id: devise
+        wrong: Children spend too long on their devises.
+        right: Children spend too long on their devices.
+        type: confusion
+        explanation: Device (with c) is the noun; devise (with s) is a verb meaning to invent a plan.

@@ -1,0 +1,75 @@
+id: beneficial
+kind: word
+headword: beneficial
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: beneficial, type: lemma }
+senses:
+  - key: helpful
+    pos: adjective
+    definition: Having a good effect, or helping someone or something.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Saying that something has good effects on health, learning, society or the economy.
+    examples:
+      - id: ex1
+        text: Regular exercise is beneficial to both physical and mental health.
+        highlight: beneficial to
+        skill: writing
+        task: writing-2
+        pattern: to
+        practice:
+          accept_preposition: [for]
+      - id: ex2
+        text: Studying abroad can be highly beneficial for young people.
+        highlight: highly beneficial for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept_preposition: [to]
+      - id: ex3
+        text: I think learning to cook is really beneficial, especially for students.
+        highlight: beneficial
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [useful, helpful, valuable]
+    preposition_patterns:
+      - id: to
+        base: beneficial
+        preposition: to
+        pattern: beneficial to + noun
+        complement: noun
+        note: the person or thing that gains
+      - id: for
+        base: beneficial
+        preposition: for
+        pattern: beneficial for + noun
+        complement: noun
+        note: equally correct
+    collocations:
+      - id: effect
+        phrase: a beneficial effect
+        pattern: have a beneficial effect on + noun
+        note: a formal way to say something helps
+      - id: highly
+        phrase: highly beneficial
+        note: very beneficial
+    mistakes:
+      - id: benefit-adj
+        wrong: Exercise is very benefit for health.
+        right: Exercise is very beneficial for health.
+        type: word_form
+        explanation: Benefit is the noun or verb; beneficial is the adjective.
+    relations:
+      - type: opposite
+        to: harmful.damaging
+      - type: alternative
+        to: positive.good
+        weight: 2
+        note: Positive is more general; beneficial says that something actually helps.

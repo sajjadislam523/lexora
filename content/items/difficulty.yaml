@@ -1,0 +1,53 @@
+id: difficulty
+kind: word
+headword: difficulty
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: difficulty, type: lemma }
+  - { form: difficulties, type: inflection }
+senses:
+  - key: problem
+    pos: noun
+    definition: A problem, or the fact that something is hard to do or understand.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: '"Have difficulty (in) doing something", and "financial difficulties" — problems people experience.'
+    examples:
+      - id: ex1
+        text: Many older people have difficulty using online services.
+        highlight: have difficulty using
+        skill: writing
+        task: writing-2
+        collocation: have
+        practice:
+          accept: [trouble, problems]
+      - id: ex2
+        text: I had real difficulty understanding the local accent at first.
+        highlight: difficulty understanding
+        skill: speaking
+        task: speaking-2
+        collocation: have
+        practice:
+          accept: [trouble]
+    collocations:
+      - id: have
+        phrase: have difficulty (in) doing
+        pattern: have difficulty + -ing
+      - id: financial
+        phrase: financial difficulties
+    mistakes:
+      - id: to-do
+        wrong: Many students have difficulty to find a job.
+        right: Many students have difficulty finding a job.
+        type: grammar
+        explanation: '"Have difficulty" is followed by an -ing form, not "to" + verb.'
+    relations:
+      - type: alternative
+        to: problem.difficulty
+        weight: 1
+        note: Problem is more general; difficulty often describes the experience of struggling.

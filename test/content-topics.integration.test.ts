@@ -62,7 +62,7 @@ describe.skipIf(!hasDatabase)("topics and discourse functions (PostgreSQL)", () 
     expect(await enumValues("discourse_function")).toEqual([...DISCOURSE_FUNCTIONS]);
   });
 
-  it("imports the published content unchanged, with no topics", async () => {
+  it("imports the published content unchanged, with its authored topics", async () => {
     const content = await loadPublishedContent();
     expect((await mod.importer.importContent(temp.db, content)).status).toBe("imported");
 
@@ -71,10 +71,18 @@ describe.skipIf(!hasDatabase)("topics and discourse functions (PostgreSQL)", () 
       .select({ id: s.languageItems.id })
       .from(s.languageItems)
       .where(eq(s.languageItems.status, "published"));
-    expect(published).toHaveLength(40);
-    const senses = [...(await sensesById()).values()];
-    expect(senses).toHaveLength(42);
-    expect(senses.every((row) => row.topics.length === 0)).toBe(true);
+    expect(published).toHaveLength(420);
+    const senses = await sensesById();
+    expect(senses.size).toBe(442);
+    // Topics arrived with the content expansion (Wave 2); each sense stores exactly its own.
+    for (const item of content.items) {
+      for (const authored of item.senses) {
+        expect(
+          senses.get(`${item.id}.${authored.key}`)?.topics,
+          `${item.id}.${authored.key}`,
+        ).toEqual(authored.topics ?? []);
+      }
+    }
 
     expect((await mod.importer.importContent(temp.db, content)).status).toBe("unchanged");
   });

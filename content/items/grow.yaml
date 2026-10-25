@@ -1,0 +1,65 @@
+id: grow
+kind: word
+headword: grow
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: grow, type: lemma }
+  - { form: grows, type: inflection }
+  - { form: grew, type: inflection }
+  - { form: grown, type: inflection }
+  - { form: growing, type: inflection }
+senses:
+  - key: increase
+    pos: verb
+    definition: To become larger or greater over a period of time.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [increase]
+    best_when: Things that develop over time — a population, an economy, a city, demand or a problem.
+    avoid_when: A single figure moves up and down on a chart; "rise" or "increase" is more precise there.
+    examples:
+      - id: ex1
+        text: The population of the city grew from 2 million to 3.5 million in thirty years.
+        highlight: grew
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [rose, increased]
+      - id: ex2
+        text: Demand for electric cars is growing rapidly in most developed countries.
+        highlight: growing rapidly
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [increasing, rising]
+      - id: ex3
+        text: My hometown has grown a lot since I was a child.
+        highlight: grown
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: number
+        phrase: a growing number of
+        pattern: a growing number of + plural noun
+        note: more and more people or things
+      - id: concern
+        phrase: growing concern
+        item: there-is-growing-concern-about
+      - id: rapidly
+        phrase: grow rapidly
+        note: fast growth
+    mistakes:
+      - id: grew-up
+        wrong: The number of students grew up quickly.
+        right: The number of students grew quickly.
+        type: confusion
+        explanation: '"Grow up" means to become an adult. Numbers and economies simply "grow".'
+    relations:
+      - type: alternative
+        to: expand.grow
+        weight: 2
+        note: Expand is for size, range or activity — a business, a city, a service — rather than numbers.

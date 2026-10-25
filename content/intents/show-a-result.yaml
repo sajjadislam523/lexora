@@ -7,14 +7,21 @@ triggers:
   - show the result
   - show a consequence
   - link cause and effect
+  - cause and effect linker
+  - cause and effect linkers
   - explain the effect
   - say what happened because of something
 groups:
   - label: Starting a new sentence
     entries:
       - { sense: as-a-result.result, fit: "the effect of what you just described" }
+      - { sense: therefore.result, fit: "a logical conclusion" }
+      - { sense: consequently.result, fit: "formal; what happened next as a result" }
+      - { sense: thus.result, fit: "very formal; often thus + -ing" }
   - label: Inside one sentence
     entries:
       - { sense: result-in.cause, fit: "cause + result in + effect" }
       - { sense: give-rise-to.cause, fit: "formal; often new problems or questions" }
       - { sense: contribute-to.help-cause, fit: "one cause among several" }
+      - { sense: lead-to.cause, fit: "cause + lead to + effect; very flexible" }
+      - { sense: bring-about.cause, fit: "changes, often planned or positive" }

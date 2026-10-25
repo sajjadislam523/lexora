@@ -1,0 +1,71 @@
+id: impact
+kind: word
+headword: impact
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: impact, type: lemma }
+  - { form: impacts, type: inflection }
+senses:
+  - key: noun
+    pos: noun
+    definition: A strong effect that something has on a situation, person or thing.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [result]
+    best_when: Effects that are strong or wide-reaching — on the environment, the economy, society or health.
+    avoid_when: As a verb ("impact the economy"). It is common in business English, but "affect" is safer in an essay.
+    examples:
+      - id: ex1
+        text: Tourism has a huge impact on the local environment.
+        highlight: impact on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [effect, influence]
+      - id: ex2
+        text: The closure of the factory had a devastating impact on the town.
+        highlight: devastating impact on
+        skill: writing
+        task: writing-2
+        pattern: on
+        practice:
+          accept: [effect]
+      - id: ex3
+        text: The internet has had a massive impact on the way we shop.
+        highlight: impact on
+        skill: speaking
+        task: speaking-3
+        pattern: on
+        practice:
+          accept: [effect, influence]
+    preposition_patterns:
+      - id: on
+        base: impact
+        preposition: on
+        pattern: have an impact on + noun
+        complement: noun
+        note: what is affected
+        mistake: to
+    collocations:
+      - id: environmental
+        phrase: environmental impact
+        note: the effect on nature
+      - id: devastating
+        phrase: a devastating impact
+        note: 'very strong, usually negative (devastating) or deep (profound); also "a profound impact"'
+    mistakes:
+      - id: to
+        wrong: Technology has a big impact to our lives.
+        right: Technology has a big impact on our lives.
+        type: preposition
+        explanation: '"An impact on" + what is affected.'
+    relations:
+      - type: alternative
+        to: affect.influence
+        weight: 1
+        note: Affect is the verb to use in place of "impact" as a verb.

@@ -1,0 +1,54 @@
+id: an-argument-in-favour-of
+kind: sentence_pattern
+headword: One argument in favour of … is that …
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+regional_note: American English spells it "favor". Both spellings are correct.
+forms:
+  - { form: one argument in favour of, type: lemma, region: gb, default: true }
+  - { form: one argument in favor of, type: spelling_variant, region: us }
+  - { form: one argument against, type: lemma }
+senses:
+  - key: introduce
+    pos: clause_frame
+    definition: Introduces one reason for supporting an idea; "against" introduces a reason to oppose it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [opinion, addition]
+    frames:
+      - id: favour
+        parts:
+          - { text: One argument in favour of }
+          - { slot: noun, hint: school uniforms }
+          - { text: is that }
+          - { slot: clause, hint: they reduce peer pressure }
+      - id: against
+        parts:
+          - { text: One argument against }
+          - { slot: noun, hint: zoos }
+          - { text: is that }
+          - { slot: clause, hint: animals suffer in captivity }
+    best_when: Opening a body paragraph in a discussion or advantages essay.
+    examples:
+      - id: ex1
+        text: One argument in favour of school uniforms is that they reduce pressure to wear expensive clothes.
+        highlight: [One argument in favour of, is that]
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: One argument against banning cars is that many people have no other way to get to work.
+        highlight: [One argument against, is that]
+        skill: writing
+        task: writing-2
+    mistakes:
+      - id: for
+        wrong: One argument in favour for uniforms is that they are cheap.
+        right: One argument in favour of uniforms is that they are cheap.
+        type: preposition
+        explanation: The fixed phrase is "in favour of".
+    relations:
+      - type: has_component
+        to: argument.reason

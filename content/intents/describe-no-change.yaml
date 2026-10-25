@@ -1,0 +1,25 @@
+id: describe-no-change
+label: Describe no change or fluctuation
+description: Say that a figure stayed the same, stopped changing, or went up and down.
+triggers:
+  - describe no change
+  - say something stayed the same
+  - say something did not change
+  - describe a stable trend
+  - describe a flat line
+  - describe fluctuation
+  - say something went up and down
+groups:
+  - label: Staying the same
+    entries:
+      - { sense: remain-stable.stable, fit: "roughly the same level for a period" }
+      - { sense: remain-unchanged.same, fit: "exactly the same figure" }
+  - label: Stopping a change
+    entries:
+      - { sense: level-off.stop-changing, fit: "a rise or fall that ends in a flat line" }
+      - { sense: plateau.noun, fit: '"reach a plateau" — the noun phrase' }
+      - { sense: stabilise.steady, fit: "becomes steady after ups and downs" }
+  - label: Up and down
+    entries:
+      - { sense: fluctuate.vary, fit: '"fluctuate between X and Y"' }
+      - { sense: fluctuation.change, fit: '"experience fluctuations" — the noun' }

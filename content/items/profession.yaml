@@ -1,0 +1,32 @@
+id: profession
+kind: word
+headword: profession
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: profession, type: lemma }
+  - { form: professions, type: inflection }
+senses:
+  - key: skilled-job
+    pos: noun
+    definition: A type of job that needs special training and qualifications, such as teaching, medicine or law.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [work]
+    best_when: Qualified jobs — "the teaching profession", "a well-paid profession".
+    examples:
+      - id: ex1
+        text: Nursing is a demanding profession that deserves better pay.
+        highlight: profession
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [job, career]
+      - id: ex2
+        text: Lots of people in my family are in the medical profession.
+        highlight: medical profession
+        skill: speaking
+        task: speaking-1

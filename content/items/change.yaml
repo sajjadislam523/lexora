@@ -1,0 +1,87 @@
+id: change
+kind: word
+headword: change
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: change, type: lemma }
+  - { form: changes, type: inflection }
+  - { form: changed, type: inflection }
+  - { form: changing, type: inflection }
+senses:
+  - key: verb
+    label: to become different
+    pos: verb
+    definition: To become different, or to make someone or something different.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1, speaking-3] }
+    best_when: Any kind of change; add an adverb to say how much (changed dramatically, changed slightly).
+    examples:
+      - id: ex1
+        text: The way people consume news has changed dramatically.
+        highlight: changed dramatically
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: My hometown has changed a lot since I was a child.
+        highlight: changed
+        skill: speaking
+        task: speaking-2
+    relations:
+      - type: stronger
+        to: transform.change-completely
+        weight: 2
+        note: Transform means changing something completely, usually for the better.
+  - key: noun
+    label: a difference
+    pos: noun
+    definition: The process or result of something becoming different.
+    cefr: A2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    best_when: Describing the overall picture in Task 1 or social developments in Task 2.
+    examples:
+      - id: ex1
+        text: The chart shows a significant change in the way people travel to work.
+        highlight: change in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [shift]
+      - id: ex2
+        text: There has been a big change in how people date.
+        highlight: change in
+        skill: speaking
+        task: speaking-3
+        pattern: in
+    preposition_patterns:
+      - id: in
+        base: change
+        preposition: in
+        pattern: a change in + noun
+        complement: noun
+        note: what changed
+        mistake: of
+    collocations:
+      - id: climate
+        phrase: climate change
+        item: climate-change
+      - id: social
+        phrase: social change
+        note: 'also "dramatic change"'
+    mistakes:
+      - id: of
+        wrong: a big change of people's habits
+        right: a big change in people's habits
+        type: preposition
+        explanation: '"A change in" + what changed. "A change of" is used for replacing one thing with another (a change of plan).'
+    relations:
+      - type: derived_form
+        to: change.verb
+        weight: 2
+        note: The same word as a verb.

@@ -1,0 +1,45 @@
+id: consumption
+kind: word
+headword: consumption
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: consumption, type: lemma }
+senses:
+  - key: use
+    pos: noun
+    definition: The amount of energy, food, water or goods that people use, or the act of using them.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    topics: [environment, economy]
+    best_when: Task 1 charts of energy, water or food use — "energy consumption", "the consumption of".
+    examples:
+      - id: ex1
+        text: Household energy consumption peaked in winter.
+        highlight: energy consumption
+        skill: writing
+        task: writing-1
+        collocation: energy
+        practice:
+          accept: [use, usage]
+      - id: ex2
+        text: The consumption of processed food has risen sharply.
+        highlight: consumption of
+        skill: writing
+        task: writing-2
+        collocation: of
+    collocations:
+      - id: energy
+        phrase: energy consumption
+        note: 'also "water consumption", "fuel consumption"'
+      - id: of
+        phrase: the consumption of
+        pattern: the consumption of + noun
+      - id: reduce
+        phrase: reduce consumption
+    relations:
+      - type: related
+        to: natural-resources.supply

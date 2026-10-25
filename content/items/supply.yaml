@@ -1,0 +1,30 @@
+id: supply
+kind: word
+headword: supply
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: supply, type: lemma }
+  - { form: supplies, type: inflection }
+senses:
+  - key: provision
+    pos: noun
+    definition: An amount of something available to be used, or the act of providing it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    topics: [economy]
+    best_when: '"The supply of" water, energy or housing; "in short supply" when there isn''t enough.'
+    examples:
+      - id: ex1
+        text: The supply of affordable housing has not kept up with demand.
+        highlight: supply of
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Clean water is in short supply in many parts of the world.
+        highlight: in short supply
+        skill: writing
+        task: writing-2

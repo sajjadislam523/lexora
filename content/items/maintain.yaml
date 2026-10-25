@@ -1,0 +1,85 @@
+id: maintain
+kind: word
+headword: maintain
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: maintain, type: lemma }
+  - { form: maintains, type: inflection }
+  - { form: maintained, type: inflection }
+  - { form: maintaining, type: inflection }
+senses:
+  - key: keep
+    label: to keep at the same level
+    pos: verb
+    definition: To keep something at the same level, standard or condition.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Keeping standards, health, relationships or infrastructure in good condition.
+    examples:
+      - id: ex1
+        text: It is expensive to maintain old roads and bridges.
+        highlight: maintain
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [repair]
+      - id: ex2
+        text: Regular exercise helps older people maintain their independence.
+        highlight: maintain
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [keep, preserve, retain]
+      - id: ex3
+        text: It's hard to maintain a healthy diet when you work long hours.
+        highlight: maintain
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [keep, have, follow]
+    collocations:
+      - id: standards
+        phrase: maintain standards
+        note: 'also "maintain quality"'
+      - id: balance
+        phrase: maintain a balance between
+        pattern: maintain a balance between + noun + and + noun
+    relations:
+      - type: alternative
+        to: preserve.protect
+        weight: 2
+        note: Preserve means protecting something from harm or loss; maintain means keeping it in good condition.
+  - key: claim
+    label: to keep saying something is true
+    pos: verb
+    definition: To keep saying firmly that something is true, even when others disagree.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    functions: [opinion]
+    best_when: Reporting a view that someone holds firmly against opposition — "Supporters maintain that …".
+    examples:
+      - id: ex1
+        text: The company maintains that its products are completely safe.
+        highlight: maintains that
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [insists, claims, asserts]
+      - id: ex2
+        text: Some teachers maintain that handwriting helps children remember more.
+        highlight: maintain that
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [argue, claim, insist, believe]
+    relations:
+      - type: alternative
+        to: argue.claim
+        weight: 2
+        note: Maintain stresses that someone keeps holding a view despite disagreement.

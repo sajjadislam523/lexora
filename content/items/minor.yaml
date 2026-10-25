@@ -1,0 +1,45 @@
+id: minor
+kind: word
+headword: minor
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: minor, type: lemma }
+senses:
+  - key: small
+    pos: adjective
+    definition: Not very large, serious or important compared with others.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-3] }
+    strength: 1
+    best_when: Small problems, changes and differences that don't affect the main picture.
+    examples:
+      - id: ex1
+        text: Apart from minor fluctuations, the figure remained stable.
+        highlight: minor fluctuations
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [slight, small]
+      - id: ex2
+        text: These are minor problems compared with the cost of housing.
+        highlight: minor problems
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [small]
+      - id: ex3
+        text: I had a few minor problems when I first moved here, nothing serious.
+        highlight: minor problems
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [small, little]
+    relations:
+      - type: alternative
+        to: negligible.tiny
+        weight: 1
+        note: Negligible means so small that it can be ignored; minor problems still exist.

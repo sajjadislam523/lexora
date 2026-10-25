@@ -1,0 +1,59 @@
+id: necessary
+kind: word
+headword: necessary
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: necessary, type: lemma }
+senses:
+  - key: needed
+    pos: adjective
+    definition: Needed in order to achieve something or for a situation to work.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [importance]
+    best_when: Saying something is required — "it is necessary to", "necessary for".
+    examples:
+      - id: ex1
+        text: It is necessary for governments to regulate the use of personal data.
+        highlight: necessary for
+        skill: writing
+        task: writing-2
+        pattern: for
+        practice:
+          accept: [essential, vital, crucial, important]
+      - id: ex2
+        text: Is it really necessary for children to have homework every day?
+        highlight: necessary for
+        skill: speaking
+        task: speaking-3
+        pattern: for
+        practice:
+          accept: [important, essential]
+    preposition_patterns:
+      - id: for
+        base: necessary
+        preposition: for
+        pattern: necessary for + noun / person + to + verb
+        complement: noun
+        note: what or who needs it
+        mistake: to-person
+    mistakes:
+      - id: to-person
+        wrong: It is necessary to students to work hard.
+        right: It is necessary for students to work hard.
+        type: preposition
+        explanation: Use "necessary for" + the person, then "to" + the verb.
+      - id: necessity
+        wrong: Water is a necessary for life.
+        right: Water is a necessity for life.
+        type: word_form
+        explanation: Necessary is an adjective. The noun is necessity.
+    relations:
+      - type: stronger
+        to: essential.necessary
+        weight: 2
+        note: Essential means absolutely necessary — impossible to do without.

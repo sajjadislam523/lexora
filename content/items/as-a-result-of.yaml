@@ -1,0 +1,48 @@
+id: as-a-result-of
+kind: functional_expression
+headword: as a result of
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: as a result of, type: lemma }
+senses:
+  - key: cause
+    pos: prepositional_phrase
+    definition: Because of something; followed by the cause as a noun phrase.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Naming the cause as a noun phrase — "as a result of the new law".
+    examples:
+      - id: ex1
+        text: As a result of rising rents, many families have moved to the suburbs.
+        highlight: As a result of
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [because of, due to, owing to]
+      - id: ex2
+        text: I started cycling as a result of the bus strikes last year.
+        highlight: as a result of
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [because of]
+    mistakes:
+      - id: clause
+        wrong: As a result of prices rose, people spent less.
+        right: As a result of rising prices, people spent less.
+        type: grammar
+        explanation: As a result of is followed by a noun phrase. With a full clause, use "because" (Because prices rose, …).
+    relations:
+      - type: confusable
+        to: as-a-result.result
+        weight: 3
+        note: '"As a result," starts a sentence about the effect; "as a result of" + noun names the cause.'
+      - type: synonym
+        to: due-to.cause
+        weight: 2
+        note: Due to is shorter and slightly more formal.

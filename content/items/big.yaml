@@ -1,0 +1,53 @@
+id: big
+kind: word
+headword: big
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: big, type: lemma }
+  - { form: bigger, type: inflection }
+  - { form: biggest, type: inflection }
+senses:
+  - key: size
+    pos: adjective
+    definition: Large in size, amount or importance.
+    cefr: A2
+    registers: [neutral, informal]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1, speaking-3] }
+    strength: 1
+    best_when: Speaking — "a big city", "a big difference", "a big problem" all sound natural.
+    avoid_when: "Writing. Choose what kind of big you mean: an amount (substantial, considerable), seriousness (major), or effect (significant)."
+    examples:
+      - id: ex1
+        text: Moving abroad was the biggest decision I've ever made.
+        highlight: biggest
+        skill: speaking
+        task: speaking-2
+      - id: ex2
+        text: There is a big difference between the two age groups.
+        highlight: big difference
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [significant, considerable, substantial, marked]
+    relations:
+      - type: more_formal
+        to: substantial.large
+        weight: 1
+        note: Substantial is for large amounts — money, evidence, changes.
+      - type: more_formal
+        to: considerable.large
+        weight: 1
+        note: Considerable stresses size or degree — "considerable time", "a considerable amount".
+      - type: more_formal
+        to: major.large
+        weight: 1
+        note: Major means big in importance or seriousness — "a major problem", "a major cause".
+      - type: more_formal
+        to: significant.notable
+        weight: 1
+        note: Significant means big enough to have a real effect.
+      - type: opposite
+        to: small.size

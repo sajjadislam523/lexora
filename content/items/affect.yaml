@@ -1,0 +1,69 @@
+id: affect
+kind: word
+headword: affect
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: affect, type: lemma }
+  - { form: affects, type: inflection }
+  - { form: affected, type: inflection }
+  - { form: affecting, type: inflection }
+senses:
+  - key: influence
+    pos: verb
+    definition: To have an influence on someone or something, or to cause a change in them.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [cause]
+    best_when: Saying that one thing changes or influences another, without saying how — often negatively.
+    examples:
+      - id: ex1
+        text: Rising sea levels will affect millions of people in coastal cities.
+        highlight: affect
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [impact]
+      - id: ex2
+        text: Lack of sleep can seriously affect students' concentration.
+        highlight: seriously affect
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [harm, damage, impair]
+      - id: ex3
+        text: The weather really affects my mood.
+        highlight: affects
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [influences]
+    collocations:
+      - id: seriously
+        phrase: seriously affect
+        note: 'a strong negative effect; also "badly affect"'
+      - id: directly
+        phrase: directly affect
+    mistakes:
+      - id: affect-on
+        wrong: Stress can affect on your health.
+        right: Stress can affect your health.
+        type: preposition
+        explanation: Affect takes a direct object, with no preposition. The noun phrase is "have an effect on".
+      - id: effect-verb
+        wrong: The new law will effect many families.
+        right: The new law will affect many families.
+        type: confusion
+        explanation: Affect is the verb; effect is usually the noun (an effect on).
+    relations:
+      - type: confusable
+        to: effect.result
+        weight: 3
+        note: Affect is the verb (it affects us); effect is the noun (it has an effect on us).
+      - type: alternative
+        to: influence.verb
+        weight: 2
+        note: Influence suggests a gradual or indirect effect on behaviour, opinions or decisions.

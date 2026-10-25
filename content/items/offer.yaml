@@ -1,0 +1,48 @@
+id: offer
+kind: word
+headword: offer
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: offer, type: lemma }
+  - { form: offers, type: inflection }
+  - { form: offered, type: inflection }
+  - { form: offering, type: inflection }
+senses:
+  - key: give
+    pos: verb
+    definition: To make something available for people to have or use if they want it.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-1, speaking-3] }
+    best_when: Opportunities, courses, services and benefits that people can choose to take.
+    examples:
+      - id: ex1
+        text: Many universities now offer courses entirely online.
+        highlight: offer
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [provide, run]
+      - id: ex2
+        text: Big cities offer more job opportunities than small towns.
+        highlight: offer
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [provide, have]
+    collocations:
+      - id: opportunities
+        phrase: offer opportunities
+        note: 'also "offer a range of"'
+      - id: advantages
+        phrase: offer advantages
+        note: a natural way to introduce benefits
+    mistakes:
+      - id: offer-to
+        wrong: The company offered to me a job.
+        right: The company offered me a job.
+        type: grammar
+        explanation: Offer someone something, or offer something to someone — not "offer to someone something".

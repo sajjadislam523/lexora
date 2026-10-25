@@ -1,0 +1,54 @@
+id: money
+kind: word
+headword: money
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: money, type: lemma }
+senses:
+  - key: cash
+    pos: noun
+    definition: Coins, notes and the amounts held in accounts, used to buy things; it is uncountable.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [economy]
+    best_when: Everyday speech, and essays where a plain word is clearest — "spend money on", "save money".
+    avoid_when: You mean money for a purpose from a government or organisation. "Funding" or "investment" is more precise.
+    examples:
+      - id: ex1
+        text: Governments should spend more money on mental health services.
+        highlight: spend more money on
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I'm trying to save money for a trip next summer.
+        highlight: save money
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: moneys
+        wrong: People don't have enough moneys.
+        right: People don't have enough money.
+        type: countability
+        explanation: Money is uncountable — no plural in everyday use.
+      - id: many
+        wrong: Many money is wasted on advertising.
+        right: A lot of money is wasted on advertising.
+        type: countability
+        explanation: Use "much" or "a lot of" with money, not "many".
+    relations:
+      - type: more_formal
+        to: funding.money-for
+        weight: 1
+        note: Funding is money given for a purpose, especially by a government or organisation.
+      - type: alternative
+        to: income.money-received
+        weight: 1
+        note: Income is the money someone receives regularly.
+      - type: alternative
+        to: expenditure.spending
+        weight: 1
+        note: Expenditure is the formal word for money spent.

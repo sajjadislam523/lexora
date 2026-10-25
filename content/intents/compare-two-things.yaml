@@ -1,0 +1,29 @@
+id: compare-two-things
+label: Compare two things
+description: Show how two things, groups or figures are similar or different.
+function: comparison
+triggers:
+  - compare two things
+  - make a comparison
+  - compare figures
+  - show a similarity
+  - say two things are similar
+  - describe a similarity
+groups:
+  - label: Similarity
+    entries:
+      - { sense: similar.alike, fit: '"similar to" + noun' }
+      - { sense: comparable.similar, fit: "close enough to compare fairly; formal" }
+      - { sense: similarly.same-way, fit: "a second point that follows the same pattern" }
+      - { sense: likewise.same-way, fit: "formal; the same is true of the next point" }
+  - label: Comparing figures
+    entries:
+      - { sense: compared-with.comparing, fit: '"compared with 2010" — a noun phrase' }
+      - { sense: twice-as-much-as.double, fit: "one figure is double the other" }
+      - { sense: respectively.in-order, fit: "figures for two items, in the same order" }
+  - label: Difference
+    entries:
+      - { sense: different.not-same, fit: '"different from" + noun' }
+      - { sense: unlike.different, fit: '"Unlike X, Y …" — a noun phrase' }
+      - { sense: whereas.contrast, fit: "two contrasting facts in one sentence" }
+      - { sense: by-comparison.comparing, fit: "a second figure in a new sentence" }

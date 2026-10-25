@@ -1,0 +1,43 @@
+id: nearly
+kind: word
+headword: nearly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: nearly, type: lemma }
+senses:
+  - key: almost
+    pos: adverb
+    definition: Almost, but not quite; a little less than.
+    cefr: B1
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-1, speaking-3] }
+    best_when: A figure just below a round number ("nearly 50%"), in both skills.
+    examples:
+      - id: ex1
+        text: Nearly a third of adults in the survey did no regular exercise.
+        highlight: Nearly
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [almost, just under]
+      - id: ex2
+        text: I've lived in this city for nearly ten years.
+        highlight: nearly
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [almost]
+    collocations:
+      - id: double
+        phrase: nearly doubled
+        note: rose to almost twice the figure
+      - id: half
+        phrase: nearly half
+    relations:
+      - type: synonym
+        to: just-under.below
+        weight: 2
+        note: Just under is more precise in Task 1; nearly is fine in both skills.

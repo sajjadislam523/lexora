@@ -1,0 +1,32 @@
+id: global-warming
+kind: word
+headword: global warming
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: global warming, type: lemma }
+senses:
+  - key: warming
+    pos: noun
+    definition: The gradual rise in the Earth's average temperature, caused mainly by greenhouse gases.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [environment]
+    best_when: The rise in temperature itself. For the wider effects, "climate change" is more accurate.
+    examples:
+      - id: ex1
+        text: Global warming is causing glaciers to melt at an alarming rate.
+        highlight: Global warming
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Summers here are much hotter now, which I think is down to global warming.
+        highlight: global warming
+        skill: speaking
+        task: speaking-3
+    relations:
+      - type: related
+        to: greenhouse-gases.gases

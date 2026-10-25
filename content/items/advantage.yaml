@@ -1,0 +1,78 @@
+id: advantage
+kind: word
+headword: advantage
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: advantage, type: lemma }
+  - { form: advantages, type: inflection }
+senses:
+  - key: good-point
+    pos: noun
+    definition: A feature that makes something better or more useful, or puts someone in a stronger position.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: '"Advantages and disadvantages" essays — "the main advantage of", "have an advantage over".'
+    examples:
+      - id: ex1
+        text: The main advantage of public transport is that it reduces congestion.
+        highlight: advantage of
+        skill: writing
+        task: writing-2
+        pattern: of
+        practice:
+          accept: [benefit]
+      - id: ex2
+        text: Bilingual children may have an advantage over their classmates.
+        highlight: advantage over
+        skill: writing
+        task: writing-2
+        pattern: over
+      - id: ex3
+        text: One big advantage of living in a small town is that everyone knows each other.
+        highlight: advantage of
+        skill: speaking
+        task: speaking-1
+        pattern: of
+        practice:
+          accept: [benefit]
+    preposition_patterns:
+      - id: of
+        base: advantage
+        preposition: of
+        pattern: the advantage of + noun / -ing
+        complement: noun_or_ing
+        note: what has the good point
+      - id: over
+        base: advantage
+        preposition: over
+        pattern: an advantage over + person / thing
+        complement: noun
+        note: who or what is in a weaker position
+        mistake: on
+    collocations:
+      - id: take
+        phrase: take advantage of
+        pattern: take advantage of + noun
+        note: make good use of an opportunity (or unfairly use someone)
+      - id: outweigh
+        phrase: the advantages outweigh the disadvantages
+        item: outweigh
+    mistakes:
+      - id: on
+        wrong: Young workers have an advantage on older ones.
+        right: Young workers have an advantage over older ones.
+        type: preposition
+        explanation: '"An advantage over" someone.'
+    relations:
+      - type: alternative
+        to: merit.good-quality
+        weight: 1
+        note: Merits is formal and is often used to weigh an idea fairly — "the merits of the plan".
+      - type: alternative
+        to: strength.good-point
+        weight: 1
+        note: A strength is a good quality that something or someone has.

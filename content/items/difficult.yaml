@@ -1,0 +1,53 @@
+id: difficult
+kind: word
+headword: difficult
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: difficult, type: lemma }
+senses:
+  - key: hard
+    pos: adjective
+    definition: Needing a lot of effort or skill, or causing problems.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    functions: [problem]
+    best_when: A general, safe word for tasks, situations and decisions that are hard.
+    examples:
+      - id: ex1
+        text: Many graduates find it difficult to get a job in their field.
+        highlight: find it difficult to
+        skill: writing
+        task: writing-2
+        collocation: find-it
+        practice:
+          accept: [hard]
+      - id: ex2
+        text: The most difficult part of my job is dealing with complaints.
+        highlight: most difficult
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [challenging]
+    collocations:
+      - id: find-it
+        phrase: find it difficult to
+        pattern: find it difficult to + verb
+        note: a natural way to describe a struggle
+      - id: decision
+        phrase: a difficult decision
+        note: 'also "a difficult situation"'
+    mistakes:
+      - id: difficult-to-me
+        wrong: It is difficult for me understanding the rules.
+        right: It is difficult for me to understand the rules.
+        type: grammar
+        explanation: '"It is difficult (for someone)" is followed by "to" + verb.'
+    relations:
+      - type: alternative
+        to: challenging.demanding
+        weight: 2
+        note: Challenging is more positive — difficult in a way that tests your ability.

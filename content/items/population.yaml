@@ -1,0 +1,48 @@
+id: population
+kind: word
+headword: population
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: population, type: lemma }
+  - { form: populations, type: inflection }
+senses:
+  - key: people
+    pos: noun
+    definition: All the people living in a particular country, city or area, or their number.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1] }
+    topics: [society, cities]
+    best_when: Task 1 population charts and Task 2 topics such as ageing and urbanisation.
+    examples:
+      - id: ex1
+        text: The population of the city doubled between 1950 and 2000.
+        highlight: population of
+        skill: writing
+        task: writing-1
+      - id: ex2
+        text: An ageing population will put pressure on healthcare systems.
+        highlight: ageing population
+        skill: writing
+        task: writing-2
+        collocation: ageing
+      - id: ex3
+        text: My hometown has a population of about fifty thousand.
+        highlight: population of
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: ageing
+        phrase: an ageing population
+        note: '"aging" in American English'
+      - id: growth
+        phrase: population growth
+      - id: large
+        phrase: a large population
+        note: 'also "a small population"'
+    relations:
+      - type: related
+        to: urbanisation.city-growth

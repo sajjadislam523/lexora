@@ -1,0 +1,54 @@
+id: because
+kind: linker
+headword: because
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: because, type: lemma }
+senses:
+  - key: cause
+    pos: conjunction
+    definition: For the reason that; introduces a clause giving a cause.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-2, speaking-3] }
+    functions: [cause]
+    linker:
+      connects: clauses
+      positions: [start, middle]
+      punctuation: No comma before it in the middle of a sentence. When the because-clause comes first, put a comma after it.
+    best_when: Giving a reason with a full clause — the clearest cause linker in both skills.
+    avoid_when: The because-clause stands alone as a sentence in writing. It must be joined to a main clause.
+    examples:
+      - id: ex1
+        text: Many people prefer to drive because buses are unreliable.
+        highlight: because
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [since, as]
+      - id: ex2
+        text: I love living here because everything is within walking distance.
+        highlight: because
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [since, as]
+    mistakes:
+      - id: fragment
+        wrong: Many people drive to work. Because buses are slow.
+        right: Many people drive to work because buses are slow.
+        type: punctuation
+        explanation: In writing, a because-clause can't be a sentence on its own. Join it to the main clause.
+      - id: because-noun
+        wrong: The flight was delayed because the storm.
+        right: The flight was delayed because of the storm.
+        type: grammar
+        explanation: Because is followed by a clause. Before a noun phrase, use "because of".
+    relations:
+      - type: alternative
+        to: since.cause
+        weight: 2
+        note: Since gives a reason the listener may already know, and often comes at the start.

@@ -1,0 +1,59 @@
+id: approach
+kind: word
+headword: approach
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: approach, type: lemma }
+  - { form: approaches, type: inflection }
+senses:
+  - key: method
+    pos: noun
+    definition: A way of dealing with a situation or problem, or of thinking about it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Comparing ways of handling an issue — "a different approach to", "a more balanced approach".
+    examples:
+      - id: ex1
+        text: Finland takes a very different approach to education.
+        highlight: approach to
+        skill: writing
+        task: writing-2
+        pattern: to
+        practice:
+          accept: [attitude]
+      - id: ex2
+        text: My teacher's approach to grammar made it much easier to understand.
+        highlight: approach to
+        skill: speaking
+        task: speaking-2
+        pattern: to
+    preposition_patterns:
+      - id: to
+        base: approach
+        preposition: to
+        pattern: an approach to + noun / -ing
+        complement: noun_or_ing
+        note: what is being dealt with
+        mistake: for
+    collocations:
+      - id: take
+        phrase: take an approach
+        note: 'also "adopt an approach"'
+      - id: balanced
+        phrase: a balanced approach
+        note: 'also "a holistic approach"'
+    mistakes:
+      - id: for
+        wrong: a new approach for solving crime
+        right: a new approach to solving crime
+        type: preposition
+        explanation: '"An approach to" + noun or -ing.'
+    relations:
+      - type: alternative
+        to: strategy.plan
+        weight: 2
+        note: A strategy is a planned series of actions to reach a goal; an approach is a general way of dealing with something.

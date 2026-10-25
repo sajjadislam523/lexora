@@ -1,0 +1,42 @@
+id: address
+kind: word
+headword: address
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: address, type: lemma }
+  - { form: addresses, type: inflection }
+  - { form: addressed, type: inflection }
+  - { form: addressing, type: inflection }
+senses:
+  - key: deal-with
+    label: to deal with a problem
+    pos: verb
+    definition: To start dealing with a problem or issue and try to find a solution.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    best_when: Formal Task 2 writing — "address the issue of", "address the root causes".
+    examples:
+      - id: ex1
+        text: Schools need to address the issue of bullying more seriously.
+        highlight: address
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [tackle, deal with]
+      - id: ex2
+        text: Any solution must address the root causes of poverty.
+        highlight: address
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [tackle, deal with]
+    mistakes:
+      - id: to
+        wrong: The plan does not address to the problem.
+        right: The plan does not address the problem.
+        type: preposition
+        explanation: Address a problem takes a direct object, with no preposition.

@@ -1,0 +1,41 @@
+id: adopt
+kind: word
+headword: adopt
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: adopt, type: lemma }
+  - { form: adopts, type: inflection }
+  - { form: adopted, type: inflection }
+  - { form: adopting, type: inflection }
+senses:
+  - key: start-using
+    pos: verb
+    definition: To start using a particular method, plan or way of behaving.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    best_when: Governments, companies or people taking up an approach, strategy or habit.
+    examples:
+      - id: ex1
+        text: More cities should adopt a car-free approach to their historic centres.
+        highlight: adopt
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [take]
+      - id: ex2
+        text: I've adopted a much healthier lifestyle since I started running.
+        highlight: adopted
+        skill: speaking
+        task: speaking-2
+        practice:
+          accept: [developed]
+    collocations:
+      - id: approach
+        phrase: adopt an approach
+        note: 'also "adopt a strategy", "adopt a policy"'
+      - id: lifestyle
+        phrase: adopt a healthy lifestyle

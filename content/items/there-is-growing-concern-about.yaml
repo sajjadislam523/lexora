@@ -45,3 +45,6 @@ senses:
         right: There is growing concern about the rising cost of housing.
         type: confusion
         explanation: '"Concern for" someone means caring about their well-being. For a worrying issue, use "concern about".'
+    relations:
+      - type: has_component
+        to: concern.worry

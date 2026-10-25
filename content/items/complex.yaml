@@ -1,0 +1,44 @@
+id: complex
+kind: word
+headword: complex
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: complex, type: lemma }
+senses:
+  - key: many-parts
+    pos: adjective
+    definition: Having many connected parts, so that it is hard to understand or deal with.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: Problems and issues with many causes or sides — a good way to show an argument is balanced.
+    examples:
+      - id: ex1
+        text: Homelessness is a complex issue with no single cause.
+        highlight: complex issue
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [complicated]
+      - id: ex2
+        text: It's a complex question, and I can see both sides.
+        highlight: complex question
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [complicated, difficult]
+    collocations:
+      - id: issue
+        phrase: a complex issue
+        note: 'also "a complex problem"'
+      - id: highly
+        phrase: highly complex
+    relations:
+      - type: alternative
+        to: difficult.hard
+        weight: 1
+        note: Difficult means hard to do; complex means it has many parts to understand.

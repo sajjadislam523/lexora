@@ -1,0 +1,38 @@
+id: community
+kind: word
+headword: community
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: community, type: lemma }
+  - { form: communities, type: inflection }
+senses:
+  - key: local
+    pos: noun
+    definition: The people who live in one area, or a group who share an interest, background or job.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-1, speaking-3] }
+    topics: [society, cities]
+    best_when: Local life — "the local community", "a sense of community", "community centres".
+    examples:
+      - id: ex1
+        text: New housing developments should include space for the local community.
+        highlight: local community
+        skill: writing
+        task: writing-2
+        collocation: local
+      - id: ex2
+        text: There's a really strong sense of community in my village.
+        highlight: sense of community
+        skill: speaking
+        task: speaking-1
+        collocation: sense
+    collocations:
+      - id: local
+        phrase: the local community
+      - id: sense
+        phrase: a sense of community
+        note: the feeling of belonging to a group

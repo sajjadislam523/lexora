@@ -1,0 +1,45 @@
+id: concern
+kind: word
+headword: concern
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: concern, type: lemma }
+  - { form: concerns, type: inflection }
+senses:
+  - key: worry
+    pos: noun
+    definition: A feeling of worry about something, or something that worries people.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    functions: [problem]
+    best_when: Public worries about a trend or risk — "growing concern about", "a major concern for", "raise concerns about".
+    examples:
+      - id: ex1
+        text: There is growing concern about the amount of plastic in the oceans.
+        highlight: concern about
+        skill: writing
+        task: writing-2
+        pattern: about
+      - id: ex2
+        text: Safety is the main concern for parents when choosing a school.
+        highlight: main concern
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [worry, priority]
+    preposition_patterns:
+      - id: about
+        base: concern
+        preposition: about
+        pattern: concern about / over + noun
+        complement: noun
+        note: what people are worried about
+    collocations:
+      - id: growing
+        phrase: growing concern
+        item: there-is-growing-concern-about
+        note: 'also "widespread concern"'

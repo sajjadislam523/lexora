@@ -1,0 +1,48 @@
+id: implement
+kind: word
+headword: implement
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: implement, type: lemma }
+  - { form: implements, type: inflection }
+  - { form: implemented, type: inflection }
+  - { form: implementing, type: inflection }
+senses:
+  - key: put-into-action
+    pos: verb
+    definition: To make a plan, decision or system start to work and be used.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-2] }
+    topics: [government]
+    best_when: Putting policies, measures, changes and plans into action.
+    examples:
+      - id: ex1
+        text: The new recycling scheme will be implemented in all schools next year.
+        highlight: implemented
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [introduced, launched]
+      - id: ex2
+        text: Many countries have implemented measures to reduce plastic waste.
+        highlight: implemented measures
+        skill: writing
+        task: writing-2
+        collocation: measures
+        practice:
+          accept: [introduced, adopted, taken]
+    collocations:
+      - id: measures
+        phrase: implement a policy
+        note: 'also "implement measures"'
+      - id: changes
+        phrase: implement changes
+    relations:
+      - type: alternative
+        to: adopt.start-using
+        weight: 2
+        note: Adopt means deciding to use a plan or method; implement means actually putting it into action.

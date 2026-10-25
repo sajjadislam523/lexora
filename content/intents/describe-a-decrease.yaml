@@ -1,0 +1,29 @@
+id: describe-a-decrease
+label: Describe a decrease
+description: Say that a number, amount or level went down, and how much.
+function: decrease
+triggers:
+  - describe a decrease
+  - describe a fall
+  - describe a decline
+  - say something decreased
+  - say something fell
+  - say numbers went down
+groups:
+  - label: With a verb
+    entries:
+      - { sense: decrease.verb, fit: "the standard verb in Task 1" }
+      - { sense: fall.verb, fit: "very common; no object" }
+      - { sense: decline.verb, fit: "a gradual, continuing fall" }
+      - { sense: drop.verb, fit: "often a sudden fall" }
+      - { sense: plunge.decrease, fit: "a sudden, very large fall" }
+  - label: With a noun phrase
+    entries:
+      - { sense: decrease.noun, fit: '"a decrease in" + noun' }
+      - { sense: fall.noun, fit: '"a sharp fall in" + noun' }
+      - { sense: decline.noun, fit: '"a steady decline in" + noun' }
+  - label: Describing the size
+    entries:
+      - { sense: slightly.small, fit: "a small change" }
+      - { sense: sharply.fast, fit: "a sudden, steep change" }
+      - { sense: dramatically.large, fit: "the most striking change" }

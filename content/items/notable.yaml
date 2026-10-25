@@ -1,0 +1,48 @@
+id: notable
+kind: word
+headword: notable
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: notable, type: lemma }
+senses:
+  - key: worth-noting
+    pos: adjective
+    definition: Important or interesting enough to deserve attention.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [emphasis]
+    best_when: Pointing out a feature of a chart or an exception ("the most notable change", "a notable exception").
+    examples:
+      - id: ex1
+        text: The most notable change was the rise in solar power.
+        highlight: most notable change
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [significant, striking, remarkable]
+      - id: ex2
+        text: Finland is a notable exception to this trend.
+        highlight: notable exception
+        skill: writing
+        task: writing-2
+        collocation: exception
+    collocations:
+      - id: exception
+        phrase: a notable exception
+        note: one case that doesn't follow the pattern
+      - id: feature
+        phrase: the most notable feature
+        note: a useful start for a Task 1 overview sentence
+    relations:
+      - type: alternative
+        to: significant.notable
+        weight: 1
+        note: Significant is about the size of an effect; notable is about deserving attention.
+      - type: stronger
+        to: remarkable.surprising
+        weight: 1
+        note: Remarkable also suggests surprise or admiration.

@@ -1,0 +1,44 @@
+id: perspective
+kind: word
+headword: perspective
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: perspective, type: lemma }
+  - { form: perspectives, type: inflection }
+senses:
+  - key: view
+    pos: noun
+    definition: A particular way of looking at an issue, often shaped by someone's situation or field.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Looking at an issue from different angles — "from an economic perspective", "a different perspective".
+    examples:
+      - id: ex1
+        text: From an environmental perspective, flying is the least sustainable way to travel.
+        highlight: From an environmental perspective
+        skill: writing
+        task: writing-2
+        collocation: from-a
+      - id: ex2
+        text: Living abroad gave me a completely different perspective on my own country.
+        highlight: different perspective on
+        skill: speaking
+        task: speaking-2
+    collocations:
+      - id: from-a
+        phrase: from a … perspective
+        pattern: from an economic / environmental / historical perspective
+        note: a neat way to organise a Task 2 paragraph
+      - id: on
+        phrase: a perspective on
+        pattern: a (different / fresh) perspective on + noun
+    relations:
+      - type: alternative
+        to: position.stance
+        weight: 1
+        note: A position is the side you take; a perspective is the angle you see the issue from.

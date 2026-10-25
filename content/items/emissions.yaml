@@ -1,0 +1,52 @@
+id: emissions
+kind: word
+headword: emissions
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: emissions, type: lemma }
+  - { form: emission, type: inflection }
+senses:
+  - key: gases
+    pos: noun
+    definition: Gases or other substances sent into the air, especially by vehicles, factories and power stations.
+    cefr: C1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    topics: [environment, transport]
+    best_when: Climate and pollution topics — "carbon emissions", "reduce emissions", "emissions from cars".
+    examples:
+      - id: ex1
+        text: Transport is responsible for a quarter of the country's carbon emissions.
+        highlight: carbon emissions
+        skill: writing
+        task: writing-1
+        collocation: carbon
+      - id: ex2
+        text: Countries must cut emissions from coal-fired power stations.
+        highlight: cut emissions from
+        skill: writing
+        task: writing-2
+        collocation: from
+      - id: ex3
+        text: Electric buses have helped reduce emissions in my city.
+        highlight: reduce emissions
+        skill: speaking
+        task: speaking-3
+        collocation: reduce
+    collocations:
+      - id: carbon
+        phrase: carbon emissions
+        note: 'also "CO2 emissions"'
+      - id: reduce
+        phrase: reduce emissions
+        note: 'also "cut emissions"'
+      - id: from
+        phrase: emissions from
+        pattern: emissions from + source
+        note: where the gases come from
+    relations:
+      - type: related
+        to: greenhouse-gases.gases

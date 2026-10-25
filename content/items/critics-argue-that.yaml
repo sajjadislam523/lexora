@@ -1,0 +1,39 @@
+id: critics-argue-that
+kind: sentence_pattern
+headword: Critics argue that …
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: critics argue that, type: lemma }
+  - { form: critics claim that, type: lemma }
+  - { form: critics contend that, type: lemma }
+  - { form: opponents argue that, type: lemma }
+senses:
+  - key: argue
+    pos: clause_frame
+    definition: Introduces the arguments of people who disagree with an idea or policy.
+    cefr: B2
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [opinion, contrast]
+    frames:
+      - id: critics
+        parts:
+          - { text: Critics, also: [Opponents] }
+          - { slot: noun, hint: of the policy }
+          - { text: argue that, also: [claim that, contend that, point out that] }
+          - { slot: clause, hint: it is too expensive }
+    best_when: Presenting the "against" side, often after "However," in a discussion essay.
+    examples:
+      - id: ex1
+        text: However, critics argue that the scheme is too expensive to run.
+        highlight: critics argue that
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Opponents argue that the new airport will destroy green spaces.
+        highlight: Opponents argue that
+        skill: writing
+        task: writing-2

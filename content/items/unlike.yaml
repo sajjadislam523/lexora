@@ -1,0 +1,46 @@
+id: unlike
+kind: word
+headword: unlike
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: unlike, type: lemma }
+senses:
+  - key: different
+    pos: preposition
+    definition: Different from; used to compare two things and show how they differ.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [contrast, comparison]
+    best_when: Starting a comparison with a noun phrase — "Unlike France, Germany …". Compare like with like.
+    examples:
+      - id: ex1
+        text: Unlike coal, solar power produces no emissions.
+        highlight: Unlike
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [In contrast to]
+      - id: ex2
+        text: Unlike my sister, I've always been interested in science.
+        highlight: Unlike
+        skill: speaking
+        task: speaking-2
+    mistakes:
+      - id: unlike-clause
+        wrong: Unlike prices rose in the city, they fell in rural areas.
+        right: While prices rose in the city, they fell in rural areas.
+        type: grammar
+        explanation: Unlike is followed by a noun phrase. With a full clause, use "while" or "whereas".
+    relations:
+      - type: alternative
+        to: whereas.contrast
+        weight: 2
+        note: Whereas is followed by a full clause; unlike by a noun phrase.
+      - type: alternative
+        to: compared-with.comparing
+        weight: 1
+        note: Compared with is neutral; unlike always stresses a difference.

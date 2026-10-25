@@ -1,0 +1,54 @@
+id: expand
+kind: word
+headword: expand
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: expand, type: lemma }
+  - { form: expands, type: inflection }
+  - { form: expanded, type: inflection }
+  - { form: expanding, type: inflection }
+senses:
+  - key: grow
+    pos: verb
+    definition: To become, or make something, larger in size, range or activity.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-1, writing-2, speaking-3] }
+    functions: [increase]
+    topics: [economy, cities]
+    best_when: Businesses, cities, networks, services and programmes getting bigger or wider.
+    avoid_when: A number on a chart goes up. Use "rise" or "increase" for figures.
+    examples:
+      - id: ex1
+        text: The rail network expanded rapidly in the second half of the century.
+        highlight: expanded
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [grew]
+      - id: ex2
+        text: Governments should expand access to free childcare.
+        highlight: expand access
+        skill: writing
+        task: writing-2
+        collocation: access
+      - id: ex3
+        text: The company I work for is expanding into other countries.
+        highlight: expanding into
+        skill: speaking
+        task: speaking-1
+    collocations:
+      - id: access
+        phrase: expand access to
+        pattern: expand access to + noun
+        note: make a service available to more people
+      - id: rapidly
+        phrase: expand rapidly
+    relations:
+      - type: alternative
+        to: increase.verb
+        weight: 1
+        note: Increase is for numbers and amounts; expand is for size, range or activity.

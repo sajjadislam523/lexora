@@ -1,0 +1,54 @@
+id: attribute-to
+kind: preposition_pattern
+headword: be attributed to
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: be attributed to, type: lemma }
+  - { form: attributed to, type: inflection }
+  - { form: attribute to, type: lemma }
+  - { form: attributes to, type: inflection }
+senses:
+  - key: explain
+    pos: verb_phrase
+    definition: To say or believe that something is the result of a particular cause.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-1, writing-2] }
+    functions: [cause]
+    best_when: Explaining a trend carefully — "The fall can be attributed to …", often with "can", "may" or "largely".
+    examples:
+      - id: ex1
+        text: The fall in crime can be attributed to better street lighting.
+        highlight: attributed to
+        skill: writing
+        task: writing-2
+        pattern: passive
+      - id: ex2
+        text: Experts attribute the rise in obesity to changes in diet.
+        highlight: [attribute, to]
+        skill: writing
+        task: writing-2
+        pattern: active
+    preposition_patterns:
+      - id: passive
+        base: attributed
+        preposition: to
+        pattern: effect + be attributed to + cause
+        complement: noun_or_ing
+        note: the cause comes after "to"
+        mistake: by
+      - id: active
+        base: attribute
+        preposition: to
+        pattern: attribute + effect + to + cause
+        complement: noun_or_ing
+        note: the effect is the object
+    mistakes:
+      - id: by
+        wrong: The rise can be attributed by higher prices.
+        right: The rise can be attributed to higher prices.
+        type: preposition
+        explanation: Attribute always takes "to" before the cause.

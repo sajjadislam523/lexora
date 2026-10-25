@@ -1,0 +1,44 @@
+id: similarly
+kind: linker
+headword: similarly
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: similarly, type: lemma }
+senses:
+  - key: same-way
+    pos: adverb
+    definition: In the same way; used to add a point that is like the one before.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [comparison]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence.
+    best_when: Adding a second example or figure that follows the same pattern as the first.
+    examples:
+      - id: ex1
+        text: Spending on food rose by 10%. Similarly, spending on housing increased.
+        highlight: Similarly,
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [Likewise, In the same way]
+      - id: ex2
+        text: Exercise improves mood. Similarly, time outdoors can reduce stress.
+        highlight: Similarly,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [Likewise, In the same way]
+    relations:
+      - type: synonym
+        to: likewise.same-way
+        weight: 2
+        note: Likewise is slightly more formal; both introduce a similar point.
+      - type: opposite
+        to: in-contrast.difference

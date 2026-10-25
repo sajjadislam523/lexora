@@ -1,0 +1,79 @@
+id: consider
+kind: word
+headword: consider
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: consider, type: lemma }
+  - { form: considers, type: inflection }
+  - { form: considered, type: inflection }
+  - { form: considering, type: inflection }
+senses:
+  - key: think-about
+    label: to think about
+    pos: verb
+    definition: To think carefully about something before making a decision.
+    cefr: B1
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Weighing options or factors — "consider the costs", "consider moving".
+    examples:
+      - id: ex1
+        text: Policymakers must consider the long-term effects of any new tax.
+        highlight: consider
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [weigh, examine, assess, evaluate]
+      - id: ex2
+        text: I'm considering doing a master's degree abroad.
+        highlight: considering doing
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: to-do
+        wrong: Many people consider to move abroad.
+        right: Many people consider moving abroad.
+        type: grammar
+        explanation: Consider is followed by -ing, not "to" + verb.
+    relations:
+      - type: alternative
+        to: analyse.examine
+        weight: 1
+        note: Analyse means examining something in detail; consider means thinking about it before deciding.
+  - key: regard
+    label: to have an opinion
+    pos: verb
+    definition: To think of someone or something in a particular way.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    functions: [opinion]
+    best_when: Reporting how people see something — "is widely considered (to be) …".
+    examples:
+      - id: ex1
+        text: Finland is widely considered to have one of the best school systems in the world.
+        highlight: widely considered
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [regarded, thought, believed]
+      - id: ex2
+        text: I consider myself lucky to have grown up near the sea.
+        highlight: consider
+        skill: speaking
+        task: speaking-2
+    mistakes:
+      - id: as
+        wrong: Many people consider him as a hero.
+        right: Many people consider him a hero.
+        type: grammar
+        explanation: '"Consider" takes the description directly (or "to be"); "regard … as" is the pattern with "as".'
+    relations:
+      - type: alternative
+        to: believe.think
+        weight: 2
+        note: Believe states your own view; "be considered" reports a common view.

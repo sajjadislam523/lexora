@@ -1,0 +1,32 @@
+id: lifelong-learning
+kind: word
+headword: lifelong learning
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: lifelong learning, type: lemma }
+senses:
+  - key: adult
+    pos: noun
+    definition: Continuing to learn and develop skills throughout your life, not only at school.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: useful, tasks: [writing-2] }
+    topics: [education, work]
+    best_when: Arguments about retraining workers and older people learning new skills.
+    examples:
+      - id: ex1
+        text: Rapid technological change makes lifelong learning essential for workers.
+        highlight: lifelong learning
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Libraries can support lifelong learning by offering free courses.
+        highlight: lifelong learning
+        skill: writing
+        task: writing-2
+    relations:
+      - type: related
+        to: vocational-education.job-training

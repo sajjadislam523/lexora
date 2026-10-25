@@ -1,0 +1,125 @@
+id: rise
+kind: word
+headword: rise
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: rise, type: lemma }
+  - { form: rises, type: inflection }
+  - { form: rose, type: inflection }
+  - { form: risen, type: inflection }
+  - { form: rising, type: inflection }
+senses:
+  - key: verb
+    label: to go up
+    pos: verb
+    definition: To go up in number, amount or level.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, speaking-3] }
+    functions: [increase]
+    best_when: Describing figures going up in Task 1. It never takes an object, so it suits charts where the figure itself changes.
+    avoid_when: Someone makes the change. Then use "raise" or "increase" with an object ("the government raised taxes").
+    examples:
+      - id: ex1
+        text: Average house prices rose steadily throughout the decade.
+        highlight: rose steadily
+        skill: writing
+        task: writing-1
+        practice:
+          accept: [increased, grew, climbed]
+      - id: ex2
+        text: The proportion of people working from home rose to 35% in 2021.
+        highlight: rose to
+        skill: writing
+        task: writing-1
+        pattern: to
+        practice:
+          accept: [increased, grew, climbed]
+      - id: ex3
+        text: Bus fares have risen quite a lot since I started university.
+        highlight: risen
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [increased, gone up]
+    preposition_patterns:
+      - id: to
+        base: rise
+        preposition: to
+        pattern: rise to + final level
+        complement: noun
+        note: the level reached; "by" gives the size of the rise
+      - id: by
+        base: rise
+        preposition: by
+        pattern: rise by + amount
+        complement: noun
+        note: the size of the change
+    mistakes:
+      - id: raised
+        wrong: The unemployment rate raised in 2009.
+        right: The unemployment rate rose in 2009.
+        type: confusion
+        explanation: Rise has no object (the rate rose). Raise needs one (the bank raised interest rates).
+    relations:
+      - type: synonym
+        to: climb.increase
+        weight: 2
+        note: Climb often suggests a steady rise over a period of time.
+      - type: opposite
+        to: fall.verb
+  - key: noun
+    label: an increase
+    pos: noun
+    definition: An increase in the number, amount or level of something.
+    cefr: B1
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2] }
+    functions: [increase]
+    best_when: A noun phrase for an upward change, used like "an increase" but slightly less formal.
+    examples:
+      - id: ex1
+        text: The graph shows a dramatic rise in online sales after 2019.
+        highlight: rise in
+        skill: writing
+        task: writing-1
+        pattern: in
+        practice:
+          accept: [increase]
+      - id: ex2
+        text: The rise in living costs has put pressure on young families.
+        highlight: rise in
+        skill: writing
+        task: writing-2
+        pattern: in
+        practice:
+          accept: [increase]
+      - id: ex3
+        text: I think the rise in rents is the biggest problem in my city.
+        highlight: rise in
+        skill: speaking
+        task: speaking-3
+        pattern: in
+        practice:
+          accept: [increase]
+    preposition_patterns:
+      - id: in
+        base: rise
+        preposition: in
+        pattern: a rise in + noun
+        complement: noun
+        note: what went up
+        mistake: of
+    mistakes:
+      - id: of
+        wrong: a rise of unemployment
+        right: a rise in unemployment
+        type: preposition
+        explanation: '"A rise in" + what changed; "a rise of" + the amount (a rise of 3%).'
+    relations:
+      - type: opposite
+        to: fall.noun

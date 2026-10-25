@@ -1,0 +1,32 @@
+id: deforestation
+kind: word
+headword: deforestation
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: deforestation, type: lemma }
+senses:
+  - key: clearing
+    pos: noun
+    definition: The cutting down of large areas of trees.
+    cefr: C1
+    registers: [academic]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    topics: [environment]
+    best_when: Causes of climate change and habitat loss — "deforestation in the Amazon".
+    examples:
+      - id: ex1
+        text: Deforestation is destroying the habitats of thousands of species.
+        highlight: Deforestation
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: Large-scale deforestation releases huge amounts of carbon.
+        highlight: Large-scale deforestation
+        skill: writing
+        task: writing-2
+    relations:
+      - type: related
+        to: habitat.home

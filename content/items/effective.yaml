@@ -1,0 +1,60 @@
+id: effective
+kind: word
+headword: effective
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: effective, type: lemma }
+senses:
+  - key: works
+    pos: adjective
+    definition: Producing the result that is wanted or intended.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    best_when: Evaluating solutions, policies and methods — "an effective way to", "highly effective".
+    examples:
+      - id: ex1
+        text: Higher taxes on cigarettes have proved an effective way to reduce smoking.
+        highlight: effective way
+        skill: writing
+        task: writing-2
+        collocation: way
+      - id: ex2
+        text: Public awareness campaigns are not always effective.
+        highlight: effective
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [successful]
+      - id: ex3
+        text: I find making lists the most effective way to remember new words.
+        highlight: most effective
+        skill: speaking
+        task: speaking-1
+        practice:
+          accept: [useful]
+    collocations:
+      - id: way
+        phrase: an effective way
+        pattern: an effective way to + verb / of + -ing
+      - id: highly
+        phrase: highly effective
+      - id: measures
+        phrase: effective measures
+        item: take-measures
+    mistakes:
+      - id: effect-adj
+        wrong: It is a very effect method.
+        right: It is a very effective method.
+        type: word_form
+        explanation: Effect is the noun; effective is the adjective.
+    relations:
+      - type: confusable
+        to: efficient.no-waste
+        weight: 3
+        note: Effective means it works; efficient means it works without wasting time, money or energy.
+      - type: opposite
+        to: ineffective.fails

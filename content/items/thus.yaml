@@ -1,0 +1,38 @@
+id: thus
+kind: linker
+headword: thus
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: thus, type: lemma }
+senses:
+  - key: result
+    pos: adverb
+    definition: As a result of this, or in this way.
+    cefr: C1
+    registers: [academic, formal]
+    skills: [writing]
+    ielts: { relevance: high, tasks: [writing-2] }
+    functions: [result]
+    linker:
+      connects: sentences
+      positions: [start, middle]
+      punctuation: A comma after it at the start of a sentence is optional. It often follows "and" or a comma before an -ing clause ("…, thus reducing costs").
+    best_when: Formal writing, especially "thus + -ing" to show what an action achieves.
+    avoid_when: Speaking. It sounds very formal.
+    examples:
+      - id: ex1
+        text: Cycle lanes encourage people to leave their cars at home, thus reducing traffic.
+        highlight: thus
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [thereby]
+      - id: ex2
+        text: The new law makes recycling compulsory. Thus, households will produce less waste.
+        highlight: Thus,
+        skill: writing
+        task: writing-2
+        practice:
+          accept: [therefore, consequently, as a result, hence]

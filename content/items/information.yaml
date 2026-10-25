@@ -1,0 +1,42 @@
+id: information
+kind: word
+headword: information
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: information, type: lemma }
+senses:
+  - key: facts
+    pos: noun
+    definition: Facts or details about someone or something; it is uncountable.
+    cefr: A2
+    registers: [neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-1, writing-2, speaking-1, speaking-3] }
+    best_when: Any facts or details. Use "a piece of information" for one fact.
+    examples:
+      - id: ex1
+        text: The internet gives people instant access to information.
+        highlight: information
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I usually get information about local events from social media.
+        highlight: information about
+        skill: speaking
+        task: speaking-1
+    mistakes:
+      - id: plural
+        wrong: The website gives many useful informations.
+        right: The website gives a lot of useful information.
+        type: countability
+        explanation: Information is uncountable — no plural, and "much" or "a lot of" instead of "many".
+      - id: an
+        wrong: I need an information about the course.
+        right: I need some information about the course.
+        type: countability
+        explanation: Don't use "a" or "an" with information. Say "some information" or "a piece of information".
+    relations:
+      - type: related
+        to: data.information

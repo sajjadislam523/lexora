@@ -1,0 +1,35 @@
+id: workplace
+kind: word
+headword: workplace
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: workplace, type: lemma }
+  - { form: workplaces, type: inflection }
+senses:
+  - key: place
+    pos: noun
+    definition: The place where people work, such as an office or factory, and the working environment there.
+    cefr: B2
+    registers: [neutral, academic]
+    skills: [writing, speaking]
+    ielts: { relevance: high, tasks: [writing-2, speaking-3] }
+    topics: [work]
+    best_when: Conditions and relationships at work — "in the workplace", "workplace stress".
+    examples:
+      - id: ex1
+        text: Technology has changed communication in the workplace.
+        highlight: in the workplace
+        skill: writing
+        task: writing-2
+      - id: ex2
+        text: I think a friendly workplace matters more than a high salary.
+        highlight: workplace
+        skill: speaking
+        task: speaking-3
+        practice:
+          accept: [office, team]
+    relations:
+      - type: related
+        to: employee.worker

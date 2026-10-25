@@ -1,0 +1,56 @@
+id: environmental
+kind: word
+headword: environmental
+status: published
+source: lexora-editorial
+review: { author: claude, reviewer: owner, on: 2026-10-24, level: editorial }
+forms:
+  - { form: environmental, type: lemma }
+  - { form: environmentally, type: inflection }
+senses:
+  - key: relating
+    pos: adjective
+    definition: Relating to the natural world and the effect of human activity on it.
+    cefr: B2
+    registers: [academic, neutral]
+    skills: [writing, speaking]
+    ielts: { relevance: core, tasks: [writing-2, speaking-3] }
+    topics: [environment]
+    best_when: Before a noun — "environmental damage", "environmental protection"; and "environmentally friendly".
+    examples:
+      - id: ex1
+        text: Fast fashion causes significant environmental damage.
+        highlight: environmental damage
+        skill: writing
+        task: writing-2
+        collocation: damage
+      - id: ex2
+        text: Governments should do more to tackle environmental issues.
+        highlight: environmental issues
+        skill: writing
+        task: writing-2
+        collocation: issues
+      - id: ex3
+        text: I try to buy environmentally friendly products when I can.
+        highlight: environmentally friendly
+        skill: speaking
+        task: speaking-1
+        collocation: friendly
+    collocations:
+      - id: damage
+        phrase: environmental damage
+        note: 'also "environmental impact"'
+      - id: issues
+        phrase: environmental issues
+        note: 'also "environmental problems"'
+      - id: protection
+        phrase: environmental protection
+      - id: friendly
+        phrase: environmentally friendly
+        note: not harmful to the environment
+    mistakes:
+      - id: noun
+        wrong: There are many environment problems in big cities.
+        right: There are many environmental problems in big cities.
+        type: word_form
+        explanation: Use the adjective "environmental" before a noun.
