@@ -3,6 +3,7 @@
  *
  *   pnpm content:check            validate content/ — no database needed (CI runs this)
  *   pnpm content:check --practice also list every review exercise, for the content review
+ *   pnpm content:check --stats    also print exact counts of the published dataset
  *   pnpm content:import           validate, then import into DATABASE_URL in one transaction
  *   pnpm content:import --force   import even if the content is unchanged since the last release
  *
@@ -73,10 +74,50 @@ function reportPractice(content: ValidatedContent) {
   }
 }
 
+/**
+ * With `--stats`: exact counts of the published dataset (what learners can reach), for content
+ * PRs. Retired senses and drafts are left out; relations are counted as authored (the importer
+ * also writes each one's inverse).
+ */
+function reportStats(content: ValidatedContent) {
+  const items = content.items.filter((item) => item.status === "published");
+  const senses = items.flatMap((item) => item.senses.filter((sense) => !sense.retired));
+  const sum = (count: (sense: (typeof senses)[number]) => number) =>
+    senses.reduce((total, sense) => total + count(sense), 0);
+  const tally = (values: string[]) => {
+    const counts = new Map<string, number>();
+    for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+    return [...counts].sort(([a], [b]) => a.localeCompare(b)).map(([k, n]) => `${k} ${n}`);
+  };
+  const examples = senses.flatMap((sense) => sense.examples);
+  const accepted = examples.reduce(
+    (n, e) => n + (e.practice?.accept?.length ?? 0) + (e.practice?.accept_preposition?.length ?? 0),
+    0,
+  );
+  const lines = [
+    `published items ${items.length}`,
+    `senses ${senses.length}`,
+    `examples ${examples.length}`,
+    `collocations ${sum((s) => s.collocations.length)}`,
+    `preposition patterns ${sum((s) => s.preposition_patterns.length)}`,
+    `frames ${sum((s) => s.frames.length)}`,
+    `mistakes ${sum((s) => s.mistakes.length)}`,
+    `relations (authored) ${sum((s) => s.relations.length)}`,
+    `accepted alternatives ${accepted}`,
+    `intents ${content.intents.length}`,
+    `items by kind: ${tally(items.map((item) => item.kind)).join(", ")}`,
+    `senses by IELTS task: ${tally(senses.flatMap((s) => s.ielts.tasks)).join(", ")}`,
+    `senses by function: ${tally(senses.flatMap((s) => s.functions ?? [])).join(", ")}`,
+    `senses by topic: ${tally(senses.flatMap((s) => s.topics ?? [])).join(", ")}`,
+  ];
+  console.log(`\nPublished dataset\n${lines.map((line) => `  ${line}`).join("\n")}`);
+}
+
 async function check() {
   const content = await validate();
   if (!content) return 1;
   reportPractice(content);
+  if (process.argv.includes("--stats")) reportStats(content);
   return 0;
 }
 
