@@ -141,7 +141,8 @@ describe("the gap reader on Explore", () => {
     const page = await html(explore("Cars are responsible ___ pollution and depend ___ oil"));
     expect(page).toContain("Gap 1 · Prepositions after “responsible”");
     expect(page).toContain("Gap 2 · Prepositions after “depend”");
-    expect(verdictsIn(page)).toEqual(["likely_fits", "depends", "likely_fits", "depends"]);
+    // Phase 6B: "pollution" is an authored noun, so "for" fits; "oil" isn't, so "on" likely fits.
+    expect(verdictsIn(page)).toEqual(["fits", "depends", "likely_fits", "depends"]);
   });
 
   it("filters after judging, and says what the filters hid", async () => {

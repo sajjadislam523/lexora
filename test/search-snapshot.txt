@@ -348,9 +348,10 @@ LOOKUP · results · exact → such as · guide 2
 [Alternatives] for-instance.example, namely.specify
 
 ## "depend on public transport"
-LOOKUP · results · exact → public transport
-[] public-transport.buses-trains
-[Related] commute.travel-to-work, congestion.traffic
+LOOKUP · results · exact → depend on · guide 1
+[] depend-on.rely, depend-on.vary
+[Other forms] dependence.reliance
+[Also in your search] public-transport.buses-trains
 
 ## "we should raise awareness"
 LOOKUP · results · exact → raise awareness · guide 2
@@ -374,6 +375,35 @@ LOOKUP · results · exact → environment · guide 1
 LOOKUP · results · exact → public transport
 [] public-transport.buses-trains
 [Related] commute.travel-to-work, congestion.traffic
+
+## "what is a better word for important"
+SYNONYM · results · exact → important · guide 6
+[] significant.notable, crucial.essential, essential.necessary, fundamental.basic, key.main, major.large
+
+## "IELTS Task 1 word for increase"
+SYNONYM · results · exact → increase · guide 5 · task writing-1
+[increase — to go up or make go up] rise.verb, grow.increase, surge.increase, expand.grow, go-up.increase
+[increase — a rise] rise.noun
+
+## "word for very important"
+STRONGER_ALTERNATIVE · results · exact → important · guide 2
+[] crucial.essential, essential.necessary
+
+## "word for a large increase"
+SYNONYM · results · exact → increase · descriptor large (large)
+[Collocations] significant.notable:increase, substantial.large:increase, dramatically.large:dramatic, increase.noun:marked, increase.verb:significantly, rise-sharply.increase:dramatically
+[Words and phrases] considerable.large, surge.increase, jump.increase, sharply.fast, significantly.large, substantially.large
+
+## "word for a small increase"
+SYNONYM · results · exact → increase · descriptor small (small)
+[Collocations] slightly.small:slight
+[Words and phrases] marginally.small
+
+## "words to express contrast"
+PHRASE · results · guide 7
+[Between sentences] however.contrast, in-contrast.difference, on-the-other-hand.other-side
+[Within one sentence] whereas.contrast, while.contrast, unlike.different
+[Conceding a point] nevertheless.concession
 
 ## "I want to say something increased significantly"
 CONTEXTUAL_EXPRESSION · results · guide 8

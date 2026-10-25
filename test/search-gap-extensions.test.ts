@@ -139,7 +139,8 @@ describe("one authored structure for both blanks (G5-D1, G5-D2)", () => {
   it.each([
     [
       "People should ___ more attention ___ environmental problems",
-      ["devote … to{devote.give}=likely_fits"],
+      // Phase 6B: "environmental" is an authored adjective, so a noun phrase follows: fits.
+      ["devote … to{devote.give}=fits"],
     ],
     [
       "Schools should ___ more time ___ the curriculum",
@@ -160,7 +161,8 @@ describe("one authored structure for both blanks (G5-D1, G5-D2)", () => {
       "Schools should ___ awareness ___ the dangers",
       ["raise … about{raise-awareness.inform}=fits", "raise … of{raise-awareness.inform}=fits"],
     ],
-    ["Governments must ___ measures ___ crime", ["take … against{take-measures.act}=likely_fits"]],
+    // Phase 6B: "crime" is an authored noun: fits.
+    ["Governments must ___ measures ___ crime", ["take … against{take-measures.act}=fits"]],
     ["The policy ___ rise ___ protests", ["give … to{give-rise-to.cause}=likely_fits"]],
   ])("%j (J2–J9)", async (query, expected) => {
     expect(pairs(await service.search(query))).toEqual(expected);

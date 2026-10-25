@@ -23,6 +23,7 @@ import type { MistakeHit } from "../repository";
 import type { GapFit } from "../types";
 
 import type { GapCandidate, GapWindow } from "./candidates";
+import { startsNounPhrase, type ClassConflict, type Lexicon, type WordClass } from "./roles";
 import { DETERMINERS } from "./words";
 
 export const GAP_VERDICTS = [
@@ -129,9 +130,23 @@ function mistakeVerdict(mistake: MistakeHit): Verdict {
   };
 }
 
-/** A noun complement: a determiner shows a noun phrase follows; any other word can't be checked. */
-function nounPhraseVerdict(next: string, matches: string, lead: string): Verdict {
-  return DETERMINERS.has(next)
+/**
+ * What the content and the closed word classes know about the words around a blank (Phase 6B):
+ * the lexicon, and a class conflict the service found for this candidate.
+ */
+export type ClassEvidence = { lexicon?: Lexicon; conflict?: ClassConflict };
+
+/**
+ * A noun complement: a determiner shows a noun phrase follows, as does (Phase 6B) a number or a
+ * word the content only knows as a noun or adjective; any other word can't be checked.
+ */
+function nounPhraseVerdict(
+  next: string,
+  matches: string,
+  lead: string,
+  lexicon: Lexicon | undefined,
+): Verdict {
+  return DETERMINERS.has(next) || (lexicon !== undefined && startsNounPhrase(next, lexicon))
     ? {
         verdict: "fits",
         signals: [lead, "noun_phrase_follows"],
@@ -153,6 +168,7 @@ function complementVerdict(
   next: string | undefined,
   matches: string,
   lead: string,
+  lexicon?: Lexicon,
 ): Verdict {
   if (next === undefined) {
     return {
@@ -205,25 +221,66 @@ function complementVerdict(
             signals: [lead, "ing_follows"],
             reason: `${matches}, with an -ing form after it.`,
           }
-        : nounPhraseVerdict(next, matches, lead);
+        : nounPhraseVerdict(next, matches, lead, lexicon);
     case "noun":
-      return nounPhraseVerdict(next, matches, lead);
+      return nounPhraseVerdict(next, matches, lead, lexicon);
   }
 }
 
-/** A preposition candidate: a recreated mistake, else what follows the blank. */
+const CLASS_NAME: Record<WordClass, string> = {
+  noun: "A noun",
+  verb: "A verb",
+  adjective: "An adjective",
+  adverb: "An adverb",
+  preposition: "A preposition",
+  determiner: "A determiner",
+  pronoun: "A pronoun",
+  modal: "A modal verb",
+  number: "A number",
+};
+
+/**
+ * Phase 6B: the words around the blank rule the candidate out (gap/roles.ts). Unlikely, with the
+ * learner's word that decides it; an authored mistake still comes first.
+ */
+export function classVerdict(conflict: ClassConflict, display: string): Verdict {
+  if (conflict.kind === "noun_pattern") {
+    return {
+      verdict: "unlikely",
+      signals: ["word_class", "noun_pattern"],
+      reason: `${quote(display)} uses its word as a noun, but ${quote(conflict.word)} here is a verb.`,
+    };
+  }
+  const { rule, word } = conflict.exclusion;
+  const name = CLASS_NAME[conflict.wordClass];
+  const reason =
+    rule === "before_preposition"
+      ? `${name} can't come straight before ${quote(word)}: the gap needs another kind of word.`
+      : rule === "verb_object"
+        ? `${name} can't go between ${quote(word)} and the noun phrase after the gap.`
+        : `${name} can't come straight after ${quote(word)}.`;
+  return { verdict: "unlikely", signals: ["word_class", rule], reason };
+}
+
+/**
+ * A preposition candidate: a recreated mistake; else (Phase 6B) a word class the words around
+ * the blank rule out; else what follows the blank.
+ */
 export function prepositionVerdict(
   candidate: GapCandidate,
   window: GapWindow,
   mistakes: readonly MistakeHit[],
+  evidence: ClassEvidence = {},
 ): Verdict {
   const mistake = recreatedMistake(window, candidate.fill, mistakes);
   if (mistake) return mistakeVerdict(mistake);
+  if (evidence.conflict) return classVerdict(evidence.conflict, candidate.evidence.display);
   return complementVerdict(
     candidate.complement ?? "noun",
     window.after[0],
     `Matches the pattern ${quote(candidate.evidence.display)}`,
     "pattern",
+    evidence.lexicon,
   );
 }
 
@@ -235,9 +292,11 @@ export function framePrepositionVerdict(
   candidate: GapCandidate,
   window: GapWindow,
   mistakes: readonly MistakeHit[],
+  evidence: ClassEvidence = {},
 ): Verdict {
   const mistake = recreatedMistake(window, candidate.fill, mistakes);
   if (mistake) return mistakeVerdict(mistake);
+  if (evidence.conflict) return classVerdict(evidence.conflict, candidate.evidence.display);
   const frame = quote(candidate.evidence.display);
   const object = quote(window.before[0]!);
   if (!candidate.objectAuthored) {
@@ -252,6 +311,7 @@ export function framePrepositionVerdict(
     window.after[0],
     `Matches the frame ${frame} with ${object} as its object`,
     "frame_object",
+    evidence.lexicon,
   );
 }
 
@@ -268,6 +328,7 @@ export function jointVerdict(
   second: GapWindow,
   between: readonly string[],
   mistakes: readonly MistakeHit[],
+  lexicon?: Lexicon,
 ): Verdict {
   const preposition = candidate.preposition!;
   const mistake =
@@ -290,12 +351,14 @@ export function jointVerdict(
           second.after[0],
           `Matches the frame ${structure} with ${quote(between.at(-1)!)} as its object`,
           "frame_object",
+          lexicon,
         )
       : complementVerdict(
           candidate.complement ?? "noun",
           second.after[0],
           `Matches the pattern ${structure}`,
           "pattern",
+          lexicon,
         );
   const verdict: Verdict = { ...judged, signals: ["joint", ...judged.signals] };
   if (!candidate.openLeft) return verdict;
@@ -366,11 +429,13 @@ export function collocationVerdict(
 
 /**
  * A linker candidate: its authored position matches the learner's punctuation, but which
- * relationship (contrast, addition…) the sentence needs is meaning Lexora doesn't read.
+ * relationship (contrast, addition…) the sentence needs is meaning Lexora doesn't read. Phase 6B:
+ * a contrast linker notes authored opposites on the two sides ("rose" … "fell"), still Depends.
  */
 export function linkerVerdict(
   slot: "start" | "between_commas" | "after_comma",
   functionLabel: string | undefined,
+  opposites?: { left: string; right: string },
 ): Verdict {
   const where =
     slot === "start"
@@ -378,10 +443,13 @@ export function linkerVerdict(
       : slot === "between_commas"
         ? "between commas"
         : "after a comma, joining two clauses";
+  const hint = opposites
+    ? ` ${quote(opposites.left)} and ${quote(opposites.right)} are opposites, which suggests contrast;`
+    : "";
   return {
     verdict: "depends",
-    signals: ["linker_position", `position:${slot}`],
-    reason: `${functionLabel ? `A linker for ${functionLabel}` : "A linker"} that goes ${where}; whether it fits depends on how the two ideas relate.`,
+    signals: ["linker_position", `position:${slot}`, ...(opposites ? ["opposites"] : [])],
+    reason: `${functionLabel ? `A linker for ${functionLabel}` : "A linker"} that goes ${where};${hint} whether it fits depends on how the two ideas relate.`,
   };
 }
 

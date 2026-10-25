@@ -37,7 +37,8 @@ describe("prepositions", () => {
     ],
     [
       "responsible ___ them",
-      ["to{responsible-for.duty}=fits", "for{responsible-for.duty}=likely_fits"],
+      // Phase 6B: an object pronoun is a noun phrase, so "for" fits too (authored order).
+      ["for{responsible-for.duty}=fits", "to{responsible-for.duty}=fits"],
     ],
     [
       "responsible ___ maintaining parks",

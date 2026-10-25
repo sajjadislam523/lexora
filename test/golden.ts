@@ -86,6 +86,9 @@ export async function rankingSnapshot(service: LanguageSearchService, queries: r
       term && `${term.via} → ${term.resolved}`,
       r.didYouMean && `did you mean ${r.didYouMean.join(" | ")}`,
       r.guide && `guide ${r.guide.rows.length}`,
+      r.interpretation.descriptor &&
+        `descriptor ${r.interpretation.descriptor.word} (${r.interpretation.descriptor.qualities.join(", ")})`,
+      r.interpretation.task && `task ${r.interpretation.task}`,
     ].filter(Boolean);
     const lines = [`## ${JSON.stringify(query)}`, head.join(" · ")];
     if (r.outcome === "fallback") {

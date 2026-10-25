@@ -1,17 +1,17 @@
 # Retrieval benchmark
 
-passed 78/118 · top-1 67.8% · top-3 80.5% · top-5 82.2% · MRR 0.738
+passed 118/118 · top-1 98.3% · top-3 100.0% · top-5 100.0% · MRR 0.992
 
 ## Categories
 basic-lexical    passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
-synonym-intent   passed 14/22 · top-1 54.5% · top-3 95.5% · top-5 95.5% · MRR 0.712
-modifier-intent  passed 0/13 · top-1 7.7% · top-3 7.7% · top-5 7.7% · MRR 0.111
-preposition      passed 11/12 · top-1 91.7% · top-3 91.7% · top-5 91.7% · MRR 0.917
-context-gap      passed 16/19 · top-1 89.5% · top-3 89.5% · top-5 100.0% · MRR 0.918
-linker           passed 10/11 · top-1 90.9% · top-3 100.0% · top-5 100.0% · MRR 0.955
-functional       passed 9/12 · top-1 83.3% · top-3 91.7% · top-5 91.7% · MRR 0.875
-multi-word       passed 6/11 · top-1 54.5% · top-3 54.5% · top-5 54.5% · MRR 0.545
-task-aware       passed 0/6 · top-1 16.7% · top-3 83.3% · top-5 83.3% · MRR 0.417
+synonym-intent   passed 22/22 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+modifier-intent  passed 13/13 · top-1 92.3% · top-3 100.0% · top-5 100.0% · MRR 0.962
+preposition      passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+context-gap      passed 19/19 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+linker           passed 11/11 · top-1 90.9% · top-3 100.0% · top-5 100.0% · MRR 0.955
+functional       passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+multi-word       passed 11/11 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+task-aware       passed 6/6 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
 
 ## Cases
 ✓ [basic-lexical] "important" #1
@@ -28,81 +28,39 @@ task-aware       passed 0/6 · top-1 16.7% · top-3 83.3% · top-5 83.3% · MRR 
 ✓ [basic-lexical] "a significant increase" #1
 ✓ [synonym-intent] "better word for important" #1
 ✓ [synonym-intent] "a better word for important" #1
-✗ [synonym-intent] "what is a better word for important" #2
-    intent LOOKUP, want SYNONYM; first result important{important} isn't expected or acceptable
-    top: important{important} | significant{significant} | crucial{crucial} | essential{essential} | fundamental{fundamental}
+✓ [synonym-intent] "what is a better word for important" #1
 ✓ [synonym-intent] "another word for important" #1
-✗ [synonym-intent] "alternative word for important" #2
-    intent LOOKUP, want SYNONYM; first result important{important} isn't expected or acceptable
-    top: important{important} | significant{significant} | crucial{crucial} | essential{essential} | fundamental{fundamental}
-✗ [synonym-intent] "can you give me another word for important?" —
-    intent LOOKUP, want SYNONYM; no answer (no results, or only the full-text fallback)
-    top: —
+✓ [synonym-intent] "alternative word for important" #1
+✓ [synonym-intent] "can you give me another word for important?" #1
 ✓ [synonym-intent] "synonym of important" #1
 ✓ [synonym-intent] "another word for increase" #1
-✗ [synonym-intent] "what's another word for increase" #3
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✓ [synonym-intent] "formal word for good" #2
+✓ [synonym-intent] "what's another word for increase" #1
+✓ [synonym-intent] "formal word for good" #1
 ✓ [synonym-intent] "academic word for good" #1
-✓ [synonym-intent] "academic word for think" #2
-✗ [synonym-intent] "formal way to say think" #3
-    intent LOOKUP, want SYNONYM; first result think{think} isn't expected or acceptable
-    top: think{think} | in my opinion{in-my-opinion} | argue{argue} | believe{believe}
-✗ [synonym-intent] "academic way to say show" #3
-    intent LOOKUP, want SYNONYM; first result show{show} isn't expected or acceptable
-    top: show{show} | reveal{reveal} | illustrate{illustrate} | indicate{indicate} | demonstrate{demonstrate}
+✓ [synonym-intent] "academic word for think" #1
+✓ [synonym-intent] "formal way to say think" #1
+✓ [synonym-intent] "academic way to say show" #1
 ✓ [synonym-intent] "better word for show" #1
 ✓ [synonym-intent] "another word for big" #1
 ✓ [synonym-intent] "better word for bad" #1
 ✓ [synonym-intent] "stronger word for important" #1
-✗ [synonym-intent] "word for very important" #3
-    intent LOOKUP, want STRONGER_ALTERNATIVE; first result important{important} isn't expected or acceptable; rejected important at #1
-    top: important{important} | significant{significant} | crucial{crucial} | essential{essential} | fundamental{fundamental}
-✗ [synonym-intent] "word meaning very important" #3
-    intent LOOKUP, want STRONGER_ALTERNATIVE; first result important{important} isn't expected or acceptable; rejected important at #1
-    top: important{important} | significant{significant} | crucial{crucial} | essential{essential} | fundamental{fundamental}
+✓ [synonym-intent] "word for very important" #1
+✓ [synonym-intent] "word meaning very important" #1
 ✓ [synonym-intent] "another word for problem" #1
 ✓ [synonym-intent] "better word for help" #1
-✗ [modifier-intent] "word for a large increase" —
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; no expected answer; rejected decrease at #9, above the first expected; rejected increase at #1
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a big increase" —
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; no expected answer; rejected decrease at #9, above the first expected
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a huge rise" —
-    intent LOOKUP, want SYNONYM; first result rise{rise} isn't expected or acceptable; no expected answer
-    top: rise{rise} | rise{rise} | increase{increase} | increase{increase} | climb{climb}
-✗ [modifier-intent] "word for a small increase" —
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; no expected answer; rejected surge at #6, above the first expected
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a slight increase" —
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; no expected answer; rejected surge at #6, above the first expected
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a rapid increase" #6
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; first expected at #6
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a sudden increase" #6
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; first expected at #6
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a gradual increase" —
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; no expected answer; rejected surge at #6, above the first expected
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a steady increase" —
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable; no expected answer; rejected surge at #6, above the first expected
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [modifier-intent] "word for a large decrease" —
-    intent LOOKUP, want SYNONYM; first result decrease{decrease} isn't expected or acceptable; no expected answer; rejected increase at #9, above the first expected
-    top: decrease{decrease} | decrease{decrease} | fall{fall} | fall{fall} | decline{decline}
-✗ [modifier-intent] "word for a sharp fall" #9
-    intent LOOKUP, want SYNONYM; first result fall{fall} isn't expected or acceptable; first expected at #9; rejected dip at #8, above the first expected
-    top: fall{fall} | fall{fall} | decrease{decrease} | decrease{decrease} | drop{drop}
-✗ [modifier-intent] "word for a slight decrease" —
-    intent LOOKUP, want SYNONYM; first result decrease{decrease} isn't expected or acceptable; no expected answer
-    top: decrease{decrease} | decrease{decrease} | fall{fall} | fall{fall} | decline{decline}
-✗ [modifier-intent] "word for a gradual decline" #1
-    intent LOOKUP, want SYNONYM
-    top: decline{decline} | decline{decline} | decrease{decrease} | decrease{decrease} | fall{fall}
+✓ [modifier-intent] "word for a large increase" #1
+✓ [modifier-intent] "word for a big increase" #1
+✓ [modifier-intent] "word for a huge rise" #1
+✓ [modifier-intent] "word for a small increase" #1
+✓ [modifier-intent] "word for a slight increase" #1
+✓ [modifier-intent] "word for a rapid increase" #1
+✓ [modifier-intent] "word for a sudden increase" #1
+✓ [modifier-intent] "word for a gradual increase" #1
+✓ [modifier-intent] "word for a steady increase" #2
+✓ [modifier-intent] "word for a large decrease" #1
+✓ [modifier-intent] "word for a sharp fall" #1
+✓ [modifier-intent] "word for a slight decrease" #1
+✓ [modifier-intent] "word for a gradual decline" #1
 ✓ [preposition] "preposition after responsible" #1
 ✓ [preposition] "preposition after contribute" #1
 ✓ [preposition] "preposition after depend" #1
@@ -113,19 +71,13 @@ task-aware       passed 0/6 · top-1 16.7% · top-3 83.3% · top-5 83.3% · MRR 
 ✓ [preposition] "preposition after interested" #1
 ✓ [preposition] "preposition after depends" #1
 ✓ [preposition] "which preposition after aware" #1
-✗ [preposition] "preposition after an increase" —
-    intent LOOKUP, want PREPOSITION; first result increase{increase} isn't expected or acceptable; no expected answer
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
+✓ [preposition] "preposition after an increase" #1
 ✓ [preposition] "responsible for or to" #1
-✗ [context-gap] "suffer ___ poverty" #1
-    rejected reduce poverty at #3
-    top: suffer from{suffer-from} | child poverty{poverty} | reduce poverty{poverty} | alleviate poverty{alleviate}
+✓ [context-gap] "suffer ___ poverty" #1
 ✓ [context-gap] "responsible ___ the problem" #1
 ✓ [context-gap] "contribute ___ society" #1
 ✓ [context-gap] "depend ___ public transport" #1
-✗ [context-gap] "Prices rose ___ in 2020." #4
-    first result rise in{rise} isn't expected or acceptable; first expected at #4; rejected rise in at #1; rejected rise by at #2; rejected rise to at #3
-    top: rise in{rise} | rise by{rise} | rise to{rise} | rose sharply{rise-sharply} | rise dramatically{rise-sharply}
+✓ [context-gap] "Prices rose ___ in 2020." #1
 ✓ [context-gap] "prices rose ___ 2020" #1
 ✓ [context-gap] "Governments should ____ more money into public transportation" #1
 ✓ [context-gap] "The government is responsible ___ providing healthcare." #1
@@ -139,14 +91,10 @@ task-aware       passed 0/6 · top-1 16.7% · top-3 83.3% · top-5 83.3% · MRR 
 ✓ [context-gap] "Schools raised awareness ___ the dangers" #1
 ✓ [context-gap] "She devoted her life ___ helping others" #1
 ✓ [context-gap] "There was a ___ increase in prices" #1
-✗ [context-gap] "Prices rose, ___ demand fell" #5
-    first result because{because} isn't expected or acceptable; first expected at #5
-    top: because{because} | since{since} | although{although} | even though{even-though} | whereas{whereas}
+✓ [context-gap] "Prices rose, ___ demand fell" #1
 ✓ [linker] "alternative to however" #1
 ✓ [linker] "linker for reason" #1
-✗ [linker] "cause and effect linker" #1
-    intent CONTEXTUAL_EXPRESSION, want LINKER
-    top: as a result{as-a-result} | therefore{therefore} | consequently{consequently} | thus{thus} | result in{result-in}
+✓ [linker] "cause and effect linker" #1
 ✓ [linker] "linker for contrast" #1
 ✓ [linker] "linker for giving an example" #1
 ✓ [linker] "linker for addition" #1
@@ -158,57 +106,29 @@ task-aware       passed 0/6 · top-1 16.7% · top-3 83.3% · top-5 83.3% · MRR 
 ✓ [functional] "phrase for giving an opinion" #1
 ✓ [functional] "phrase for comparing two things" #1
 ✓ [functional] "phrase for describing a trend" #1
-✗ [functional] "phrase for introducing a solution" #1
-    intent LOOKUP, want PHRASE
-    top: solution{solution} | approach{approach} | response{response} | remedy{remedy}
-✗ [functional] "phrase for concluding" —
-    intent LOOKUP, want PHRASE; no answer (no results, or only the full-text fallback)
-    top: —
+✓ [functional] "phrase for introducing a solution" #1
+✓ [functional] "phrase for concluding" #1
 ✓ [functional] "phrase for giving an example" #1
 ✓ [functional] "I want to express contrast" #1
 ✓ [functional] "how to say something is important" #1
 ✓ [functional] "phrase for softening a claim" #1
 ✓ [functional] "phrase for describing a problem" #1
-✗ [functional] "sentence starter for giving an opinion" #2
-    first result argue{argue} isn't expected or acceptable
-    top: argue{argue} | It can be argued that …{it-can-be-argued-that} | Supporters of … argue that …{supporters-argue-that} | Critics argue that …{critics-argue-that} | claim{claim}
+✓ [functional] "sentence starter for giving an opinion" #1
 ✓ [functional] "phrase for summarising" #1
-✗ [multi-word] "depend on public transport" —
-    no expected answer
-    top: public transport{public-transport} | commute{commute} | congestion{congestion}
+✓ [multi-word] "depend on public transport" #1
 ✓ [multi-word] "result in higher costs" #1
 ✓ [multi-word] "responsible for the increase" #1
-✗ [multi-word] "contribute to climate change" —
-    no expected answer
-    top: climate change{climate-change} | global warming{global-warming}
-✗ [multi-word] "focus on education" —
-    no expected answer
-    top: education{education} | higher education{higher-education} | literacy{literacy}
+✓ [multi-word] "contribute to climate change" #1
+✓ [multi-word] "focus on education" #1
 ✓ [multi-word] "suffer from poverty" #1
-✗ [multi-word] "lead to unemployment" —
-    no expected answer
-    top: unemployment{unemployment} | employment{employment}
+✓ [multi-word] "lead to unemployment" #1
 ✓ [multi-word] "raise awareness of the problem" #1
 ✓ [multi-word] "a significant increase in prices" #1
-✗ [multi-word] "rely on social media" —
-    no expected answer
-    top: social media{social-media} | communication{communication} | screen time{screen-time}
+✓ [multi-word] "rely on social media" #1
 ✓ [multi-word] "tackle climate change" #1
-✗ [task-aware] "IELTS Task 1 word for increase" #3
-    intent LOOKUP, want SYNONYM; first result increase{increase} isn't expected or acceptable
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [task-aware] "Task 2 phrase for giving an opinion" #3
-    intent LOOKUP, want PHRASE; first result opinion{opinion} isn't expected or acceptable
-    top: opinion{opinion} | point of view{viewpoint} | in my opinion{in-my-opinion}
-✗ [task-aware] "academic word for describing a trend" —
-    no answer (no results, or only the full-text fallback)
-    top: —
-✗ [task-aware] "Task 1 phrase for describing an increase" #1
-    intent LOOKUP, want PHRASE
-    top: increase{increase} | increase{increase} | rise{rise} | rise{rise} | grow{grow}
-✗ [task-aware] "writing task 2 linker for contrast" #3
-    intent LOOKUP, want LINKER; first result contrast{contrast} isn't expected or acceptable
-    top: contrast{contrast} | contrast{contrast} | in contrast{in-contrast}
-✗ [task-aware] "better word for important in task 2" #2
-    intent LOOKUP, want SYNONYM; first result important{important} isn't expected or acceptable
-    top: important{important} | significant{significant} | crucial{crucial} | essential{essential} | fundamental{fundamental}
+✓ [task-aware] "IELTS Task 1 word for increase" #1
+✓ [task-aware] "Task 2 phrase for giving an opinion" #1
+✓ [task-aware] "academic word for describing a trend" #1
+✓ [task-aware] "Task 1 phrase for describing an increase" #1
+✓ [task-aware] "writing task 2 linker for contrast" #1
+✓ [task-aware] "better word for important in task 2" #1

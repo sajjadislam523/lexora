@@ -161,9 +161,17 @@ describe("linker gaps", () => {
     expect(
       shape(await service.search("My brother loves the city, ___ I prefer the country")),
     ).toEqual([["Linkers that join two clauses", clauseLinkers]]);
-    // No collocation is read across the comma ("rose sharply").
+    // No collocation is read across the comma ("rose sharply"). Phase 6B: "rose" and "fell" are
+    // authored opposites, so the contrast linkers come first.
     expect(shape(await service.search("Prices rose, ___ demand fell"))).toEqual([
-      ["Linkers that join two clauses", clauseLinkers],
+      [
+        "Linkers that join two clauses",
+        [
+          "whereas{whereas.contrast}",
+          "while{while.contrast}",
+          ...clauseLinkers.filter((l) => !l.includes(".contrast}")),
+        ],
+      ],
     ]);
   });
 

@@ -184,7 +184,7 @@
   intent: SYNONYM
   expected: [significant, substantial, considerable]
   acceptable: [dramatically, a marked increase, surge, jump, substantially, considerably, sharply]
-  rejected: [slightly, marginally, decrease, increase]
+  rejected: [slightly, marginally, decrease]
 
 - query: word for a big increase
   category: modifier-intent

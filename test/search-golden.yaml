@@ -420,10 +420,14 @@
 
 - query: depend on public transport
   intent: LOOKUP
-  # Content expansion: "public transport" is now an item and is the longest known term in the
-  # query, so the longest-term rule resolves to it rather than "depend on".
-  term: { via: exact, resolved: public transport }
-  top: [public transport]
+  # Phase 6B: a pattern in use comes first. "depend on" ends with a preposition and takes the
+  # rest of the query as its object, so it is what the learner is using; the longest-term rule
+  # (which had picked "public transport" since the content expansion) applies only otherwise.
+  # The object stays reachable as the last group.
+  term: { via: exact, resolved: depend on }
+  top: [depend on]
+  includes: [public transport]
+  groups: [Also in your search]
 
 - query: we should raise awareness
   intent: LOOKUP
@@ -452,3 +456,41 @@
   intent: LOOKUP
   top: [public transport]
   mistakes: []
+
+# ── Phase 6B: retrieval intelligence ────────────────────────────────────────────────────────
+
+# Framing words around a request are read through.
+- query: what is a better word for important
+  intent: SYNONYM
+  top: [significant, crucial, essential]
+
+# The IELTS task is kept and puts language used in it first; it hides nothing.
+- query: IELTS Task 1 word for increase
+  intent: SYNONYM
+  term: { via: exact, resolved: increase }
+  includes: [rise, grow, surge]
+
+# A stronger word, not "important" again.
+- query: word for very important
+  intent: STRONGER_ALTERNATIVE
+  only: [crucial, essential]
+
+# A descriptor with a head word: authored language that says both, the shape asked for first.
+- query: word for a large increase
+  intent: SYNONYM
+  term: { via: exact, resolved: increase }
+  top: [a significant increase, a substantial increase]
+  includes: [considerable, surge, jump]
+  excludes: [slightly, marginally, increase]
+  groups: [Collocations, Words and phrases]
+
+- query: word for a small increase
+  intent: SYNONYM
+  top: [a slight increase]
+  includes: [marginally]
+  excludes: [surge, jump, dip, significant]
+
+# A request for words for an idea reaches the intent.
+- query: words to express contrast
+  intent: PHRASE
+  includes: [however, in contrast, whereas]

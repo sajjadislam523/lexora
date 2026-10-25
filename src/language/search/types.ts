@@ -3,9 +3,10 @@
  * query gives every visitor the same response; saved state is added in the browser.
  */
 import type { SearchFilters } from "../filters";
+import type { Quality } from "./descriptors";
 import type { GapVerdict } from "./gap/verdicts";
 import type { SenseSummary, Span } from "../model";
-import type { ItemKind, Register, Skill } from "../schema/vocabulary";
+import type { IeltsTask, ItemKind, Register, Skill } from "../schema/vocabulary";
 
 import type { FilterCounts } from "./repository";
 
@@ -129,6 +130,13 @@ export type SearchResponse = {
     summary: string;
     term?: TermResolution;
     modifiers: Modifier[];
+    /**
+     * Phase 6B: a size or speed word read with the term ("large" in "a word for a large
+     * increase"), and the qualities it asks for.
+     */
+    descriptor?: { word: string; qualities: Quality[] };
+    /** Phase 6B: the IELTS task the query names; language used in it comes first. */
+    task?: IeltsTask;
   };
   groups: ResultGroup[];
   guide?: FitGuide;

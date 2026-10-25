@@ -12,6 +12,11 @@
  * 7. With filters (Phase 4), keep only the results whose sense matches them. Filters never change
  *    how a query is read or ranked: the answer is the same, with fewer results.
  *
+ * Phase 6B (docs/ARCHITECTURE.md → Retrieval intelligence) adds, still without AI: request
+ * normalisation before step 2 (request.ts), descriptor words read with a term (descriptors.ts),
+ * word-class checks for context gaps (gap/roles.ts), word-class and register fit in relation
+ * ranking, context-aware choice among the known terms in a longer query, and task-aware order.
+ *
  * Browsing (filters without a query) lists matching senses in a fixed order, filtered in the
  * repository, page by page.
  */
@@ -23,15 +28,27 @@ import {
   type SearchFilters,
 } from "../filters";
 import type { SenseSummary } from "../model";
-import { MAX_QUERY_LENGTH, normaliseQuery, words } from "../normalise";
+import { MAX_QUERY_LENGTH, normaliseQuery, normaliseTerm, words } from "../normalise";
 import { RELATION_GROUPS, RELATION_PHRASE } from "../relations";
 import {
   DISCOURSE_FUNCTIONS,
   type DiscourseFunction,
+  type IeltsTask,
+  type PartOfSpeech,
   type RelationType,
 } from "../schema/vocabulary";
 
-import { classify, type Classification } from "./classify";
+import { type Classification } from "./classify";
+import {
+  containsPhrase,
+  describesNear,
+  glossRank,
+  phraseShape,
+  readDescriptor,
+  signalRank,
+  signalsOf,
+  type Descriptor,
+} from "./descriptors";
 import {
   anchorWords,
   baseCandidates,
@@ -54,6 +71,8 @@ import {
   type GapWindow,
 } from "./gap/candidates";
 import { planGaps, type Blank, type GapPlan } from "./gap/reader";
+import { GAP_PREPOSITIONS, isFunctionWord } from "./gap/words";
+import { buildLexicon, classConflict, lexiconWords, readSlot, type Lexicon } from "./gap/roles";
 import {
   collocationVerdict,
   framePrepositionVerdict,
@@ -62,10 +81,12 @@ import {
   linkerVerdict,
   prepositionVerdict,
   VERDICT_ORDER,
+  type GapVerdict,
   type Verdict,
 } from "./gap/verdicts";
 import { frameFit, matchIntent, readGap, showsMistake } from "./match";
 import { RELATION_PRIORITY, rank, type Candidate, type MatchTier } from "./rank";
+import { readRequest } from "./request";
 import type {
   CollocationHit,
   FormMatch,
@@ -74,6 +95,7 @@ import type {
   MistakeHit,
   PatternHit,
   RelationHit,
+  SenseFacets,
   SenseRef,
 } from "./repository";
 import { chooseCorrection } from "./text";
@@ -216,8 +238,20 @@ export class LanguageSearchService {
     const normalised = normaliseQuery(text);
     if (!normalised) return null;
 
-    const classification = classify(normalised);
+    const classification = readRequest(normalised);
     const base = { query, normalised };
+    const response = await this.byIntent(base, classification, query, plan);
+    return response && classification.task
+      ? this.taskFirst(response, classification.task)
+      : response;
+  }
+
+  private async byIntent(
+    base: { query: string; normalised: string },
+    classification: Classification,
+    query: string,
+    plan: GapPlan,
+  ): Promise<SearchResponse | null> {
     switch (classification.intent) {
       case "SYNONYM":
       case "STRONGER_ALTERNATIVE":
@@ -244,15 +278,15 @@ export class LanguageSearchService {
         return response;
       }
       case "LOOKUP":
-        return this.lookup(base, normalised, []);
+        return this.lookup(base, base.normalised, []);
     }
   }
 
   // ── Term resolution ──────────────────────────────────────────────────────────────────────
 
   /** Exact form, then spelling variant, then a cautious typo correction (never silent). */
-  private async resolve(term: string): Promise<Resolution> {
-    const forms = await this.repo.findForms(term);
+  private async resolve(term: string, found?: FormMatch[]): Promise<Resolution> {
+    const forms = found ?? (await this.repo.findForms(term));
     if (forms.length > 0) return { forms, resolution: describeMatch(term, forms) };
 
     const outcome = chooseCorrection(term, await this.repo.findTermCandidates(term));
@@ -278,7 +312,12 @@ export class LanguageSearchService {
     c: Classification,
   ): Promise<SearchResponse> {
     const term = c.term!;
-    const resolved = await this.resolve(term);
+    const forms = await this.repo.findForms(term);
+    if (forms.length === 0) {
+      const read = await this.unresolvedRequest(base, c, term);
+      if (read) return read;
+    }
+    const resolved = await this.resolve(term, forms);
     if (!resolved) return this.lookup(base, base.normalised, c.modifiers);
     if ("didYouMean" in resolved) return didYouMean(base, c, resolved.didYouMean);
 
@@ -293,7 +332,10 @@ export class LanguageSearchService {
       senses.map((sense) => sense.id),
       types,
     );
-    const summaries = await this.summaries(relations.map((r) => r.toSenseId));
+    const [summaries, facets] = await Promise.all([
+      this.summaries(relations.map((r) => r.toSenseId)),
+      this.facets([...senses.map((sense) => sense.id), ...relations.map((r) => r.toSenseId)]),
+    ]);
     const headword = resolved.forms[0]!.headword;
     const tier: MatchTier = resolved.resolution.via === "typo" ? 4 : 3;
 
@@ -310,6 +352,8 @@ export class LanguageSearchService {
           {
             result: resultFrom(summary, relationReason(relation, headword)),
             tier,
+            // Phase 6B: a word of the same class first ("think" → "argue" before "in my opinion").
+            classFit: sameWordClass(facets.get(sense.id), facets.get(relation.toSenseId)) ? 0 : 1,
             weight: relation.weight,
             relevance: summary.ieltsRelevance,
             typePriority: RELATION_PRIORITY[relation.type] ?? 9,
@@ -337,13 +381,237 @@ export class LanguageSearchService {
     });
   }
 
+  /**
+   * Phase 6B: a request whose term isn't a form Lexora knows, read before any typo correction:
+   * a stronger or weaker word ("very important"), a descriptor with a head word ("a large
+   * increase"), or an idea rather than a word ("describing a trend"). Undefined: none of these.
+   */
+  private async unresolvedRequest(
+    base: { query: string; normalised: string },
+    c: Classification,
+    term: string,
+  ): Promise<SearchResponse | undefined> {
+    const descriptor = readDescriptor(term);
+    if (descriptor?.kind === "intensity") {
+      const intent =
+        descriptor.direction === "stronger" ? "STRONGER_ALTERNATIVE" : "WEAKER_ALTERNATIVE";
+      const shifted = await this.relationSearch(base, { ...c, intent, term: descriptor.head });
+      if (shifted.groups.length > 0 || c.intent === intent) return shifted;
+      return this.relationSearch(base, { ...c, term: descriptor.head });
+    }
+    if (descriptor?.kind === "quality") {
+      const described = await this.descriptorSearch(base, c, descriptor);
+      if (described) return described;
+      const plain = await this.relationSearch(base, { ...c, term: descriptor.head });
+      const head = plain.interpretation.term?.resolved ?? descriptor.head;
+      plain.interpretation.summary = `Lexora has nothing that says ${quote(descriptor.word)} with ${quote(head)} — ${lowerFirst(plain.interpretation.summary)}`;
+      return plain;
+    }
+    const match = matchIntent(term, await this.repo.listIntents());
+    if (!match) return undefined;
+    return this.expressionSearch(base, {
+      intent: "PHRASE",
+      phrase: term,
+      modifiers: c.modifiers,
+    });
+  }
+
+  /**
+   * Phase 6B: language for a head word with a size or speed descriptor ("a large increase"). The
+   * descriptor's signals (descriptors.ts) must meet the head word, or a word related to it, in
+   * authored content:
+   *
+   * 1. a collocation with both ("a substantial increase");
+   * 2. a definition with both ("jump: to rise suddenly by a large amount"), or a relation from
+   *    the head word whose note says it ("Surge means a sudden, large increase");
+   * 3. a definition with the descriptor, and examples or collocations that use the head word
+   *    ("considerable: large in size" · "rose by a considerable margin").
+   *
+   * Collocations come first, then words of the class the descriptor asks for (an adjective before
+   * a noun, an adverb after a verb), then the rest; within that, stronger evidence, the signal's
+   * priority, IELTS relevance and headword. Undefined when nothing has such evidence.
+   */
+  private async descriptorSearch(
+    base: { query: string; normalised: string },
+    c: Classification,
+    d: Extract<Descriptor, { kind: "quality" }>,
+  ): Promise<SearchResponse | undefined> {
+    const { signals, glosses } = signalsOf(d.qualities);
+    const definedPromise = this.repo.sensesDefinedWith(glosses);
+    const forms = await this.repo.findForms(d.head);
+    if (forms.length === 0) return undefined;
+    const own = (await this.sensesFor(forms)).map((sense) => sense.id);
+    const related = await this.repo.relationsFrom(own, SYNONYM_TYPES);
+    const family = new Set([...own, ...related.map((r) => r.toSenseId)]);
+    const familyForms = [
+      ...new Set((await this.repo.formsOfSenses([...family])).map((f) => f.form)),
+    ];
+    const [collocations, defined] = await Promise.all([
+      this.repo.collocationsContaining(familyForms),
+      definedPromise,
+    ]);
+
+    const asked = normaliseTerm(c.term ?? d.head);
+    const typed = new Set([asked, asked.replace(/^(?:a|an|the) /, "")]);
+    const usedWith = (texts: readonly string[]) =>
+      familyForms.find((form) => texts.some((text) => containsPhrase(text, form)));
+
+    // Sense evidence, the strongest per sense: 0 definition or relation note, 1 usage.
+    const senseEvidence = new Map<string, { strength: number; priority: number; reason: string }>();
+    const offer = (senseId: string, strength: number, priority: number, reason: string) => {
+      const known = senseEvidence.get(senseId);
+      if (
+        known &&
+        (known.strength < strength || (known.strength === strength && known.priority <= priority))
+      )
+        return;
+      senseEvidence.set(senseId, { strength, priority, reason });
+    };
+    for (const sense of defined) {
+      const gloss = glossRank(sense.definition, glosses);
+      if (gloss < 0) continue;
+      if (
+        family.has(sense.senseId) ||
+        familyForms.some((f) => containsPhrase(sense.definition, f))
+      ) {
+        offer(sense.senseId, 0, gloss, `Its definition describes ${quote(asked)}`);
+        continue;
+      }
+      const word = usedWith(sense.usage);
+      if (word)
+        offer(
+          sense.senseId,
+          1,
+          gloss,
+          `Means ${d.qualities[0]}, and Lexora uses it with ${quote(word)}`,
+        );
+    }
+    const headword = forms[0]!.headword;
+    for (const relation of related) {
+      // The note must say it of the head word ("a sudden, large increase"), not elsewhere
+      // ("slightly less formal").
+      const note = normaliseTerm(relation.note ?? "");
+      const rank = note ? describesNear(note, familyForms, glosses, signals) : -1;
+      if (rank >= 0) offer(relation.toSenseId, 0, rank, relationReason(relation, headword));
+    }
+
+    const phrases = collocations
+      .map((row) => {
+        const phrase = normaliseTerm(row.phrase);
+        return {
+          row,
+          rank: signalRank(phrase, signals),
+          shape: phraseShape(phrase, familyForms, signals),
+        };
+      })
+      .filter(({ row, rank }) => rank >= 0 && !typed.has(normaliseTerm(row.phrase)));
+    if (phrases.length === 0 && senseEvidence.size === 0) return undefined;
+
+    const ids = [
+      ...phrases.flatMap(({ row }) => [
+        row.senseId,
+        ...(row.linkedSenseId ? [row.linkedSenseId] : []),
+      ]),
+      ...senseEvidence.keys(),
+    ];
+    const [summaries, facets] = await Promise.all([this.summaries(ids), this.facets(ids)]);
+    const relevance = { core: 0, high: 1, useful: 2 } as const;
+    const byCode = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
+    const collocationResults = phrases
+      .flatMap(({ row, rank, shape }) => {
+        const parent = summaries.get(row.senseId);
+        if (!parent) return [];
+        const result = collocationResult(row, parent, summaries, headword);
+        const reason = `A collocation for ${quote(asked)}${row.note ? ` — ${row.note}` : ""}`;
+        return [{ result: { ...result, reason }, rank, fit: shape === d.reading ? 0 : 1 }];
+      })
+      .sort(
+        (a, b) =>
+          // The shape asked for first: "a large increase" → "a significant increase".
+          a.fit - b.fit ||
+          a.rank - b.rank ||
+          relevance[summaries.get(a.result.senseId)!.ieltsRelevance] -
+            relevance[summaries.get(b.result.senseId)!.ieltsRelevance] ||
+          byCode(a.result.key, b.result.key),
+      )
+      .map(({ result }) => result);
+    const shown = new Set(collocationResults.map((result) => result.slug));
+    const wanted: PartOfSpeech[] =
+      d.reading === "noun" ? ["adjective", "adjective_phrase"] : ["adverb", "adverbial_phrase"];
+    const last: PartOfSpeech[] =
+      d.reading === "noun" ? ["adverb", "adverbial_phrase"] : ["adjective", "adjective_phrase"];
+    const classOrder = (senseId: string) => {
+      const pos = facets.get(senseId)?.partOfSpeech;
+      return pos && wanted.includes(pos) ? 0 : pos && last.includes(pos) ? 2 : 1;
+    };
+    const modifier = (senseId: string) =>
+      ["adjective", "adjective_phrase", "adverb", "adverbial_phrase"].includes(
+        facets.get(senseId)?.partOfSpeech ?? "",
+      );
+    const wordResults = [...senseEvidence.entries()]
+      .flatMap(([senseId, evidence]) => {
+        const summary = summaries.get(senseId);
+        // Usage alone ("rose by a considerable margin") counts for a modifier, not for a verb
+        // whose definition names another change ("dip: to fall slightly").
+        if (evidence.strength === 1 && !modifier(senseId)) return [];
+        return summary && !shown.has(summary.slug) ? [{ summary, evidence }] : [];
+      })
+      .sort(
+        (a, b) =>
+          classOrder(a.summary.senseId) - classOrder(b.summary.senseId) ||
+          a.evidence.strength - b.evidence.strength ||
+          a.evidence.priority - b.evidence.priority ||
+          relevance[a.summary.ieltsRelevance] - relevance[b.summary.ieltsRelevance] ||
+          byCode(a.summary.headword.toLowerCase(), b.summary.headword.toLowerCase()) ||
+          byCode(a.summary.senseId, b.summary.senseId),
+      )
+      .map(({ summary, evidence }) => resultFrom(summary, evidence.reason));
+
+    return respond(base, c, {
+      summary: `Language for ${quote(asked)}`,
+      term: describeMatch(d.head, forms),
+      descriptor: { word: d.word, qualities: [...d.qualities] },
+      groups: [
+        { label: "Collocations", results: collocationResults.slice(0, MAX_DESCRIBED) },
+        { label: "Words and phrases", results: wordResults.slice(0, MAX_DESCRIBED) },
+      ],
+    });
+  }
+
+  /**
+   * Phase 6B: within each group, the results used in the task the query names come first (the
+   * engine's order is kept otherwise). The task never hides a result.
+   */
+  private async taskFirst(response: SearchResponse, task: IeltsTask) {
+    const ids = response.groups.flatMap((group) => group.results.map((r) => r.senseId));
+    const facets = await this.facets(ids);
+    const used = (r: SearchResult) => facets.get(r.senseId)?.ieltsTasks.includes(task) ?? false;
+    response.groups = response.groups.map((group) => ({
+      ...group,
+      results: [...group.results.filter(used), ...group.results.filter((r) => !used(r))],
+    }));
+    const any = response.groups.some((group) => group.results.some(used));
+    response.interpretation = {
+      ...response.interpretation,
+      task,
+      ...(any && {
+        summary: `${response.interpretation.summary} · ${TASK_LABEL[task]} first`,
+      }),
+    };
+    return response;
+  }
+
   // ── Prepositions ─────────────────────────────────────────────────────────────────────────
 
   private async prepositionSearch(
     base: { query: string; normalised: string },
     c: Classification,
   ): Promise<SearchResponse> {
-    const term = c.term!;
+    // Phase 6B: "preposition after an increase" asks about the noun: patterns authored with an
+    // article ("an increase in + noun") come first.
+    const noun = ARTICLE.test(c.term!);
+    const term = c.term!.replace(ARTICLE, "");
     let resolution: TermResolution = { input: term, resolved: term, via: "exact" };
     let patterns = await this.repo.findPatternsByBase(term);
 
@@ -376,7 +644,7 @@ export class LanguageSearchService {
           tier: resolution.via === "typo" ? 4 : 2,
           weight: 0,
           relevance: summary.ieltsRelevance,
-          typePriority: 0,
+          typePriority: noun && !ARTICLE.test(pattern.pattern.toLowerCase()) ? 1 : 0,
           position: index,
         },
       ];
@@ -505,7 +773,11 @@ export class LanguageSearchService {
         if (results.length > 0) groups.push({ label: "Other linkers", results });
       }
 
-      if (c.intent === "SENTENCE_PATTERN") moveKindFirst(groups, "sentence_pattern");
+      if (c.intent === "SENTENCE_PATTERN") {
+        moveKindFirst(groups, "sentence_pattern");
+        // Phase 6B: and within each group, so a starter is what the learner sees first.
+        for (const group of groups) group.results = kindFirst(group.results, "sentence_pattern");
+      }
       return respond(base, c, {
         summary: `Language to ${match.label.toLowerCase()}`,
         groups,
@@ -562,7 +834,7 @@ export class LanguageSearchService {
         : undefined;
     if (windows.length === 0 && !pair) return framed;
 
-    const found = await this.gapCandidates(windows, pair, frameFits);
+    const found = await this.gapCandidates(windows, pair, frameFits, base.normalised);
     if (found.candidates.length === 0 && found.pairs.length === 0) return framed;
 
     const twoGaps = blanks.length > 1;
@@ -584,12 +856,13 @@ export class LanguageSearchService {
           ]
         : [];
     const groups: ResultGroup[] = [...pairGroups, ...(frameFits ? framed.groups : [])];
+    const windowGroups: ResultGroup[] = [];
     for (const window of windows) {
       for (const type of GAP_CANDIDATE_TYPES) {
         const list = found.candidates.filter((c) => c.gap === window.index && c.type === type);
         if (list.length === 0) continue;
         const label = gapGroupLabel(type, list, window);
-        groups.push({
+        windowGroups.push({
           label: twoGaps ? `Gap ${window.index + 1} · ${label}` : label,
           results: list.flatMap((candidate) => {
             const summary = found.summaries.get(candidate.senseId);
@@ -601,9 +874,19 @@ export class LanguageSearchService {
       }
     }
 
+    // Phase 6B: a group with nothing that fits (every candidate ruled out) comes after the others.
+    const fitting = (group: ResultGroup) =>
+      group.results.some((r) => r.gapMatch && !RULED_OUT.has(r.gapMatch.verdict));
+    groups.push(...windowGroups.filter(fitting), ...windowGroups.filter((g) => !fitting(g)));
+
     const gaps = (framed.gaps ?? []).map((slot) => {
       if (slot.type !== "unknown") return slot;
-      const first = found.candidates.find((c) => c.gap === slot.index) ?? found.pairs[0];
+      const first =
+        found.candidates.find(
+          (c) => c.gap === slot.index && !RULED_OUT.has(found.verdicts.get(c)!.verdict),
+        ) ??
+        found.candidates.find((c) => c.gap === slot.index) ??
+        found.pairs[0];
       return first ? { ...slot, type: publicGapType(first) } : slot;
     });
     const newGroups = groups.filter((group) => !framed.groups.includes(group));
@@ -635,9 +918,14 @@ export class LanguageSearchService {
     windows: GapWindow[],
     pair?: { between: string[]; first: GapWindow; second: GapWindow },
     frameFits = false,
+    normalised = "",
   ) {
     const unique = (list: string[]) => [...new Set(list)];
     const words = unique(windows.flatMap(anchorWords));
+    // Phase 6B: read alongside the candidates, only where a linker could go.
+    const opposites = windows.some((window) => linkerSlot(window))
+      ? this.oppositesAround(normalised)
+      : Promise.resolve(undefined);
     const [patterns, templates, linkers, pairPatterns, pairFrames] = await Promise.all([
       this.repo.findGapPatterns(
         unique(windows.flatMap((window) => [...baseCandidates(window), ...headCandidates(window)])),
@@ -679,38 +967,58 @@ export class LanguageSearchService {
     }
 
     // One read for the mistakes of every preposition and collocation candidate's own sense: the
-    // evidence for "unlikely", and the linked ones shown with the answer.
+    // evidence for "unlikely", and the linked ones shown with the answer. Phase 6B: in the same
+    // round, the word classes of the words next to each blank and of the candidates' words.
     const all = [...pairs, ...raw];
     const mistakeSenses = unique(all.filter((c) => c.type !== "linker").map((c) => c.senseId));
-    const [summaries, senseMistakes] = await Promise.all([
+    const classWords = lexiconWords(windows, raw);
+    const [summaries, senseMistakes, classHits] = await Promise.all([
       this.summaries(all.map((c) => c.senseId)),
       mistakeSenses.length > 0
         ? this.repo.mistakesOf(mistakeSenses)
         : Promise.resolve([] as MistakeHit[]),
+      classWords.length > 0 ? this.repo.wordClasses(classWords) : Promise.resolve([]),
     ]);
+    const lexicon: Lexicon = buildLexicon(classHits);
+    const contrast = await opposites;
+    // Authored opposites on the two sides of a linker's blank ("rose" … "fell") suggest contrast:
+    // contrast linkers are listed first. Which linker fits still depends on the meaning.
+    const functionOrder: readonly DiscourseFunction[] = contrast
+      ? ["contrast", ...DISCOURSE_FUNCTIONS.filter((fn) => fn !== "contrast")]
+      : DISCOURSE_FUNCTIONS;
     const firstFunction = new Map(linkers.map((l) => [l.senseId, l.functions[0]]));
     const windowOf = new Map(windows.map((window) => [window.index, window]));
+    const readings = new Map(windows.map((window) => [window.index, readSlot(window, lexicon)]));
+    const conflictOf = (candidate: GapCandidate) =>
+      classConflict(candidate, windowOf.get(candidate.gap)!, readings.get(candidate.gap)!, lexicon);
+    // A collocation whose word the sentence rules out ("suffer reduce poverty") isn't an answer.
+    const kept = raw.filter((c) => c.type !== "collocation" || !conflictOf(c));
     const verdicts = new Map<GapCandidate, Verdict>();
     for (const candidate of pairs) {
       const own = senseMistakes.filter((m) => m.senseId === candidate.senseId);
       verdicts.set(
         candidate,
-        jointVerdict(candidate, pair!.first, pair!.second, pair!.between, own),
+        jointVerdict(candidate, pair!.first, pair!.second, pair!.between, own, lexicon),
       );
     }
-    for (const candidate of raw) {
+    for (const candidate of kept) {
       const window = windowOf.get(candidate.gap)!;
       const own = senseMistakes.filter((m) => m.senseId === candidate.senseId);
       const fn = firstFunction.get(candidate.senseId);
+      const evidence = { lexicon, conflict: conflictOf(candidate) };
       verdicts.set(
         candidate,
         candidate.type === "preposition"
-          ? prepositionVerdict(candidate, window, own)
+          ? prepositionVerdict(candidate, window, own, evidence)
           : candidate.type === "frame_preposition"
-            ? framePrepositionVerdict(candidate, window, own)
+            ? framePrepositionVerdict(candidate, window, own, evidence)
             : candidate.type === "collocation"
               ? collocationVerdict(candidate, window, own)
-              : linkerVerdict(linkerSlot(window)!, fn ? FUNCTION_LABEL[fn] : undefined),
+              : linkerVerdict(
+                  linkerSlot(window)!,
+                  fn ? FUNCTION_LABEL[fn] : undefined,
+                  fn === "contrast" ? contrast : undefined,
+                ),
       );
     }
     const linked = new Set(
@@ -722,7 +1030,7 @@ export class LanguageSearchService {
     const candidates = windows.flatMap((window) =>
       GAP_CANDIDATE_TYPES.flatMap((type) =>
         orderCandidates(
-          raw.filter((c) => c.gap === window.index && c.type === type),
+          kept.filter((c) => c.gap === window.index && c.type === type),
           (senseId): CandidateFacts | undefined => {
             const summary = summaries.get(senseId);
             if (!summary) return undefined;
@@ -732,7 +1040,7 @@ export class LanguageSearchService {
               ...(type === "linker" && { firstFunction: firstFunction.get(senseId) }),
             };
           },
-          DISCOURSE_FUNCTIONS,
+          functionOrder,
         )
           // Verdict first (a stable sort keeps the fixed order within each verdict).
           .sort(
@@ -748,6 +1056,39 @@ export class LanguageSearchService {
       summaries,
       mistakes,
       linkers,
+    };
+  }
+
+  /**
+   * Phase 6B: two words the content authors as opposites ("rise" / "fall"), one before the
+   * query's first blank and one after it. Three small reads: the words' items, their senses, and
+   * the opposite relations between them.
+   */
+  private async oppositesAround(normalised: string) {
+    const list = words(normalised);
+    const at = list.indexOf("___");
+    if (at < 0) return undefined;
+    const content = (side: string[]) =>
+      side.filter((word) => word !== "___" && !isFunctionWord(word));
+    const [left, right] = [content(list.slice(0, at)), content(list.slice(at + 1))];
+    if (left.length === 0 || right.length === 0) return undefined;
+    const forms = await this.repo.findFormsIn([...new Set([...left, ...right])]);
+    const leftItems = new Set(forms.filter((f) => left.includes(f.form)).map((f) => f.itemId));
+    const rightItems = new Set(forms.filter((f) => right.includes(f.form)).map((f) => f.itemId));
+    if (leftItems.size === 0 || rightItems.size === 0) return undefined;
+    const senses = await this.repo.sensesOfItems([...new Set([...leftItems, ...rightItems])]);
+    const itemOf = new Map(senses.map((sense) => [sense.id, sense.itemId]));
+    const relations = await this.repo.relationsFrom(
+      senses.filter((sense) => leftItems.has(sense.itemId)).map((sense) => sense.id),
+      ["opposite"],
+    );
+    const hit = relations.find((r) => rightItems.has(itemOf.get(r.toSenseId) ?? ""));
+    if (!hit) return undefined;
+    const formIn = (side: string[], itemId: string) =>
+      forms.find((f) => f.itemId === itemId && side.includes(f.form))!.form;
+    return {
+      left: formIn(left, itemOf.get(hit.fromSenseId)!),
+      right: formIn(right, itemOf.get(hit.toSenseId)!),
     };
   }
 
@@ -878,16 +1219,31 @@ export class LanguageSearchService {
 
     const contained = await this.repo.findFormsIn(phrasesIn(text));
     if (contained.length > 0) {
-      // The longest known term inside the query: "depend on public transport" → depend on.
-      const longest = Math.max(...contained.map((form) => form.form.length));
-      const best = contained.filter((form) => form.form.length === longest);
-      return this.itemLookup(
-        base,
-        c,
-        best,
-        { input: text, resolved: best[0]!.headword, via: "exact" },
-        6,
-      );
+      const best = primaryForms(text, contained);
+      const others = otherForms(text, best[0]!, contained);
+      const [response, otherSenses] = await Promise.all([
+        this.itemLookup(
+          base,
+          c,
+          best,
+          { input: text, resolved: best[0]!.headword, via: "exact" },
+          6,
+        ),
+        this.sensesFor(others),
+      ]);
+      if (otherSenses.length === 0) return response;
+      // Phase 6B: the query's other known terms, after the one it is about.
+      const summaries = await this.summaries(otherSenses.map((sense) => sense.id));
+      const formOf = new Map(others.map((form) => [form.itemId, form.form]));
+      const results = otherSenses.flatMap((sense) => {
+        const summary = summaries.get(sense.id);
+        if (!summary || response.groups.some((g) => g.results.some((r) => r.key === sense.id))) {
+          return [];
+        }
+        return [resultFrom(summary, `Also in your search: ${quote(formOf.get(sense.itemId)!)}`)];
+      });
+      if (results.length > 0) response.groups.push({ label: "Also in your search", results });
+      return response;
     }
 
     const ids = await this.repo.fullText(text);
@@ -1035,6 +1391,12 @@ export class LanguageSearchService {
     const list = await this.repo.getSenseSummaries(unique);
     return new Map(list.map((summary) => [summary.senseId, summary]));
   }
+
+  private async facets(ids: readonly string[]) {
+    const unique = [...new Set(ids)];
+    const list = unique.length > 0 ? await this.repo.senseFacets(unique) : [];
+    return new Map(list.map((facets) => [facets.senseId, facets]));
+  }
 }
 
 // ── Response shaping ───────────────────────────────────────────────────────────────────────
@@ -1045,6 +1407,7 @@ function respond(
   parts: {
     summary: string;
     term?: TermResolution;
+    descriptor?: SearchResponse["interpretation"]["descriptor"];
     groups: ResultGroup[];
     guide?: FitGuide;
     mistakes?: MistakeHit[];
@@ -1068,6 +1431,7 @@ function respond(
       summary: parts.summary,
       ...(parts.term && { term: parts.term }),
       modifiers: c.modifiers,
+      ...(parts.descriptor && { descriptor: parts.descriptor }),
     },
     groups,
     ...(parts.guide && parts.guide.rows.length > 0 && { guide: parts.guide }),
@@ -1088,6 +1452,9 @@ function respond(
  * rather than in it, so the response a visitor receives is unchanged by filters existing.
  */
 const MISTAKE_SENSES = new WeakMap<SearchResponse, string[]>();
+
+/** Verdicts that rule a candidate out for this sentence. */
+const RULED_OUT = new Set<GapVerdict>(["unlikely", "not_supported"]);
 
 const GAP_CANDIDATE_TYPES: readonly GapCandidateType[] = [
   "preposition",
@@ -1349,6 +1716,63 @@ function moveKindFirst(groups: ResultGroup[], kind: SearchResult["kind"]) {
   );
 }
 
+const ARTICLE = /^(?:a|an|the) /;
+
+function kindFirst(results: SearchResult[], kind: SearchResult["kind"]) {
+  return [...results.filter((r) => r.kind === kind), ...results.filter((r) => r.kind !== kind)];
+}
+
+/** Where a run of words starts in a list of words, or -1. */
+function runAt(list: readonly string[], run: readonly string[]) {
+  for (let at = 0; at + run.length <= list.length; at++) {
+    if (run.every((word, i) => list[at + i] === word)) return at;
+  }
+  return -1;
+}
+
+/**
+ * The known term a longer query is about (Phase 6B). A pattern in use comes first: a form of two
+ * or more words ending with a preposition, with more of the query after it ("depend on public
+ * transport" → depend on, with "public transport" as its object). Otherwise, as before, the
+ * longest known term.
+ */
+function primaryForms(text: string, contained: FormMatch[]) {
+  const list = words(text);
+  const inUse = contained.filter((form) => {
+    const run = words(form.form);
+    if (run.length < 2 || !(GAP_PREPOSITIONS as readonly string[]).includes(run.at(-1)!)) {
+      return false;
+    }
+    const at = runAt(list, run);
+    return at >= 0 && at + run.length < list.length;
+  });
+  const pool = inUse.length > 0 ? inUse : contained;
+  const longest = Math.max(...pool.map((form) => form.form.length));
+  return pool.filter((form) => form.form.length === longest);
+}
+
+/**
+ * The query's other known terms (Phase 6B): items whose form doesn't overlap the primary term's
+ * words, one form per item, longest first.
+ */
+function otherForms(text: string, primary: FormMatch, contained: FormMatch[]) {
+  const list = words(text);
+  const run = words(primary.form);
+  const from = runAt(list, run);
+  const to = from + run.length - 1;
+  const seen = new Set([primary.itemId]);
+  return [...contained]
+    .sort((a, b) => b.form.length - a.form.length || (a.itemId < b.itemId ? -1 : 1))
+    .filter((form) => {
+      if (seen.has(form.itemId)) return false;
+      const own = words(form.form);
+      const at = runAt(list, own);
+      if (at < 0 || (at <= to && at + own.length - 1 >= from)) return false;
+      seen.add(form.itemId);
+      return true;
+    });
+}
+
 /** Every run of 1–5 consecutive words: candidates for a known term inside a longer query. */
 function phrasesIn(text: string) {
   const list = words(text);
@@ -1364,6 +1788,47 @@ function phrasesIn(text: string) {
 
 function capitalise(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function lowerFirst(text: string) {
+  return text.charAt(0).toLowerCase() + text.slice(1);
+}
+
+/** At most this many results per group of a descriptor answer. */
+const MAX_DESCRIBED = 8;
+
+const TASK_LABEL: Record<IeltsTask, string> = {
+  "writing-1": "Writing Task 1",
+  "writing-2": "Writing Task 2",
+  "speaking-1": "Speaking Part 1",
+  "speaking-2": "Speaking Part 2",
+  "speaking-3": "Speaking Part 3",
+};
+
+/** Parts of speech that substitute for one another: a word and the phrase of its class. */
+const WORD_CLASS: Record<PartOfSpeech, string> = {
+  noun: "noun",
+  noun_phrase: "noun",
+  verb: "verb",
+  verb_phrase: "verb",
+  adjective: "adjective",
+  adjective_phrase: "adjective",
+  adverb: "adverb",
+  adverbial_phrase: "adverb",
+  prepositional_phrase: "adverb",
+  conjunction: "conjunction",
+  preposition: "preposition",
+  clause_frame: "clause",
+};
+
+/**
+ * Phase 6B: whether a related sense can take its source's place in a sentence: the same word
+ * class, or both linkers (their notes explain position). Unknown facets don't penalise.
+ */
+function sameWordClass(from: SenseFacets | undefined, to: SenseFacets | undefined) {
+  if (!from || !to) return true;
+  if (from.kind === "linker" && to.kind === "linker") return true;
+  return WORD_CLASS[from.partOfSpeech] === WORD_CLASS[to.partOfSpeech];
 }
 
 function dedupe(results: SearchResult[]) {
