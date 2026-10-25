@@ -1,0 +1,134 @@
+# Retrieval benchmark
+
+passed 118/118 · top-1 98.3% · top-3 100.0% · top-5 100.0% · MRR 0.992
+
+## Categories
+basic-lexical    passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+synonym-intent   passed 22/22 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+modifier-intent  passed 13/13 · top-1 92.3% · top-3 100.0% · top-5 100.0% · MRR 0.962
+preposition      passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+context-gap      passed 19/19 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+linker           passed 11/11 · top-1 90.9% · top-3 100.0% · top-5 100.0% · MRR 0.955
+functional       passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+multi-word       passed 11/11 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+task-aware       passed 6/6 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+
+## Cases
+✓ [basic-lexical] "important" #1
+✓ [basic-lexical] "increase" #1
+✓ [basic-lexical] "good" #1
+✓ [basic-lexical] "bad" #1
+✓ [basic-lexical] "think" #1
+✓ [basic-lexical] "however" #1
+✓ [basic-lexical] "decrease" #1
+✓ [basic-lexical] "analyze" #1
+✓ [basic-lexical] "signifcant" #1
+✓ [basic-lexical] "responsable for" #1
+✓ [basic-lexical] "depend on" #1
+✓ [basic-lexical] "a significant increase" #1
+✓ [synonym-intent] "better word for important" #1
+✓ [synonym-intent] "a better word for important" #1
+✓ [synonym-intent] "what is a better word for important" #1
+✓ [synonym-intent] "another word for important" #1
+✓ [synonym-intent] "alternative word for important" #1
+✓ [synonym-intent] "can you give me another word for important?" #1
+✓ [synonym-intent] "synonym of important" #1
+✓ [synonym-intent] "another word for increase" #1
+✓ [synonym-intent] "what's another word for increase" #1
+✓ [synonym-intent] "formal word for good" #1
+✓ [synonym-intent] "academic word for good" #1
+✓ [synonym-intent] "academic word for think" #1
+✓ [synonym-intent] "formal way to say think" #1
+✓ [synonym-intent] "academic way to say show" #1
+✓ [synonym-intent] "better word for show" #1
+✓ [synonym-intent] "another word for big" #1
+✓ [synonym-intent] "better word for bad" #1
+✓ [synonym-intent] "stronger word for important" #1
+✓ [synonym-intent] "word for very important" #1
+✓ [synonym-intent] "word meaning very important" #1
+✓ [synonym-intent] "another word for problem" #1
+✓ [synonym-intent] "better word for help" #1
+✓ [modifier-intent] "word for a large increase" #1
+✓ [modifier-intent] "word for a big increase" #1
+✓ [modifier-intent] "word for a huge rise" #1
+✓ [modifier-intent] "word for a small increase" #1
+✓ [modifier-intent] "word for a slight increase" #1
+✓ [modifier-intent] "word for a rapid increase" #1
+✓ [modifier-intent] "word for a sudden increase" #1
+✓ [modifier-intent] "word for a gradual increase" #1
+✓ [modifier-intent] "word for a steady increase" #2
+✓ [modifier-intent] "word for a large decrease" #1
+✓ [modifier-intent] "word for a sharp fall" #1
+✓ [modifier-intent] "word for a slight decrease" #1
+✓ [modifier-intent] "word for a gradual decline" #1
+✓ [preposition] "preposition after responsible" #1
+✓ [preposition] "preposition after contribute" #1
+✓ [preposition] "preposition after depend" #1
+✓ [preposition] "preposition after result" #1
+✓ [preposition] "preposition with responsible" #1
+✓ [preposition] "what preposition goes with focus" #1
+✓ [preposition] "preposition after suffer" #1
+✓ [preposition] "preposition after interested" #1
+✓ [preposition] "preposition after depends" #1
+✓ [preposition] "which preposition after aware" #1
+✓ [preposition] "preposition after an increase" #1
+✓ [preposition] "responsible for or to" #1
+✓ [context-gap] "suffer ___ poverty" #1
+✓ [context-gap] "responsible ___ the problem" #1
+✓ [context-gap] "contribute ___ society" #1
+✓ [context-gap] "depend ___ public transport" #1
+✓ [context-gap] "Prices rose ___ in 2020." #1
+✓ [context-gap] "prices rose ___ 2020" #1
+✓ [context-gap] "Governments should ____ more money into public transportation" #1
+✓ [context-gap] "The government is responsible ___ providing healthcare." #1
+✓ [context-gap] "Many people depend ___ their cars." #1
+✓ [context-gap] "The government took ___ to reduce crime" #1
+✓ [context-gap] "Public transport plays a ___ role" #1
+✓ [context-gap] "Screen time has a ___ effect on sleep" #1
+✓ [context-gap] "Plastic waste ___ a threat to marine life" #1
+✓ [context-gap] "Plastic waste poses a threat ___ marine life" #1
+✓ [context-gap] "The council allocated money ___ education" #1
+✓ [context-gap] "Schools raised awareness ___ the dangers" #1
+✓ [context-gap] "She devoted her life ___ helping others" #1
+✓ [context-gap] "There was a ___ increase in prices" #1
+✓ [context-gap] "Prices rose, ___ demand fell" #1
+✓ [linker] "alternative to however" #1
+✓ [linker] "linker for reason" #1
+✓ [linker] "cause and effect linker" #1
+✓ [linker] "linker for contrast" #1
+✓ [linker] "linker for giving an example" #1
+✓ [linker] "linker for addition" #1
+✓ [linker] "linker for result" #1
+✓ [linker] "alternative to furthermore" #2
+✓ [linker] "linker for concession" #1
+✓ [linker] "another word for because" #1
+✓ [linker] "linking words for contrast" #1
+✓ [functional] "phrase for giving an opinion" #1
+✓ [functional] "phrase for comparing two things" #1
+✓ [functional] "phrase for describing a trend" #1
+✓ [functional] "phrase for introducing a solution" #1
+✓ [functional] "phrase for concluding" #1
+✓ [functional] "phrase for giving an example" #1
+✓ [functional] "I want to express contrast" #1
+✓ [functional] "how to say something is important" #1
+✓ [functional] "phrase for softening a claim" #1
+✓ [functional] "phrase for describing a problem" #1
+✓ [functional] "sentence starter for giving an opinion" #1
+✓ [functional] "phrase for summarising" #1
+✓ [multi-word] "depend on public transport" #1
+✓ [multi-word] "result in higher costs" #1
+✓ [multi-word] "responsible for the increase" #1
+✓ [multi-word] "contribute to climate change" #1
+✓ [multi-word] "focus on education" #1
+✓ [multi-word] "suffer from poverty" #1
+✓ [multi-word] "lead to unemployment" #1
+✓ [multi-word] "raise awareness of the problem" #1
+✓ [multi-word] "a significant increase in prices" #1
+✓ [multi-word] "rely on social media" #1
+✓ [multi-word] "tackle climate change" #1
+✓ [task-aware] "IELTS Task 1 word for increase" #1
+✓ [task-aware] "Task 2 phrase for giving an opinion" #1
+✓ [task-aware] "academic word for describing a trend" #1
+✓ [task-aware] "Task 1 phrase for describing an increase" #1
+✓ [task-aware] "writing task 2 linker for contrast" #1
+✓ [task-aware] "better word for important in task 2" #1

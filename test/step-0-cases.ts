@@ -75,5 +75,7 @@ export const STEP_0_CASES: GoldenCase[] = [
 /**
  * Queries that contain a trigger with more words, so they stay ordinary lookups. Only the reading
  * is pinned: their full-text fallback differs between the repositories (a known test artifact).
+ * Phase 6B: "words to express contrast" left this list. It is a request ("words to …"), and its
+ * idea now reaches the intent instead of a full-text fallback (test/search-golden.yaml).
  */
-export const NOT_TRIGGERS = ["express contrast in writing", "words to express contrast"];
+export const NOT_TRIGGERS = ["express contrast in writing"];

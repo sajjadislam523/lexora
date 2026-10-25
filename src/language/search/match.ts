@@ -52,7 +52,70 @@ export function matchIntent(
 
   const fn = functionIn(phrase);
   const byFunction = fn && intents.find((intent) => intent.function === fn);
-  return byFunction ? { intent: byFunction, via: "function", score: 0 } : undefined;
+  if (byFunction) return { intent: byFunction, via: "function", score: 0 };
+  return matchLoosely(phrase, intents);
+}
+
+/**
+ * Verbs that only say "express" in a request ("introducing a solution", "propose a solution"):
+ * one class when comparing a phrase with triggers. Stems, as `stem` makes them.
+ */
+const SAYING = new Set([
+  "say",
+  "giv",
+  "express",
+  "expres",
+  "stat",
+  "describ",
+  "introduc",
+  "propos",
+  "suggest",
+  "offer",
+  "mak",
+  "show",
+  "talk",
+  "present",
+  "explain",
+  "writ",
+]);
+
+const SAYING_CLASS = "@say";
+
+const sayingStems = (text: string) =>
+  contentStems(text).map((s) => (SAYING.has(s) ? SAYING_CLASS : s));
+
+/**
+ * Phase 6B, only when nothing else matched: the trigger that best covers the phrase or is best
+ * covered by it, with saying verbs as one class ("concluding" is all of "conclude an essay";
+ * "introducing a solution" is "propose a solution"). At least one shared word must be more than
+ * a saying verb. Ties: more shared words, then intent ID.
+ */
+function matchLoosely(
+  phrase: string,
+  intents: readonly IntentDefinition[],
+): IntentMatch | undefined {
+  const own = new Set(sayingStems(phrase));
+  if (![...own].some((s) => s !== SAYING_CLASS)) return undefined;
+  let best: { intent: IntentDefinition; score: number; shared: number } | undefined;
+  for (const intent of intents) {
+    for (const trigger of intent.triggers) {
+      const stems = [...new Set(sayingStems(trigger))];
+      const shared = stems.filter((s) => own.has(s));
+      if (!shared.some((s) => s !== SAYING_CLASS)) continue;
+      const score = Math.max(shared.length / stems.length, shared.length / own.size);
+      if (
+        !best ||
+        score > best.score ||
+        (score === best.score && shared.length > best.shared) ||
+        (score === best.score && shared.length === best.shared && intent.id < best.intent.id)
+      ) {
+        best = { intent, score, shared: shared.length };
+      }
+    }
+  }
+  return best && best.score >= TRIGGER_THRESHOLD
+    ? { intent: best.intent, via: "trigger", score: best.score }
+    : undefined;
 }
 
 /** Words skipped between the gap and the object: "___ more money", "___ a lot of time". */

@@ -4,7 +4,7 @@
  * to express), plus modifiers. Adding a phrasing means adding a pattern and a test.
  */
 import { GAP_TOKEN } from "../normalise";
-import type { DiscourseFunction } from "../schema/vocabulary";
+import type { DiscourseFunction, IeltsTask } from "../schema/vocabulary";
 
 import type { Modifier, QueryIntent } from "./types";
 
@@ -17,6 +17,8 @@ export type Classification = {
   /** For linker questions: the discourse function asked for. */
   function?: DiscourseFunction;
   modifiers: Modifier[];
+  /** Phase 6B: the IELTS task the question names (request.ts); its language comes first. */
+  task?: IeltsTask;
 };
 
 const MODIFIER_WORDS: Record<string, Modifier[]> = {
@@ -94,7 +96,7 @@ function cleanTerm(term: string) {
 }
 
 const QUALIFIERS =
-  "(?:(?:a|an|the|some|good|better|best|more|other|another|different|nice|natural|spoken|speaking|conversational|casual|informal|formal|academic|written|writing|essay|common|useful)\\s+)*";
+  "(?:(?:a|an|the|some|good|better|best|more|other|another|alternative|different|nice|natural|spoken|speaking|conversational|casual|informal|formal|academic|written|writing|essay|common|useful)\\s+)*";
 const WORD = "(?:words?|terms?|synonyms?|expressions?|ways?|options?|alternatives?)";
 const PREPOSITIONS = "(?:in|on|at|for|of|to|with|about|from|into|by)";
 
@@ -111,7 +113,7 @@ const RULES: Rule[] = [
   {
     intent: "PREPOSITION",
     pattern: new RegExp(
-      `^(?:what|which)?\\s*(?:prepositions?|preps?)\\s+(?:comes?\\s+|goes?\\s+|do i use\\s+|to use\\s+|is used\\s+|should i use\\s+)?(?:after|with|for|follows?)\\s+(.+)$`,
+      `^(?:what|which)?\\s*(?:(?:the|a)\\s+)?(?:prepositions?|preps?)\\s+(?:comes?\\s+|goes?\\s+|do i use\\s+|to use\\s+|is used\\s+|should i use\\s+)?(?:after|with|for|follows?)\\s+(.+)$`,
     ),
     slot: "term",
   },
@@ -163,6 +165,21 @@ const RULES: Rule[] = [
     pattern: /^(?:(another|a better|a different|a more \w+) )?way to say (.+)$/,
     slot: "term",
   },
+  // Phase 6B: "formal way to say …", "academic words for saying …", "a word meaning …".
+  {
+    intent: "SYNONYM",
+    pattern: new RegExp(
+      `^(${QUALIFIERS})(?:words?|terms?|ways?|expressions?)\\s+(?:to say|of saying|for saying)\\s+(.+)$`,
+    ),
+    slot: "term",
+  },
+  {
+    intent: "SYNONYM",
+    pattern: new RegExp(
+      `^(${QUALIFIERS})(?:words?|terms?|expressions?)\\s+(?:meaning|that means|which means|to mean)\\s+(.+)$`,
+    ),
+    slot: "term",
+  },
   // Collocations.
   {
     intent: "COLLOCATION",
@@ -178,6 +195,13 @@ const RULES: Rule[] = [
     pattern: new RegExp(
       `^${QUALIFIERS}(?:linkers?|linking (?:words?|phrases?)|connectors?|connectives?|transitions?|transition words?|discourse markers?)\\s+(?:for|to show|to express|of|to)\\s+(.+)$`,
     ),
+    slot: "phrase",
+  },
+  // Phase 6B: "cause and effect linker", "contrast linking words".
+  {
+    intent: "LINKER",
+    pattern:
+      /^(.+?) (?:linkers?|linking (?:words?|phrases?)|connectors?|connectives?|transition words?|transitions?)$/,
     slot: "phrase",
   },
   // Phrases and sentence patterns.

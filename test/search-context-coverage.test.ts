@@ -103,7 +103,8 @@ describe("4.4-2 inflected multiword bases", () => {
     [
       "The government takes measures ___ crime",
       "Prepositions after “take measures”",
-      ["against{take-measures.act}=likely_fits"],
+      // Phase 6B: "crime" is an authored noun, so a noun phrase follows: fits.
+      ["against{take-measures.act}=fits"],
       [],
     ],
   ])("%j (B1–B3)", async (query, label, expected, mistakes) => {
@@ -119,17 +120,18 @@ describe("4.4-3 prepositions after a verb frame's object", () => {
   it("offers the frame's prepositions after an authored object (C1, C2)", async () => {
     const response = await service.search("The council allocated money ___ education");
     expect(response?.groups.map((g) => g.label)).toEqual(["Prepositions after “allocated money”"]);
+    // Phase 6B: "education" is an authored noun, so a noun phrase follows: fits.
     expect(verdicts(response)).toEqual([
-      "to{allocate.distribute}=likely_fits",
-      "for{allocate.distribute}=likely_fits",
+      "to{allocate.distribute}=fits",
+      "for{allocate.distribute}=fits",
     ]);
     const [to] = results(response);
     expect(to?.gapMatch).toEqual({
       gap: 0,
       type: "preposition",
       evidence: "allocate.distribute:money-to",
-      verdict: "likely_fits",
-      signals: ["frame_object", "noun_unchecked"],
+      verdict: "fits",
+      signals: ["frame_object", "noun_phrase_follows"],
     });
     expect(to?.pattern).toBe("allocate something to / for + noun");
     expect(response?.mistakes.map((m) => m.wrong)).toEqual([
@@ -251,16 +253,16 @@ describe("4.4-5 first words the content authors as inflections", () => {
     ],
     [
       "Prices rose ___ in 2020",
-      // Content expansion: rise authors "rise in / by / to". They only likely fit here: what
-      // follows a preposition's blank isn't checked yet.
+      // Phase 6B: a preposition can't come straight before "in", so rise's "in / by / to" are
+      // unlikely and their group comes after the adverbs that fit.
       [
-        "in{rise.noun}=likely_fits",
-        "by{rise.verb}=likely_fits",
-        "to{rise.verb}=likely_fits",
         "sharply{rise-sharply.increase}=fits",
         "dramatically{rise-sharply.increase}=fits",
         "gradually{rise-sharply.increase}=fits",
         "steadily{rise-sharply.increase}=fits",
+        "in{rise.noun}=unlikely",
+        "by{rise.verb}=unlikely",
+        "to{rise.verb}=unlikely",
       ],
     ],
     [

@@ -13,6 +13,7 @@ import {
   type SearchFilters,
 } from "@/language/filters";
 import type { FramePart, SenseSummary } from "@/language/model";
+import { normaliseTerm } from "@/language/normalise";
 import { toGapFrame } from "@/language/search/match";
 import type {
   CollocationHit,
@@ -29,6 +30,8 @@ import type {
   RelationHit,
   SenseFacets,
   SenseRef,
+  SenseTexts,
+  WordClassHit,
 } from "@/language/search/repository";
 import { stem, trigramSimilarity } from "@/language/search/text";
 import type { DiscourseFunction, ItemKind, RelationType } from "@/language/schema/vocabulary";
@@ -415,6 +418,7 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
           topics: sense.topics ?? [],
           skills: sense.skills,
           ieltsTasks: sense.ieltsTasks,
+          partOfSpeech: sense.partOfSpeech,
           relevance: RELEVANCE_ORDER[sense.ieltsRelevance],
           headword: item.normalized,
           position: sense.position,
@@ -426,14 +430,106 @@ export class MemoryLanguageRepository implements LanguageSearchRepository {
     const wanted = new Set(senseIds);
     return this.liveFacets()
       .filter((facets) => wanted.has(facets.senseId))
-      .map(({ senseId, kind, functions, topics, skills, ieltsTasks }) => ({
+      .map(({ senseId, kind, functions, topics, skills, ieltsTasks, partOfSpeech }) => ({
         senseId,
         kind,
         functions,
         topics,
         skills,
         ieltsTasks,
+        partOfSpeech,
       }));
+  }
+
+  async wordClasses(words: readonly string[]): Promise<WordClassHit[]> {
+    const wanted = new Set(words);
+    const hits = new Map<string, WordClassHit>();
+    for (const form of this.rows.forms) {
+      const first = form.normalized.split(" ")[0]!;
+      const own = wanted.has(form.normalized);
+      if (!own && !(form.normalized.includes(" ") && wanted.has(first))) continue;
+      for (const sense of this.rows.senses) {
+        if (sense.itemId !== form.itemId || !this.isLiveSense(sense.id)) continue;
+        const head =
+          sense.partOfSpeech === "verb_phrase" || sense.partOfSpeech === "adjective_phrase";
+        const found: WordClassHit[] = [
+          ...(own
+            ? [
+                {
+                  word: form.normalized,
+                  partOfSpeech: sense.partOfSpeech,
+                  formType: form.formType,
+                  phraseHead: false,
+                },
+              ]
+            : []),
+          ...(head && form.normalized.includes(" ") && wanted.has(first)
+            ? [
+                {
+                  word: first,
+                  partOfSpeech: sense.partOfSpeech,
+                  formType: form.formType,
+                  phraseHead: true,
+                },
+              ]
+            : []),
+        ];
+        for (const hit of found) {
+          hits.set(`${hit.word}|${hit.partOfSpeech}|${hit.formType}|${hit.phraseHead}`, hit);
+        }
+      }
+    }
+    const key = (h: WordClassHit) => [h.word, h.partOfSpeech, h.formType, String(h.phraseHead)];
+    return [...hits.values()].sort((a, b) => {
+      const [x, y] = [key(a), key(b)];
+      for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return x[i]! < y[i]! ? -1 : 1;
+      return 0;
+    });
+  }
+
+  async collocationsContaining(phrases: readonly string[]) {
+    return this.collocations((c) =>
+      phrases.some((phrase) => ` ${c.normalized} `.includes(` ${phrase} `)),
+    );
+  }
+
+  async sensesDefinedWith(phrases: readonly string[]): Promise<SenseTexts[]> {
+    if (phrases.length === 0) return [];
+    return this.rows.senses
+      .filter(
+        (sense) =>
+          this.isLiveSense(sense.id) &&
+          phrases.some((phrase) => sense.definition.toLowerCase().includes(phrase)),
+      )
+      .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+      .map((sense) => ({
+        senseId: sense.id,
+        definition: normaliseTerm(sense.definition),
+        usage: [
+          ...this.rows.examples
+            .filter((e) => e.senseId === sense.id)
+            .sort((a, b) => a.position - b.position)
+            .map((e) => normaliseTerm(e.text)),
+          ...this.rows.collocations
+            .filter((c) => c.senseId === sense.id)
+            .sort((a, b) => a.position - b.position)
+            .map((c) => c.normalized),
+        ],
+      }));
+  }
+
+  async formsOfSenses(senseIds: readonly string[]) {
+    return [...new Set(senseIds)]
+      .filter((id) => this.isLiveSense(id))
+      .sort()
+      .flatMap((senseId) => {
+        const itemId = this.rows.senses.find((s) => s.id === senseId)!.itemId;
+        return this.rows.forms
+          .filter((f) => f.itemId === itemId)
+          .map((f) => f.normalized)
+          .sort()
+          .map((form) => ({ senseId, form }));
+      });
   }
 
   async browseSenses(filters: SearchFilters, page: { limit: number; offset: number }) {

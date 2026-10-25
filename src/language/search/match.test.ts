@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { mistakeWrongPart, showsMistake } from "./match";
+import { matchIntent, mistakeWrongPart, showsMistake } from "./match";
+import type { IntentDefinition } from "./repository";
 
 const amount = { wrong: "a significant amount of people", right: "a significant number of people" };
 const depend = {
@@ -109,5 +110,37 @@ describe("mistakeWrongPart", () => {
       span: [0, 1],
       missing: true,
     });
+  });
+});
+
+describe("matchIntent", () => {
+  const intent = (id: string, triggers: string[], fn?: IntentDefinition["function"]) => ({
+    id,
+    label: id,
+    ...(fn && { function: fn }),
+    triggers,
+    entries: [],
+  });
+  const intents: IntentDefinition[] = [
+    intent("conclude", ["conclude an essay", "write a conclusion", "sum up"]),
+    intent("give-an-opinion", ["give an opinion", "express my view"], "opinion"),
+    intent("propose-a-solution", ["propose a solution", "suggest a solution"]),
+  ];
+  const id = (phrase: string) => matchIntent(phrase, intents)?.intent.id;
+
+  it("matches an exact trigger, and a trigger most of whose words the phrase has", () => {
+    expect(id("give an opinion")).toBe("give-an-opinion");
+    expect(id("giving an opinion")).toBe("give-an-opinion");
+  });
+
+  // Phase 6B: only when nothing else matched.
+  it("matches a phrase a trigger covers, with saying verbs as one class", () => {
+    expect(id("concluding")).toBe("conclude");
+    expect(id("introducing a solution")).toBe("propose-a-solution");
+  });
+
+  it("needs a shared word that is more than a saying verb", () => {
+    expect(id("giving")).toBeUndefined();
+    expect(id("introducing a hobby")).toBeUndefined();
   });
 });
