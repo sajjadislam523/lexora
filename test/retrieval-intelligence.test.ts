@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { FILTER_DIMENSIONS, FILTER_VALUES, type SearchFilters } from "@/language/filters";
+import { RELATION_GROUPS } from "@/language/relations";
 import { LanguageSearchService } from "@/language/search/service";
 import type { SearchResponse, SearchResult } from "@/language/search/types";
 import { buildRows } from "@/server/content/build";
@@ -169,6 +170,77 @@ describe("descriptors", () => {
         const kept = results(filtered).map((r) => r.key);
         expect(keys.filter((key) => kept.includes(key))).toEqual(kept);
       }
+    }
+  });
+});
+
+describe("synonym requests without authored alternatives", () => {
+  /** Group labels for the relation types a synonym request asks for. */
+  const ALTERNATIVE_LABELS = RELATION_GROUPS.filter((g) =>
+    g.types.some((t) =>
+      ["synonym", "alternative", "stronger", "weaker", "more_formal", "more_natural"].includes(t),
+    ),
+  ).map((g) => g.label);
+
+  it("answers a known word with alternatives exactly as before", async () => {
+    const response = await service.search("what is another word for important");
+    expect(response?.interpretation.summary).toBe("Alternatives to “important”");
+    expect(terms(response)).toEqual([
+      "significant",
+      "crucial",
+      "essential",
+      "fundamental",
+      "key",
+      "major",
+    ]);
+  });
+
+  it.each([
+    ["another word for stable", undefined],
+    ["what is another word for stable", undefined],
+    ["Task 1 word for stable", "writing-1"],
+    ["Task 2 word for stable", "writing-2"],
+    ["can you give me a better word for stable", undefined],
+  ])("answers %j with the word itself, never with nothing", async (query, task) => {
+    const response = await service.search(query);
+    expect(response?.outcome).toBe("results");
+    expect(response?.interpretation).toMatchObject({
+      intent: "SYNONYM",
+      term: { via: "exact", resolved: "stable" },
+      ...(task && { task }),
+    });
+    expect(response?.interpretation.summary).toMatch(
+      /^No alternatives to “stable” in Lexora yet — showing the word itself/,
+    );
+    const [first] = results(response);
+    expect(first?.slug).toBe("stable");
+    // Honest: the word is not presented as an alternative to itself, and nothing is invented.
+    expect(first?.reason).toBe("The word you asked about: Lexora has no alternatives to it yet");
+    const labels = response?.groups.flatMap((g) => (g.label ? [g.label] : [])) ?? [];
+    for (const label of ALTERNATIVE_LABELS) expect(labels, label).not.toContain(label);
+  });
+
+  it.each(["access", "advice", "crime", "economy", "fluctuate"])(
+    "answers another word for %j with its own item",
+    async (word) => {
+      const response = await service.search(`another word for ${word}`);
+      expect(response?.outcome).toBe("results");
+      expect(slugs(response)[0]).toBe(word);
+    },
+  );
+
+  it("does the same for an alternative request and a corrected spelling", async () => {
+    expect(slugs(await service.search("alternative to education"))[0]).toBe("education");
+    const typo = await service.search("better word for stabel");
+    expect(typo?.interpretation.term).toMatchObject({ via: "typo", resolved: "stable" });
+    expect(slugs(typo)[0]).toBe("stable");
+  });
+
+  it("leaves an unknown word to the unknown-query path, never to an item", async () => {
+    for (const query of ["another word for zebra", "what is another word for zebra"]) {
+      const response = await service.search(query);
+      expect(response?.outcome, query).not.toBe("results");
+      expect(response?.interpretation.term, query).toBeUndefined();
     }
   });
 });

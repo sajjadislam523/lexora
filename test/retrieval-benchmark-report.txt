@@ -1,10 +1,11 @@
 # Retrieval benchmark
 
-passed 118/118 · top-1 98.3% · top-3 100.0% · top-5 100.0% · MRR 0.992
+passed 128/128 · top-1 98.4% · top-3 100.0% · top-5 100.0% · MRR 0.992
 
 ## Categories
 basic-lexical    passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
 synonym-intent   passed 22/22 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
+synonym-fallback passed 10/10 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
 modifier-intent  passed 13/13 · top-1 92.3% · top-3 100.0% · top-5 100.0% · MRR 0.962
 preposition      passed 12/12 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
 context-gap      passed 19/19 · top-1 100.0% · top-3 100.0% · top-5 100.0% · MRR 1.000
@@ -48,6 +49,16 @@ task-aware       passed 6/6 · top-1 100.0% · top-3 100.0% · top-5 100.0% · M
 ✓ [synonym-intent] "word meaning very important" #1
 ✓ [synonym-intent] "another word for problem" #1
 ✓ [synonym-intent] "better word for help" #1
+✓ [synonym-fallback] "what is another word for problem" #1
+✓ [synonym-fallback] "Task 2 word for problem" #1
+✓ [synonym-fallback] "another word for stable" #1
+✓ [synonym-fallback] "what is another word for access" #1
+✓ [synonym-fallback] "Task 1 word for stable" #1
+✓ [synonym-fallback] "Task 1 word for fluctuate" #1
+✓ [synonym-fallback] "Task 2 word for crime" #1
+✓ [synonym-fallback] "can you give me a better word for advice" #1
+✓ [synonym-fallback] "better word for economy" #1
+✓ [synonym-fallback] "alternative to education" #1
 ✓ [modifier-intent] "word for a large increase" #1
 ✓ [modifier-intent] "word for a big increase" #1
 ✓ [modifier-intent] "word for a huge rise" #1
