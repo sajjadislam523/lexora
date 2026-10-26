@@ -3,8 +3,9 @@ import "server-only";
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
-import type { Box, CardState } from "@/learning/scheduler";
+import type { Box, CardState, Outcome } from "@/learning/scheduler";
 import { newCard } from "@/learning/scheduler";
+import { NO_EVIDENCE, type PracticeEvidence } from "@/learning/state";
 import { db } from "@/server/db/client";
 import { languageItems, reviewCards, reviewLog, savedSenses, senses } from "@/server/db/schema";
 
@@ -434,6 +435,115 @@ export async function recurringMistakes(
     times: Number(row.times),
     lastAt: new Date(row.last_at),
   }));
+}
+
+// ── Learning state (Phase 7.1) ───────────────────────────────────────────────────────────────
+
+export type LearningEvidenceEntry = ReviewState & { senseId: string; evidence: PracticeEvidence };
+
+/**
+ * The learner's saved senses among `senseIds` (or all of them, with `null`), each with its review
+ * state and the evidence in its recorded answers (`evidenceFrom` in src/learning/state.ts): every
+ * answer on the sense in `review_log`, including those from before it was saved again. Senses
+ * the learner hasn't saved are left out. Retired senses are included. Counted and ranked in SQL
+ * (no answer rows are returned), ordered by sense ID. One statement, whatever the number of
+ * senses.
+ */
+export async function learningEvidence(
+  executor: Executor,
+  userId: string,
+  senseIds: readonly string[] | null,
+): Promise<LearningEvidenceEntry[]> {
+  if (senseIds?.length === 0) return [];
+  const rows = await executor.execute<{
+    sense_id: string;
+    saved_at: string | Date;
+    card_id: string | null;
+    box: number | null;
+    due_at: string | Date | null;
+    reviews: number | null;
+    lapses: number | null;
+    last_reviewed_at: string | Date | null;
+    sense_status: string;
+    item_status: string;
+    attempts: number | null;
+    correct: number | null;
+    last_at: string | Date | null;
+    latest_outcome: Outcome | null;
+    in_a_row: number | null;
+  }>(sql`
+    with saved as (
+      select ${savedSenses.senseId} as sense_id, ${savedSenses.savedAt} as saved_at
+      from ${savedSenses}
+      where ${savedSenses.userId} = ${userId}
+        and ${senseIds ? inArray(savedSenses.senseId, [...new Set(senseIds)]) : sql`true`}
+    ), answers as (
+      select l.${sql.identifier("sense_id")} as sense_id, l.${sql.identifier("outcome")} as outcome,
+             l.${sql.identifier("reviewed_at")} as reviewed_at,
+             row_number() over latest_first as recency,
+             first_value(l.${sql.identifier("outcome")}) over latest_first as latest_outcome
+      from ${reviewLog} l
+      where l.${sql.identifier("user_id")} = ${userId}
+        and l.${sql.identifier("sense_id")} in (select sense_id from saved)
+      window latest_first as (
+        partition by l.${sql.identifier("sense_id")}
+        order by l.${sql.identifier("reviewed_at")} desc, l.${sql.identifier("review_number")} desc
+      )
+    ), evidence as (
+      select sense_id,
+             count(*)::int as attempts,
+             count(*) filter (where outcome = 'correct')::int as correct,
+             max(reviewed_at) as last_at,
+             min(latest_outcome::text) as latest_outcome,
+             -- the answers before the latest one with a different outcome, or all of them
+             coalesce(min(recency) filter (where outcome <> latest_outcome) - 1, count(*))::int as in_a_row
+      from answers
+      group by sense_id
+    )
+    select saved.sense_id, saved.saved_at,
+           c.${sql.identifier("id")} as card_id, c.${sql.identifier("box")} as box,
+           c.${sql.identifier("due_at")} as due_at, c.${sql.identifier("reviews")} as reviews,
+           c.${sql.identifier("lapses")} as lapses,
+           c.${sql.identifier("last_reviewed_at")} as last_reviewed_at,
+           s.${sql.identifier("status")} as sense_status, i.${sql.identifier("status")} as item_status,
+           e.attempts, e.correct, e.last_at, e.latest_outcome, e.in_a_row
+    from saved
+    join ${senses} s on s.${sql.identifier("id")} = saved.sense_id
+    join ${languageItems} i on i.${sql.identifier("id")} = s.${sql.identifier("item_id")}
+    left join ${reviewCards} c
+      on c.${sql.identifier("user_id")} = ${userId} and c.${sql.identifier("sense_id")} = saved.sense_id
+    left join evidence e on e.sense_id = saved.sense_id
+    order by saved.sense_id
+  `);
+  const date = (value: string | Date | null) => (value === null ? null : new Date(value));
+  return rows.map((row) => {
+    const attempts = Number(row.attempts ?? 0);
+    const correct = Number(row.correct ?? 0);
+    return {
+      ...toState({
+        savedAt: date(row.saved_at)!,
+        cardId: row.card_id,
+        box: row.box,
+        dueAt: date(row.due_at),
+        reviews: row.reviews,
+        lapses: row.lapses,
+        lastReviewedAt: date(row.last_reviewed_at),
+        senseStatus: row.sense_status,
+        itemStatus: row.item_status,
+      }),
+      senseId: row.sense_id,
+      evidence:
+        attempts === 0 || row.latest_outcome === null
+          ? NO_EVIDENCE
+          : {
+              attempts,
+              correct,
+              incorrect: attempts - correct,
+              lastPractisedAt: date(row.last_at),
+              latest: { outcome: row.latest_outcome, inARow: Number(row.in_a_row) },
+            },
+    };
+  });
 }
 
 // ── Home (specification §18) ─────────────────────────────────────────────────────────────────
