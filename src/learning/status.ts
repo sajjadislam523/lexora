@@ -13,6 +13,18 @@ import { DAY_MS, isDue, type CardState } from "./scheduler";
  */
 export type ReviewStatus = "retired" | "no_exercise" | "new" | "due" | "known" | "learning";
 
+/**
+ * Where the card's answers put a sense, whether or not it's due: `new` (never answered on this
+ * card), `known` (box 4 or 5) or `learning` (box 1 to 3). The one rule behind both the bank's
+ * status and the learning state (src/learning/state.ts).
+ */
+export type LearningStage = "new" | "learning" | "known";
+
+export function learningStage(card: Pick<CardState, "box" | "reviews">): LearningStage {
+  if (card.reviews === 0) return "new";
+  return card.box >= 4 ? "known" : "learning";
+}
+
 export function reviewStatus(
   input: { card: CardState; retired: boolean; hasExercise: boolean },
   now: Date,
@@ -20,9 +32,10 @@ export function reviewStatus(
   const { card } = input;
   if (input.retired) return "retired";
   if (!input.hasExercise) return "no_exercise";
-  if (card.reviews === 0) return "new";
+  const stage = learningStage(card);
+  if (stage === "new") return "new";
   if (isDue(card, now)) return "due";
-  return card.box >= 4 ? "known" : "learning";
+  return stage;
 }
 
 /**

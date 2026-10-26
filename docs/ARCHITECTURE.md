@@ -462,6 +462,44 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 - **Scheduler (earlier note):** FSRS (`ts-fsrs`) was the leading option over SM-2. Either way it's a pure function: `(card state, rating, now) → next state`.
 - **Practice generation** is deterministic from language data: fill-in-the-blank from examples (their `highlight` spans), multiple choice from relations (distractors drawn from same-category items and known mistakes' `wrong` forms), preposition drills from `preposition_patterns`, and so on.
 
+### 9.1 Learning state (Phase 7.1, Learning Intelligence)
+
+_As built._ A learner's state for one saved sense: its stage, whether it's due, what their recorded answers show, and why, in observed facts. It's the foundation later Phase 7 work reads; nothing displays it yet. Derived, never stored, and with no schema change.
+
+- **Sources** (no new table, nothing duplicated):
+  - `saved_senses`: only saved senses have a learning state;
+  - `review_cards`: the stage and the due time, exactly as the scheduler leaves them;
+  - `review_log`: the evidence. That's every recorded answer on the sense, including answers from before it was removed and saved again (spec §9.4: history still counts as evidence).
+- **Rules** (`src/learning/state.ts`, pure):
+  - **stage**, by `learningStage`, which `reviewStatus` now also uses, so the bank and the learning state can't disagree:
+    - `new` until the card's first answer;
+    - `known` in box 4–5, which the scheduler reaches only after at least three right answers in a row (four from new);
+    - `learning` otherwise. Any wrong answer goes back to box 1, so it's `learning`.
+  - **due**: `due_at ≤ now`, and never for a retired sense, matching the review queue.
+  - **evidence**: attempts, correct, incorrect, the last answer's time, and the latest outcome with how many answers in a row had it. `evidenceFrom` is the reference rule.
+  - **reason**, in priority order, with its wording in `learningReasonText`:
+    1. `not_practised`: "Not practised yet.";
+    2. `saved_again`: the new card has no answers but earlier ones exist;
+    3. `missed`: "Missed last time." or "Missed the last n times.";
+    4. `correct`: "Answered correctly the last n times.".
+
+  Reasons describe answers and never judge the learner or name boxes.
+
+- **Read:** `learningEvidence` in `review-cards.ts` takes given senses or all saved ones. It's one statement: a window over the learner's log rows, aggregated per sense, so no answer rows leave the database. `loadLearningStates` and `loadLearningState` in `src/server/learning/state.ts` apply the rules at `now`. Measured on a local database with 486k logged answers (no new index; the existing user/sense indexes are used):
+  - a page of 50 senses: about 2 ms of execution;
+  - a 500-sense bank with 6,000 answers: about 22 ms.
+- **Practice and Review:** a recorded answer (`recordAnswer`) is the only evidence. Learning state reads the log and the card; it never schedules or writes, and the scheduler is unchanged. Tests assert the SQL evidence equals `evidenceFrom` over the log, the card's `reviews`/`lapses`, and that stage and due agree with `bankCounts` and `reviewQueue`.
+- **Privacy:**
+  - Learning state is server-only (`import "server-only"`).
+  - Every read is scoped by the user ID the caller takes from the session.
+  - It's exposed through no route or endpoint, and public routes and features can't import it (§4.2).
+- **Not in Phase 7.1:**
+  - any UI (Home, Bank and Practice are unchanged);
+  - recommendations;
+  - an HTTP endpoint;
+  - evidence for senses that aren't saved;
+  - stored scores or streaks.
+
 ## 10. Writing & Speaking labs (Phase 7–8)
 
 - **Writing audit** is a rule pipeline over tokenised text: repetition (lemma frequency), preposition checks against `preposition_patterns`, collocation checks against `collocations`, linker variety, register mismatches. Each rule returns a `Finding { span, type, message, suggestions[] }`.
@@ -576,3 +614,4 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 | 86  | 2026-10-23 | Honest Home: `loadHome` reads counts, the next review, four latest saves and up to three recurring mistakes from the learner's data; `src/demo/` deleted; Progress hidden from navigation (`HIDDEN_NAV`); routes unchanged (`/home`, `/`, `/finder`)                                                                        | Spec §18, D15, D20; owner kept the spec's routes over moving Home to `/`, which would put a session-reading page on the public landing route                                                      |
 | 87  | 2026-10-24 | Save copy promises only what exists: the save response says `review` is `ready` or `scheduled`, read from the card after saving; the notices, save gate and landing CTA use spec §19's wording                                                                                                                              | Spec §19. `PUT` is idempotent, so saving an answered meaning again isn't ready; reading the card keeps "It's ready to review" true                                                                |
 | 88  | 2026-10-24 | Phase 5 release order: migrations 0005–0007, then the content import, both on Neon from the phase PR's head, before the owner approves the merge that deploys; rollback is Vercel Instant Rollback, never schema changes                                                                                                    | Saving writes review cards and the bank, Practice and Home read the review tables, so the schema must exist first; it is additive, so v0.4.0 runs on it unchanged                                 |
+| 91  | 2026-10-26 | Learning state (§9.1) derived, not stored: stage from the review card through the bank's own rule (`learningStage`), evidence from `review_log` across saves in one aggregated statement, reasons as observed facts; no table, migration, index, endpoint or UI                                                             | Phase 7.1. Card and log already hold every fact; a second mastery rule or table would drift from the scheduler. Measured fast on existing indexes                                                 |
