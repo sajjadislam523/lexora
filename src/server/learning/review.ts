@@ -5,11 +5,13 @@ import { z } from "zod";
 import { evaluateAnswer } from "@/learning/answers";
 import { exerciseFor, type Exercise, type ExercisePrompt } from "@/learning/exercises";
 import { isDue, schedule, type Outcome } from "@/learning/scheduler";
+import type { PracticeReason } from "@/learning/selection";
 import { nextReview, type NextReview } from "@/learning/status";
 import { languageHref } from "@/language/links";
 import { db } from "@/server/db/client";
 import { senseIdSchema } from "@/server/http/responses";
 import { describeEvidence, sameResponse, type MistakeEvidence } from "@/server/learning/evidence";
+import { selectPracticeCandidates } from "@/server/learning/selection";
 import { loadPracticeMaterial, loadSenseNotes } from "@/server/repositories/language/practice";
 import {
   ensureCard,
@@ -172,6 +174,8 @@ export type ReviewItem = {
   /** The card's answers so far: the answer is recorded as review number + 1. */
   expectedReviews: number;
   prompt: ReviewPrompt;
+  /** Why practice selection chose it (Phase 7.3): "Missed the last 2 times." */
+  reason: PracticeReason;
 };
 
 function browserPrompt({ term, ...prompt }: ExercisePrompt): ReviewPrompt {
@@ -188,45 +192,48 @@ export type ReviewSession =
   | { kind: "caught_up"; nextReview: NextReview | null };
 
 /** The queue's entries that have an exercise, each with the exercise for its next review. */
-async function withExercises(queue: QueueEntry[]) {
+async function withExercises<T extends { entry: QueueEntry }>(queue: T[]) {
   const materials = new Map(
     (
       await loadPracticeMaterial(
         db,
-        queue.map((entry) => entry.senseId),
+        queue.map(({ entry }) => entry.senseId),
       )
     ).map((material) => [material.senseId, material]),
   );
-  return queue.flatMap((entry) => {
-    const material = materials.get(entry.senseId);
-    const exercise = material ? exerciseFor(material, entry.card.reviews) : null;
-    return exercise ? [{ entry, exercise }] : [];
+  return queue.flatMap((candidate) => {
+    const material = materials.get(candidate.entry.senseId);
+    const exercise = material ? exerciseFor(material, candidate.entry.card.reviews) : null;
+    return exercise ? [{ ...candidate, exercise }] : [];
   });
 }
 
 /**
  * The learner's review session at `now` (§14): up to five due senses that have an exercise, in
- * review order, each with the exercise its card is on. When nothing is due, whether anything is
- * saved at all, and when the next review comes. Reads only; a card is created at its first answer.
+ * practice-selection order (Phase 7.3: missed, then other due, then new; ties in review order),
+ * each with the exercise its card is on and why it was chosen. When nothing is due, whether
+ * anything is saved at all, and when the next review comes. Reads only; a card is created at its
+ * first answer.
  */
 export async function loadReviewSession(userId: string, now: Date): Promise<ReviewSession> {
-  const due = await withExercises(
-    await reviewQueue(userId, now, { when: "due", limit: QUEUE_LIMIT }),
-  );
+  const due = await withExercises(await selectPracticeCandidates(userId, now, QUEUE_LIMIT));
   if (due.length > 0) {
     return {
       kind: "session",
-      items: due.slice(0, REVIEW_SESSION_SIZE).map(({ entry, exercise }) => ({
+      items: due.slice(0, REVIEW_SESSION_SIZE).map(({ entry, exercise, reason }) => ({
         senseId: entry.senseId,
         expectedReviews: entry.card.reviews,
         prompt: browserPrompt(exercise.prompt),
+        reason,
       })),
       more: due.length > REVIEW_SESSION_SIZE,
     };
   }
   if ((await countSavedSenses(userId)) === 0) return { kind: "empty" };
   const [upcoming] = await withExercises(
-    await reviewQueue(userId, now, { when: "upcoming", limit: QUEUE_LIMIT }),
+    (await reviewQueue(userId, now, { when: "upcoming", limit: QUEUE_LIMIT })).map((entry) => ({
+      entry,
+    })),
   );
   return { kind: "caught_up", nextReview: upcoming ? nextReview(upcoming.entry.card, now) : null };
 }

@@ -104,6 +104,8 @@ describe("practice", () => {
     const { html } = await page("/practice");
     expect(html).toContain("Review 1 of 1");
     expect(html).toMatch(/<h1[^>]*>Complete the sentence<\/h1>/);
+    // Why practice selection chose it (Phase 7.3), under the heading.
+    expect(html).toMatch(/<\/h1><p[^>]*>Not practised yet\.<\/p>/);
     expect(html).toContain(
       "Missing word in: There was a … increase in the number of cyclists between 2010 and 2020.",
     );
@@ -181,7 +183,7 @@ describe("practice", () => {
     expect(bank.html).toContain("Start review");
 
     const { html } = await page("/practice");
-    expect(html).toMatch(/<h1[^>]*>Which is correct\?<\/h1>/);
+    expect(html).toMatch(/<h1[^>]*>Which is correct\?<\/h1><p[^>]*>Due for review\.<\/p>/);
     expect(html).toContain("a significant amount of people");
     expect(html).toContain("a significant number of people");
 
@@ -197,6 +199,16 @@ describe("practice", () => {
     expect(feedback.explanation).toEqual(expect.any(String));
     expect(await card()).toEqual({ box: 1, reviews: 2, lapses: 1 });
     expect(await logCount()).toBe(2);
+  });
+
+  it("selects a missed meaning with its reason once it's due again", async () => {
+    // Not due until tomorrow: practice selection doesn't take it early (no early reviews).
+    expect((await page("/practice")).html).toContain("Nothing is due right now");
+    await sql`update review_cards set due_at = now() - interval '1 hour'
+              where user_id = ${userId} and sense_id = ${NOTABLE}`;
+    const { html } = await page("/practice");
+    expect(html).toMatch(/<\/h1><p[^>]*>Missed last time\.<\/p>/);
+    expect(html).not.toContain("Due for review.");
   });
 
   it("limits a learner to 30 answers a minute", async () => {

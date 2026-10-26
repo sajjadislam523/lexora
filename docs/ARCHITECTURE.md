@@ -448,7 +448,7 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
   - removing goes through the existing save flow; nothing in the bank schedules or writes;
   - _Start review_ (with the number ready) links to `/practice` when something is due or new.
 - **Review session** (`/practice`; `loadReviewSession` / `answerReview` in `src/server/learning/review.ts`, `reviewQueue` in `review-cards.ts`):
-  - a session is up to five due senses that have an exercise, in §14 order (reviewed and due by due time, then new by save time, ties by sense ID), from one ten-row read plus four statements of practice material. Reading creates no card; the first answer does;
+  - a session is up to five due senses that have an exercise, in §14 order (reviewed and due by due time, then new by save time, ties by sense ID), from one ten-row read plus four statements of practice material. Reading creates no card; the first answer does. Since Phase 7.3 the order within the due senses is practice selection's (§9.1);
   - the browser gets prompts only: no keys, no card ids, and no headword on a typed exercise, where it would be the answer. Sense and exercise ids are authored ids, so they do name the item;
   - `POST /api/review/answers` (route handler, D21): same origin → session → `review_answer` limit (30 a minute) → a strict Zod body of `senseId`, `exerciseId`, `expectedReviews` and `answer` (≤ 2 KB) → `answerReview`. Inside `recordAnswer`'s transaction, with the card locked, the exercise is regenerated for `expectedReviews` and the answer checked (`exercise_changed` and `invalid_answer` record nothing), then scheduled and logged once. Responses: 200 (with `duplicate: true` for a retry), 400, 401, 403, 404 `not_saved`, 409 `retired` / `stale` / `not_due` / `exercise_changed`, 429, 503;
   - feedback is built from the recorded answer and authored content only (the matched mistake's explanation, the pattern's note, or the sense's best-when); the UI never decides correctness;
@@ -515,6 +515,29 @@ _As built._ A learner's state for one saved sense: its stage, whether it's due, 
     - an empty filter: one statement.
 
     No index was added.
+
+- **Practice selection (Phase 7.3):** what a review session takes first, and why. Code: `rankPracticeCandidates` in `src/learning/selection.ts` (pure) and `selectPracticeCandidates(userId, now, limit)` in `src/server/learning/selection.ts`. It's called only by `loadReviewSession`; there's no endpoint.
+  - **Candidates:** the learner's saved senses that Review can take now, which is Review's own due queue (`reviewQueue`, due and published, new saves included).
+    - Senses that aren't due are never selected. Spec §14 has no early reviews, and an early answer is refused with `409 not_due`; the owner chose this on 26 October 2026 over "practise anyway" (unrecorded) and early review (rescheduled). So the brief's "learning" and "known reinforcement" priorities apply only to senses that are due.
+    - Unsaved public content is never a candidate.
+    - The pool is the 200 most due senses in Review's order; a larger backlog is reached as those are answered.
+  - **Tiers:** each candidate is in exactly one, the first that applies, read from its learning state:
+    1. `missed`: answered, and the latest answer was wrong. More misses in a row come first. Reason: the learning state's, "Missed the last 2 times.";
+    2. `due`: answered, latest answer right. Learning before known. Reason: "Due for review.";
+    3. `new`: no answer on this save. Reason: the learning state's, "Not practised yet." or "Saved again, so its reviews start over.".
+  - **Order and overlap:** a sense appears once; "due + learning", "due + known", "missed + learning" and "new + due" each fall in one tier. Ties keep Review's order (most overdue first, then new by save time, then sense ID). There's no score and no randomness: the same data at the same `now` gives the same list.
+  - **Reads:** two statements, the due queue and one `loadLearningStates` for the pool; an empty pool needs only the first. A session adds the practice material for the ten candidates it considers (four statements), so it's six statements in all.
+    - Exercises still come from `exerciseFor` on the card's review count, and answers still go through `answerReview` and the unchanged scheduler.
+    - Each session item carries its reason, shown as one caption under the exercise heading.
+  - **Fallbacks:**
+    - nothing saved: Practice's existing empty state;
+    - nothing due: the existing "caught up" state with the next review;
+    - no candidate with an exercise: the same, never invented content.
+  - **Measured** locally (61.5k saves, 739k logged answers; no index added):
+    - selection: about 10 ms median for 7 or 50 saves, and 22–24 ms for 500-save banks that are due-heavy or miss-heavy;
+    - the two statements execute in about 2 ms and 7 ms;
+    - a whole session read: 12–26 ms.
+  - **No AI:** the tiers are three rules over recorded answers and the schedule, each one explained in words. A model would add nothing a learner could check.
 
 ## 10. Writing & Speaking labs (Phase 7–8)
 
@@ -632,3 +655,4 @@ _As built._ A learner's state for one saved sense: its stage, whether it's due, 
 | 88  | 2026-10-24 | Phase 5 release order: migrations 0005–0007, then the content import, both on Neon from the phase PR's head, before the owner approves the merge that deploys; rollback is Vercel Instant Rollback, never schema changes                                                                                                    | Saving writes review cards and the bank, Practice and Home read the review tables, so the schema must exist first; it is additive, so v0.4.0 runs on it unchanged                                 |
 | 91  | 2026-10-26 | Learning state (§9.1) derived, not stored: stage from the review card through the bank's own rule (`learningStage`), evidence from `review_log` across saves in one aggregated statement, reasons as observed facts; no table, migration, index, endpoint or UI                                                             | Phase 7.1. Card and log already hold every fact; a second mastery rule or table would drift from the scheduler. Measured fast on existing indexes                                                 |
 | 92  | 2026-10-26 | The bank reads each row's learning state from `loadLearningStates` for its page (one batched statement) and filters by stage or due in SQL (`?show=`), keeping its order and pages; stage-and-due filter chips with counts replace the Phase 5 summary line                                                                 | Phase 7.2. One source for stage, due and reason; filtering in SQL keeps pages of 50 without reading the whole bank; the old summary's partition would contradict stage counts                     |
+| 93  | 2026-10-26 | Practice selection (§9.1) orders Review's due queue by tier from the learning state (missed, more misses first; due, learning before known; new), ties in Review's order; never selects what isn't due; reasons on each session item; no endpoint, index or scheduler change                                                | Phase 7.3. Owner chose to keep spec §14's no-early-reviews rule over practising or reviewing not-due senses; one due definition, one learning state, one exercise generator                       |
