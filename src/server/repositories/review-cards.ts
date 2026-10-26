@@ -178,6 +178,35 @@ function bankTerms(now: Date) {
   return { retired, reviewed, dueAt, due };
 }
 
+/**
+ * The bank's filters (Phase 7.2): every saved sense, or the reviewed ones (not retired) in one
+ * learning stage, or those that are due (new ones included, as the review queue takes them).
+ * Stage and due are orthogonal, so a due sense is also under its stage.
+ */
+export const BANK_FILTERS = ["all", "new", "learning", "known", "due"] as const;
+export type BankFilter = (typeof BANK_FILTERS)[number];
+
+/**
+ * Which saved senses a filter selects: the SQL form of `learningStage` and the learning state's
+ * `due` (src/learning/state.ts), so a page can be filtered before it's read. Tests assert every
+ * row it selects has that stage or due in `loadLearningStates`.
+ */
+function bankFilterTerm(filter: BankFilter, now: Date) {
+  const { retired, reviewed, due } = bankTerms(now);
+  switch (filter) {
+    case "all":
+      return sql`true`;
+    case "new":
+      return sql`(not ${retired} and not ${reviewed})`;
+    case "learning":
+      return sql`(not ${retired} and ${reviewed} and ${reviewCards.box} between 1 and 3)`;
+    case "known":
+      return sql`(not ${retired} and ${reviewed} and ${reviewCards.box} >= 4)`;
+    case "due":
+      return sql`(not ${retired} and ${due})`;
+  }
+}
+
 export type BankCounts = {
   total: number;
   due: number;
@@ -185,11 +214,15 @@ export type BankCounts = {
   learning: number;
   known: number;
   retired: number;
+  /** How many saved senses each filter shows. */
+  filters: Record<BankFilter, number>;
 };
 
-/** How many saved senses the learner has in each scheduling state. One statement. */
+/** How many saved senses the learner has in each scheduling state and filter. One statement. */
 export async function bankCounts(userId: string, now: Date): Promise<BankCounts> {
   const { retired, reviewed, due } = bankTerms(now);
+  const inFilter = (filter: BankFilter) =>
+    sql<number>`count(*) filter (where ${bankFilterTerm(filter, now)})::int`;
   const [row] = await db
     .select({
       total: sql<number>`count(*)::int`,
@@ -198,6 +231,10 @@ export async function bankCounts(userId: string, now: Date): Promise<BankCounts>
       learning: sql<number>`count(*) filter (where not ${retired} and ${reviewed} and not ${due} and ${reviewCards.box} between 1 and 3)::int`,
       known: sql<number>`count(*) filter (where not ${retired} and ${reviewed} and not ${due} and ${reviewCards.box} >= 4)::int`,
       retired: sql<number>`count(*) filter (where ${retired})::int`,
+      filterNew: inFilter("new"),
+      filterLearning: inFilter("learning"),
+      filterKnown: inFilter("known"),
+      filterDue: inFilter("due"),
     })
     .from(savedSenses)
     .innerJoin(senses, eq(senses.id, savedSenses.senseId))
@@ -207,7 +244,17 @@ export async function bankCounts(userId: string, now: Date): Promise<BankCounts>
       and(eq(reviewCards.userId, savedSenses.userId), eq(reviewCards.senseId, savedSenses.senseId)),
     )
     .where(eq(savedSenses.userId, userId));
-  return row!;
+  const { filterNew, filterLearning, filterKnown, filterDue, ...counts } = row!;
+  return {
+    ...counts,
+    filters: {
+      all: counts.total,
+      new: filterNew,
+      learning: filterLearning,
+      known: filterKnown,
+      due: filterDue,
+    },
+  };
 }
 
 export type BankEntry = ReviewState & {
@@ -232,12 +279,12 @@ export type BankEntry = ReviewState & {
  * One page of the learner's saved senses in bank order (specification §14, §17): reviewed cards
  * that are due (oldest due first), then new ones (oldest save first), then the rest by when they
  * come back, then retired ones; ties by sense ID. Saves without a card are included, as new.
- * One statement.
+ * `filter` keeps only the senses it selects, in the same order. One statement.
  */
 export async function listBank(
   userId: string,
   now: Date,
-  page: { limit: number; offset: number },
+  page: { limit: number; offset: number; filter?: BankFilter },
 ): Promise<BankEntry[]> {
   const { retired, reviewed, dueAt, due } = bankTerms(now);
   const rank = sql`case when ${retired} then 3 when not ${reviewed} then 1 when ${due} then 0 else 2 end`;
@@ -270,7 +317,7 @@ export async function listBank(
       replacementItem,
       and(eq(replacementItem.id, replacementSense.itemId), eq(replacementItem.status, "published")),
     )
-    .where(eq(savedSenses.userId, userId))
+    .where(and(eq(savedSenses.userId, userId), bankFilterTerm(page.filter ?? "all", now)))
     .orderBy(
       rank,
       sql`case when ${rank} in (1, 3) then ${savedSenses.savedAt} else ${dueAt} end`,

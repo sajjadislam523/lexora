@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 
 import { CategoryBadge } from "@/components/lexora/category-badge";
-import { FilterChip } from "@/components/lexora/filter-chip";
+import { FilterChip, FilterChipLink } from "@/components/lexora/filter-chip";
 import { Kbd } from "@/components/lexora/kbd";
 import {
   LANGUAGE_CATEGORY_KEYS,
@@ -276,6 +276,31 @@ export function ComponentsSection() {
                 />
               ))}
             </div>
+          </div>
+          <div className="space-y-2">
+            <p className="type-overline text-subtle-foreground">
+              Filter links · single-select views (language bank)
+            </p>
+            <nav aria-label="Filter by learning state (sample)">
+              <ul className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["All", 57],
+                    ["New", 11],
+                    ["Learning", 35],
+                    ["Known", 11],
+                    ["Due", 27],
+                  ] as const
+                ).map(([label, count], i) => (
+                  <li key={label}>
+                    <FilterChipLink href="#" current={i === 0} count={count}>
+                      {label}
+                      <span className="sr-only">, </span>
+                    </FilterChipLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
           <div className="space-y-2">
             <p className="type-overline text-subtle-foreground">Underline tabs · sections</p>

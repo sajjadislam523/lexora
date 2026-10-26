@@ -135,7 +135,16 @@ describe.skipIf(!hasDatabase)("language bank (PostgreSQL)", () => {
   it("is empty for a learner who has saved nothing", async () => {
     const page = await mod.bank.loadBankPage(carol, 1, NOW);
     expect(page).toEqual({
-      counts: { total: 0, due: 0, new: 0, learning: 0, known: 0, retired: 0 },
+      counts: {
+        total: 0,
+        due: 0,
+        new: 0,
+        learning: 0,
+        known: 0,
+        retired: 0,
+        filters: { all: 0, new: 0, learning: 0, known: 0, due: 0 },
+      },
+      filter: "all",
       page: 1,
       pages: 1,
       rows: [],
@@ -174,7 +183,17 @@ describe.skipIf(!hasDatabase)("language bank (PostgreSQL)", () => {
       "coming",
       "retired",
     ]);
-    expect(page.counts).toEqual({ total: 7, due: 1, new: 2, learning: 2, known: 1, retired: 1 });
+    expect(page.counts).toEqual({
+      total: 7,
+      due: 1,
+      new: 2,
+      learning: 2,
+      known: 1,
+      retired: 1,
+      // By stage, whether due or not ("due", "learning" and "bare" are in box 1–3), and due with
+      // the new ones; the retired sense is only under All.
+      filters: { all: 7, new: 2, learning: 3, known: 1, due: 3 },
+    });
   });
 
   it("reads a save without a card as new, due since it was saved, and creates nothing", async () => {
@@ -207,6 +226,10 @@ describe.skipIf(!hasDatabase)("language bank (PostgreSQL)", () => {
       example: null,
       pattern: null,
       status: "learning",
+      stage: "learning",
+      due: false,
+      // These fixture cards are written directly, with no answers in the log, so no evidence.
+      reason: { code: "not_practised" },
       nextReview: { due: false, days: 2 },
       replacement: null,
       missed: null,

@@ -5,14 +5,23 @@ import { CATEGORY_BY_KIND } from "@/components/language/card-props";
 import { Callout } from "@/components/lexora/callout";
 import { CategoryBadge } from "@/components/lexora/category-badge";
 import { EmptyState } from "@/components/lexora/empty-state";
+import { FilterChipLink } from "@/components/lexora/filter-chip";
 import { HighlightedText } from "@/components/lexora/highlighted-text";
 import { MistakeRow } from "@/components/lexora/mistake-row";
 import { StatusBadge } from "@/components/lexora/status-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { learningReasonText } from "@/learning/state";
 import { evidenceText, nextReviewText } from "@/learning/status";
 import { cn } from "@/lib/utils";
-import { bankSection, type BankPage, type BankRow } from "@/server/learning/bank";
+import {
+  BANK_FILTERS,
+  bankPath,
+  bankSection,
+  type BankFilter,
+  type BankPage,
+  type BankRow,
+} from "@/server/learning/bank";
 
 import { RemoveButton } from "./remove-button";
 
@@ -22,20 +31,96 @@ const SECTIONS = [
   { id: "retired", title: "No longer reviewed" },
 ] as const;
 
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+const FILTER_LABELS: Record<BankFilter, string> = {
+  all: "All",
+  new: "New",
+  learning: "Learning",
+  known: "Known",
+  due: "Due",
+};
 
-/** "12 meanings · 3 due now · 2 new · 5 learning · 2 known": counts as text, not tiles. */
-function summary(counts: BankPage["counts"]) {
-  return [
-    plural(counts.total, "meaning"),
-    counts.due ? `${counts.due} due now` : null,
-    counts.new ? `${counts.new} new` : null,
-    counts.learning ? `${counts.learning} learning` : null,
-    counts.known ? `${counts.known} known` : null,
-    counts.retired ? `${counts.retired} no longer reviewed` : null,
-  ]
-    .filter(Boolean)
-    .join(" · ");
+/** What a filter with nothing in it says: one line, no instructions. */
+const FILTER_EMPTY: Record<Exclude<BankFilter, "all">, string> = {
+  new: "No new meanings right now.",
+  learning: "No meanings in Learning right now.",
+  known: "No known meanings yet.",
+  due: "Nothing is due right now.",
+};
+
+/**
+ * The learning-state filters as one row of links with their counts (Phase 7.2): All, the three
+ * stages, then Due, which overlaps them. Links, not toggles, so each view has its own URL.
+ */
+function Filters({ bank }: { bank: BankPage }) {
+  return (
+    <nav aria-label="Filter by learning state">
+      <ul className="flex flex-wrap gap-2">
+        {BANK_FILTERS.map((filter) => (
+          <li key={filter}>
+            <FilterChipLink
+              href={bankPath(filter)}
+              current={bank.filter === filter}
+              count={bank.counts.filters[filter]}
+            >
+              {FILTER_LABELS[filter]}
+              <span className="sr-only">, </span>
+            </FilterChipLink>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+/**
+ * The row's learning context: its stage (or retired / no exercise), whether it's due and when it
+ * comes back, and the reason, all from its learning state. The badge shows the stage even when
+ * the sense is due: "Due now" says that in words, and its section is Ready to review.
+ */
+function RowState({ row }: { row: BankRow }) {
+  const badge = row.status === "due" ? row.stage : row.status;
+  // "Not practised yet" is what New already says; a retired sense isn't reviewed.
+  const reason =
+    row.status !== "retired" && row.reason.code !== "not_practised"
+      ? learningReasonText(row.reason)
+      : null;
+  // "Missed the last 2 times" already says "Missed 2 times".
+  const missed =
+    row.missed && !(row.reason.code === "missed" && row.reason.times === row.missed)
+      ? row.missed
+      : null;
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+      <StatusBadge status={badge} />
+      {row.nextReview ? (
+        <span
+          className={cn(
+            "type-caption",
+            row.due ? "font-medium text-foreground" : "text-muted-foreground",
+          )}
+        >
+          {nextReviewText(row.nextReview)}
+        </span>
+      ) : null}
+      {reason ? <span className="type-caption text-muted-foreground">{reason}</span> : null}
+      {missed ? (
+        <span className="type-caption text-muted-foreground">Missed {missed} times</span>
+      ) : null}
+      {row.replacement ? (
+        <span className="type-caption text-muted-foreground">
+          Replaced by{" "}
+          <Link
+            href={row.replacement.href}
+            className="rounded-xs text-ink underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {row.replacement.senseLabel
+              ? `${row.replacement.term} (${row.replacement.senseLabel})`
+              : row.replacement.term}
+          </Link>
+        </span>
+      ) : null}
+    </div>
+  );
 }
 
 function Row({ row }: { row: BankRow }) {
@@ -70,30 +155,7 @@ function Row({ row }: { row: BankRow }) {
             <HighlightedText text={row.example.text} spans={row.example.spans} />
           </p>
         ) : null}
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <StatusBadge status={row.status} />
-          {row.nextReview ? (
-            <span className="type-caption text-muted-foreground">
-              {nextReviewText(row.nextReview)}
-            </span>
-          ) : null}
-          {row.missed ? (
-            <span className="type-caption text-muted-foreground">Missed {row.missed} times</span>
-          ) : null}
-          {row.replacement ? (
-            <span className="type-caption text-muted-foreground">
-              Replaced by{" "}
-              <Link
-                href={row.replacement.href}
-                className="rounded-xs text-ink underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {row.replacement.senseLabel
-                  ? `${row.replacement.term} (${row.replacement.senseLabel})`
-                  : row.replacement.term}
-              </Link>
-            </span>
-          ) : null}
-        </div>
+        <RowState row={row} />
         {row.mistakes.length > 0 ? (
           <ul
             aria-label={`Your recurring mistakes with “${name}”`}
@@ -117,9 +179,9 @@ function Row({ row }: { row: BankRow }) {
   );
 }
 
-function Pagination({ page, pages }: { page: number; pages: number }) {
+function Pagination({ filter, page, pages }: { filter: BankFilter; page: number; pages: number }) {
   if (pages <= 1) return null;
-  const href = (n: number) => (n <= 1 ? "/bank" : `/bank?page=${n}`);
+  const href = (n: number) => bankPath(filter, n);
   const shape =
     "inline-flex h-control-md items-center gap-1.5 rounded-md border px-3 type-label max-sm:h-11";
   const link = (n: number, label: string, children: React.ReactNode) =>
@@ -164,7 +226,7 @@ function Pagination({ page, pages }: { page: number; pages: number }) {
   );
 }
 
-/** The bank's saved language, in sections (specification §17). */
+/** The bank's saved language, in sections (specification §17), filtered by learning state. */
 export function BankView({ bank }: { bank: BankPage }) {
   if (bank.counts.total === 0) {
     return (
@@ -185,7 +247,7 @@ export function BankView({ bank }: { bank: BankPage }) {
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <p className="type-body text-muted-foreground">{summary(bank.counts)}</p>
+        <Filters bank={bank} />
         {ready > 0 ? (
           <Button asChild>
             <Link href="/practice">
@@ -211,7 +273,18 @@ export function BankView({ bank }: { bank: BankPage }) {
           </section>
         );
       })}
-      <Pagination page={bank.page} pages={bank.pages} />
+      {bank.filter !== "all" && bank.rows.length === 0 ? (
+        <p className="rounded-lg border border-border bg-card px-4 py-6 type-body text-muted-foreground">
+          {FILTER_EMPTY[bank.filter]}{" "}
+          <Link
+            href={bankPath("all")}
+            className="rounded-xs text-ink underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Show all
+          </Link>
+        </p>
+      ) : null}
+      <Pagination filter={bank.filter} page={bank.page} pages={bank.pages} />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 
 import { LANGUAGE_CATEGORIES, type LanguageCategory } from "./language-category";
@@ -8,6 +10,27 @@ type FilterChipProps = Omit<React.ComponentProps<"button">, "type"> & {
   category?: LanguageCategory;
   count?: number;
 };
+
+const chipClass = (active: boolean) =>
+  cn(
+    "inline-flex h-control-sm shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 type-label whitespace-nowrap transition-[color,background-color,border-color] duration-120 ease-standard outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:text-disabled-foreground max-sm:h-8",
+    active
+      ? "border-primary bg-primary text-primary-foreground"
+      : "border-border bg-card text-muted-foreground hover:border-border-strong hover:text-foreground",
+  );
+
+function ChipCount({ count, active }: { count: number; active: boolean }) {
+  return (
+    <span
+      className={cn(
+        "font-mono text-2xs tabular-nums",
+        active ? "text-primary-foreground/75" : "text-subtle-foreground",
+      )}
+    >
+      {count}
+    </span>
+  );
+}
 
 /**
  * Toggleable filter pill (e.g. Finder category filters). One of the few pill shapes in Lexora.
@@ -28,13 +51,7 @@ export function FilterChip({
       type="button"
       data-slot="filter-chip"
       aria-pressed={pressed}
-      className={cn(
-        "inline-flex h-control-sm shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 type-label whitespace-nowrap transition-[color,background-color,border-color] duration-120 ease-standard outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:text-disabled-foreground max-sm:h-8",
-        pressed
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border bg-card text-muted-foreground hover:border-border-strong hover:text-foreground",
-        className,
-      )}
+      className={cn(chipClass(pressed), className)}
       {...props}
     >
       {config ? (
@@ -44,16 +61,32 @@ export function FilterChip({
         />
       ) : null}
       {children ?? config?.label}
-      {count !== undefined ? (
-        <span
-          className={cn(
-            "font-mono text-2xs tabular-nums",
-            pressed ? "text-primary-foreground/75" : "text-subtle-foreground",
-          )}
-        >
-          {count}
-        </span>
-      ) : null}
+      {count !== undefined ? <ChipCount count={count} active={pressed} /> : null}
     </button>
+  );
+}
+
+/**
+ * A filter pill that navigates: one of a single-select set of links that each show a filtered
+ * view (the language bank's learning-state filters). It looks like a FilterChip; the current one
+ * is marked with aria-current, since following a link is navigation, not a toggle.
+ */
+export function FilterChipLink({
+  current,
+  count,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof Link> & { current: boolean; count?: number }) {
+  return (
+    <Link
+      data-slot="filter-chip"
+      aria-current={current ? "page" : undefined}
+      className={cn(chipClass(current), className)}
+      {...props}
+    >
+      {children}
+      {count !== undefined ? <ChipCount count={count} active={current} /> : null}
+    </Link>
   );
 }
