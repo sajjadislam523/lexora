@@ -13,6 +13,7 @@ import { ProgressTrack } from "@/components/lexora/progress-track";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ExerciseType } from "@/learning/exercises";
+import { practiceReasonText } from "@/learning/selection";
 import { evidenceText, nextReviewText } from "@/learning/status";
 import type { ReviewFeedback, ReviewItem, ReviewPrompt } from "@/server/learning/review";
 
@@ -467,14 +468,18 @@ export function ReviewSession({ items, more }: { items: ReviewItem[]; more: bool
         aria-labelledby="review-prompt"
         className="space-y-5 rounded-lg border border-border bg-card p-5 sm:p-8"
       >
-        <h1
-          id="review-prompt"
-          ref={headingRef}
-          tabIndex={-1}
-          className="type-subheading text-foreground outline-none"
-        >
-          {MODE[item.prompt.type]}
-        </h1>
+        <div className="space-y-1">
+          <h1
+            id="review-prompt"
+            ref={headingRef}
+            tabIndex={-1}
+            className="type-subheading text-foreground outline-none"
+          >
+            {MODE[item.prompt.type]}
+          </h1>
+          {/* Why practice selection chose it: observed facts only (Phase 7.3). */}
+          <p className="type-caption text-muted-foreground">{practiceReasonText(item.reason)}</p>
+        </div>
         {typed ? (
           <TypedBody
             key={item.prompt.id}
