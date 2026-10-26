@@ -372,6 +372,16 @@ export class LanguageSearchService {
       });
     }
 
+    // Authored relations are the only source of alternatives. A known word without any is
+    // answered with its own item, saying so: never an empty answer, never invented alternatives.
+    if (groups.length === 0 && (c.intent === "SYNONYM" || c.intent === "ALTERNATIVE")) {
+      return this.itemLookup(base, c, resolved.forms, resolved.resolution, tier === 4 ? 4 : 1, {
+        summary: (related) =>
+          `No alternatives to ${quote(headword)} in Lexora yet — showing the word itself${related ? " and its related language" : ""}`,
+        reason: "The word you asked about: Lexora has no alternatives to it yet",
+      });
+    }
+
     const notes = new Map(relations.map((r) => [r.toSenseId, r.note]));
     return respond(base, c, {
       summary: `${relationSummary(c.intent, c.modifiers)} ${quote(headword)}`,
@@ -1265,13 +1275,18 @@ export class LanguageSearchService {
     return respond(base, c, { summary: `No match for ${quote(base.query)}`, groups: [] });
   }
 
-  /** A term's item: its senses first, then its related language grouped by relation. */
+  /**
+   * A term's item: its senses first, then its related language grouped by relation. `fallback`
+   * (Phase 6 fix): the summary, and the reason on an exactly matched term's own senses, for a
+   * request this item answers in place of alternatives Lexora doesn't have.
+   */
   private async itemLookup(
     base: { query: string; normalised: string },
     c: Classification,
     forms: FormMatch[],
     resolution: TermResolution,
     tier: MatchTier,
+    fallback?: { summary: (related: boolean) => string; reason: string },
   ): Promise<SearchResponse> {
     const senses = await this.sensesFor(forms);
     const senseIds = senses.map((sense) => sense.id);
@@ -1284,7 +1299,9 @@ export class LanguageSearchService {
 
     const own = senses.flatMap((sense: SenseRef): SearchResult[] => {
       const summary = summaries.get(sense.id);
-      return summary ? [resultFrom(summary, lookupReason(resolution, tier))] : [];
+      const reason =
+        fallback && resolution.via === "exact" ? fallback.reason : lookupReason(resolution, tier);
+      return summary ? [resultFrom(summary, reason)] : [];
     });
     const groups: ResultGroup[] = [{ results: own }];
     for (const { label, types } of RELATION_GROUPS) {
@@ -1310,9 +1327,11 @@ export class LanguageSearchService {
 
     const notes = new Map(relations.map((r) => [r.toSenseId, r.note]));
     return respond(base, c, {
-      summary: groups.some((group) => group.label)
-        ? `${quote(headword)} and related language`
-        : quote(headword),
+      summary: fallback
+        ? fallback.summary(groups.some((group) => group.label))
+        : groups.some((group) => group.label)
+          ? `${quote(headword)} and related language`
+          : quote(headword),
       term: resolution,
       groups,
       guide: guideFrom(groups.slice(1), (result) => notes.get(result.senseId), "How they differ"),

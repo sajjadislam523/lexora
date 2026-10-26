@@ -175,6 +175,69 @@
   expected: [enable, support]
   acceptable: [encourage, enhance, improve, benefit, promote]
 
+# ── Synonym fallback ──────────────────────────────────────────────────────────────────────
+# Authored relations are the only source of alternatives, and about a third of the headwords
+# have none. A request for another word must still answer: with alternatives when they exist,
+# and with the word's own item when they don't — never with nothing.
+
+- query: what is another word for problem
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [issue, challenge]
+  acceptable: [difficulty, obstacle, drawback, concern]
+  rejected: [problem]
+
+- query: Task 2 word for problem
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [issue, challenge]
+  acceptable: [difficulty, obstacle, drawback, concern]
+  rejected: [problem]
+
+# Known words without authored alternatives: the word itself, never an empty answer.
+- query: another word for stable
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [stable]
+  acceptable: [remain-stable]
+
+- query: what is another word for access
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [access]
+
+- query: Task 1 word for stable
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [stable]
+  acceptable: [remain-stable]
+
+- query: Task 1 word for fluctuate
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [fluctuate]
+  acceptable: [fluctuation]
+
+- query: Task 2 word for crime
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [crime]
+
+- query: can you give me a better word for advice
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [advice]
+
+- query: better word for economy
+  category: synonym-fallback
+  intent: SYNONYM
+  expected: [economy]
+
+- query: alternative to education
+  category: synonym-fallback
+  intent: ALTERNATIVE
+  expected: [education]
+
 # ── Modifier intent ─────────────────────────────────────────────────────────────────────────
 # A modifier ("large", "rapid") narrows the head word. Answers must combine the two in authored
 # content: a collocation, a definition, or examples that use the head word.

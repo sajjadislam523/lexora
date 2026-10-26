@@ -26,6 +26,7 @@ import type { ContentRows } from "@/server/content/build";
 export const BENCHMARK_CATEGORIES = [
   "basic-lexical",
   "synonym-intent",
+  "synonym-fallback",
   "modifier-intent",
   "preposition",
   "context-gap",
