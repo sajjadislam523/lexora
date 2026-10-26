@@ -70,7 +70,9 @@ describe("personal mistake evidence", () => {
     });
     const page = await bank();
     expect(page).not.toContain("Your mistake");
-    expect(page).not.toContain("Missed");
+    // The row says what happened (Phase 7.2), but one miss is no count and no evidence.
+    expect(page).toContain("Missed last time.");
+    expect(page).not.toMatch(/Missed \d+ times/);
   });
 
   it("is evidence when the same mistake comes back within 30 days", async () => {

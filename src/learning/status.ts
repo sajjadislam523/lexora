@@ -29,13 +29,29 @@ export function reviewStatus(
   input: { card: CardState; retired: boolean; hasExercise: boolean },
   now: Date,
 ): ReviewStatus {
-  const { card } = input;
+  return statusOf({
+    retired: input.retired,
+    hasExercise: input.hasExercise,
+    stage: learningStage(input.card),
+    due: isDue(input.card, now),
+  });
+}
+
+/**
+ * The status order above, from a stage and due already derived — as a learning state
+ * (src/learning/state.ts) carries them — so the bank reads the same status from it.
+ */
+export function statusOf(input: {
+  retired: boolean;
+  hasExercise: boolean;
+  stage: LearningStage;
+  due: boolean;
+}): ReviewStatus {
   if (input.retired) return "retired";
   if (!input.hasExercise) return "no_exercise";
-  const stage = learningStage(card);
-  if (stage === "new") return "new";
-  if (isDue(card, now)) return "due";
-  return stage;
+  if (input.stage === "new") return "new";
+  if (input.due) return "due";
+  return input.stage;
 }
 
 /**

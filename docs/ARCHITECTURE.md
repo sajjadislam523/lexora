@@ -443,7 +443,7 @@ _As built in Phase 5 ([Retrieval Loop specification](specs/phase-5-retrieval-loo
 
 - **Bank** (`/bank`; `src/server/learning/bank.ts`, `listBank` / `bankCounts` in `review-cards.ts`):
   - saved senses left-joined to their cards (a save without one reads as new), ordered in SQL as §14 and §17 describe;
-  - statuses from `reviewStatus`, next reviews from `nextReview`; whether a sense has an exercise comes from its practice material;
+  - statuses from `reviewStatus`, next reviews from `nextReview`; whether a sense has an exercise comes from its practice material. Since Phase 7.2 both come from each row's learning state instead (§9.1);
   - one statement for the counts, one for a page of 50 rows, four for the page's practice material;
   - removing goes through the existing save flow; nothing in the bank schedules or writes;
   - _Start review_ (with the number ready) links to `/practice` when something is due or new.
@@ -499,6 +499,22 @@ _As built._ A learner's state for one saved sense: its stage, whether it's due, 
   - an HTTP endpoint;
   - evidence for senses that aren't saved;
   - stored scores or streaks.
+- **Language bank (Phase 7.2):** the first consumer. `loadBankPage` keeps the bank's order and its pages of 50, and computes no learning state of its own.
+  - **Reads:**
+    1. the counts (one statement, now with each filter's count);
+    2. one page from `listBank`;
+    3. then, in parallel and for that page's sense IDs only: `loadLearningStates`, the practice material and the recurring mistakes.
+
+    That's 8 statements whatever the page's size, filter or number. There's never a read per row, and normal rendering never reads the whole bank.
+
+  - **Rows:** stage, due, next review and reason are the learning state's. Status is `statusOf` over the state's stage and due: the same order `reviewStatus` applies to a card. "Missed n times" still reads the card's stored `lapses` (Phase 5 spec §16).
+  - **Filters** (`?show=new|learning|known|due`): `bankFilterTerm` is their SQL form, so a page is filtered before it's read. Stages exclude retired senses. Due includes new saves, as the review queue does. Tests assert each filter selects exactly the senses whose learning state matches, at two times and across pages.
+  - **Measured** locally with 727k logged answers, end to end:
+    - a page of 1, 7 or 50 rows: about 17–25 ms median;
+    - the learning-state read for 50 senses: about 6 ms;
+    - an empty filter: one statement.
+
+    No index was added.
 
 ## 10. Writing & Speaking labs (Phase 7–8)
 
@@ -615,3 +631,4 @@ _As built._ A learner's state for one saved sense: its stage, whether it's due, 
 | 87  | 2026-10-24 | Save copy promises only what exists: the save response says `review` is `ready` or `scheduled`, read from the card after saving; the notices, save gate and landing CTA use spec §19's wording                                                                                                                              | Spec §19. `PUT` is idempotent, so saving an answered meaning again isn't ready; reading the card keeps "It's ready to review" true                                                                |
 | 88  | 2026-10-24 | Phase 5 release order: migrations 0005–0007, then the content import, both on Neon from the phase PR's head, before the owner approves the merge that deploys; rollback is Vercel Instant Rollback, never schema changes                                                                                                    | Saving writes review cards and the bank, Practice and Home read the review tables, so the schema must exist first; it is additive, so v0.4.0 runs on it unchanged                                 |
 | 91  | 2026-10-26 | Learning state (§9.1) derived, not stored: stage from the review card through the bank's own rule (`learningStage`), evidence from `review_log` across saves in one aggregated statement, reasons as observed facts; no table, migration, index, endpoint or UI                                                             | Phase 7.1. Card and log already hold every fact; a second mastery rule or table would drift from the scheduler. Measured fast on existing indexes                                                 |
+| 92  | 2026-10-26 | The bank reads each row's learning state from `loadLearningStates` for its page (one batched statement) and filters by stage or due in SQL (`?show=`), keeping its order and pages; stage-and-due filter chips with counts replace the Phase 5 summary line                                                                 | Phase 7.2. One source for stage, due and reason; filtering in SQL keeps pages of 50 without reading the whole bank; the old summary's partition would contradict stage counts                     |

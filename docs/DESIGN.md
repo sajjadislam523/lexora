@@ -348,6 +348,7 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 | Pattern               | Component                  | Use                                                                                                                                                                      |
 | --------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **FilterChip**        | `lexora/filter-chip`       | Multi-select filters (Finder categories). Pill, 28px (32 on mobile). Inactive: hairline outline. Active: charcoal fill. Optional category dot and count. `aria-pressed`. |
+| **FilterChipLink**    | `lexora/filter-chip`       | The same pill as a link, for single-select views with their own URL (language bank filters). The current one has the charcoal fill and `aria-current="page"`.            |
 | **Underline tabs**    | `ui/tabs` `variant="line"` | Page sections (Overview / Examples / Mistakes). Full-width hairline with a 2px foreground bar on the active tab.                                                         |
 | **Segmented control** | `ui/tabs` (default)        | Two or three views of the same content (Writing / Speaking). Recessed track; the active segment is raised white with `shadow-xs`.                                        |
 
@@ -355,14 +356,14 @@ All have an accessible label. Placeholders are prompts ("What do you want to say
 
 **Rectangles say what something is. Pills say where you are with it.**
 
-| Component               | Shape              | Use                                                                                                         |
-| ----------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
-| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                    |
-| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                            |
-| `lexora/status-badge`   | Pill               | New (ink), Learning (warning), Due (charcoal), Known (success); retired, no exercise (muted)                |
-| `lexora/fit-badge`      | Pill               | The Phase 3 verb-frame fit: Fits (success), Different preposition (warning), Doesn’t fit (neutral)          |
-| `lexora/verdict-badge`  | Pill               | Context-fit verdict: Fits · Likely fits · Depends · Unlikely · Not supported. Icon and label, never a score |
-| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                    |
+| Component               | Shape              | Use                                                                                                                                                |
+| ----------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lexora/category-badge` | Rectangle, `xs`    | The kind of language. `soft` chip or quiet `dot` variant                                                                                           |
+| `lexora/tag-badge`      | Rectangle, neutral | Register (academic / formal / neutral / informal) and skill (writing / speaking)                                                                   |
+| `lexora/status-badge`   | Pill               | New (ink), Learning (warning), Due (charcoal), Known (success); retired, no exercise (muted). The bank shows the stage and says "Due now" in words |
+| `lexora/fit-badge`      | Pill               | The Phase 3 verb-frame fit: Fits (success), Different preposition (warning), Doesn’t fit (neutral)                                                 |
+| `lexora/verdict-badge`  | Pill               | Context-fit verdict: Fits · Likely fits · Depends · Unlikely · Not supported. Icon and label, never a score                                        |
+| `ui/badge`              | Rectangle          | Generic labels (`default`, `secondary`, `ink`, `outline`, `destructive`)                                                                           |
 
 All badges are 20px tall with `type-micro` text.
 
@@ -526,7 +527,11 @@ One view, two homes: `/finder` inside the app shell and `/explore` in the public
 The learner's saved meanings and when each comes back (Phase 5 Step 4).
 
 - **Header:** `PageHeader`: "Language bank", "Everything you've saved, and when it comes back."
-- **Summary:** one text line, not tiles: "12 meanings · 3 due now · 2 new · 5 learning · 2 known". Beside it, a primary _Start review_ with "n due" (due plus new) links to Practice, only when something is.
+- **Filters (Phase 7.2):** one row of `FilterChipLink`s with counts, in a `nav` named "Filter by learning state": _All_, _New_, _Learning_, _Known_, then _Due_. The stages exclude retired senses. _Due_ overlaps them and includes new saves, as the review queue does, so its count is the _Start review_ number.
+  - Each is a link (`/bank`, `/bank?show=due`, …; `?show=` before `?page=`, one URL per view), and pages count the filtered rows.
+  - They replace the Phase 5 summary line, whose partition ("3 due now · 5 learning") would disagree with stage counts that include due senses.
+  - Beside them, a primary _Start review_ with "n due" (due plus new) links to Practice, only when something is.
+  - A filter with nothing in it says so in one line, with _Show all_: "Nothing is due right now.", "No new meanings right now.", "No meanings in Learning right now.", "No known meanings yet."
 - **Sections:** in order, each an `h2` and one bordered list (`rounded-lg border bg-card p-1`, rows divided by `border-subtle`):
   - _Ready to review_: Due, then New;
   - _Coming up_: Learning, Known, and senses with no exercise yet, by when they come back;
@@ -534,7 +539,11 @@ The learner's saved meanings and when each comes back (Phase 5 Step 4).
 - **Row:**
   - the term (`type-term-sm`, the link to its language page), the kind dot and the sense label;
   - the definition (`type-body`, muted), the first authored pattern (`type-mono` chip), and the first authored example (`type-example`, highlighted);
-  - a `StatusBadge` and the next review in caption: "Due now", "Next review in 3 days" (whole days, no timezones), and "Missed n times" once a card has two wrong answers;
+  - the row's learning state (Phase 7.1, read for the page in one batch):
+    - a `StatusBadge` with its stage (New, Learning or Known; or No longer reviewed / No exercise yet), even when it's due;
+    - the next review in caption, "Due now" in `text-foreground` medium so due is said in words, not colour: "Due now", "Next review in 3 days" (whole days, no timezones);
+    - the reason when it adds something: "Missed the last 2 times.", "Answered correctly the last 4 times.", "Saved again, so its reviews start over." ("Not practised yet" isn't repeated beside New);
+    - "Missed n times" once a card has two wrong answers, unless the reason already says the same number;
   - each recurring mistake (§16 of the Phase 5 spec) as a `MistakeRow` in a `bg-muted` well: "Your mistake", the wrong → right versions, the authored explanation and "You've made this mistake 2 times in the last 30 days" (or "You typed “at” 2 times…");
   - a ghost icon button that removes it, named "Remove “term (label)” from your language bank", 44px on touch.
 - **Removing:** it goes through the shared save flow (the same endpoint and notices as the Finder). The list refreshes only once the server confirms. On failure, including the rate limit, the row stays and the notice says why.

@@ -37,6 +37,8 @@ const PERSONAL = [
   "/finder?q=important",
   "/finder?kind=linker&use=speaking",
   "/bank",
+  "/bank?show=due",
+  "/bank?show=known",
   "/practice",
   "/writing",
   "/speaking",
